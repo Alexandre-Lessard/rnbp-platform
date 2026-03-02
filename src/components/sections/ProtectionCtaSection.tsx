@@ -1,7 +1,10 @@
 export function ProtectionCtaSection() {
   return (
-    <section id="inscription" className="section-frame scroll-mt-24 border-t-0 bg-[#f6f7f9]">
-      <div className="section-shell py-16 sm:py-20">
+    <section
+      id="inscription"
+      className="section-frame relative z-10 scroll-mt-24 border-t-0 bg-[#f5f5f5]"
+    >
+      <div className="section-shell pt-32 pb-16 sm:pt-44 sm:pb-20 lg:pt-60">
         <div className="relative mx-auto max-w-5xl rounded-[2.5rem] border-2 border-[#81a7c8] bg-[#f6f7f9] px-8 py-14 text-center sm:px-16 sm:py-20">
           <img
             src="/assets/cta-arrow.png"
