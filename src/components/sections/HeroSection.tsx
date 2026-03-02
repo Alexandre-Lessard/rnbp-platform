@@ -30,8 +30,8 @@ export function HeroSection() {
           </p>
 
           <p className="mt-8 max-w-xl text-2xl leading-relaxed text-slate-600">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+            Enregistrez vos biens de valeur dans un registre sécurisé afin de simplifier leur
+            identification et d'augmenter vos chances de restitution en cas de perte ou de vol.
           </p>
 
           <div className="mt-12 flex flex-wrap items-center gap-4">

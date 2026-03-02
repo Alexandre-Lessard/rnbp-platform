@@ -29,15 +29,39 @@ export const categories: CategoryItem[] = [
 ];
 
 export const cycleActions: CyclePoint[] = [
-  { number: "01", title: "Première action", description: "Lorem ipsum" },
-  { number: "02", title: "Deuxième action", description: "Lorem ipsum" },
-  { number: "03", title: "Troisième action", description: "Lorem ipsum" },
+  {
+    number: "01",
+    title: "Enregistrez votre bien",
+    description: "Ajoutez la marque, le modèle, le numéro de série et vos preuves d'achat.",
+  },
+  {
+    number: "02",
+    title: "Signalez en quelques clics",
+    description: "En cas de vol, mettez immédiatement le bien en statut volé dans le registre.",
+  },
+  {
+    number: "03",
+    title: "Accélérez la restitution",
+    description: "Partagez un dossier clair qui facilite la vérification de propriété.",
+  },
 ];
 
 export const cycleBenefits: CyclePoint[] = [
-  { number: "01", title: "Bénéfice", description: "Lorem ipsum" },
-  { number: "02", title: "Bénéfice", description: "Lorem ipsum" },
-  { number: "03", title: "Bénéfice", description: "Lorem ipsum" },
+  {
+    number: "01",
+    title: "Bénéfice",
+    description: "Un bien traçable est plus difficile à revendre et plus facile à identifier.",
+  },
+  {
+    number: "02",
+    title: "Bénéfice",
+    description: "Vos informations sont centralisées pour réagir vite au bon moment.",
+  },
+  {
+    number: "03",
+    title: "Bénéfice",
+    description: "Vous conservez une preuve de propriété structurée pour vos démarches.",
+  },
 ];
 
 export const registrationSteps: StepCard[] = [
