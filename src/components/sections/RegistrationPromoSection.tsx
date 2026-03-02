@@ -4,7 +4,7 @@ export function RegistrationPromoSection() {
       <div className="section-shell py-16 sm:py-20">
         <article className="mx-auto grid max-w-6xl items-stretch overflow-hidden rounded-[2.4rem] border border-[#81a7c8] bg-[#f6f7f9] lg:grid-cols-[340px_1fr]">
           <img
-            src="/assets/promo-protect.png"
+            src="/assets/register-protect-image-1.png"
             alt="Personnes discutant autour d'une table"
             className="h-full w-full object-cover"
           />

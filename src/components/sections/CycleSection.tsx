@@ -46,7 +46,7 @@ export function CycleSection({ actions, benefits }: CycleSectionProps) {
 
           <figure className="mx-auto w-full max-w-[430px]">
             <img
-              src="/assets/cycle-police.png"
+              src="/assets/cycle-chatgpt-17fev-2026.png"
               alt="Agent prenant note d'un vélo volé"
               className="h-auto w-full rounded-[2.2rem] object-cover"
             />
