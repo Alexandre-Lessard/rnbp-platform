@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FaqItem } from "../../types/content";
+import { Button } from "../ui/Button";
 
 type FaqSectionProps = {
   items: FaqItem[];
@@ -7,7 +8,7 @@ type FaqSectionProps = {
 
 function PlusMinus({ open }: { open: boolean }) {
   return (
-    <svg aria-hidden viewBox="0 0 24 24" className="h-8 w-8 text-[#0c5488]">
+    <svg aria-hidden viewBox="0 0 24 24" className="h-8 w-8 text-[var(--rcb-navy)]">
       <path
         d="M5 12h14"
         fill="none"
@@ -29,7 +30,7 @@ function PlusMinus({ open }: { open: boolean }) {
 }
 
 export function FaqSection({ items }: FaqSectionProps) {
-  const [openItems, setOpenItems] = useState<number[]>([0, 1, 2, 3, 4]);
+  const [openItems, setOpenItems] = useState<number[]>([]);
 
   const toggle = (index: number) => {
     setOpenItems((current) =>
@@ -38,19 +39,14 @@ export function FaqSection({ items }: FaqSectionProps) {
   };
 
   return (
-    <section id="faq" className="section-frame scroll-mt-24 border-t-0 bg-[#f6f7f9]">
+    <section id="faq" className="section-frame scroll-mt-24 border-t-0 bg-[var(--rcb-bg)]">
       <div className="section-shell py-16 sm:py-20">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-6xl font-bold text-slate-950 sm:text-7xl">FAQ</h2>
-          <p className="mt-7 text-3xl leading-relaxed text-slate-600">
+          <h2 className="text-6xl font-bold text-[var(--rcb-text)] sm:text-7xl">FAQ</h2>
+          <p className="mt-7 text-3xl leading-relaxed text-[var(--rcb-text-muted)]">
             Trouvez les réponses aux questions courantes sur l'enregistrement de vos biens.
           </p>
-          <button
-            type="button"
-            className="mt-8 rounded-xl bg-[var(--rcb-primary)] px-8 py-4 text-lg font-medium text-white transition-colors hover:bg-[var(--rcb-primary-dark)]"
-          >
-            Voir FAQ
-          </button>
+          <Button className="mt-8">Voir FAQ</Button>
         </div>
 
         <div className="mx-auto mt-14 max-w-6xl space-y-6">
@@ -58,20 +54,20 @@ export function FaqSection({ items }: FaqSectionProps) {
             const isOpen = openItems.includes(index);
 
             return (
-              <article key={item.question} className="rounded-2xl border border-[#8f8f8f] bg-[#f6f7f9] p-7">
+              <article key={item.question} className="rounded-2xl border border-[var(--rcb-border-muted)] bg-[var(--rcb-bg)] p-7">
                 <button
                   type="button"
                   onClick={() => toggle(index)}
-                  className="flex w-full items-start justify-between gap-5 text-left"
+                  className="flex w-full cursor-pointer items-start justify-between gap-5 text-left"
                   aria-expanded={isOpen}
                 >
-                  <h3 className="text-5xl font-bold text-slate-950">{item.question}</h3>
+                  <h3 className="text-5xl font-bold text-[var(--rcb-text)]">{item.question}</h3>
                   <span className="mt-1">
                     <PlusMinus open={isOpen} />
                   </span>
                 </button>
                 {isOpen ? (
-                  <p className="mt-5 max-w-5xl text-3xl leading-relaxed text-slate-600">{item.answer}</p>
+                  <p className="mt-5 max-w-5xl text-3xl leading-relaxed text-[var(--rcb-text-muted)]">{item.answer}</p>
                 ) : null}
               </article>
             );

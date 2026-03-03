@@ -1,4 +1,5 @@
 import type { CyclePoint } from "../../types/content";
+import { Button } from "../ui/Button";
 
 type CycleSectionProps = {
   actions: CyclePoint[];
@@ -19,14 +20,14 @@ function CycleColumn({
       {items.map((item) => (
         <article
           key={`${item.number}-${item.title}-${align}`}
-          className="border-t border-[#9fa3a6] pt-6 text-left"
+          className="border-t border-[var(--rcb-border-muted)] pt-6 text-left"
         >
           <div className={`flex items-center gap-3 text-4xl font-bold ${isRight ? "justify-between" : ""}`}>
             {!isRight ? <span className="text-3xl">{item.number}</span> : null}
             <h3>{item.title}</h3>
             {isRight ? <span className="text-3xl">{item.number}</span> : null}
           </div>
-          <p className="mt-4 text-3xl text-slate-700">{item.description}</p>
+          <p className="mt-4 text-3xl text-[var(--rcb-text-body)]">{item.description}</p>
         </article>
       ))}
     </div>
@@ -35,9 +36,9 @@ function CycleColumn({
 
 export function CycleSection({ actions, benefits }: CycleSectionProps) {
   return (
-    <section id="cycle" className="section-frame scroll-mt-24 border-t-0 bg-[#f5f6f8]">
+    <section id="cycle" className="section-frame scroll-mt-24 border-t-0 bg-[var(--rcb-surface)]">
       <div className="section-shell py-18 sm:py-20">
-        <h2 className="text-center text-6xl font-bold text-slate-950 sm:text-7xl">
+        <h2 className="text-center text-6xl font-bold text-[var(--rcb-text)] sm:text-7xl">
           Cycle du Registre des biens
         </h2>
 
@@ -56,12 +57,7 @@ export function CycleSection({ actions, benefits }: CycleSectionProps) {
         </div>
 
         <div className="mt-14 text-center">
-          <button
-            type="button"
-            className="rounded-xl border border-[var(--rcb-primary)] bg-white px-8 py-4 text-lg font-medium text-slate-900 transition-colors hover:bg-[var(--rcb-primary-light)]"
-          >
-            Déclare un bien volé
-          </button>
+          <Button variant="outline">Déclare un bien volé</Button>
         </div>
       </div>
     </section>
