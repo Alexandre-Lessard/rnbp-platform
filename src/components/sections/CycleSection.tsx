@@ -1,10 +1,6 @@
-import type { CyclePoint } from "../../types/content";
-import { Button } from "../ui/Button";
-
-type CycleSectionProps = {
-  actions: CyclePoint[];
-  benefits: CyclePoint[];
-};
+import type { CyclePoint } from "@/types/content";
+import { Button } from "@/components/ui/Button";
+import { useLanguage } from "@/i18n/context";
 
 function CycleColumn({
   items,
@@ -34,30 +30,32 @@ function CycleColumn({
   );
 }
 
-export function CycleSection({ actions, benefits }: CycleSectionProps) {
+export function CycleSection() {
+  const { t } = useLanguage();
+
   return (
-    <section id="cycle" className="section-frame scroll-mt-24 border-t-0 bg-[var(--rcb-surface)]">
+    <section id="cycle" className="scroll-mt-24 bg-[var(--rcb-surface)]">
       <div className="section-shell py-18 sm:py-20">
         <h2 className="text-center text-6xl font-bold text-[var(--rcb-text)] sm:text-7xl">
-          Cycle du Registre des biens
+          {t.cycle.heading}
         </h2>
 
         <div className="mt-14 grid items-start gap-12 xl:grid-cols-[1fr_0.95fr_1fr]">
-          <CycleColumn items={actions} align="left" />
+          <CycleColumn items={t.cycle.actions} align="left" />
 
           <figure className="mx-auto w-full max-w-[430px]">
             <img
               src="/assets/cycle-police.png"
-              alt="Agent prenant note d'un vélo volé"
+              alt={t.cycle.imageAlt}
               className="h-auto w-full rounded-[2.2rem] object-cover"
             />
           </figure>
 
-          <CycleColumn items={benefits} align="right" />
+          <CycleColumn items={t.cycle.benefits} align="right" />
         </div>
 
         <div className="mt-14 text-center">
-          <Button variant="outline">Déclare un bien volé</Button>
+          <Button variant="outline">{t.buttons.declareStolen}</Button>
         </div>
       </div>
     </section>

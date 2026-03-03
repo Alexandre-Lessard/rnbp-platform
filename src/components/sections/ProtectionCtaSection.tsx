@@ -1,11 +1,14 @@
-import { Button } from "../ui/Button";
+import { Button } from "@/components/ui/Button";
+import { useLanguage } from "@/i18n/context";
 
 export function ProtectionCtaSection() {
+  const { t } = useLanguage();
+
   return (
     <section id="inscription" className="scroll-mt-24 bg-[var(--rcb-bg)]">
       <div className="section-shell pt-16 pb-28 sm:pt-20 sm:pb-32 lg:pt-24">
         <div className="relative mx-auto max-w-5xl rounded-[2.5rem] border border-[var(--rcb-frame)] bg-[var(--rcb-bg)] px-8 py-14 sm:px-16 sm:py-20 md:border-0">
-          <div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden md:block">
             <div className="absolute left-[180px] right-[38px] top-0 h-[2px] bg-[var(--rcb-frame)]" />
             <div className="absolute right-0 top-[38px] bottom-[220px] w-[2px] bg-[var(--rcb-frame)]" />
             <div className="absolute left-0 top-[226px] bottom-[38px] w-[2px] bg-[var(--rcb-frame)]" />
@@ -29,19 +32,17 @@ export function ProtectionCtaSection() {
 
           <div className="relative z-10 text-center">
             <h2 className="mx-auto max-w-3xl text-6xl font-bold leading-tight text-[var(--rcb-text)] sm:text-7xl">
-              Commencez à protéger
+              {t.protectionCta.headingLine1}
               <br />
-              vos biens maintenant
+              {t.protectionCta.headingLine2}
             </h2>
             <p className="mx-auto mt-8 max-w-3xl text-3xl leading-relaxed text-[var(--rcb-text-muted)]">
-              Que ce soit un vélo électrique, une voiturette de golf, un tracteur à gazon ou tout
-              autre véhicule similaire, inscrivez-le pour plus de sécurité et de tranquillité
-              d'esprit.
+              {t.protectionCta.description}
             </p>
 
             <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
-              <Button>S'inscrire</Button>
-              <Button variant="outline">Vérifier un bien</Button>
+              <Button>{t.buttons.signUp}</Button>
+              <Button variant="outline">{t.buttons.verifyItem}</Button>
             </div>
           </div>
         </div>
