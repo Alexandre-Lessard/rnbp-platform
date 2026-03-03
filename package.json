@@ -11,7 +11,7 @@
     "deploy": "npm run build && wrangler pages deploy dist --project-name ${CF_PAGES_PROJECT:-rcdb-landing} --branch ${CF_PAGES_BRANCH:-main}",
     "ws2": "code -n projet2.code-workspace"
   },
-  "description": "Landing page du Registre canadien des biens",
+  "description": "Landing page du Registre canadien des biens personnels",
   "license": "UNLICENSED",
   "dependencies": {
     "react": "^19.2.4",

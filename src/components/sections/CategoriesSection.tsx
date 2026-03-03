@@ -15,7 +15,7 @@ export function CategoriesSection({ items, minValueLabel }: CategoriesSectionPro
             Protégez vos biens de valeur dès aujourd'hui
           </h2>
           <p className="mt-7 text-3xl leading-relaxed text-[var(--rcb-text-muted)]">
-            Le Registre Canadien des Biens vous permet d'enregistrer vos possessions précieuses
+            Le Registre canadien des biens personnels vous permet d'enregistrer vos possessions précieuses
             pour faciliter leur identification et leur restitution en cas de vol.
           </p>
           <p className="mt-2 text-4xl font-bold text-[var(--rcb-text-body)]">{minValueLabel}</p>

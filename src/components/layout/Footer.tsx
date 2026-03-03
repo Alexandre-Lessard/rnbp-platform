@@ -5,7 +5,7 @@ export function Footer() {
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
             <a href="#accueil" className="inline-block">
-              <img src="/assets/logo-rcdb.png" alt="RCDB" className="h-10" />
+              <img src="/assets/logo-rcdb.png" alt="RCBP" className="h-10" />
             </a>
             <nav className="mt-8 flex flex-wrap gap-8 text-sm font-medium text-[var(--rcb-text-strong)]">
               <a href="#accueil">Accueil</a>
@@ -52,7 +52,7 @@ export function Footer() {
                 Paramètres de cookies
               </a>
             </div>
-            <p>© 2026 Registre canadien des biens. Tous droits réservés.</p>
+            <p>© 2026 Registre canadien des biens personnels. Tous droits réservés.</p>
           </div>
         </div>
       </div>

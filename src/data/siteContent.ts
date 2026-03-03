@@ -7,7 +7,7 @@ import type {
 } from "../types/content";
 
 export const siteMeta = {
-  brandName: "Registre canadien des biens",
+  brandName: "Registre canadien des biens personnels",
   minValueLabel: "Vous pouvez enregistrer un bien d'une valeur de plus de 1 000$",
 };
 
@@ -94,7 +94,7 @@ export const faqItems: FaqItem[] = [
   {
     question: "Mes données sont-elles protégées?",
     answer:
-      "Oui. Le RCB respecte les lois fédérales sur la protection des données. Vos informations personnelles ne sont jamais vendues ni partagées sans consentement.",
+      "Oui. Le RCBP respecte les lois fédérales sur la protection des données. Vos informations personnelles ne sont jamais vendues ni partagées sans consentement.",
   },
   {
     question: "Combien de temps prend l'enregistrement?",

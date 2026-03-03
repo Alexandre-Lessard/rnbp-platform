@@ -7,10 +7,10 @@ export function RollingRegistrySection() {
             <h2 className="text-6xl font-bold leading-tight text-[var(--rcb-text)] sm:text-7xl">
               Le Registre canadien
               <br />
-              des biens
+              des biens personnels
             </h2>
             <p className="mt-6 max-w-3xl text-3xl leading-relaxed text-[var(--rcb-text-muted)]">
-              RCDB couvre plus de 47 catégories de biens, incluant le matériel roulant, l'électronique,
+              Le RCBP couvre plus de 47 catégories de biens, incluant le matériel roulant, l'électronique,
               les outils spécialisés et d'autres articles de valeur.
             </p>
             <p className="mt-6 text-2xl font-semibold text-[var(--rcb-text-strong)]">
