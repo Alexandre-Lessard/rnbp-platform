@@ -4,8 +4,8 @@ export function Footer() {
       <div className="section-shell py-16">
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
-            <a href="#accueil" className="text-5xl font-semibold italic text-slate-900">
-              Logo
+            <a href="#accueil" className="inline-block">
+              <img src="/assets/logo-rcdb.png" alt="RCDB" className="h-10" />
             </a>
             <nav className="mt-8 flex flex-wrap gap-8 text-sm font-medium text-slate-900">
               <a href="#accueil">Accueil</a>

@@ -43,19 +43,19 @@ export function HeroSection() {
             </button>
             <button
               type="button"
-              className="rounded-xl border border-[var(--rcb-primary)] px-7 py-4 text-lg font-medium text-slate-900 transition-colors hover:bg-white"
+              className="rounded-xl border border-[var(--rcb-primary)] bg-white px-7 py-4 text-lg font-medium text-slate-900 transition-colors hover:bg-[var(--rcb-primary-light)]"
             >
               Déclare un bien volé
             </button>
           </div>
         </div>
 
-        <div className="relative mx-auto flex w-full max-w-[720px] items-center justify-center lg:justify-end">
+        <div className="relative mx-auto flex w-full max-w-[720px] items-center justify-center lg:justify-start">
           <img
             src="/assets/hero-shield-check.png"
             alt=""
             aria-hidden
-            className="pointer-events-none absolute -top-4 w-[85%] opacity-25"
+            className="pointer-events-none absolute -top-16 -left-2 w-[70%]"
           />
           <img
             src="/assets/hero-scooter.png"

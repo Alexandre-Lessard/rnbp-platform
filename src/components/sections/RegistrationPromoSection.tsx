@@ -1,10 +1,10 @@
 export function RegistrationPromoSection() {
   return (
-    <section className="section-frame border-t-0 bg-[#f6f7f9]">
+    <section className="bg-[#f6f7f9]">
       <div className="section-shell py-16 sm:py-20">
-        <article className="mx-auto grid max-w-6xl items-stretch overflow-hidden rounded-[2.4rem] border border-[#81a7c8] bg-[#f6f7f9] lg:grid-cols-[340px_1fr]">
+        <article className="mx-auto grid max-w-6xl items-stretch overflow-hidden rounded-[2.4rem] bg-[#f6f7f9] lg:grid-cols-[340px_1fr]">
           <img
-            src="/assets/register-protect-image-1.png"
+            src="/assets/promo-protect.png"
             alt="Personnes discutant autour d'une table"
             className="h-full w-full object-cover"
           />

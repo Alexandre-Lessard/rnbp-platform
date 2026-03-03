@@ -7,7 +7,7 @@ type CategoriesSectionProps = {
 
 export function CategoriesSection({ items, minValueLabel }: CategoriesSectionProps) {
   return (
-    <section id="categories" className="section-frame scroll-mt-24 border-t-0 bg-[#f6f7f9]">
+    <section id="categories" className="scroll-mt-24 bg-[#f6f7f9]">
       <div className="section-shell py-20">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-6xl font-bold leading-tight text-slate-950 sm:text-7xl">

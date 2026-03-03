@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name ${CF_PAGES_PROJECT:-rcdb-landing} --branch ${CF_PAGES_BRANCH:-main}"
+    "deploy": "npm run build && wrangler pages deploy dist --project-name ${CF_PAGES_PROJECT:-rcdb-landing} --branch ${CF_PAGES_BRANCH:-main}",
+    "ws2": "code -n projet2.code-workspace"
   },
   "description": "Landing page du Registre canadien des biens",
   "license": "UNLICENSED",

@@ -46,7 +46,7 @@ export function CycleSection({ actions, benefits }: CycleSectionProps) {
 
           <figure className="mx-auto w-full max-w-[430px]">
             <img
-              src="/assets/cycle-chatgpt-17fev-2026.png"
+              src="/assets/cycle-police.png"
               alt="Agent prenant note d'un vélo volé"
               className="h-auto w-full rounded-[2.2rem] object-cover"
             />
@@ -58,7 +58,7 @@ export function CycleSection({ actions, benefits }: CycleSectionProps) {
         <div className="mt-14 text-center">
           <button
             type="button"
-            className="rounded-xl border border-[var(--rcb-primary)] px-8 py-4 text-lg font-medium text-slate-900 transition-colors hover:bg-white"
+            className="rounded-xl border border-[var(--rcb-primary)] bg-white px-8 py-4 text-lg font-medium text-slate-900 transition-colors hover:bg-[var(--rcb-primary-light)]"
           >
             Déclare un bien volé
           </button>

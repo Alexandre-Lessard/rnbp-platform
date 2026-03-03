@@ -4,6 +4,8 @@
 :root {
   --rcb-primary: #146fb9;
   --rcb-primary-dark: #0f568f;
+  --rcb-primary-light: #e8f0f8;
+  --rcb-navy: #0c3554;
   --rcb-header: #dce7f1;
   --rcb-border: #d6dde6;
 }
@@ -39,7 +41,7 @@ a {
 }
 
 .section-shell {
-  width: min(1440px, calc(100% - 40px));
+  width: min(1400px, calc(100% - 40px));
   margin-inline: auto;
 }
 
@@ -64,7 +66,7 @@ a {
 
 @media (max-width: 768px) {
   .section-shell {
-    width: min(1440px, calc(100% - 28px));
+    width: min(1400px, calc(100% - 28px));
   }
 }
 

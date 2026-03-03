@@ -23,11 +23,8 @@ export function Navbar({ items }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-[#d4dde7] bg-[var(--rcb-header)]/95 backdrop-blur">
       <div className="section-shell flex min-h-20 items-center justify-between gap-6 py-3">
-        <a
-          href="#accueil"
-          className="text-2xl font-bold uppercase tracking-tight text-slate-500 transition-colors hover:text-slate-700"
-        >
-          LOGO
+        <a href="#accueil" className="shrink-0">
+          <img src="/assets/logo-rcdb.png" alt="RCDB" className="h-10" />
         </a>
 
         <nav className="hidden items-center gap-9 text-[1.1rem] font-medium text-slate-900 lg:flex">
@@ -46,7 +43,7 @@ export function Navbar({ items }: NavbarProps) {
         <div className="hidden items-center gap-3 md:flex">
           <button
             type="button"
-            className="rounded-xl border border-[var(--rcb-primary)] px-6 py-2 text-sm font-medium text-slate-800 transition-colors hover:bg-slate-50"
+            className="rounded-xl border border-[var(--rcb-primary)] bg-white px-6 py-2 text-sm font-medium text-slate-800 transition-colors hover:bg-[var(--rcb-primary-light)]"
           >
             Partenaires
           </button>
