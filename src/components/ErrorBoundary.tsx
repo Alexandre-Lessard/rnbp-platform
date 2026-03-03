@@ -1,18 +1,27 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
 type Props = { children: ReactNode };
-type State = { hasError: boolean };
+type State = { hasError: boolean; retried: boolean };
 
 export class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false };
+  state: State = { hasError: false, retried: false };
 
-  static getDerivedStateFromError(): State {
+  static getDerivedStateFromError(): Partial<State> {
     return { hasError: true };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("ErrorBoundary caught:", error, info.componentStack);
+
+    // In dev, auto-retry once after HMR has time to apply new modules
+    if (import.meta.env.DEV && !this.state.retried) {
+      setTimeout(() => this.setState({ hasError: false, retried: true }), 300);
+    }
   }
+
+  private handleRetry = () => {
+    this.setState({ hasError: false, retried: false });
+  };
 
   render() {
     if (this.state.hasError) {
@@ -25,16 +34,25 @@ export class ErrorBoundary extends Component<Props, State> {
             </h1>
             <p className="mt-4 text-lg text-[var(--rcb-text-muted)]">
               {isFr
-                ? "Veuillez rafraîchir la page ou réessayer plus tard."
-                : "Please refresh the page or try again later."}
+                ? "Veuillez réessayer ou rafraîchir la page."
+                : "Please try again or refresh the page."}
             </p>
-            <button
-              type="button"
-              onClick={() => window.location.reload()}
-              className="mt-8 rounded-lg bg-[var(--rcb-primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--rcb-primary-dark)]"
-            >
-              {isFr ? "Rafraîchir" : "Refresh"}
-            </button>
+            <div className="mt-8 flex items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={this.handleRetry}
+                className="rounded-lg bg-[var(--rcb-primary)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--rcb-primary-dark)]"
+              >
+                {isFr ? "Réessayer" : "Try again"}
+              </button>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="rounded-lg border border-[var(--rcb-border-muted)] px-6 py-3 text-sm font-semibold text-[var(--rcb-text)] transition-colors hover:bg-[var(--rcb-surface)]"
+              >
+                {isFr ? "Rafraîchir" : "Refresh"}
+              </button>
+            </div>
           </div>
         </div>
       );

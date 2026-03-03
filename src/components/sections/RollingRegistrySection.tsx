@@ -19,6 +19,12 @@ export function RollingRegistrySection() {
             <p className="mt-6 text-2xl font-semibold text-[var(--rcb-text-strong)]">
               {t.rollingRegistry.tagline}
             </p>
+            <a
+              href="#all-categories"
+              className="mt-6 inline-block text-2xl font-semibold underline"
+            >
+              {t.rollingRegistry.viewCategoriesLink} &gt;
+            </a>
           </div>
 
           <div className="mx-auto w-full max-w-[760px]">

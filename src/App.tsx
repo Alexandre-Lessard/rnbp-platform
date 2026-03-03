@@ -1,12 +1,12 @@
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
-import { CategoriesSection } from "@/components/sections/CategoriesSection";
+import { AllCategoriesSection } from "@/components/sections/AllCategoriesSection";
 import { CycleSection } from "@/components/sections/CycleSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ProtectionCtaSection } from "@/components/sections/ProtectionCtaSection";
-import { RegistrationPromoSection } from "@/components/sections/RegistrationPromoSection";
 import { RollingRegistrySection } from "@/components/sections/RollingRegistrySection";
+import { SocialProofSection } from "@/components/sections/SocialProofSection";
 import { ThreeStepsSection } from "@/components/sections/ThreeStepsSection";
 import { useLanguage } from "@/i18n/context";
 
@@ -24,12 +24,12 @@ function App() {
       <Navbar />
       <main id="main-content">
         <HeroSection />
-        <CategoriesSection />
         <CycleSection />
-        <RegistrationPromoSection />
         <RollingRegistrySection />
+        <AllCategoriesSection />
         <ProtectionCtaSection />
         <ThreeStepsSection />
+        <SocialProofSection />
         <FaqSection />
       </main>
       <Footer />

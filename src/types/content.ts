@@ -4,11 +4,6 @@ export type NavItem = {
   withChevron?: boolean;
 };
 
-export type CategoryItem = {
-  label: string;
-  image: string;
-};
-
 export type CyclePoint = {
   number: string;
   title: string;
@@ -25,6 +20,15 @@ export type StepCard = {
 export type FaqItem = {
   question: string;
   answer: string;
+};
+
+export type TrustBadge = {
+  label: string;
+};
+
+export type StatItem = {
+  value: string;
+  label: string;
 };
 
 export type SiteContent = {
@@ -45,13 +49,11 @@ export type SiteContent = {
     freeLabel: string;
     insurancePromo: string;
     imageAlt: string;
+    trustBadges: TrustBadge[];
   };
-  categories: {
-    heading: string;
-    description: string;
-    minValueLabel: string;
-    items: CategoryItem[];
-    viewCategoriesLink: string;
+  socialProof: {
+    badge: string;
+    stats: StatItem[];
   };
   cycle: {
     heading: string;
@@ -59,24 +61,25 @@ export type SiteContent = {
     actions: CyclePoint[];
     benefits: CyclePoint[];
   };
-  registrationPromo: {
-    headingLine1: string;
-    headingLine2: string;
-    description: string;
-    linkText: string;
-    imageAlt: string;
-  };
   rollingRegistry: {
     headingLine1: string;
     headingLine2: string;
     description: string;
     tagline: string;
     imageAlt: string;
+    viewCategoriesLink: string;
+  };
+  allCategories: {
+    heading: string;
+    description: string;
+    toggleButton: string;
+    items: string[];
   };
   protectionCta: {
     headingLine1: string;
     headingLine2: string;
     description: string;
+    imageAlt: string;
   };
   threeSteps: {
     heading: string;

@@ -27,28 +27,20 @@ const fr: SiteContent = {
     insurancePromo: "Enregistre tes biens et obtiens un rabais sur tes assurances maison",
     imageAlt:
       "V\u00e9lo, laptop, cellulaire, montre, voiturette de golf et autres biens",
-  },
-  categories: {
-    heading: "Prot\u00e9gez vos biens de valeur d\u00e8s aujourd\u2019hui",
-    description:
-      "Le Registre canadien des biens personnels vous permet d\u2019enregistrer vos possessions pr\u00e9cieuses pour faciliter leur identification et leur restitution en cas de vol.",
-    minValueLabel:
-      "Vous pouvez enregistrer un bien d\u2019une valeur de plus de 1\u00a0000\u00a0$",
-    items: [
-      { label: "V\u00e9lo \u00c9lectrique", image: "/assets/icon-bike.png" },
-      { label: "Scooter", image: "/assets/icon-scooter.png" },
-      { label: "Ordinateur portable", image: "/assets/icon-laptop.png" },
-      {
-        label: "Trottinette \u00c9lectrique",
-        image: "/assets/icon-escooter.png",
-      },
-      {
-        label: "Voiturette de golf",
-        image: "/assets/icon-golf-cart.png",
-      },
-      { label: "Montre", image: "/assets/icon-watch.png" },
+    trustBadges: [
+      { label: "Donn\u00e9es h\u00e9berg\u00e9es au Canada" },
+      { label: "Chiffrement avanc\u00e9" },
+      { label: "Services policiers partenaires" },
+      { label: "Compatible avec les assureurs" },
     ],
-    viewCategoriesLink: "Voir cat\u00e9gories des biens",
+  },
+  socialProof: {
+    badge: "En phase de d\u00e9ploiement national",
+    stats: [
+      { value: "15\u00a0000+", label: "biens enregistr\u00e9s" },
+      { value: "12+", label: "villes partenaires" },
+      { value: "5+", label: "assureurs collaborateurs" },
+    ],
   },
   cycle: {
     heading: "Cycle du Registre des biens",
@@ -94,28 +86,78 @@ const fr: SiteContent = {
       },
     ],
   },
-  registrationPromo: {
-    headingLine1: "Enregistrer et",
-    headingLine2: "prot\u00e9ger vos biens",
-    description:
-      "Cr\u00e9ez un compte et documentez vos possessions de valeur pour faciliter leur identification et leur restitution.",
-    linkText: "Acc\u00e9der",
-    imageAlt: "Personnes discutant autour d\u2019une table",
-  },
   rollingRegistry: {
     headingLine1: "Le Registre canadien",
     headingLine2: "des biens personnels",
     description:
-      "Le RCBP couvre plus de 47 cat\u00e9gories de biens, incluant le mat\u00e9riel roulant, l\u2019\u00e9lectronique, les outils sp\u00e9cialis\u00e9s et d\u2019autres articles de valeur.",
+      "Le RCBP couvre plus de 48 cat\u00e9gories de biens, incluant le mat\u00e9riel roulant, l\u2019\u00e9lectronique, les outils sp\u00e9cialis\u00e9s et d\u2019autres articles de valeur.",
     tagline:
       "Une preuve claire de propri\u00e9t\u00e9, au m\u00eame endroit.",
     imageAlt: "Tracteur \u00e0 gazon",
+    viewCategoriesLink: "Voir cat\u00e9gories des biens",
+  },
+  allCategories: {
+    heading: "48 cat\u00e9gories de biens admissibles",
+    description:
+      "Le RCBP vous permet d\u2019enregistrer tout bien personnel d\u2019une valeur de plus de 1\u00a0000\u00a0$.",
+    toggleButton: "Afficher les cat\u00e9gories",
+    items: [
+      "V\u00e9lo \u00e9lectrique",
+      "Trottinette \u00e9lectrique",
+      "Scooter \u00e9lectrique",
+      "Voiturette de golf",
+      "VTT / Quad",
+      "Motoneige",
+      "Motomarine",
+      "Tracteur \u00e0 gazon",
+      "Moto",
+      "Remorque utilitaire",
+      "Ordinateur portable",
+      "Ordinateur de bureau",
+      "Tablette",
+      "T\u00e9l\u00e9phone intelligent",
+      "Appareil photo",
+      "Cam\u00e9ra vid\u00e9o",
+      "Drone",
+      "Montre de luxe",
+      "Bijoux",
+      "Instrument de musique",
+      "\u00c9quipement de son",
+      "T\u00e9l\u00e9vision",
+      "Console de jeux vid\u00e9o",
+      "\u00c9quipement de r\u00e9alit\u00e9 virtuelle",
+      "Imprimante 3D",
+      "Outil sp\u00e9cialis\u00e9",
+      "\u00c9quipement de soudure",
+      "G\u00e9n\u00e9ratrice",
+      "Compresseur",
+      "Scie \u00e0 cha\u00eene professionnelle",
+      "\u00c9quipement de plong\u00e9e",
+      "Kayak / Canot",
+      "Planche \u00e0 pagaie (SUP)",
+      "\u00c9quipement de ski",
+      "V\u00e9lo de montagne",
+      "V\u00e9lo de route",
+      "\u00c9quipement de camping haut de gamme",
+      "Arme \u00e0 feu enregistr\u00e9e",
+      "T\u00e9lescope / Jumelles",
+      "\u00c9quipement m\u00e9dical portable",
+      "Mobilier d\u2019antiquit\u00e9",
+      "\u0152uvre d\u2019art",
+      "Collection de pi\u00e8ces de monnaie",
+      "Collection de timbres",
+      "\u00c9quipement de gym",
+      "Machine \u00e0 coudre industrielle",
+      "Panneau solaire portable",
+      "Instrument d\u2019optique",
+    ],
   },
   protectionCta: {
     headingLine1: "Commencez \u00e0 prot\u00e9ger",
     headingLine2: "vos biens maintenant",
     description:
-      "Que ce soit un v\u00e9lo \u00e9lectrique, une voiturette de golf, un tracteur \u00e0 gazon ou tout autre v\u00e9hicule similaire, inscrivez-le pour plus de s\u00e9curit\u00e9 et de tranquillit\u00e9 d\u2019esprit.",
+      "Cr\u00e9ez un compte et documentez vos possessions de valeur pour faciliter leur identification et leur restitution.",
+    imageAlt: "Personnes discutant autour d\u2019une table",
   },
   threeSteps: {
     heading: "Trois \u00e9tapes claires",
@@ -181,6 +223,12 @@ const fr: SiteContent = {
           "Que se passe-t-il si mon bien est vol\u00e9\u00a0?",
         answer:
           "Signalez-le imm\u00e9diatement via la section \u00ab\u00a0D\u00e9clarer un bien vol\u00e9\u00a0\u00bb. Le statut de votre bien sera mis \u00e0 jour dans le registre.",
+      },
+      {
+        question:
+          "Pourquoi le registre est-il n\u00e9cessaire\u00a0?",
+        answer:
+          "Chaque ann\u00e9e, des milliers de biens sont perdus ou vol\u00e9s au Canada, et la majorit\u00e9 ne sont jamais retrouv\u00e9s. Sans preuve centralis\u00e9e de propri\u00e9t\u00e9, il est difficile pour la police d\u2019identifier un propri\u00e9taire et pour les assureurs de traiter efficacement une r\u00e9clamation. Le RCBP cr\u00e9e une preuve officielle, s\u00e9curis\u00e9e et dat\u00e9e de vos biens \u2014 num\u00e9ro de s\u00e9rie, photos, preuves d\u2019achat \u2014 dans un dossier unique. Il transforme un objet anonyme en bien identifiable, rend la revente de biens vol\u00e9s beaucoup plus difficile et acc\u00e9l\u00e8re vos d\u00e9marches de restitution.",
       },
     ],
   },

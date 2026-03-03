@@ -51,9 +51,30 @@ export function HeroSection() {
         </div>
       </div>
 
+      <div className="border-t border-[var(--rcb-border-muted)] bg-[var(--rcb-surface)]">
+        <div className="section-shell py-5">
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
+            {t.hero.trustBadges.map((badge, i) => {
+              const icons = [
+                <svg key="db" className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5" /><path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6" /></svg>,
+                <svg key="lock" className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>,
+                <svg key="shield" className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>,
+                <svg key="building" className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}><path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 4v14" /><path d="M9 9h1m-1 4h1m3-4h1m-1 4h1" /></svg>,
+              ];
+              return (
+                <span key={badge.label} className="flex items-center gap-2 text-sm font-medium text-[var(--rcb-text-muted)]">
+                  <span className="text-[var(--rcb-primary)]">{icons[i]}</span>
+                  {badge.label}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
       <div className="relative h-14 border-t border-[var(--rcb-border-muted)]">
         <a
-          href="#categories"
+          href="#cycle"
           className="absolute left-1/2 top-[-1px] flex h-[49px] w-[98px] -translate-x-1/2 items-start justify-center rounded-b-full border border-t-0 border-[var(--rcb-border-muted)] bg-[var(--rcb-bg)] text-[var(--rcb-text)] transition-colors hover:text-[var(--rcb-primary)]"
         >
           <ChevronDown className="-mt-1 h-9 w-14" />
