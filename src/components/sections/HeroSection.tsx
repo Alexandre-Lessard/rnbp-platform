@@ -42,17 +42,17 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div className="relative mx-auto flex w-full max-w-[720px] items-center justify-center lg:justify-start">
+        <div className="relative mx-auto flex w-full max-w-[700px] items-center justify-center">
           <img
             src="/assets/hero-shield-check.png"
             alt=""
             aria-hidden
-            className="pointer-events-none absolute -top-16 -left-2 w-[70%]"
+            className="pointer-events-none absolute -top-10 -left-10 w-[420px] opacity-90"
           />
           <img
-            src="/assets/hero-scooter.png"
-            alt="Trottinette électrique"
-            className="relative z-10 w-full max-w-[460px] drop-shadow-[0_30px_40px_rgba(16,25,40,0.2)]"
+            src="/assets/hero-items.png"
+            alt="Vélo, laptop, cellulaire, montre, voiturette de golf et autres biens"
+            className="relative z-10 w-full drop-shadow-[0_30px_40px_rgba(16,25,40,0.2)]"
           />
         </div>
       </div>

@@ -25,7 +25,7 @@ export function Navbar({ items }: NavbarProps) {
     <header className="sticky top-0 z-50 bg-[var(--rcb-header)]/95 backdrop-blur">
       <div className="section-shell flex min-h-20 items-center justify-between gap-6 py-3">
         <a href="#accueil" className="shrink-0">
-          <img src="/assets/logo-rcdb.png" alt="RCBP" className="h-10" />
+          <img src="/assets/logo-texte.png" alt="RCBP" className="h-10" />
         </a>
 
         <nav className="hidden items-center gap-9 text-[1.1rem] font-medium text-[var(--rcb-text-strong)] lg:flex">
