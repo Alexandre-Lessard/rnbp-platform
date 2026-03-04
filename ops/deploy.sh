@@ -18,6 +18,8 @@ RSYNC_EXCLUDES=(
   --exclude='.env'
   --exclude='.deploy.env'
   --exclude='NOTES.md'
+  --exclude='notes'
+  --exclude='design'
 )
 
 # Colors
