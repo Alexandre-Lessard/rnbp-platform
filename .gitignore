@@ -9,8 +9,18 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+package-lock.json
+
+# uploads (backend)
+apps/api/uploads/
+
+# keys
+*.pem
+
+# project-local
 Registre Canadiens des biens/
 design/
 design-refs/
 *.code-workspace
 guide-dev-ia*
+INSURANCE-FORM-NOTES.md

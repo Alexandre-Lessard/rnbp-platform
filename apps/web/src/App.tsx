@@ -1,0 +1,65 @@
+import { Routes, Route } from "react-router";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { useLanguage } from "@/i18n/context";
+
+import { LandingPage } from "@/routes/LandingPage";
+import { LoginPage } from "@/routes/LoginPage";
+import { RegisterAccountPage } from "@/routes/RegisterAccountPage";
+import { RegisterItemPage } from "@/routes/RegisterItemPage";
+import { DashboardPage } from "@/routes/DashboardPage";
+import { ReportTheftPage } from "@/routes/ReportTheftPage";
+import { LookupPage } from "@/routes/LookupPage";
+import { PartnerPage } from "@/routes/PartnerPage";
+import { PrivacyPolicyPage } from "@/routes/PrivacyPolicyPage";
+import { TermsOfServicePage } from "@/routes/TermsOfServicePage";
+import { NotFoundPage } from "@/routes/NotFoundPage";
+
+function App() {
+  const { t } = useLanguage();
+
+  return (
+    <div className="min-h-screen">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-[var(--rcb-primary)] focus:px-4 focus:py-2 focus:text-white"
+      >
+        {t.a11y.skipToContent}
+      </a>
+      <Navbar />
+      <main id="main-content">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/connexion" element={<LoginPage />} />
+          <Route path="/inscription" element={<RegisterAccountPage />} />
+          <Route path="/enregistrer" element={<RegisterItemPage />} />
+          <Route path="/verifier" element={<LookupPage />} />
+          <Route path="/partenaires" element={<PartnerPage />} />
+          <Route path="/confidentialite" element={<PrivacyPolicyPage />} />
+          <Route path="/conditions" element={<TermsOfServicePage />} />
+          <Route
+            path="/tableau-de-bord"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/declarer-vol"
+            element={
+              <ProtectedRoute>
+                <ReportTheftPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+export default App;

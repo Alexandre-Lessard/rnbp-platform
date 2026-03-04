@@ -1,0 +1,238 @@
+import { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "@/i18n/context";
+import { useAuth, setRefreshToken } from "@/lib/auth-context";
+import { apiRequest, setAccessToken } from "@/lib/api-client";
+import { StepIndicator } from "@/components/registration/StepIndicator";
+import { StepItemDetails } from "@/components/registration/StepItemDetails";
+import { StepDocuments } from "@/components/registration/StepDocuments";
+import { StepAccount } from "@/components/registration/StepAccount";
+import { RegistrationConfirmation } from "@/components/registration/RegistrationConfirmation";
+
+type ItemData = {
+  name: string;
+  category: string;
+  brand: string;
+  model: string;
+  serialNumber: string;
+  estimatedValue: string;
+  description: string;
+};
+
+type AccountData = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+};
+
+const STORAGE_KEY = "rcbp_registration_draft";
+
+function loadDraft(): { item: ItemData; account: AccountData; termsAccepted: boolean } | null {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveDraft(item: ItemData, account: AccountData, termsAccepted: boolean) {
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ item, account, termsAccepted }));
+}
+
+function clearDraft() {
+  sessionStorage.removeItem(STORAGE_KEY);
+}
+
+const emptyItem: ItemData = {
+  name: "",
+  category: "",
+  brand: "",
+  model: "",
+  serialNumber: "",
+  estimatedValue: "",
+  description: "",
+};
+
+const emptyAccount: AccountData = {
+  email: "",
+  password: "",
+  firstName: "",
+  lastName: "",
+  phone: "",
+};
+
+export function RegisterItemPage() {
+  const { t } = useLanguage();
+  const { user, refreshAuth } = useAuth();
+  const reg = t.registration;
+
+  const draft = loadDraft();
+  const [step, setStep] = useState(1);
+  const [itemData, setItemData] = useState<ItemData>(draft?.item ?? emptyItem);
+  const [accountData, setAccountData] = useState<AccountData>(draft?.account ?? emptyAccount);
+  const [termsAccepted, setTermsAccepted] = useState(draft?.termsAccepted ?? false);
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [documents, setDocuments] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [rcbpNumber, setRcbpNumber] = useState("");
+
+  // Auth-aware: if logged in, only 2 steps
+  const totalSteps = user ? 2 : 3;
+
+  // Debounced save to sessionStorage
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      saveDraft(itemData, accountData, termsAccepted);
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [itemData, accountData, termsAccepted]);
+
+  const handleSubmitLoggedIn = useCallback(async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const body: Record<string, unknown> = {
+        name: itemData.name,
+        category: itemData.category,
+        description: itemData.description || undefined,
+        brand: itemData.brand || undefined,
+        model: itemData.model || undefined,
+        serialNumber: itemData.serialNumber || undefined,
+        estimatedValue: itemData.estimatedValue
+          ? Number(itemData.estimatedValue)
+          : undefined,
+      };
+
+      const res = await apiRequest<{ item: { rcbpNumber: string } }>(
+        "/items",
+        { method: "POST", body },
+      );
+
+      clearDraft();
+      setRcbpNumber(res.item.rcbpNumber);
+      setStep(totalSteps + 1); // confirmation
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur");
+    } finally {
+      setLoading(false);
+    }
+  }, [itemData, totalSteps]);
+
+  const handleSubmitWithAccount = useCallback(async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await apiRequest<{
+        item: { rcbpNumber: string };
+        accessToken: string;
+        refreshToken: string;
+      }>("/auth/register-with-item", {
+        method: "POST",
+        body: {
+          account: {
+            email: accountData.email,
+            password: accountData.password,
+            firstName: accountData.firstName,
+            lastName: accountData.lastName,
+            phone: accountData.phone || undefined,
+          },
+          item: {
+            name: itemData.name,
+            category: itemData.category,
+            description: itemData.description || undefined,
+            brand: itemData.brand || undefined,
+            model: itemData.model || undefined,
+            serialNumber: itemData.serialNumber || undefined,
+            estimatedValue: itemData.estimatedValue
+              ? Number(itemData.estimatedValue)
+              : undefined,
+          },
+        },
+      });
+
+      // Store tokens
+      setAccessToken(res.accessToken);
+      setRefreshToken(res.refreshToken);
+
+      // Refresh auth context
+      await refreshAuth();
+
+      clearDraft();
+      setRcbpNumber(res.item.rcbpNumber);
+      setStep(totalSteps + 1); // confirmation
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur");
+    } finally {
+      setLoading(false);
+    }
+  }, [accountData, itemData, totalSteps, refreshAuth]);
+
+  // Confirmation screen
+  if (rcbpNumber) {
+    return (
+      <section className="section-shell py-16">
+        <RegistrationConfirmation rcbpNumber={rcbpNumber} />
+      </section>
+    );
+  }
+
+  return (
+    <section className="section-shell py-16">
+      <h1 className="text-center text-3xl font-bold text-[var(--rcb-text-strong)]">
+        {reg?.heading ?? "Enregistrer un bien"}
+      </h1>
+      <p className="mt-2 text-center text-lg text-[var(--rcb-text-muted)]">
+        {reg?.description ?? ""}
+      </p>
+
+      <div className="mt-10">
+        <StepIndicator currentStep={step} totalSteps={totalSteps} />
+      </div>
+
+      <div className="mt-12">
+        {step === 1 && (
+          <StepItemDetails
+            data={itemData}
+            onChange={setItemData}
+            onNext={() => setStep(2)}
+            termsAccepted={termsAccepted}
+            onTermsChange={setTermsAccepted}
+          />
+        )}
+
+        {step === 2 && (
+          <StepDocuments
+            photos={photos}
+            documents={documents}
+            onPhotosChange={setPhotos}
+            onDocumentsChange={setDocuments}
+            onNext={() => {
+              if (user) {
+                handleSubmitLoggedIn();
+              } else {
+                setStep(3);
+              }
+            }}
+            onBack={() => setStep(1)}
+          />
+        )}
+
+        {step === 3 && !user && (
+          <StepAccount
+            data={accountData}
+            onChange={setAccountData}
+            onSubmit={handleSubmitWithAccount}
+            onBack={() => setStep(2)}
+            loading={loading}
+            error={error}
+          />
+        )}
+      </div>
+    </section>
+  );
+}

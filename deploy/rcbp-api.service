@@ -1,0 +1,29 @@
+[Unit]
+Description=RCBP API Server
+After=network.target postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=rcbp
+Group=rcbp
+WorkingDirectory=/opt/rcbp/repo/apps/api
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rcbp-api
+
+# Environment
+EnvironmentFile=/opt/rcbp/.env
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/rcbp/uploads
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

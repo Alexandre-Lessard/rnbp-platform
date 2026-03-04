@@ -1,0 +1,26 @@
+export const INSURERS = [
+  "Intact Financial / Intact Insurance",
+  "Aviva Canada",
+  "Desjardins Assurances",
+  "Wawanesa Mutual Insurance",
+  "Co-operators General Insurance",
+  "TD Insurance",
+  "AIG Canada",
+  "RBC Insurance",
+  "Sonnet Insurance",
+  "Promutuel Assurance",
+  "SSQ Assurance",
+  "Belairdirect / Belair Insurance",
+  "Industrielle Alliance (iA Groupe financier)",
+  "Optimum Insurance",
+  "The Personal Insurance Company",
+  "Chubb Insurance Company of Canada",
+  "Peace Hills General Insurance Company",
+  "Red River Mutual Insurance",
+  "Saskatchewan Mutual Insurance",
+  "Pafco Insurance",
+  "CAA-Québec Assurance",
+  "Economical Insurance",
+] as const;
+
+export type Insurer = (typeof INSURERS)[number];

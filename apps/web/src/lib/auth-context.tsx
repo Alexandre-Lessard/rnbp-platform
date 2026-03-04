@@ -1,0 +1,222 @@
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from "react";
+import {
+  apiRequest,
+  setAccessToken,
+  healthCheck,
+} from "./api-client";
+
+type User = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string | null;
+  emailVerified: boolean;
+  createdAt: string;
+};
+
+type AuthState = {
+  user: User | null;
+  loading: boolean;
+  backendAvailable: boolean;
+};
+
+type AuthContextType = AuthState & {
+  login: (email: string, password: string) => Promise<void>;
+  register: (data: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    phone?: string;
+  }) => Promise<void>;
+  logout: () => Promise<void>;
+  refreshAuth: () => Promise<boolean>;
+};
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+function getRefreshToken() {
+  return sessionStorage.getItem("rcbp_refresh_token");
+}
+
+export function setRefreshToken(token: string | null) {
+  if (token) {
+    sessionStorage.setItem("rcbp_refresh_token", token);
+  } else {
+    sessionStorage.removeItem("rcbp_refresh_token");
+  }
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [state, setState] = useState<AuthState>({
+    user: null,
+    loading: true,
+    backendAvailable: true,
+  });
+
+  const refreshAuth = useCallback(async (): Promise<boolean> => {
+    const rt = getRefreshToken();
+    if (!rt) return false;
+
+    try {
+      const data = await apiRequest<{
+        accessToken: string;
+        refreshToken: string;
+      }>("/auth/refresh", {
+        method: "POST",
+        body: { refreshToken: rt },
+      });
+
+      setAccessToken(data.accessToken);
+      setRefreshToken(data.refreshToken);
+      return true;
+    } catch {
+      setAccessToken(null);
+      setRefreshToken(null);
+      return false;
+    }
+  }, []);
+
+  // Check backend and try to restore session on mount
+  useEffect(() => {
+    let cancelled = false;
+
+    async function init() {
+      const available = await healthCheck();
+      if (cancelled) return;
+
+      if (!available) {
+        setState({ user: null, loading: false, backendAvailable: false });
+        return;
+      }
+
+      const refreshed = await refreshAuth();
+      if (cancelled) return;
+
+      if (refreshed) {
+        try {
+          const data = await apiRequest<{ user: User }>("/auth/me");
+          if (!cancelled) {
+            setState({
+              user: data.user,
+              loading: false,
+              backendAvailable: true,
+            });
+          }
+        } catch {
+          if (!cancelled) {
+            setState({ user: null, loading: false, backendAvailable: true });
+          }
+        }
+      } else {
+        setState({ user: null, loading: false, backendAvailable: true });
+      }
+    }
+
+    init();
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshAuth]);
+
+  // Poll health when backend is down
+  useEffect(() => {
+    if (state.backendAvailable) return;
+
+    const interval = setInterval(async () => {
+      const available = await healthCheck();
+      if (available) {
+        setState((prev) => ({ ...prev, backendAvailable: true }));
+      }
+    }, 30_000);
+
+    return () => clearInterval(interval);
+  }, [state.backendAvailable]);
+
+  const login = useCallback(async (email: string, password: string) => {
+    const data = await apiRequest<{
+      user: User;
+      accessToken: string;
+      refreshToken: string;
+    }>("/auth/login", {
+      method: "POST",
+      body: { email, password },
+    });
+
+    setAccessToken(data.accessToken);
+    setRefreshToken(data.refreshToken);
+    setState((prev) => ({
+      ...prev,
+      user: data.user,
+      backendAvailable: true,
+    }));
+  }, []);
+
+  const register = useCallback(
+    async (data: {
+      email: string;
+      password: string;
+      firstName: string;
+      lastName: string;
+      phone?: string;
+    }) => {
+      const res = await apiRequest<{
+        user: User;
+        accessToken: string;
+        refreshToken: string;
+      }>("/auth/register", {
+        method: "POST",
+        body: data,
+      });
+
+      setAccessToken(res.accessToken);
+      setRefreshToken(res.refreshToken);
+      setState((prev) => ({
+        ...prev,
+        user: res.user,
+        backendAvailable: true,
+      }));
+    },
+    [],
+  );
+
+  const logout = useCallback(async () => {
+    const rt = getRefreshToken();
+    try {
+      await apiRequest("/auth/logout", {
+        method: "POST",
+        body: { refreshToken: rt },
+      });
+    } catch {
+      // Logout even if API fails
+    }
+
+    setAccessToken(null);
+    setRefreshToken(null);
+    setState((prev) => ({ ...prev, user: null }));
+  }, []);
+
+  return (
+    <AuthContext.Provider
+      value={{ ...state, login, register, logout, refreshAuth }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+  return ctx;
+}
