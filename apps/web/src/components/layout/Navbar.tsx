@@ -23,12 +23,13 @@ export function Navbar() {
         <nav aria-label={t.a11y.mainNav} className="hidden items-center gap-9 text-[1.1rem] font-medium text-[var(--rcb-text-strong)] lg:flex">
           {t.nav.items.map((item) => {
             const isHash = item.href.startsWith("#");
+            const cls = "flex items-center justify-center gap-1 min-w-[4rem] transition-colors hover:text-[var(--rcb-primary)]";
             if (isHash && isLanding) {
               return (
                 <a
                   key={item.label}
                   href={item.href}
-                  className="flex items-center gap-1 transition-colors hover:text-[var(--rcb-primary)]"
+                  className={cls}
                 >
                   {item.label}
                 </a>
@@ -38,7 +39,7 @@ export function Navbar() {
               <Link
                 key={item.label}
                 to={isHash ? `/${item.href}` : item.href}
-                className="flex items-center gap-1 transition-colors hover:text-[var(--rcb-primary)]"
+                className={cls}
               >
                 {item.label}
               </Link>
@@ -48,24 +49,24 @@ export function Navbar() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <LanguageSwitcher />
-          <Link to="/partenaires" className={getButtonClasses("outline", "sm", "w-[120px] text-center")}>
+          <Link to="/partenaires" className={getButtonClasses("outline", "sm", "w-[140px] whitespace-nowrap text-center")}>
             {t.nav.partners}
           </Link>
           {user ? (
             <>
-              <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm", "w-[120px] text-center")}>
+              <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm", "w-[140px] whitespace-nowrap text-center")}>
                 {t.nav.myAccount}
               </Link>
               <button
                 type="button"
                 onClick={() => logout()}
-                className="cursor-pointer text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-primary)]"
+                className="w-[100px] cursor-pointer text-center text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-primary)]"
               >
                 {t.nav.logout}
               </button>
             </>
           ) : (
-            <Link to="/connexion" className={getButtonClasses("primary", "sm", "w-[120px] text-center")}>
+            <Link to="/connexion" className={getButtonClasses("primary", "sm", "w-[140px] whitespace-nowrap text-center")}>
               {t.nav.login}
             </Link>
           )}

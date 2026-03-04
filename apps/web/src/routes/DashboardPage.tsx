@@ -69,13 +69,13 @@ export function DashboardPage() {
         <div className="flex items-center gap-3">
           <Link
             to="/enregistrer"
-            className={getButtonClasses("primary", "sm")}
+            className={getButtonClasses("primary", "sm", "w-[170px] whitespace-nowrap text-center")}
           >
             + {t.dashboard?.addItem ?? "Enregistrer un bien"}
           </Link>
           <Link
             to="/declarer-vol"
-            className={getButtonClasses("outline", "sm")}
+            className={getButtonClasses("outline", "sm", "w-[170px] whitespace-nowrap text-center")}
           >
             {t.dashboard?.reportTheft ?? "Déclarer un vol"}
           </Link>
