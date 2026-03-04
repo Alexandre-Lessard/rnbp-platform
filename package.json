@@ -1,13 +1,13 @@
 {
-  "name": "rcbp",
+  "name": "rnbp",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @rcbp/web dev",
-    "dev:api": "pnpm --filter @rcbp/api dev",
+    "dev": "pnpm --filter @rnbp/web dev",
+    "dev:api": "pnpm --filter @rnbp/api dev",
     "dev:all": "pnpm -r --parallel dev",
     "build": "pnpm -r build",
-    "build:web": "pnpm --filter @rcbp/web build",
-    "build:api": "pnpm --filter @rcbp/api build",
+    "build:web": "pnpm --filter @rnbp/web build",
+    "build:api": "pnpm --filter @rnbp/api build",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test"
   },

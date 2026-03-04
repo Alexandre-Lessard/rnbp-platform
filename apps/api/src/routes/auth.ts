@@ -5,7 +5,7 @@ import {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-} from "@rcbp/shared";
+} from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { users, sessions } from "../db/schema.js";
 import { hashPassword, verifyPassword } from "../utils/password.js";

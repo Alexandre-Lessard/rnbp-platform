@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
-import { newsletterSubscribeSchema } from "@rcbp/shared";
+import { newsletterSubscribeSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { newsletterSubscribers } from "../db/schema.js";
 

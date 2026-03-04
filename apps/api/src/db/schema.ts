@@ -84,7 +84,7 @@ export const items = pgTable(
     estimatedValue: integer("estimated_value"),
     purchaseDate: timestamp("purchase_date", { withTimezone: true }),
     status: itemStatusEnum("status").notNull().default("active"),
-    rcbpNumber: varchar("rcbp_number", { length: 13 }).notNull().unique(),
+    rnbpNumber: varchar("rnbp_number", { length: 13 }).notNull().unique(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -94,7 +94,7 @@ export const items = pgTable(
   },
   (table) => [
     index("items_owner_id_idx").on(table.ownerId),
-    index("items_rcbp_number_idx").on(table.rcbpNumber),
+    index("items_rnbp_number_idx").on(table.rnbpNumber),
     index("items_status_idx").on(table.status),
   ],
 );

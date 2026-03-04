@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { insuranceRequestSchema, INSURERS } from "@rcbp/shared";
+import { insuranceRequestSchema, INSURERS } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { insuranceRequests } from "../db/schema.js";
 import { requireAuth } from "../middleware/auth.js";

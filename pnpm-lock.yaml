@@ -19,7 +19,7 @@ importers:
       '@fastify/rate-limit':
         specifier: ^10.3.0
         version: 10.3.0
-      '@rcbp/shared':
+      '@rnbp/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       argon2:
@@ -74,7 +74,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@rcbp/shared':
+      '@rnbp/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       react:

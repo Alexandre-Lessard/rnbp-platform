@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 type Item = {
   id: string;
   name: string;
-  rcbpNumber: string;
+  rnbpNumber: string;
   status: string;
 };
 
@@ -125,7 +125,7 @@ export function ReportTheftPage() {
               <option value="">Sélectionnez un bien</option>
               {items.map((item) => (
                 <option key={item.id} value={item.id}>
-                  {item.name} ({item.rcbpNumber})
+                  {item.name} ({item.rnbpNumber})
                 </option>
               ))}
             </select>

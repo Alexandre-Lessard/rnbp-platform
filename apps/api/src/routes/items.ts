@@ -1,11 +1,11 @@
 import type { FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { createItemSchema, updateItemSchema } from "@rcbp/shared";
+import { createItemSchema, updateItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { items, itemPhotos, itemDocuments } from "../db/schema.js";
 import { requireAuth } from "../middleware/auth.js";
-import { generateRcbpNumber } from "../utils/rcbp-number.js";
+import { generateRnbpNumber } from "../utils/rnbp-number.js";
 import { notFound, forbidden, badRequest } from "../utils/errors.js";
 
 const uuidSchema = z.string().uuid("Identifiant invalide");
@@ -37,7 +37,7 @@ export async function itemRoutes(app: FastifyInstance) {
       const body = createItemSchema.parse(request.body);
       const db = getDb();
 
-      const rcbpNumber = generateRcbpNumber();
+      const rnbpNumber = generateRnbpNumber();
 
       const [item] = await db
         .insert(items)
@@ -53,7 +53,7 @@ export async function itemRoutes(app: FastifyInstance) {
           purchaseDate: body.purchaseDate
             ? new Date(body.purchaseDate)
             : null,
-          rcbpNumber,
+          rnbpNumber,
         })
         .returning();
 
@@ -157,10 +157,10 @@ export async function itemRoutes(app: FastifyInstance) {
 
   // ── Public lookup ────────────────────────────────────────────────
 
-  app.get("/lookup/:rcbpNumber", {
+  app.get("/lookup/:rnbpNumber", {
     config: { rateLimit: { max: 30, timeWindow: "1 minute" } },
   }, async (request, reply) => {
-    const { rcbpNumber } = request.params as { rcbpNumber: string };
+    const { rnbpNumber } = request.params as { rnbpNumber: string };
     const db = getDb();
 
     const [item] = await db
@@ -171,7 +171,7 @@ export async function itemRoutes(app: FastifyInstance) {
         model: items.model,
       })
       .from(items)
-      .where(eq(items.rcbpNumber, rcbpNumber.toUpperCase()))
+      .where(eq(items.rnbpNumber, rnbpNumber.toUpperCase()))
       .limit(1);
 
     if (!item) {

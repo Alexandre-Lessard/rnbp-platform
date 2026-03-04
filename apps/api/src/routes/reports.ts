@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
-import { createReportSchema } from "@rcbp/shared";
+import { createReportSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { theftReports, items } from "../db/schema.js";
 import { requireAuth } from "../middleware/auth.js";

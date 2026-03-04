@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
-import { INSURERS } from "@rcbp/shared";
+import { INSURERS } from "@rnbp/shared";
 
 export function InsuranceFormSection() {
   const { t } = useLanguage();

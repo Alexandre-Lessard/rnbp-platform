@@ -43,7 +43,7 @@ export function LoginPage() {
         </h1>
         <p className="mt-2 text-[var(--rcb-text-muted)]">
           {t.auth?.loginDescription ??
-            "Connectez-vous à votre compte RCBP"}
+            "Connectez-vous à votre compte RNBP"}
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">

@@ -27,16 +27,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared package
-        run: pnpm --filter @rcbp/shared build
+        run: pnpm --filter @rnbp/shared build
 
       - name: Type-check API
-        run: pnpm --filter @rcbp/api exec tsc --noEmit
+        run: pnpm --filter @rnbp/api exec tsc --noEmit
 
       - name: Type-check web
-        run: pnpm --filter @rcbp/web exec tsc --noEmit
+        run: pnpm --filter @rnbp/web exec tsc --noEmit
 
       - name: Build web
-        run: pnpm --filter @rcbp/web build
+        run: pnpm --filter @rnbp/web build
 
   deploy-web:
     name: Deploy to Cloudflare Pages
@@ -60,7 +60,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm --filter @rcbp/shared build && pnpm --filter @rcbp/web build
+        run: pnpm --filter @rnbp/shared build && pnpm --filter @rnbp/web build
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
 
@@ -69,4 +69,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/web/dist --project-name=rcbp
+          command: pages deploy apps/web/dist --project-name=rnbp

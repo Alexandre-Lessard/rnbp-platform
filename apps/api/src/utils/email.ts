@@ -109,11 +109,11 @@ export function buildVerificationEmail(
 ): EmailPayload {
   return {
     to,
-    subject: "Vérifiez votre adresse courriel — RCBP",
+    subject: "Vérifiez votre adresse courriel — RNBP",
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Bonjour ${firstName},</h2>
-        <p>Merci de vous être inscrit au RCBP. Veuillez vérifier votre adresse courriel en cliquant sur le lien ci-dessous :</p>
+        <p>Merci de vous être inscrit au RNBP. Veuillez vérifier votre adresse courriel en cliquant sur le lien ci-dessous :</p>
         <p style="margin: 24px 0;">
           <a href="${verifyUrl}" style="background-color: #1a2e44; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block;">
             Vérifier mon courriel
@@ -122,7 +122,7 @@ export function buildVerificationEmail(
         <p>Ce lien expire dans 24 heures.</p>
         <p>Si vous n'avez pas créé de compte, ignorez ce courriel.</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
-        <p style="color: #888; font-size: 12px;">RCBP — Registre canadien des biens personnels</p>
+        <p style="color: #888; font-size: 12px;">RNBP — Registre canadien des biens personnels</p>
       </div>
     `,
   };
@@ -135,7 +135,7 @@ export function buildResetEmail(
 ): EmailPayload {
   return {
     to,
-    subject: "Réinitialisation de mot de passe — RCBP",
+    subject: "Réinitialisation de mot de passe — RNBP",
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Bonjour ${firstName},</h2>
@@ -148,7 +148,7 @@ export function buildResetEmail(
         <p>Ce lien expire dans 1 heure.</p>
         <p>Si vous n'avez pas demandé cette réinitialisation, ignorez ce courriel.</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
-        <p style="color: #888; font-size: 12px;">RCBP — Registre canadien des biens personnels</p>
+        <p style="color: #888; font-size: 12px;">RNBP — Registre canadien des biens personnels</p>
       </div>
     `,
   };

@@ -3,11 +3,11 @@ import { useLanguage } from "@/i18n/context";
 import { getButtonClasses } from "@/lib/button-styles";
 
 type RegistrationConfirmationProps = {
-  rcbpNumber: string;
+  rnbpNumber: string;
 };
 
 export function RegistrationConfirmation({
-  rcbpNumber,
+  rnbpNumber,
 }: RegistrationConfirmationProps) {
   const { t } = useLanguage();
   const reg = t.registration!;
@@ -29,10 +29,10 @@ export function RegistrationConfirmation({
 
       <div className="mt-8 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-6">
         <p className="text-sm font-medium text-[var(--rcb-text-muted)]">
-          {reg.rcbpNumberLabel}
+          {reg.rnbpNumberLabel}
         </p>
         <p className="mt-2 text-3xl font-bold tracking-wider text-[var(--rcb-primary)]">
-          {rcbpNumber}
+          {rnbpNumber}
         </p>
       </div>
 

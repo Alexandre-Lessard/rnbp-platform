@@ -1,28 +1,28 @@
 [Unit]
-Description=RCBP API Server
+Description=RNBP API Server
 After=network.target postgresql.service
 Requires=postgresql.service
 
 [Service]
 Type=simple
-User=rcbp
-Group=rcbp
-WorkingDirectory=/opt/rcbp/repo/apps/api
+User=rnbp
+Group=rnbp
+WorkingDirectory=/opt/rnbp/repo/apps/api
 ExecStart=/usr/bin/node dist/index.js
 Restart=always
 RestartSec=5
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=rcbp-api
+SyslogIdentifier=rnbp-api
 
 # Environment
-EnvironmentFile=/opt/rcbp/.env
+EnvironmentFile=/opt/rnbp/.env
 
 # Security hardening
 NoNewPrivileges=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/rcbp/uploads
+ReadWritePaths=/opt/rnbp/uploads
 PrivateTmp=true
 
 [Install]

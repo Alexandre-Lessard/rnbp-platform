@@ -13,7 +13,7 @@ export type Item = {
   estimatedValue: string | null;
   purchaseDate: string | null;
   status: ItemStatus;
-  rcbpNumber: string;
+  rnbpNumber: string;
   createdAt: string;
   updatedAt: string;
 };

@@ -26,7 +26,7 @@ type AccountData = {
   phone: string;
 };
 
-const STORAGE_KEY = "rcbp_registration_draft";
+const STORAGE_KEY = "rnbp_registration_draft";
 
 function loadDraft(): { item: ItemData; account: AccountData; termsAccepted: boolean } | null {
   try {
@@ -77,7 +77,7 @@ export function RegisterItemPage() {
   const [documents, setDocuments] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [rcbpNumber, setRcbpNumber] = useState("");
+  const [rnbpNumber, setRnbpNumber] = useState("");
 
   // Auth-aware: if logged in, only 2 steps
   const totalSteps = user ? 2 : 3;
@@ -107,13 +107,13 @@ export function RegisterItemPage() {
           : undefined,
       };
 
-      const res = await apiRequest<{ item: { rcbpNumber: string } }>(
+      const res = await apiRequest<{ item: { rnbpNumber: string } }>(
         "/items",
         { method: "POST", body },
       );
 
       clearDraft();
-      setRcbpNumber(res.item.rcbpNumber);
+      setRnbpNumber(res.item.rnbpNumber);
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur");
@@ -128,7 +128,7 @@ export function RegisterItemPage() {
 
     try {
       const res = await apiRequest<{
-        item: { rcbpNumber: string };
+        item: { rnbpNumber: string };
         accessToken: string;
         refreshToken: string;
       }>("/auth/register-with-item", {
@@ -163,7 +163,7 @@ export function RegisterItemPage() {
       await refreshAuth();
 
       clearDraft();
-      setRcbpNumber(res.item.rcbpNumber);
+      setRnbpNumber(res.item.rnbpNumber);
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur");
@@ -173,10 +173,10 @@ export function RegisterItemPage() {
   }, [accountData, itemData, totalSteps, refreshAuth]);
 
   // Confirmation screen
-  if (rcbpNumber) {
+  if (rnbpNumber) {
     return (
       <section className="section-shell py-16">
-        <RegistrationConfirmation rcbpNumber={rcbpNumber} />
+        <RegistrationConfirmation rnbpNumber={rnbpNumber} />
       </section>
     );
   }

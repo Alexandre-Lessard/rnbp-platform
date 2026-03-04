@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
-import { ITEM_CATEGORIES } from "@rcbp/shared";
+import { ITEM_CATEGORIES } from "@rnbp/shared";
 
 type ItemData = {
   name: string;

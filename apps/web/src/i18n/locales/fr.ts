@@ -2,9 +2,9 @@ import type { SiteContent } from "@/types/content";
 
 const fr: SiteContent = {
   meta: {
-    title: "Registre canadien des biens personnels",
+    title: "Registre national des biens personnels",
     description:
-      "Registre canadien des biens personnels \u2014 prot\u00e9gez et retrouvez vos biens de valeur.",
+      "Registre national des biens personnels \u2014 prot\u00e9gez et retrouvez vos biens de valeur.",
   },
   nav: {
     items: [
@@ -89,10 +89,10 @@ const fr: SiteContent = {
     ],
   },
   rollingRegistry: {
-    headingLine1: "Le Registre canadien",
+    headingLine1: "Le Registre national",
     headingLine2: "des biens personnels",
     description:
-      "Le RCBP couvre plus de 48 cat\u00e9gories de biens, incluant le mat\u00e9riel roulant, l\u2019\u00e9lectronique, les outils sp\u00e9cialis\u00e9s et d\u2019autres articles de valeur.",
+      "Le RNBP couvre plus de 48 cat\u00e9gories de biens, incluant le mat\u00e9riel roulant, l\u2019\u00e9lectronique, les outils sp\u00e9cialis\u00e9s et d\u2019autres articles de valeur.",
     tagline:
       "Une preuve claire de propri\u00e9t\u00e9, au m\u00eame endroit.",
     imageAlt: "Tracteur \u00e0 gazon",
@@ -101,7 +101,7 @@ const fr: SiteContent = {
   allCategories: {
     heading: "48 cat\u00e9gories de biens admissibles",
     description:
-      "Le RCBP vous permet d\u2019enregistrer tout bien personnel d\u2019une valeur de plus de 1\u00a0000\u00a0$.",
+      "Le RNBP vous permet d\u2019enregistrer tout bien personnel d\u2019une valeur de plus de 1\u00a0000\u00a0$.",
     toggleButton: "Afficher les cat\u00e9gories",
     items: [
       "V\u00e9lo \u00e9lectrique",
@@ -206,7 +206,7 @@ const fr: SiteContent = {
       {
         question: "Mes donn\u00e9es sont-elles prot\u00e9g\u00e9es\u00a0?",
         answer:
-          "Oui. Le RCBP respecte les lois f\u00e9d\u00e9rales sur la protection des donn\u00e9es. Vos informations personnelles ne sont jamais vendues ni partag\u00e9es sans consentement.",
+          "Oui. Le RNBP respecte les lois f\u00e9d\u00e9rales sur la protection des donn\u00e9es. Vos informations personnelles ne sont jamais vendues ni partag\u00e9es sans consentement.",
       },
       {
         question:
@@ -230,7 +230,7 @@ const fr: SiteContent = {
         question:
           "Pourquoi le registre est-il n\u00e9cessaire\u00a0?",
         answer:
-          "Chaque ann\u00e9e, des milliers de biens sont perdus ou vol\u00e9s au Canada, et la majorit\u00e9 ne sont jamais retrouv\u00e9s. Sans preuve centralis\u00e9e de propri\u00e9t\u00e9, il est difficile pour la police d\u2019identifier un propri\u00e9taire et pour les assureurs de traiter efficacement une r\u00e9clamation. Le RCBP cr\u00e9e une preuve officielle, s\u00e9curis\u00e9e et dat\u00e9e de vos biens \u2014 num\u00e9ro de s\u00e9rie, photos, preuves d\u2019achat \u2014 dans un dossier unique. Il transforme un objet anonyme en bien identifiable, rend la revente de biens vol\u00e9s beaucoup plus difficile et acc\u00e9l\u00e8re vos d\u00e9marches de restitution.",
+          "Chaque ann\u00e9e, des milliers de biens sont perdus ou vol\u00e9s au Canada, et la majorit\u00e9 ne sont jamais retrouv\u00e9s. Sans preuve centralis\u00e9e de propri\u00e9t\u00e9, il est difficile pour la police d\u2019identifier un propri\u00e9taire et pour les assureurs de traiter efficacement une r\u00e9clamation. Le RNBP cr\u00e9e une preuve officielle, s\u00e9curis\u00e9e et dat\u00e9e de vos biens \u2014 num\u00e9ro de s\u00e9rie, photos, preuves d\u2019achat \u2014 dans un dossier unique. Il transforme un objet anonyme en bien identifiable, rend la revente de biens vol\u00e9s beaucoup plus difficile et acc\u00e9l\u00e8re vos d\u00e9marches de restitution.",
       },
     ],
   },
@@ -244,7 +244,7 @@ const fr: SiteContent = {
     termsOfUse: "Conditions d\u2019utilisation",
     cookieSettings: "Param\u00e8tres de cookies",
     copyright:
-      "\u00a9 {{year}} Registre canadien des biens personnels. Tous droits r\u00e9serv\u00e9s.",
+      "\u00a9 {{year}} Registre national des biens personnels. Tous droits r\u00e9serv\u00e9s.",
   },
   buttons: {
     registerItem: "Enregistrer un bien",
@@ -256,11 +256,11 @@ const fr: SiteContent = {
     skipToContent: "Aller au contenu principal",
     mainNav: "Navigation principale",
     mobileNav: "Navigation mobile",
-    logoAlt: "RCBP",
+    logoAlt: "RNBP",
   },
   auth: {
     loginHeading: "Connexion",
-    loginDescription: "Connectez-vous à votre compte RCBP",
+    loginDescription: "Connectez-vous à votre compte RNBP",
     registerHeading: "Créer un compte",
     registerDescription: "Inscrivez-vous pour enregistrer vos biens",
     emailLabel: "Courriel",
@@ -287,7 +287,7 @@ const fr: SiteContent = {
   },
   registration: {
     heading: "Enregistrer un bien",
-    description: "Remplissez le formulaire pour enregistrer votre bien dans le RCBP.",
+    description: "Remplissez le formulaire pour enregistrer votre bien dans le RNBP.",
     step1Title: "Informations du bien",
     step2Title: "Photos et documents",
     step3Title: "Créer votre compte",
@@ -309,8 +309,8 @@ const fr: SiteContent = {
     documentsDescription: "Preuve d'achat, certificat d'authenticité (optionnel).",
     confirmButton: "Confirmer l'enregistrement",
     successHeading: "Bien enregistré avec succès !",
-    successDescription: "Votre bien a été enregistré dans le RCBP. Conservez votre numéro RCBP.",
-    rcbpNumberLabel: "Votre numéro RCBP",
+    successDescription: "Votre bien a été enregistré dans le RNBP. Conservez votre numéro RNBP.",
+    rnbpNumberLabel: "Votre numéro RNBP",
     goToDashboard: "Voir mon tableau de bord",
   },
   report: {
@@ -319,8 +319,8 @@ const fr: SiteContent = {
   },
   lookup: {
     heading: "Vérifier un bien",
-    description: "Entrez un numéro RCBP pour vérifier le statut d'un bien.",
-    inputPlaceholder: "RCBP-XXXXXXXX",
+    description: "Entrez un numéro RNBP pour vérifier le statut d'un bien.",
+    inputPlaceholder: "RNBP-XXXXXXXX",
     searchButton: "Vérifier",
     searching: "Recherche...",
     foundMessage: "Bien trouvé dans le registre",
@@ -328,28 +328,28 @@ const fr: SiteContent = {
     notFoundMessage: "Aucun bien trouvé avec ce numéro.",
   },
   partners: {
-    heading: "Devenez partenaire du RCBP",
-    description: "Le Registre canadien des biens personnels collabore avec des assureurs, des détaillants et des organismes de sécurité publique à travers le Canada. Ensemble, nous protégeons les biens de valeur des Canadiens et facilitons leur restitution.",
+    heading: "Devenez partenaire du RNBP",
+    description: "Le Registre national des biens personnels collabore avec des assureurs, des détaillants et des organismes de sécurité publique à travers le Canada. Ensemble, nous protégeons les biens de valeur des Canadiens et facilitons leur restitution.",
     whyPartner: "Pourquoi devenir partenaire ?",
     benefits: [
-      "Accès au réseau de vérification RCBP pour authentifier les biens de vos clients",
+      "Accès au réseau de vérification RNBP pour authentifier les biens de vos clients",
       "Visibilité auprès de milliers de propriétaires de biens enregistrés",
       "Réduction des fraudes grâce à la traçabilité des biens de valeur",
-      "Intégration API pour connecter vos systèmes au registre RCBP",
+      "Intégration API pour connecter vos systèmes au registre RNBP",
       "Programme de rabais co-marqué pour fidéliser vos assurés",
     ],
     ctaHeading: "Intéressé à rejoindre le réseau ?",
     ctaDescription: "Contactez notre équipe de partenariats pour discuter des possibilités de collaboration adaptées à votre entreprise.",
     ctaButton: "Nous contacter",
-    contactEmail: "partenaires@rcbp.ca",
+    contactEmail: "partenaires@rnbp.ca",
   },
   insurance: {
     heading: "Obtenez un rabais sur votre assurance",
-    description: "La plupart des assureurs offrent un rabais aux membres du RCBP. Sélectionnez votre assureur et contactez-le pour vérifier si vous êtes éligible.",
+    description: "La plupart des assureurs offrent un rabais aux membres du RNBP. Sélectionnez votre assureur et contactez-le pour vérifier si vous êtes éligible.",
     selectLabel: "Votre assureur",
     selectPlaceholder: "Sélectionnez votre assureur",
     messageLabel: "Message pré-rempli",
-    messageTemplate: "Bonjour {{insurer}}, je viens d'inscrire mes biens de valeur sur le RCBP (Registre canadien des biens personnels). J'aimerais vérifier avec vous si je suis éligible à un rabais sur mon assurance maison.",
+    messageTemplate: "Bonjour {{insurer}}, je viens d'inscrire mes biens de valeur sur le RNBP (Registre national des biens personnels). J'aimerais vérifier avec vous si je suis éligible à un rabais sur mon assurance maison.",
     sendButton: "Copier le message",
     copiedToast: "Message copié ! Envoyez-le à votre assureur.",
   },
@@ -358,7 +358,7 @@ const fr: SiteContent = {
     privacyContent: [
       {
         title: "1. Collecte de renseignements personnels",
-        body: "Le RCBP recueille uniquement les renseignements nécessaires à la création de votre compte et à l'enregistrement de vos biens : nom, adresse courriel, numéro de téléphone (facultatif), ainsi que les informations descriptives de vos biens (catégorie, marque, modèle, numéro de série, photos). Ces renseignements sont fournis volontairement lors de votre inscription.",
+        body: "Le RNBP recueille uniquement les renseignements nécessaires à la création de votre compte et à l'enregistrement de vos biens : nom, adresse courriel, numéro de téléphone (facultatif), ainsi que les informations descriptives de vos biens (catégorie, marque, modèle, numéro de série, photos). Ces renseignements sont fournis volontairement lors de votre inscription.",
       },
       {
         title: "2. Utilisation des renseignements",
@@ -374,11 +374,11 @@ const fr: SiteContent = {
       },
       {
         title: "5. Vérification publique",
-        body: "La fonction de vérification publique (recherche par numéro RCBP) ne divulgue aucune information personnelle sur le propriétaire. Seul le statut du bien (enregistré, déclaré volé) est affiché.",
+        body: "La fonction de vérification publique (recherche par numéro RNBP) ne divulgue aucune information personnelle sur le propriétaire. Seul le statut du bien (enregistré, déclaré volé) est affiché.",
       },
       {
         title: "6. Cookies et technologies similaires",
-        body: "Le RCBP utilise des cookies strictement nécessaires au fonctionnement du site (authentification, préférences linguistiques). Aucun cookie de suivi publicitaire ou d'analyse tiers n'est utilisé.",
+        body: "Le RNBP utilise des cookies strictement nécessaires au fonctionnement du site (authentification, préférences linguistiques). Aucun cookie de suivi publicitaire ou d'analyse tiers n'est utilisé.",
       },
       {
         title: "7. Modifications",
@@ -386,18 +386,18 @@ const fr: SiteContent = {
       },
       {
         title: "8. Contact",
-        body: "Pour toute question relative à la protection de vos renseignements personnels, contactez-nous à confidentialite@rcbp.ca.",
+        body: "Pour toute question relative à la protection de vos renseignements personnels, contactez-nous à confidentialite@rnbp.ca.",
       },
     ],
     termsHeading: "Conditions d'utilisation",
     termsContent: [
       {
         title: "1. Acceptation des conditions",
-        body: "En utilisant le site et les services du Registre canadien des biens personnels (RCBP), vous acceptez d'être lié par les présentes conditions d'utilisation. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.",
+        body: "En utilisant le site et les services du Registre national des biens personnels (RNBP), vous acceptez d'être lié par les présentes conditions d'utilisation. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.",
       },
       {
         title: "2. Description du service",
-        body: "Le RCBP offre un service gratuit d'enregistrement de biens personnels de valeur. Le registre permet aux utilisateurs de documenter leurs biens, de déclarer des vols et de vérifier le statut d'un bien à l'aide de son numéro RCBP unique. Le service est offert « tel quel » et le RCBP ne garantit pas la récupération d'un bien perdu ou volé.",
+        body: "Le RNBP offre un service gratuit d'enregistrement de biens personnels de valeur. Le registre permet aux utilisateurs de documenter leurs biens, de déclarer des vols et de vérifier le statut d'un bien à l'aide de son numéro RNBP unique. Le service est offert « tel quel » et le RNBP ne garantit pas la récupération d'un bien perdu ou volé.",
       },
       {
         title: "3. Inscription et compte",
@@ -405,23 +405,23 @@ const fr: SiteContent = {
       },
       {
         title: "4. Enregistrement de biens",
-        body: "Vous ne pouvez enregistrer que des biens dont vous êtes le propriétaire légitime. L'enregistrement d'un bien ne constitue pas une preuve de propriété au sens juridique. Il est interdit d'enregistrer des biens volés, contrefaits ou illégaux. Le RCBP se réserve le droit de supprimer tout enregistrement frauduleux.",
+        body: "Vous ne pouvez enregistrer que des biens dont vous êtes le propriétaire légitime. L'enregistrement d'un bien ne constitue pas une preuve de propriété au sens juridique. Il est interdit d'enregistrer des biens volés, contrefaits ou illégaux. Le RNBP se réserve le droit de supprimer tout enregistrement frauduleux.",
       },
       {
         title: "5. Déclaration de vol",
-        body: "En déclarant un bien comme volé sur le RCBP, vous attestez que cette déclaration est véridique. Les fausses déclarations de vol sont interdites et peuvent entraîner la suspension de votre compte ainsi que des poursuites légales. Nous vous encourageons à déposer également un rapport auprès de votre service de police local.",
+        body: "En déclarant un bien comme volé sur le RNBP, vous attestez que cette déclaration est véridique. Les fausses déclarations de vol sont interdites et peuvent entraîner la suspension de votre compte ainsi que des poursuites légales. Nous vous encourageons à déposer également un rapport auprès de votre service de police local.",
       },
       {
         title: "6. Contenu utilisateur",
-        body: "Vous conservez la propriété des photos et documents que vous téléversez. En les soumettant, vous accordez au RCBP une licence non exclusive d'utilisation pour le fonctionnement du service. Vous garantissez que le contenu téléversé ne viole aucun droit de propriété intellectuelle ni aucune loi applicable.",
+        body: "Vous conservez la propriété des photos et documents que vous téléversez. En les soumettant, vous accordez au RNBP une licence non exclusive d'utilisation pour le fonctionnement du service. Vous garantissez que le contenu téléversé ne viole aucun droit de propriété intellectuelle ni aucune loi applicable.",
       },
       {
         title: "7. Limitation de responsabilité",
-        body: "Le RCBP ne peut être tenu responsable de tout dommage direct, indirect ou consécutif résultant de l'utilisation ou de l'impossibilité d'utiliser le service. Le RCBP ne garantit pas la disponibilité ininterrompue du service et ne peut être tenu responsable des pertes de données dues à des circonstances hors de son contrôle.",
+        body: "Le RNBP ne peut être tenu responsable de tout dommage direct, indirect ou consécutif résultant de l'utilisation ou de l'impossibilité d'utiliser le service. Le RNBP ne garantit pas la disponibilité ininterrompue du service et ne peut être tenu responsable des pertes de données dues à des circonstances hors de son contrôle.",
       },
       {
         title: "8. Résiliation",
-        body: "Vous pouvez fermer votre compte à tout moment. Le RCBP se réserve le droit de suspendre ou de fermer un compte en cas de violation des présentes conditions, sans préavis.",
+        body: "Vous pouvez fermer votre compte à tout moment. Le RNBP se réserve le droit de suspendre ou de fermer un compte en cas de violation des présentes conditions, sans préavis.",
       },
       {
         title: "9. Loi applicable",
@@ -429,7 +429,7 @@ const fr: SiteContent = {
       },
       {
         title: "10. Modifications",
-        body: "Le RCBP se réserve le droit de modifier les présentes conditions à tout moment. Les modifications entreront en vigueur dès leur publication sur le site. L'utilisation continue du service après une modification constitue votre acceptation des nouvelles conditions.",
+        body: "Le RNBP se réserve le droit de modifier les présentes conditions à tout moment. Les modifications entreront en vigueur dès leur publication sur le site. L'utilisation continue du service après une modification constitue votre acceptation des nouvelles conditions.",
       },
     ],
   },

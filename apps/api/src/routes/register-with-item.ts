@@ -1,12 +1,12 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
-import { registerSchema, createItemSchema } from "@rcbp/shared";
+import { registerSchema, createItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { users, items, sessions } from "../db/schema.js";
 import { hashPassword } from "../utils/password.js";
 import { signAccessToken, signRefreshToken, hashToken } from "../utils/tokens.js";
-import { generateRcbpNumber } from "../utils/rcbp-number.js";
+import { generateRnbpNumber } from "../utils/rnbp-number.js";
 import { conflict } from "../utils/errors.js";
 import {
   sendEmail,
@@ -27,7 +27,7 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
     const db = getDb();
 
     const passwordHash = await hashPassword(body.account.password);
-    const rcbpNumber = generateRcbpNumber();
+    const rnbpNumber = generateRnbpNumber();
 
     // Atomic transaction: check uniqueness + create user + item (prevents TOCTOU)
     const result = await db.transaction(async (tx) => {
@@ -74,7 +74,7 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
           purchaseDate: body.item.purchaseDate
             ? new Date(body.item.purchaseDate)
             : null,
-          rcbpNumber,
+          rnbpNumber,
         })
         .returning();
 

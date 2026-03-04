@@ -13,7 +13,7 @@ type LookupResult = {
 
 export function LookupPage() {
   const { t } = useLanguage();
-  const [rcbpNumber, setRcbpNumber] = useState("");
+  const [rnbpNumber, setRnbpNumber] = useState("");
   const [result, setResult] = useState<LookupResult | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ export function LookupPage() {
 
     try {
       const data = await apiRequest<LookupResult>(
-        `/lookup/${encodeURIComponent(rcbpNumber.trim())}`,
+        `/lookup/${encodeURIComponent(rnbpNumber.trim())}`,
       );
       setResult(data);
     } catch (err) {
@@ -48,7 +48,7 @@ export function LookupPage() {
         </h1>
         <p className="mt-2 text-[var(--rcb-text-muted)]">
           {t.lookup?.description ??
-            "Entrez un numéro RCBP pour vérifier le statut d'un bien."}
+            "Entrez un numéro RNBP pour vérifier le statut d'un bien."}
         </p>
 
         <form
@@ -57,9 +57,9 @@ export function LookupPage() {
         >
           <input
             type="text"
-            placeholder={t.lookup?.inputPlaceholder ?? "RCBP-XXXXXXXX"}
-            value={rcbpNumber}
-            onChange={(e) => setRcbpNumber(e.target.value.toUpperCase())}
+            placeholder={t.lookup?.inputPlaceholder ?? "RNBP-XXXXXXXX"}
+            value={rnbpNumber}
+            onChange={(e) => setRnbpNumber(e.target.value.toUpperCase())}
             className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-center text-lg tracking-wider text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none sm:max-w-xs"
           />
           <Button type="submit" disabled={loading} className="cursor-pointer disabled:opacity-50">

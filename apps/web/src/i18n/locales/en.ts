@@ -2,9 +2,9 @@ import type { SiteContent } from "@/types/content";
 
 const en: SiteContent = {
   meta: {
-    title: "Canadian Personal Property Registry",
+    title: "National Registry of Personal Property",
     description:
-      "Canadian Personal Property Registry \u2014 protect and recover your valuable belongings.",
+      "National Registry of Personal Property \u2014 protect and recover your valuable belongings.",
   },
   nav: {
     items: [
@@ -92,7 +92,7 @@ const en: SiteContent = {
     headingLine1: "The Canadian",
     headingLine2: "Personal Property Registry",
     description:
-      "The CPPR covers over 48 categories of items, including rolling stock, electronics, specialized tools and other valuable articles.",
+      "The NRPP covers over 48 categories of items, including rolling stock, electronics, specialized tools and other valuable articles.",
     tagline: "Clear proof of ownership, all in one place.",
     imageAlt: "Riding lawn mower",
     viewCategoriesLink: "View item categories",
@@ -100,7 +100,7 @@ const en: SiteContent = {
   allCategories: {
     heading: "48 eligible item categories",
     description:
-      "The CPPR lets you register any personal property valued over $1,000.",
+      "The NRPP lets you register any personal property valued over $1,000.",
     toggleButton: "Show categories",
     items: [
       "Electric Bicycle",
@@ -204,7 +204,7 @@ const en: SiteContent = {
       {
         question: "Is my data protected?",
         answer:
-          "Yes. The CPPR complies with federal data protection laws. Your personal information is never sold or shared without consent.",
+          "Yes. The NRPP complies with federal data protection laws. Your personal information is never sold or shared without consent.",
       },
       {
         question: "How long does registration take?",
@@ -224,7 +224,7 @@ const en: SiteContent = {
       {
         question: "Why is the registry necessary?",
         answer:
-          "Every year, thousands of items are lost or stolen in Canada, and the majority are never recovered. Without centralized proof of ownership, it is difficult for police to identify an owner and for insurers to process a claim efficiently. The CPPR creates an official, secure and dated record of your belongings \u2014 serial number, photos, proof of purchase \u2014 in a single file. It turns an anonymous object into an identifiable asset, makes reselling stolen goods much harder, and speeds up your recovery process.",
+          "Every year, thousands of items are lost or stolen in Canada, and the majority are never recovered. Without centralized proof of ownership, it is difficult for police to identify an owner and for insurers to process a claim efficiently. The NRPP creates an official, secure and dated record of your belongings \u2014 serial number, photos, proof of purchase \u2014 in a single file. It turns an anonymous object into an identifiable asset, makes reselling stolen goods much harder, and speeds up your recovery process.",
       },
     ],
   },
@@ -238,7 +238,7 @@ const en: SiteContent = {
     termsOfUse: "Terms of Use",
     cookieSettings: "Cookie Settings",
     copyright:
-      "\u00a9 {{year}} Canadian Personal Property Registry. All rights reserved.",
+      "\u00a9 {{year}} National Registry of Personal Property. All rights reserved.",
   },
   buttons: {
     registerItem: "Register an item",
@@ -250,11 +250,11 @@ const en: SiteContent = {
     skipToContent: "Skip to main content",
     mainNav: "Main navigation",
     mobileNav: "Mobile navigation",
-    logoAlt: "CPPR",
+    logoAlt: "NRPP",
   },
   auth: {
     loginHeading: "Login",
-    loginDescription: "Sign in to your CPPR account",
+    loginDescription: "Sign in to your NRPP account",
     registerHeading: "Create an account",
     registerDescription: "Sign up to register your belongings",
     emailLabel: "Email",
@@ -281,7 +281,7 @@ const en: SiteContent = {
   },
   registration: {
     heading: "Register an item",
-    description: "Fill out the form to register your item in the CPPR.",
+    description: "Fill out the form to register your item in the NRPP.",
     step1Title: "Item information",
     step2Title: "Photos and documents",
     step3Title: "Create your account",
@@ -303,8 +303,8 @@ const en: SiteContent = {
     documentsDescription: "Proof of purchase, certificate of authenticity (optional).",
     confirmButton: "Confirm registration",
     successHeading: "Item registered successfully!",
-    successDescription: "Your item has been registered in the CPPR. Keep your CPPR number.",
-    rcbpNumberLabel: "Your CPPR number",
+    successDescription: "Your item has been registered in the NRPP. Keep your NRPP number.",
+    rnbpNumberLabel: "Your NRPP number",
     goToDashboard: "Go to dashboard",
   },
   report: {
@@ -313,8 +313,8 @@ const en: SiteContent = {
   },
   lookup: {
     heading: "Verify an item",
-    description: "Enter a CPPR number to check an item's status.",
-    inputPlaceholder: "RCBP-XXXXXXXX",
+    description: "Enter a NRPP number to check an item's status.",
+    inputPlaceholder: "RNBP-XXXXXXXX",
     searchButton: "Verify",
     searching: "Searching...",
     foundMessage: "Item found in the registry",
@@ -322,28 +322,28 @@ const en: SiteContent = {
     notFoundMessage: "No item found with this number.",
   },
   partners: {
-    heading: "Become a CPPR Partner",
-    description: "The Canadian Personal Property Registry collaborates with insurers, retailers and public safety organizations across Canada. Together, we protect Canadians' valuable belongings and facilitate their recovery.",
+    heading: "Become a NRPP Partner",
+    description: "The National Registry of Personal Property collaborates with insurers, retailers and public safety organizations across Canada. Together, we protect Canadians' valuable belongings and facilitate their recovery.",
     whyPartner: "Why become a partner?",
     benefits: [
-      "Access the CPPR verification network to authenticate your clients' belongings",
+      "Access the NRPP verification network to authenticate your clients' belongings",
       "Visibility among thousands of registered property owners",
       "Reduce fraud through valuable property traceability",
-      "API integration to connect your systems to the CPPR registry",
+      "API integration to connect your systems to the NRPP registry",
       "Co-branded discount program to retain your insureds",
     ],
     ctaHeading: "Interested in joining the network?",
     ctaDescription: "Contact our partnerships team to discuss collaboration opportunities tailored to your business.",
     ctaButton: "Contact us",
-    contactEmail: "partners@rcbp.ca",
+    contactEmail: "partners@rnbp.ca",
   },
   insurance: {
     heading: "Get a discount on your insurance",
-    description: "Most insurers offer a discount to CPPR members. Select your insurer and contact them to check if you're eligible.",
+    description: "Most insurers offer a discount to NRPP members. Select your insurer and contact them to check if you're eligible.",
     selectLabel: "Your insurer",
     selectPlaceholder: "Select your insurer",
     messageLabel: "Pre-filled message",
-    messageTemplate: "Hello {{insurer}}, I have just registered my valuable belongings on the CPPR (Canadian Personal Property Registry). I would like to check with you if I am eligible for a discount on my home insurance.",
+    messageTemplate: "Hello {{insurer}}, I have just registered my valuable belongings on the NRPP (National Registry of Personal Property). I would like to check with you if I am eligible for a discount on my home insurance.",
     sendButton: "Copy message",
     copiedToast: "Message copied! Send it to your insurer.",
   },
@@ -352,7 +352,7 @@ const en: SiteContent = {
     privacyContent: [
       {
         title: "1. Collection of Personal Information",
-        body: "The CPPR collects only the information necessary to create your account and register your belongings: name, email address, phone number (optional), and descriptive information about your property (category, brand, model, serial number, photos). This information is provided voluntarily during registration.",
+        body: "The NRPP collects only the information necessary to create your account and register your belongings: name, email address, phone number (optional), and descriptive information about your property (category, brand, model, serial number, photos). This information is provided voluntarily during registration.",
       },
       {
         title: "2. Use of Information",
@@ -368,11 +368,11 @@ const en: SiteContent = {
       },
       {
         title: "5. Public Verification",
-        body: "The public verification feature (search by CPPR number) does not disclose any personal information about the owner. Only the property status (registered, reported stolen) is displayed.",
+        body: "The public verification feature (search by NRPP number) does not disclose any personal information about the owner. Only the property status (registered, reported stolen) is displayed.",
       },
       {
         title: "6. Cookies and Similar Technologies",
-        body: "The CPPR uses only strictly necessary cookies for site functionality (authentication, language preferences). No advertising tracking or third-party analytics cookies are used.",
+        body: "The NRPP uses only strictly necessary cookies for site functionality (authentication, language preferences). No advertising tracking or third-party analytics cookies are used.",
       },
       {
         title: "7. Changes",
@@ -380,18 +380,18 @@ const en: SiteContent = {
       },
       {
         title: "8. Contact",
-        body: "For any questions regarding the protection of your personal information, contact us at privacy@rcbp.ca.",
+        body: "For any questions regarding the protection of your personal information, contact us at privacy@rnbp.ca.",
       },
     ],
     termsHeading: "Terms of Service",
     termsContent: [
       {
         title: "1. Acceptance of Terms",
-        body: "By using the Canadian Personal Property Registry (CPPR) website and services, you agree to be bound by these terms of service. If you do not accept these terms, please do not use our services.",
+        body: "By using the National Registry of Personal Property (NRPP) website and services, you agree to be bound by these terms of service. If you do not accept these terms, please do not use our services.",
       },
       {
         title: "2. Description of Service",
-        body: "The CPPR offers a free registration service for valuable personal property. The registry allows users to document their belongings, report thefts and verify the status of property using its unique CPPR number. The service is provided \"as is\" and the CPPR does not guarantee recovery of lost or stolen property.",
+        body: "The NRPP offers a free registration service for valuable personal property. The registry allows users to document their belongings, report thefts and verify the status of property using its unique NRPP number. The service is provided \"as is\" and the NRPP does not guarantee recovery of lost or stolen property.",
       },
       {
         title: "3. Registration and Account",
@@ -399,23 +399,23 @@ const en: SiteContent = {
       },
       {
         title: "4. Property Registration",
-        body: "You may only register property that you legitimately own. Registration of property does not constitute proof of ownership in a legal sense. It is prohibited to register stolen, counterfeit or illegal property. The CPPR reserves the right to remove any fraudulent registration.",
+        body: "You may only register property that you legitimately own. Registration of property does not constitute proof of ownership in a legal sense. It is prohibited to register stolen, counterfeit or illegal property. The NRPP reserves the right to remove any fraudulent registration.",
       },
       {
         title: "5. Theft Reporting",
-        body: "By reporting property as stolen on the CPPR, you attest that this declaration is truthful. False theft reports are prohibited and may result in account suspension as well as legal prosecution. We encourage you to also file a report with your local police service.",
+        body: "By reporting property as stolen on the NRPP, you attest that this declaration is truthful. False theft reports are prohibited and may result in account suspension as well as legal prosecution. We encourage you to also file a report with your local police service.",
       },
       {
         title: "6. User Content",
-        body: "You retain ownership of the photos and documents you upload. By submitting them, you grant the CPPR a non-exclusive license to use them for the operation of the service. You warrant that uploaded content does not violate any intellectual property rights or applicable laws.",
+        body: "You retain ownership of the photos and documents you upload. By submitting them, you grant the NRPP a non-exclusive license to use them for the operation of the service. You warrant that uploaded content does not violate any intellectual property rights or applicable laws.",
       },
       {
         title: "7. Limitation of Liability",
-        body: "The CPPR shall not be held liable for any direct, indirect or consequential damages resulting from the use or inability to use the service. The CPPR does not guarantee uninterrupted availability of the service and cannot be held liable for data loss due to circumstances beyond its control.",
+        body: "The NRPP shall not be held liable for any direct, indirect or consequential damages resulting from the use or inability to use the service. The NRPP does not guarantee uninterrupted availability of the service and cannot be held liable for data loss due to circumstances beyond its control.",
       },
       {
         title: "8. Termination",
-        body: "You may close your account at any time. The CPPR reserves the right to suspend or close an account for violation of these terms, without prior notice.",
+        body: "You may close your account at any time. The NRPP reserves the right to suspend or close an account for violation of these terms, without prior notice.",
       },
       {
         title: "9. Governing Law",
@@ -423,7 +423,7 @@ const en: SiteContent = {
       },
       {
         title: "10. Changes",
-        body: "The CPPR reserves the right to modify these terms at any time. Changes will take effect upon publication on the site. Continued use of the service after a change constitutes your acceptance of the new terms.",
+        body: "The NRPP reserves the right to modify these terms at any time. Changes will take effect upon publication on the site. Continued use of the service after a change constitutes your acceptance of the new terms.",
       },
     ],
   },

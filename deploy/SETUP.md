@@ -1,4 +1,4 @@
-# RCBP Deployment Guide — Debian Server
+# RNBP Deployment Guide — Debian Server
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@
 
 ```bash
 # Create system user
-sudo useradd --system --shell /bin/bash --create-home -d /opt/rcbp rcbp
+sudo useradd --system --shell /bin/bash --create-home -d /opt/rnbp rnbp
 
 # Install Node.js 20
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -37,25 +37,25 @@ sudo ufw enable
 ## 2. Database
 
 ```bash
-sudo -u postgres createuser rcbp
-sudo -u postgres createdb rcbp_production -O rcbp
-sudo -u postgres psql -c "ALTER USER rcbp WITH PASSWORD 'your_secure_password';"
+sudo -u postgres createuser rnbp
+sudo -u postgres createdb rnbp_production -O rnbp
+sudo -u postgres psql -c "ALTER USER rnbp WITH PASSWORD 'your_secure_password';"
 ```
 
 ## 3. Application
 
 ```bash
 # Clone and build
-sudo -u rcbp git clone <repo-url> /opt/rcbp/repo
-cd /opt/rcbp/repo
-sudo -u rcbp pnpm install --frozen-lockfile
-sudo -u rcbp pnpm --filter @rcbp/shared build
-sudo -u rcbp pnpm --filter @rcbp/api build
+sudo -u rnbp git clone <repo-url> /opt/rnbp/repo
+cd /opt/rnbp/repo
+sudo -u rnbp pnpm install --frozen-lockfile
+sudo -u rnbp pnpm --filter @rnbp/shared build
+sudo -u rnbp pnpm --filter @rnbp/api build
 
 # Environment
-sudo cp /opt/rcbp/repo/.env.example /opt/rcbp/.env
-sudo chown rcbp:rcbp /opt/rcbp/.env
-sudo chmod 600 /opt/rcbp/.env
+sudo cp /opt/rnbp/repo/.env.example /opt/rnbp/.env
+sudo chown rnbp:rnbp /opt/rnbp/.env
+sudo chmod 600 /opt/rnbp/.env
 # Edit .env with production values (DATABASE_URL, JWT keys, etc.)
 
 # Generate JWT Ed25519 keys
@@ -66,33 +66,33 @@ echo "JWT_PUBLIC_KEY=$(base64 -w 0 /tmp/ed25519_public.pem)"
 rm /tmp/ed25519_private.pem /tmp/ed25519_public.pem
 
 # Run migrations
-cd /opt/rcbp/repo/apps/api
-sudo -u rcbp pnpm db:push
+cd /opt/rnbp/repo/apps/api
+sudo -u rnbp pnpm db:push
 
 # Create uploads directory
-sudo mkdir -p /opt/rcbp/uploads
-sudo chown rcbp:rcbp /opt/rcbp/uploads
+sudo mkdir -p /opt/rnbp/uploads
+sudo chown rnbp:rnbp /opt/rnbp/uploads
 ```
 
 ## 4. systemd
 
 ```bash
-sudo cp /opt/rcbp/repo/deploy/rcbp-api.service /etc/systemd/system/
+sudo cp /opt/rnbp/repo/deploy/rnbp-api.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable rcbp-api
-sudo systemctl start rcbp-api
-sudo systemctl status rcbp-api
+sudo systemctl enable rnbp-api
+sudo systemctl start rnbp-api
+sudo systemctl status rnbp-api
 ```
 
 ## 5. nginx + TLS
 
 ```bash
 # Get certificate
-sudo certbot certonly --nginx -d api.rcbp.ca
+sudo certbot certonly --nginx -d api.rnbp.ca
 
 # Install config
-sudo cp /opt/rcbp/repo/deploy/nginx-rcbp.conf /etc/nginx/sites-available/rcbp
-sudo ln -s /etc/nginx/sites-available/rcbp /etc/nginx/sites-enabled/
+sudo cp /opt/rnbp/repo/deploy/nginx-rnbp.conf /etc/nginx/sites-available/rnbp
+sudo ln -s /etc/nginx/sites-available/rnbp /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -100,26 +100,26 @@ sudo systemctl reload nginx
 ## 6. Backups
 
 ```bash
-sudo mkdir -p /opt/rcbp/backups
-sudo chown rcbp:rcbp /opt/rcbp/backups
+sudo mkdir -p /opt/rnbp/backups
+sudo chown rnbp:rnbp /opt/rnbp/backups
 
 # Add to crontab
-sudo -u rcbp crontab -e
-# Add: 0 3 * * * /opt/rcbp/repo/deploy/backup.sh >> /opt/rcbp/backups/backup.log 2>&1
+sudo -u rnbp crontab -e
+# Add: 0 3 * * * /opt/rnbp/repo/deploy/backup.sh >> /opt/rnbp/backups/backup.log 2>&1
 ```
 
 ## 7. Monitoring
 
-Set up UptimeRobot (free tier) to monitor `https://api.rcbp.ca/api/health` every 5 minutes.
+Set up UptimeRobot (free tier) to monitor `https://api.rnbp.ca/api/health` every 5 minutes.
 
 ## Updates
 
 ```bash
-cd /opt/rcbp/repo
-sudo -u rcbp git pull
-sudo -u rcbp pnpm install --frozen-lockfile
-sudo -u rcbp pnpm --filter @rcbp/shared build
-sudo -u rcbp pnpm --filter @rcbp/api build
-sudo -u rcbp pnpm --filter @rcbp/api db:push
-sudo systemctl restart rcbp-api
+cd /opt/rnbp/repo
+sudo -u rnbp git pull
+sudo -u rnbp pnpm install --frozen-lockfile
+sudo -u rnbp pnpm --filter @rnbp/shared build
+sudo -u rnbp pnpm --filter @rnbp/api build
+sudo -u rnbp pnpm --filter @rnbp/api db:push
+sudo systemctl restart rnbp-api
 ```

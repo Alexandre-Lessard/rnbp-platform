@@ -44,14 +44,14 @@ type AuthContextType = AuthState & {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 function getRefreshToken() {
-  return sessionStorage.getItem("rcbp_refresh_token");
+  return sessionStorage.getItem("rnbp_refresh_token");
 }
 
 export function setRefreshToken(token: string | null) {
   if (token) {
-    sessionStorage.setItem("rcbp_refresh_token", token);
+    sessionStorage.setItem("rnbp_refresh_token", token);
   } else {
-    sessionStorage.removeItem("rcbp_refresh_token");
+    sessionStorage.removeItem("rnbp_refresh_token");
   }
 }
 

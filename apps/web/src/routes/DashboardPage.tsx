@@ -12,7 +12,7 @@ type Item = {
   brand: string | null;
   model: string | null;
   status: string;
-  rcbpNumber: string;
+  rnbpNumber: string;
   createdAt: string;
 };
 
@@ -106,7 +106,7 @@ export function DashboardPage() {
                   {item.model ? ` ${item.model}` : ""}
                   {" — "}
                   <span className="font-mono text-xs tracking-wider">
-                    {item.rcbpNumber}
+                    {item.rnbpNumber}
                   </span>
                 </p>
               </div>

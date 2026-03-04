@@ -169,7 +169,7 @@ export type SiteContent = {
     confirmButton: string;
     successHeading: string;
     successDescription: string;
-    rcbpNumberLabel: string;
+    rnbpNumberLabel: string;
     goToDashboard: string;
   };
   report?: {

@@ -4,7 +4,7 @@ import { useLanguage } from "@/i18n/context";
 import { apiRequest } from "@/lib/api-client";
 
 export function Footer() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const year = new Date().getFullYear();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -32,7 +32,7 @@ export function Footer() {
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
             <Link to="/" className="inline-block">
-              <img src="/assets/logo-acronyme.png" alt={t.a11y.logoAlt} className="h-10" />
+              <img src={`/assets/logo-acronyme-${locale}.png`} alt={t.a11y.logoAlt} className="h-10" />
             </Link>
             <nav aria-label={t.a11y.mainNav} className="mt-8 flex flex-wrap gap-8 text-sm font-medium text-[var(--rcb-text-strong)]">
               {t.nav.items
