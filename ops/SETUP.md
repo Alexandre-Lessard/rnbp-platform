@@ -94,7 +94,7 @@ PG_HBA=$(find /etc/postgresql -name pg_hba.conf)
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" $PG_CONF
 
 # Autoriser le container prod à se connecter
-echo "host    rnbp_production    rnbp    192.168.50.241/32    scram-sha-256" >> $PG_HBA
+echo "host    rnbp_prod    rnbp    192.168.50.241/32    scram-sha-256" >> $PG_HBA
 
 # Redémarrer PostgreSQL
 systemctl restart postgresql
@@ -107,7 +107,7 @@ systemctl restart postgresql
 ```bash
 # Sur le container PostgreSQL (192.168.50.239)
 sudo -u postgres createuser rnbp
-sudo -u postgres createdb rnbp_production -O rnbp
+sudo -u postgres createdb rnbp_prod -O rnbp
 sudo -u postgres psql -c "ALTER USER rnbp WITH PASSWORD '<MOT_DE_PASSE_SECURISE>';"
 ```
 
@@ -116,12 +116,12 @@ sudo -u postgres psql -c "ALTER USER rnbp WITH PASSWORD '<MOT_DE_PASSE_SECURISE>
 ```bash
 # Depuis 192.168.50.241
 apt install -y postgresql-client   # si pas installé
-psql -h 192.168.50.239 -U rnbp -d rnbp_production -c "SELECT 1;"
+psql -h 192.168.50.239 -U rnbp -d rnbp_prod -c "SELECT 1;"
 ```
 
 L'URL de connexion sera :
 ```
-postgresql://rnbp:<MOT_DE_PASSE>@192.168.50.239:5432/rnbp_production
+postgresql://rnbp:<MOT_DE_PASSE>@192.168.50.239:5432/rnbp_prod
 ```
 
 ---
@@ -167,7 +167,7 @@ sudo chmod 600 /opt/rnbp/.env
 |----------|--------|
 | `NODE_ENV` | `production` |
 | `PORT` | `3000` |
-| `DATABASE_URL` | `postgresql://rnbp:<MOT_DE_PASSE>@192.168.50.239:5432/rnbp_production` |
+| `DATABASE_URL` | `postgresql://rnbp:<MOT_DE_PASSE>@192.168.50.239:5432/rnbp_prod` |
 | `JWT_PRIVATE_KEY` | *(voir ci-dessous)* |
 | `JWT_PUBLIC_KEY` | *(voir ci-dessous)* |
 | `CORS_ORIGINS` | `https://rnbp.ca,https://nrpp.ca` |
@@ -507,7 +507,7 @@ sudo systemctl restart cloudflared
 
 ```bash
 # Vérifier la connexion DB
-psql -h 192.168.50.239 -U rnbp -d rnbp_production -c "SELECT 1;"
+psql -h 192.168.50.239 -U rnbp -d rnbp_prod -c "SELECT 1;"
 
 # Vérifier les fichiers SQL
 ls -la /opt/rnbp/repo/apps/api/drizzle/

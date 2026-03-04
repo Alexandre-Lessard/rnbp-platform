@@ -11,6 +11,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 ENV_FILE="$ROOT_DIR/.deploy.env"
 
+RSYNC_EXCLUDES=(
+  --exclude='node_modules'
+  --exclude='.git'
+  --exclude='dist'
+  --exclude='.env'
+  --exclude='.deploy.env'
+  --exclude='NOTES.md'
+)
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -86,13 +95,8 @@ cd "$ROOT_DIR"
 
 # ── Pre-checks ────────────────────────────────
 
-if [[ -n "$(git status --porcelain)" ]]; then
-  error "Working directory is not clean. Commit or stash your changes first."
-  exit 1
-fi
-
-COMMIT_BEFORE=$(git rev-parse --short HEAD)
-log "Current commit: $COMMIT_BEFORE ($(git log -1 --format='%s'))"
+COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "no-git")
+log "Deploying commit: $COMMIT ($(git log -1 --format='%s' 2>/dev/null || echo 'unknown'))"
 
 # ── Build ─────────────────────────────────────
 
@@ -101,12 +105,6 @@ pnpm --filter @rnbp/shared build
 pnpm --filter @rnbp/web build
 pnpm --filter @rnbp/api build
 ok "Build complete"
-
-# ── Push ──────────────────────────────────────
-
-log "Pushing to origin main..."
-git push origin main
-ok "Pushed"
 
 # ── Deploy Web ────────────────────────────────
 
@@ -119,22 +117,13 @@ deploy_web() {
 # ── Deploy API ────────────────────────────────
 
 deploy_api() {
-  log "Deploying backend to $DEPLOY_SERVER..."
+  log "Syncing code to $DEPLOY_SERVER..."
+  rsync -avz "${RSYNC_EXCLUDES[@]}" "$ROOT_DIR/" "$DEPLOY_SERVER:$DEPLOY_DIR/"
+  ok "Code synced"
 
-  ssh "$DEPLOY_SERVER" bash <<REMOTE
-    set -euo pipefail
-    cd "$DEPLOY_DIR"
-
-    echo "[remote] Pulling latest..."
-    git pull origin main
-
-    echo "[remote] Installing dependencies..."
-    pnpm install --frozen-lockfile
-
-    echo "[remote] Building..."
-    pnpm --filter @rnbp/shared build
-    pnpm --filter @rnbp/api build
-REMOTE
+  log "Installing dependencies and building on server..."
+  ssh "$DEPLOY_SERVER" "source ~/.nvm/nvm.sh && cd $DEPLOY_DIR && pnpm install --frozen-lockfile && pnpm --filter @rnbp/shared build && pnpm --filter @rnbp/api build"
+  ok "Server build complete"
 
   # Migration prompt
   log "Checking for pending migrations..."
@@ -148,7 +137,7 @@ REMOTE
     read -rp "Run migrations? [y/N] " REPLY
     if [[ "$REPLY" =~ ^[Yy]$ ]]; then
       log "Running migrations..."
-      ssh "$DEPLOY_SERVER" "cd $DEPLOY_DIR/apps/api && node --env-file=/opt/rnbp/.env dist/migrate.js"
+      ssh "$DEPLOY_SERVER" "source ~/.nvm/nvm.sh && cd $DEPLOY_DIR/apps/api && node --env-file=/opt/rnbp/.env dist/migrate.js"
       ok "Migrations applied"
     else
       warn "Migrations skipped"
@@ -166,7 +155,7 @@ REMOTE
   sleep 3
 
   for i in 1 2 3; do
-    if curl -sf "$API_HEALTH_URL" > /dev/null 2>&1; then
+    if ssh "$DEPLOY_SERVER" "curl -sf http://localhost:3000/api/health" > /dev/null 2>&1; then
       ok "Health check passed"
       return 0
     fi
@@ -192,7 +181,6 @@ esac
 
 # ── Done ──────────────────────────────────────
 
-COMMIT_AFTER=$(git rev-parse --short HEAD)
 echo ""
 ok "Deploy complete!"
-log "Commit deployed: $COMMIT_AFTER ($(git log -1 --format='%s'))"
+log "Commit deployed: $COMMIT"

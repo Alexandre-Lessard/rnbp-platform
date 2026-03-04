@@ -1,14 +1,13 @@
 [Unit]
 Description=RNBP API Server
-After=network.target postgresql.service
-Requires=postgresql.service
+After=network.target
 
 [Service]
 Type=simple
 User=prod
 Group=prod
 WorkingDirectory=/opt/rnbp/repo/apps/api
-ExecStart=/usr/bin/node dist/index.js
+ExecStart=/home/prod/.nvm/versions/node/v20.19.4/bin/node dist/index.js
 Restart=always
 RestartSec=5
 StandardOutput=journal
@@ -21,7 +20,7 @@ EnvironmentFile=/opt/rnbp/.env
 # Security hardening
 NoNewPrivileges=true
 ProtectSystem=strict
-ProtectHome=true
+ProtectHome=read-only
 ReadWritePaths=/opt/rnbp/uploads
 PrivateTmp=true
 

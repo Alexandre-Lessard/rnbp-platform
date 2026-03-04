@@ -18,10 +18,12 @@
     "node": ">=20.0.0",
     "pnpm": ">=9.0.0"
   },
-  "onlyBuiltDependencies": [
-    "argon2",
-    "esbuild",
-    "sharp",
-    "workerd"
-  ]
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "argon2",
+      "esbuild",
+      "sharp",
+      "workerd"
+    ]
+  }
 }
