@@ -136,13 +136,17 @@ deploy_api() {
     warn "Migration files found:"
     echo "$MIGRATION_FILES"
     echo ""
-    read -rp "Run migrations? [y/N] " REPLY
-    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-      log "Running migrations..."
-      ssh "$DEPLOY_SERVER" "source ~/.nvm/nvm.sh && cd $DEPLOY_DIR/apps/api && node --env-file=/opt/rnbp/.env dist/migrate.js"
-      ok "Migrations applied"
+    if [[ -t 0 ]]; then
+      read -rp "Run migrations? [y/N] " REPLY
+      if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+        log "Running migrations..."
+        ssh "$DEPLOY_SERVER" "source ~/.nvm/nvm.sh && cd $DEPLOY_DIR/apps/api && node --env-file=/opt/rnbp/.env dist/migrate.js"
+        ok "Migrations applied"
+      else
+        warn "Migrations skipped"
+      fi
     else
-      warn "Migrations skipped"
+      warn "Non-interactive mode — migrations skipped (run manually if needed)"
     fi
   else
     ok "No migration files found"
