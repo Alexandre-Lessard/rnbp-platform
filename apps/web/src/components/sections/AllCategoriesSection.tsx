@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "@/i18n/context";
+import { getButtonClasses } from "@/lib/button-styles";
 
 export function AllCategoriesSection() {
   const { t } = useLanguage();
@@ -19,7 +20,7 @@ export function AllCategoriesSection() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="mt-8 inline-flex cursor-pointer items-center gap-2 rounded-full border-2 border-[var(--rcb-primary)] bg-[var(--rcb-primary)]/10 px-8 py-3 text-lg font-semibold text-[var(--rcb-primary)] transition-colors hover:bg-[var(--rcb-primary)] hover:text-white"
+            className={`${getButtonClasses("outline")} mt-8 inline-flex cursor-pointer items-center gap-2`}
           >
             {t.allCategories.toggleButton}
             <svg

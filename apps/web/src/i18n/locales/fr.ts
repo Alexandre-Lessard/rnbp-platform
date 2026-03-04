@@ -11,7 +11,7 @@ const fr: SiteContent = {
       { label: "Accueil", href: "#accueil" },
       { label: "\u00c0 propos", href: "#cycle" },
       { label: "Enregistrer", href: "#inscription" },
-      { label: "Plus", href: "#faq", withChevron: true },
+      { label: "FAQ", href: "/faq" },
       { label: "Contact", href: "#contact" },
     ],
     partners: "Partenaires",
@@ -36,14 +36,6 @@ const fr: SiteContent = {
       { label: "Compatible avec les assureurs" },
     ],
   },
-  socialProof: {
-    badge: "En phase de d\u00e9ploiement national",
-    stats: [
-      { value: "15\u00a0000+", label: "biens enregistr\u00e9s" },
-      { value: "12+", label: "villes partenaires" },
-      { value: "5+", label: "assureurs collaborateurs" },
-    ],
-  },
   cycle: {
     heading: "Cycle du Registre des biens",
     imageAlt: "Agent prenant note d\u2019un v\u00e9lo vol\u00e9",
@@ -65,26 +57,6 @@ const fr: SiteContent = {
         title: "Acc\u00e9l\u00e9rez la restitution",
         description:
           "Partagez un dossier clair qui facilite la v\u00e9rification de propri\u00e9t\u00e9.",
-      },
-    ],
-    benefits: [
-      {
-        number: "01",
-        title: "B\u00e9n\u00e9fice",
-        description:
-          "Un bien tra\u00e7able est plus difficile \u00e0 revendre et plus facile \u00e0 identifier.",
-      },
-      {
-        number: "02",
-        title: "B\u00e9n\u00e9fice",
-        description:
-          "Vos informations sont centralis\u00e9es pour r\u00e9agir vite au bon moment.",
-      },
-      {
-        number: "03",
-        title: "B\u00e9n\u00e9fice",
-        description:
-          "Vous conservez une preuve de propri\u00e9t\u00e9 structur\u00e9e pour vos d\u00e9marches.",
       },
     ],
   },
@@ -191,7 +163,7 @@ const fr: SiteContent = {
     heading: "FAQ",
     description:
       "Trouvez les r\u00e9ponses aux questions courantes sur l\u2019enregistrement de vos biens.",
-    buttonText: "Voir FAQ",
+    buttonText: "Voir toutes les questions",
     items: [
       {
         question: "Combien \u00e7a co\u00fbte\u00a0?",
@@ -231,6 +203,110 @@ const fr: SiteContent = {
           "Pourquoi le registre est-il n\u00e9cessaire\u00a0?",
         answer:
           "Chaque ann\u00e9e, des milliers de biens sont perdus ou vol\u00e9s au Canada, et la majorit\u00e9 ne sont jamais retrouv\u00e9s. Sans preuve centralis\u00e9e de propri\u00e9t\u00e9, il est difficile pour la police d\u2019identifier un propri\u00e9taire et pour les assureurs de traiter efficacement une r\u00e9clamation. Le RNBP cr\u00e9e une preuve officielle, s\u00e9curis\u00e9e et dat\u00e9e de vos biens \u2014 num\u00e9ro de s\u00e9rie, photos, preuves d\u2019achat \u2014 dans un dossier unique. Il transforme un objet anonyme en bien identifiable, rend la revente de biens vol\u00e9s beaucoup plus difficile et acc\u00e9l\u00e8re vos d\u00e9marches de restitution.",
+      },
+      {
+        question: "Quels types de biens puis-je enregistrer\u00a0?",
+        answer:
+          "Vous pouvez enregistrer tous types de biens personnels de valeur\u00a0: v\u00e9los, outils, appareils \u00e9lectroniques, instruments de musique, \u00e9quipements sportifs, bijoux, etc.",
+      },
+      {
+        question: "Pourquoi enregistrer mes biens avant qu\u2019un vol survienne\u00a0?",
+        answer:
+          "L\u2019enregistrement pr\u00e9alable permet de prouver la propri\u00e9t\u00e9 et de faciliter l\u2019identification d\u2019un bien s\u2019il est retrouv\u00e9. De plus, certains assureurs pourraient offrir un rabais sur l\u2019assurance habitation lorsque les biens sont enregistr\u00e9s avant qu\u2019un vol ne soit d\u00e9clar\u00e9.",
+      },
+      {
+        question: "Qui peut consulter les informations du registre\u00a0?",
+        answer:
+          "Seuls les corps policiers et les assureurs autoris\u00e9s peuvent acc\u00e9der \u00e0 certaines informations du registre, uniquement dans le cadre de la v\u00e9rification d\u2019un bien ou d\u2019une enqu\u00eate.",
+      },
+      {
+        question: "Puis-je enregistrer un bien sans num\u00e9ro de s\u00e9rie\u00a0?",
+        answer:
+          "Oui. Il est possible d\u2019enregistrer un bien en ajoutant des photos, une description d\u00e9taill\u00e9e et d\u2019autres caract\u00e9ristiques permettant de l\u2019identifier. Toutefois, l\u2019ajout d\u2019un num\u00e9ro de s\u00e9rie est recommand\u00e9. L\u2019utilisation d\u2019autocollants d\u2019enregistrement disponibles dans la boutique en ligne du RNBP permet \u00e9galement d\u2019am\u00e9liorer l\u2019identification du bien.",
+      },
+      {
+        question: "Comment puis-je r\u00e9cup\u00e9rer mon bien\u00a0?",
+        answer:
+          "Lorsqu\u2019un bien enregistr\u00e9 au RNBP est retrouv\u00e9, celui-ci est pris en charge par le registre afin d\u2019en v\u00e9rifier l\u2019identification et la propri\u00e9t\u00e9. Une fois la propri\u00e9t\u00e9 confirm\u00e9e gr\u00e2ce aux informations enregistr\u00e9es (photos, description, num\u00e9ro de s\u00e9rie, etc.), le RNBP communique avec le propri\u00e9taire et organise la restitution du bien.",
+      },
+      {
+        question: "Y a-t-il des frais pour r\u00e9cup\u00e9rer mon bien\u00a0?",
+        answer:
+          "Oui. Des frais administratifs peuvent s\u2019appliquer pour couvrir les co\u00fbts li\u00e9s \u00e0 la gestion du dossier, \u00e0 l\u2019identification du bien, \u00e0 la r\u00e9cup\u00e9ration et \u00e0 l\u2019organisation de sa restitution au propri\u00e9taire. Les frais exacts peuvent varier selon la situation et la nature du bien r\u00e9cup\u00e9r\u00e9.",
+      },
+      {
+        question: "Combien de biens puis-je enregistrer\u00a0?",
+        answer: "Vous pouvez enregistrer autant de biens que vous le souhaitez.",
+      },
+      {
+        question: "Puis-je enregistrer les biens de ma famille\u00a0?",
+        answer:
+          "Oui. Un seul compte peut enregistrer les biens de plusieurs membres d\u2019un m\u00eame foyer.",
+      },
+      {
+        question: "Puis-je transf\u00e9rer un bien enregistr\u00e9\u00a0?",
+        answer:
+          "Oui. Si vous vendez ou donnez un bien, vous pouvez mettre \u00e0 jour son statut ou le transf\u00e9rer sans frais.",
+      },
+      {
+        question: "Le registre fonctionne-t-il partout au pays\u00a0?",
+        answer:
+          "Oui. Le registre est con\u00e7u pour fonctionner \u00e0 l\u2019\u00e9chelle nationale. Les biens vol\u00e9s dans une province sont souvent revendus dans une autre province, ce qui rend essentiel l\u2019existence d\u2019un registre national pour faciliter leur identification et leur r\u00e9cup\u00e9ration.",
+      },
+      {
+        question: "Puis-je enregistrer un bien achet\u00e9 usag\u00e9\u00a0?",
+        answer:
+          "Oui. Il est recommand\u00e9 d\u2019enregistrer un bien d\u00e8s que vous en devenez le propri\u00e9taire.",
+      },
+      {
+        question: "Que faire si je retrouve mon bien vol\u00e9\u00a0?",
+        answer:
+          "Vous pouvez simplement mettre \u00e0 jour son statut dans votre compte.",
+      },
+      {
+        question: "Dois-je ajouter des photos de mes biens\u00a0?",
+        answer:
+          "Les photos ne sont pas obligatoires mais fortement recommand\u00e9es pour faciliter l\u2019identification.",
+      },
+      {
+        question: "Le registre peut-il aider \u00e0 dissuader le vol\u00a0?",
+        answer:
+          "Oui. Un objet enregistr\u00e9 et identifiable RNBP est plus difficile \u00e0 revendre et peut \u00eatre plus facilement retrac\u00e9.",
+      },
+      {
+        question: "Puis-je supprimer mon compte\u00a0?",
+        answer:
+          "Oui. Vous pouvez supprimer votre compte et les informations associ\u00e9es \u00e0 tout moment.",
+      },
+      {
+        question: "Est-ce que mes informations personnelles sont visibles publiquement\u00a0?",
+        answer:
+          "Non. Les informations personnelles ne sont pas rendues publiques.",
+      },
+      {
+        question: "Comment le registre aide-t-il \u00e0 retrouver un bien\u00a0?",
+        answer:
+          "Tous les corps policiers ont acc\u00e8s au registre 24\u00a0h/24 afin de faciliter l\u2019identification du propri\u00e9taire lorsqu\u2019un bien est retrouv\u00e9. Gr\u00e2ce aux informations enregistr\u00e9es, il devient plus simple et rapide de retracer et de restituer le bien \u00e0 son propri\u00e9taire l\u00e9gitime.",
+      },
+      {
+        question: "Le registre remplace-t-il une assurance\u00a0?",
+        answer:
+          "Non. Le registre ne remplace pas une assurance, mais il peut faciliter certaines d\u00e9marches en cas de vol.",
+      },
+      {
+        question: "Si mon bien est d\u00e9j\u00e0 assur\u00e9 par mon assurance habitation, dois-je quand m\u00eame l\u2019enregistrer sur le RNBP\u00a0?",
+        answer:
+          "Oui. L\u2019enregistrement de votre bien au RNBP peut r\u00e9duire les cons\u00e9quences d\u2019un vol dans le cas o\u00f9 le bien serait retrouv\u00e9. Celui-ci pourrait alors \u00eatre identifi\u00e9 et restitu\u00e9 \u00e0 son propri\u00e9taire ou \u00e0 l\u2019assureur, ce qui peut diminuer les pertes li\u00e9es au sinistre.",
+      },
+      {
+        question: "Quel est l\u2019avantage pour mon assureur habitation de me donner un rabais\u00a0?",
+        answer:
+          "Certains biens sont couverts par l\u2019assurance habitation. Si un assureur indemnise un assur\u00e9 \u00e0 la suite d\u2019un vol et que le bien est retrouv\u00e9 par la suite gr\u00e2ce au registre, celui-ci peut \u00eatre r\u00e9cup\u00e9r\u00e9 et remis \u00e0 l\u2019assureur. Cela permet de r\u00e9duire la perte financi\u00e8re li\u00e9e \u00e0 l\u2019indemnisation, ce qui explique pourquoi certains assureurs offrent un rabais aux assur\u00e9s qui enregistrent leurs biens au RNBP.",
+      },
+      {
+        question: "Quels biens n\u2019est-il pas n\u00e9cessaire d\u2019enregistrer au RNBP\u00a0?",
+        answer:
+          "Les immeubles, les v\u00e9hicules immatricul\u00e9s et les armes \u00e0 feu n\u2019ont g\u00e9n\u00e9ralement pas besoin d\u2019\u00eatre enregistr\u00e9s au RNBP, car ces biens disposent d\u00e9j\u00e0 de leurs propres registres officiels. Le RNBP vise principalement les biens personnels qui ne sont pas couverts par un registre existant.",
       },
     ],
   },

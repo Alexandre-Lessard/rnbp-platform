@@ -26,11 +26,6 @@ export type TrustBadge = {
   label: string;
 };
 
-export type StatItem = {
-  value: string;
-  label: string;
-};
-
 export type SiteContent = {
   meta: {
     title: string;
@@ -53,15 +48,10 @@ export type SiteContent = {
     imageAlt: string;
     trustBadges: TrustBadge[];
   };
-  socialProof: {
-    badge: string;
-    stats: StatItem[];
-  };
   cycle: {
     heading: string;
     imageAlt: string;
     actions: CyclePoint[];
-    benefits: CyclePoint[];
   };
   rollingRegistry: {
     headingLine1: string;

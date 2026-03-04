@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
-import { ChevronDown } from "@/components/icons/ChevronDown";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
@@ -22,26 +21,29 @@ export function Navbar() {
         </Link>
 
         <nav aria-label={t.a11y.mainNav} className="hidden items-center gap-9 text-[1.1rem] font-medium text-[var(--rcb-text-strong)] lg:flex">
-          {t.nav.items.map((item) =>
-            isLanding ? (
-              <a
-                key={item.label}
-                href={item.href}
-                className="flex items-center gap-1 transition-colors hover:text-[var(--rcb-primary)]"
-              >
-                {item.label}
-                {item.withChevron ? <ChevronDown /> : null}
-              </a>
-            ) : (
+          {t.nav.items.map((item) => {
+            const isHash = item.href.startsWith("#");
+            if (isHash && isLanding) {
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="flex items-center gap-1 transition-colors hover:text-[var(--rcb-primary)]"
+                >
+                  {item.label}
+                </a>
+              );
+            }
+            return (
               <Link
                 key={item.label}
-                to={`/${item.href}`}
+                to={isHash ? `/${item.href}` : item.href}
                 className="flex items-center gap-1 transition-colors hover:text-[var(--rcb-primary)]"
               >
                 {item.label}
               </Link>
-            ),
-          )}
+            );
+          })}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
@@ -99,27 +101,31 @@ export function Navbar() {
           className="border-t border-[var(--rcb-border)] bg-[var(--rcb-header)] lg:hidden"
         >
           <div className="section-shell flex flex-col gap-1 py-4">
-            {t.nav.items.map((item) =>
-              isLanding ? (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="rounded-lg px-4 py-3 text-base font-medium text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-border)]"
-                >
-                  {item.label}
-                </a>
-              ) : (
+            {t.nav.items.map((item) => {
+              const isHash = item.href.startsWith("#");
+              if (isHash && isLanding) {
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="rounded-lg px-4 py-3 text-base font-medium text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-border)]"
+                  >
+                    {item.label}
+                  </a>
+                );
+              }
+              return (
                 <Link
                   key={item.label}
-                  to={`/${item.href}`}
+                  to={isHash ? `/${item.href}` : item.href}
                   onClick={() => setMenuOpen(false)}
                   className="rounded-lg px-4 py-3 text-base font-medium text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-border)]"
                 >
                   {item.label}
                 </Link>
-              ),
-            )}
+              );
+            })}
             <div className="mt-2 border-t border-[var(--rcb-border)] pt-4">
               <div className="flex items-center px-4">
                 <LanguageSwitcher />

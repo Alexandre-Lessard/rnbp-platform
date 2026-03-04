@@ -1,8 +1,24 @@
-import { Routes, Route } from "react-router";
+import { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useLanguage } from "@/i18n/context";
+
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const el = document.getElementById(hash.slice(1));
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+    }
+    window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+}
 
 import { LandingPage } from "@/routes/LandingPage";
 import { LoginPage } from "@/routes/LoginPage";
@@ -14,6 +30,7 @@ import { LookupPage } from "@/routes/LookupPage";
 import { PartnerPage } from "@/routes/PartnerPage";
 import { PrivacyPolicyPage } from "@/routes/PrivacyPolicyPage";
 import { TermsOfServicePage } from "@/routes/TermsOfServicePage";
+import { FaqPage } from "@/routes/FaqPage";
 import { NotFoundPage } from "@/routes/NotFoundPage";
 
 function App() {
@@ -27,6 +44,7 @@ function App() {
       >
         {t.a11y.skipToContent}
       </a>
+      <ScrollToTop />
       <Navbar />
       <main id="main-content">
         <Routes>
@@ -38,6 +56,7 @@ function App() {
           <Route path="/partenaires" element={<PartnerPage />} />
           <Route path="/confidentialite" element={<PrivacyPolicyPage />} />
           <Route path="/conditions" element={<TermsOfServicePage />} />
+          <Route path="/faq" element={<FaqPage />} />
           <Route
             path="/tableau-de-bord"
             element={

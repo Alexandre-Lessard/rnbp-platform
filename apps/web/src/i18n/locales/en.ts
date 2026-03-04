@@ -11,7 +11,7 @@ const en: SiteContent = {
       { label: "Home", href: "#accueil" },
       { label: "About", href: "#cycle" },
       { label: "Register", href: "#inscription" },
-      { label: "More", href: "#faq", withChevron: true },
+      { label: "FAQ", href: "/faq" },
       { label: "Contact", href: "#contact" },
     ],
     partners: "Partners",
@@ -36,14 +36,6 @@ const en: SiteContent = {
       { label: "Compatible with insurers" },
     ],
   },
-  socialProof: {
-    badge: "In national deployment phase",
-    stats: [
-      { value: "15,000+", label: "items registered" },
-      { value: "12+", label: "partner cities" },
-      { value: "5+", label: "collaborating insurers" },
-    ],
-  },
   cycle: {
     heading: "Property Registry Cycle",
     imageAlt: "Officer taking note of a stolen bike",
@@ -65,26 +57,6 @@ const en: SiteContent = {
         title: "Speed up recovery",
         description:
           "Share a clear file that facilitates ownership verification.",
-      },
-    ],
-    benefits: [
-      {
-        number: "01",
-        title: "Benefit",
-        description:
-          "A traceable item is harder to resell and easier to identify.",
-      },
-      {
-        number: "02",
-        title: "Benefit",
-        description:
-          "Your information is centralized to react quickly at the right time.",
-      },
-      {
-        number: "03",
-        title: "Benefit",
-        description:
-          "You keep a structured proof of ownership for your procedures.",
       },
     ],
   },
@@ -189,7 +161,7 @@ const en: SiteContent = {
     heading: "FAQ",
     description:
       "Find answers to common questions about registering your belongings.",
-    buttonText: "View FAQ",
+    buttonText: "View all questions",
     items: [
       {
         question: "How much does it cost?",
@@ -225,6 +197,110 @@ const en: SiteContent = {
         question: "Why is the registry necessary?",
         answer:
           "Every year, thousands of items are lost or stolen in Canada, and the majority are never recovered. Without centralized proof of ownership, it is difficult for police to identify an owner and for insurers to process a claim efficiently. The NRPP creates an official, secure and dated record of your belongings \u2014 serial number, photos, proof of purchase \u2014 in a single file. It turns an anonymous object into an identifiable asset, makes reselling stolen goods much harder, and speeds up your recovery process.",
+      },
+      {
+        question: "What types of items can I register?",
+        answer:
+          "You can register all types of valuable personal property: bikes, tools, electronics, musical instruments, sports equipment, jewellery, etc.",
+      },
+      {
+        question: "Why register my items before a theft occurs?",
+        answer:
+          "Pre-registration allows you to prove ownership and makes it easier to identify an item if it is recovered. Additionally, some insurers may offer a discount on home insurance when items are registered before a theft is reported.",
+      },
+      {
+        question: "Who can access the registry information?",
+        answer:
+          "Only authorized police services and insurers can access certain registry information, solely for the purpose of verifying an item or conducting an investigation.",
+      },
+      {
+        question: "Can I register an item without a serial number?",
+        answer:
+          "Yes. You can register an item by adding photos, a detailed description and other identifying characteristics. However, adding a serial number is recommended. Using registration stickers available in the NRPP online store can also improve item identification.",
+      },
+      {
+        question: "How can I recover my item?",
+        answer:
+          "When an item registered with the NRPP is found, it is handled by the registry to verify identification and ownership. Once ownership is confirmed through registered information (photos, description, serial number, etc.), the NRPP contacts the owner and arranges the return of the item.",
+      },
+      {
+        question: "Are there fees to recover my item?",
+        answer:
+          "Yes. Administrative fees may apply to cover costs related to file management, item identification, recovery and arranging its return to the owner. Exact fees may vary depending on the situation and the nature of the recovered item.",
+      },
+      {
+        question: "How many items can I register?",
+        answer: "You can register as many items as you wish.",
+      },
+      {
+        question: "Can I register my family\u2019s items?",
+        answer:
+          "Yes. A single account can register items belonging to multiple members of the same household.",
+      },
+      {
+        question: "Can I transfer a registered item?",
+        answer:
+          "Yes. If you sell or give away an item, you can update its status or transfer it at no cost.",
+      },
+      {
+        question: "Does the registry work across the country?",
+        answer:
+          "Yes. The registry is designed to operate nationwide. Items stolen in one province are often resold in another, making a national registry essential for facilitating their identification and recovery.",
+      },
+      {
+        question: "Can I register a used item?",
+        answer:
+          "Yes. It is recommended to register an item as soon as you become its owner.",
+      },
+      {
+        question: "What if I find my stolen item?",
+        answer:
+          "You can simply update its status in your account.",
+      },
+      {
+        question: "Do I need to add photos of my items?",
+        answer:
+          "Photos are not mandatory but strongly recommended to facilitate identification.",
+      },
+      {
+        question: "Can the registry help deter theft?",
+        answer:
+          "Yes. A registered and NRPP-identifiable item is harder to resell and can be more easily traced.",
+      },
+      {
+        question: "Can I delete my account?",
+        answer:
+          "Yes. You can delete your account and associated information at any time.",
+      },
+      {
+        question: "Is my personal information publicly visible?",
+        answer:
+          "No. Personal information is not made public.",
+      },
+      {
+        question: "How does the registry help recover items?",
+        answer:
+          "All police services have 24/7 access to the registry to help identify owners when an item is found. Thanks to registered information, it becomes simpler and faster to trace and return the item to its rightful owner.",
+      },
+      {
+        question: "Does the registry replace insurance?",
+        answer:
+          "No. The registry does not replace insurance, but it can facilitate certain processes in case of theft.",
+      },
+      {
+        question: "If my item is already covered by my home insurance, should I still register it on the NRPP?",
+        answer:
+          "Yes. Registering your item on the NRPP can reduce the consequences of a theft if the item is recovered. It could then be identified and returned to its owner or the insurer, which can reduce losses related to the claim.",
+      },
+      {
+        question: "What is the advantage for my home insurer to give me a discount?",
+        answer:
+          "Some items are covered by home insurance. If an insurer compensates a policyholder following a theft and the item is later recovered through the registry, it can be retrieved and returned to the insurer. This reduces the financial loss related to the compensation, which is why some insurers offer a discount to policyholders who register their items on the NRPP.",
+      },
+      {
+        question: "Which items do not need to be registered on the NRPP?",
+        answer:
+          "Real estate, registered vehicles and firearms generally do not need to be registered on the NRPP, as these items already have their own official registries. The NRPP primarily targets personal property not covered by an existing registry.",
       },
     ],
   },

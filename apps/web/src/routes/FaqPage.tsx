@@ -1,12 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router";
 import { PlusMinus } from "@/components/icons/PlusMinus";
 import { useLanguage } from "@/i18n/context";
-import { getButtonClasses } from "@/lib/button-styles";
 
-const PREVIEW_COUNT = 3;
-
-export function FaqSection() {
+export function FaqPage() {
   const { t } = useLanguage();
   const [openItems, setOpenItems] = useState<number[]>([]);
 
@@ -16,20 +12,18 @@ export function FaqSection() {
     );
   };
 
-  const previewItems = t.faq.items.slice(0, PREVIEW_COUNT);
-
   return (
-    <section id="faq" className="section-frame scroll-mt-24 border-t-0 bg-[var(--rcb-bg)]">
+    <section className="bg-[var(--rcb-bg)]">
       <div className="section-shell py-16 sm:py-20">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-6xl font-bold text-[var(--rcb-text)] sm:text-7xl">{t.faq.heading}</h2>
+          <h1 className="text-6xl font-bold text-[var(--rcb-text)] sm:text-7xl">{t.faq.heading}</h1>
           <p className="mt-7 text-3xl leading-relaxed text-[var(--rcb-text-muted)]">
             {t.faq.description}
           </p>
         </div>
 
-        <div id="faq-list" className="mx-auto mt-14 max-w-6xl space-y-6">
-          {previewItems.map((item, index) => {
+        <div className="mx-auto mt-14 max-w-6xl space-y-6">
+          {t.faq.items.map((item, index) => {
             const isOpen = openItems.includes(index);
 
             return (
@@ -40,7 +34,7 @@ export function FaqSection() {
                   className="flex w-full cursor-pointer items-start justify-between gap-5 text-left"
                   aria-expanded={isOpen}
                 >
-                  <h3 className="text-xl font-bold text-[var(--rcb-text)] sm:text-2xl">{item.question}</h3>
+                  <h2 className="text-xl font-bold text-[var(--rcb-text)] sm:text-2xl">{item.question}</h2>
                   <span className="mt-1">
                     <PlusMinus open={isOpen} className="h-8 w-8 text-[var(--rcb-navy)]" />
                   </span>
@@ -51,12 +45,6 @@ export function FaqSection() {
               </article>
             );
           })}
-        </div>
-
-        <div className="mt-10 text-center">
-          <Link to="/faq" className={getButtonClasses("primary")}>
-            {t.faq.buttonText}
-          </Link>
         </div>
       </div>
     </section>

@@ -8,7 +8,7 @@ export const buttonStyles = {
     primary:
       "bg-[var(--rcb-primary)] text-white hover:bg-[var(--rcb-primary-dark)]",
     outline:
-      "border border-[var(--rcb-primary)] bg-[var(--rcb-bg)] text-[var(--rcb-text-strong)] hover:bg-[var(--rcb-red-light)] hover:text-black",
+      "border border-[var(--rcb-primary)] bg-transparent text-[var(--rcb-text-strong)] hover:bg-[var(--rcb-red-light)] hover:text-black",
   },
 } as const;
 
