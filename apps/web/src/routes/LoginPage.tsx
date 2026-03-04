@@ -2,10 +2,12 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
+import { isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 
 export function LoginPage() {
-  const { login } = useAuth();
+  const { login, backendAvailable } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get("redirect") || "/tableau-de-bord";
@@ -15,6 +17,7 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [backendDown, setBackendDown] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -25,6 +28,10 @@ export function LoginPage() {
       await login(email, password);
       navigate(redirect, { replace: true });
     } catch (err) {
+      if (isNetworkError(err)) {
+        setBackendDown(true);
+        return;
+      }
       setError(
         err instanceof Error
           ? err.message
@@ -35,8 +42,16 @@ export function LoginPage() {
     }
   }
 
+  if (backendDown || !backendAvailable) {
+    return (
+      <section className="min-h-[70vh] bg-[var(--rcb-white)]">
+        <ServiceUnavailable />
+      </section>
+    );
+  }
+
   return (
-    <section className="flex min-h-[70vh] items-center justify-center px-4 py-16">
+    <section className="flex min-h-[70vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {t.auth?.loginHeading ?? "Connexion"}

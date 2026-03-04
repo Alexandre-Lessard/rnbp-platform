@@ -6,6 +6,12 @@ type RequestOptions = {
   headers?: Record<string, string>;
 };
 
+export type ApiError = Error & { status: number; code?: string };
+
+export function isNetworkError(err: unknown): boolean {
+  return (err as ApiError)?.code === "NETWORK_ERROR";
+}
+
 let accessToken: string | null = null;
 
 export function setAccessToken(token: string | null) {
@@ -30,20 +36,25 @@ export async function apiRequest<T>(
     headers["Content-Type"] = "application/json";
   }
 
-  const response = await fetch(`${API_URL}${path}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    const error = new Error("Service temporairement indisponible") as ApiError;
+    error.status = 0;
+    error.code = "NETWORK_ERROR";
+    throw error;
+  }
 
   if (!response.ok) {
     const data = await response.json().catch(() => null);
     const message =
       data?.error?.message || `Erreur ${response.status}`;
-    const error = new Error(message) as Error & {
-      status: number;
-      code?: string;
-    };
+    const error = new Error(message) as ApiError;
     error.status = response.status;
     error.code = data?.error?.code;
     throw error;

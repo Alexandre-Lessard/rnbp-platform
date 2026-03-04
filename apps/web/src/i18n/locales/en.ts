@@ -9,8 +9,8 @@ const en: SiteContent = {
   nav: {
     items: [
       { label: "Home", href: "#accueil" },
-      { label: "Register", href: "#inscription" },
       { label: "About", href: "#cycle" },
+      { label: "Register", href: "#inscription" },
       { label: "More", href: "#faq", withChevron: true },
       { label: "Contact", href: "#contact" },
     ],
@@ -278,6 +278,13 @@ const en: SiteContent = {
     welcome: "Welcome, {{name}}",
     noItems: "No items registered yet.",
     addItem: "Register an item",
+    reportTheft: "Report a theft",
+    statuses: {
+      active: "Active",
+      stolen: "Stolen",
+      recovered: "Recovered",
+      transferred: "Transferred",
+    },
   },
   registration: {
     heading: "Register an item",

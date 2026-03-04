@@ -143,6 +143,8 @@ export type SiteContent = {
     welcome: string;
     noItems: string;
     addItem: string;
+    reportTheft: string;
+    statuses: Record<string, string>;
   };
   registration?: {
     heading: string;

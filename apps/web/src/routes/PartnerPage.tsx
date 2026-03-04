@@ -5,7 +5,8 @@ export function PartnerPage() {
   const p = t.partners!;
 
   return (
-    <section className="section-shell py-16">
+    <section className="min-h-[70vh] bg-[var(--rcb-white)]">
+      <div className="section-shell py-16">
       <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
         {p.heading}
       </h1>
@@ -43,6 +44,7 @@ export function PartnerPage() {
         >
           {p.ctaButton}
         </a>
+      </div>
       </div>
     </section>
   );

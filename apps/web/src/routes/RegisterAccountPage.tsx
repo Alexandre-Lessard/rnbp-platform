@@ -2,10 +2,12 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
+import { isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 
 export function RegisterAccountPage() {
-  const { register } = useAuth();
+  const { register, backendAvailable } = useAuth();
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -18,6 +20,7 @@ export function RegisterAccountPage() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [backendDown, setBackendDown] = useState(false);
 
   function update(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -38,6 +41,10 @@ export function RegisterAccountPage() {
       });
       navigate("/tableau-de-bord", { replace: true });
     } catch (err) {
+      if (isNetworkError(err)) {
+        setBackendDown(true);
+        return;
+      }
       setError(
         err instanceof Error ? err.message : "Erreur lors de l'inscription",
       );
@@ -46,8 +53,16 @@ export function RegisterAccountPage() {
     }
   }
 
+  if (backendDown || !backendAvailable) {
+    return (
+      <section className="min-h-[70vh] bg-[var(--rcb-white)]">
+        <ServiceUnavailable />
+      </section>
+    );
+  }
+
   return (
-    <section className="flex min-h-[70vh] items-center justify-center px-4 py-16">
+    <section className="flex min-h-[70vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {t.auth?.registerHeading ?? "Créer un compte"}

@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useLanguage } from "@/i18n/context";
+import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/Button";
-import { apiRequest } from "@/lib/api-client";
+import { apiRequest, isNetworkError } from "@/lib/api-client";
+import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 
 type LookupResult = {
   found: boolean;
@@ -13,10 +15,12 @@ type LookupResult = {
 
 export function LookupPage() {
   const { t } = useLanguage();
+  const { backendAvailable } = useAuth();
   const [rnbpNumber, setRnbpNumber] = useState("");
   const [result, setResult] = useState<LookupResult | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [backendDown, setBackendDown] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -30,6 +34,10 @@ export function LookupPage() {
       );
       setResult(data);
     } catch (err) {
+      if (isNetworkError(err)) {
+        setBackendDown(true);
+        return;
+      }
       setError(
         err instanceof Error
           ? err.message
@@ -40,8 +48,16 @@ export function LookupPage() {
     }
   }
 
+  if (backendDown || !backendAvailable) {
+    return (
+      <section className="min-h-[60vh] bg-[var(--rcb-white)]">
+        <ServiceUnavailable />
+      </section>
+    );
+  }
+
   return (
-    <section className="flex min-h-[60vh] items-center justify-center px-4 py-16">
+    <section className="flex min-h-[60vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
       <div className="w-full max-w-lg text-center">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {t.lookup?.heading ?? "Vérifier un bien"}

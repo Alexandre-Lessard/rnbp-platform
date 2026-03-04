@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "@/i18n/context";
 import { useAuth, setRefreshToken } from "@/lib/auth-context";
-import { apiRequest, setAccessToken } from "@/lib/api-client";
+import { apiRequest, setAccessToken, isNetworkError } from "@/lib/api-client";
+import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { StepIndicator } from "@/components/registration/StepIndicator";
 import { StepItemDetails } from "@/components/registration/StepItemDetails";
 import { StepDocuments } from "@/components/registration/StepDocuments";
@@ -77,6 +78,7 @@ export function RegisterItemPage() {
   const [documents, setDocuments] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [backendDown, setBackendDown] = useState(false);
   const [rnbpNumber, setRnbpNumber] = useState("");
 
   // Auth-aware: if logged in, only 2 steps
@@ -116,6 +118,7 @@ export function RegisterItemPage() {
       setRnbpNumber(res.item.rnbpNumber);
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
+      if (isNetworkError(err)) { setBackendDown(true); return; }
       setError(err instanceof Error ? err.message : "Erreur");
     } finally {
       setLoading(false);
@@ -166,11 +169,20 @@ export function RegisterItemPage() {
       setRnbpNumber(res.item.rnbpNumber);
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
+      if (isNetworkError(err)) { setBackendDown(true); return; }
       setError(err instanceof Error ? err.message : "Erreur");
     } finally {
       setLoading(false);
     }
   }, [accountData, itemData, totalSteps, refreshAuth]);
+
+  if (backendDown) {
+    return (
+      <section className="min-h-[70vh] bg-[var(--rcb-white)]">
+        <ServiceUnavailable />
+      </section>
+    );
+  }
 
   // Confirmation screen
   if (rnbpNumber) {

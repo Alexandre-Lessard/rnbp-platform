@@ -190,18 +190,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     const rt = getRefreshToken();
+    let networkDown = false;
     try {
       await apiRequest("/auth/logout", {
         method: "POST",
         body: { refreshToken: rt },
       });
-    } catch {
-      // Logout even if API fails
+    } catch (err) {
+      if ((err as { code?: string })?.code === "NETWORK_ERROR") {
+        networkDown = true;
+      }
     }
 
     setAccessToken(null);
     setRefreshToken(null);
-    setState((prev) => ({ ...prev, user: null }));
+    setState((prev) => ({
+      ...prev,
+      user: null,
+      backendAvailable: networkDown ? false : prev.backendAvailable,
+    }));
   }, []);
 
   return (

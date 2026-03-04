@@ -9,8 +9,8 @@ const fr: SiteContent = {
   nav: {
     items: [
       { label: "Accueil", href: "#accueil" },
-      { label: "Enregistrer", href: "#inscription" },
       { label: "\u00c0 propos", href: "#cycle" },
+      { label: "Enregistrer", href: "#inscription" },
       { label: "Plus", href: "#faq", withChevron: true },
       { label: "Contact", href: "#contact" },
     ],
@@ -284,6 +284,13 @@ const fr: SiteContent = {
     welcome: "Bienvenue, {{name}}",
     noItems: "Aucun bien enregistré pour le moment.",
     addItem: "Enregistrer un bien",
+    reportTheft: "Déclarer un vol",
+    statuses: {
+      active: "Actif",
+      stolen: "Volé",
+      recovered: "Récupéré",
+      transferred: "Transféré",
+    },
   },
   registration: {
     heading: "Enregistrer un bien",

@@ -4,7 +4,7 @@ export function ServiceUnavailable() {
   const { t } = useLanguage();
 
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
+    <div className="flex min-h-[60vh] flex-col items-center justify-center bg-[var(--rcb-white)] px-4 text-center">
       <svg
         className="mb-6 h-16 w-16 text-[var(--rcb-text-muted)]"
         viewBox="0 0 24 24"

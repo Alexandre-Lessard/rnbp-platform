@@ -1,14 +1,14 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
-import { apiRequest } from "@/lib/api-client";
+import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
 
 export function Footer() {
   const { t, locale } = useLanguage();
   const year = new Date().getFullYear();
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error" | "unavailable">("idle");
 
   async function handleSubscribe(e: FormEvent) {
     e.preventDefault();
@@ -22,8 +22,8 @@ export function Footer() {
       });
       setStatus("success");
       setEmail("");
-    } catch {
-      setStatus("error");
+    } catch (err) {
+      setStatus(isNetworkError(err) ? "unavailable" : "error");
     }
   }
 
@@ -78,6 +78,9 @@ export function Footer() {
             )}
             {status === "error" && (
               <p className="mt-3 text-sm text-red-600">Une erreur est survenue.</p>
+            )}
+            {status === "unavailable" && (
+              <p className="mt-3 text-sm text-red-600">Service temporairement indisponible. Réessayez plus tard.</p>
             )}
             <p className="mt-4 text-sm text-[var(--rcb-text-muted)]">
               {t.footer.disclaimer}

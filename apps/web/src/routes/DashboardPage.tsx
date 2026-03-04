@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
-import { apiRequest } from "@/lib/api-client";
+import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 
 type Item = {
   id: string;
@@ -17,17 +18,22 @@ type Item = {
 };
 
 export function DashboardPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { t } = useLanguage();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
+  const [backendDown, setBackendDown] = useState(false);
 
   useEffect(() => {
     apiRequest<{ items: Item[] }>("/items")
       .then((data) => setItems(data.items))
       .catch((err) => {
-        setLoadError(err instanceof Error ? err.message : "Erreur de chargement");
+        if (isNetworkError(err)) {
+          setBackendDown(true);
+        } else {
+          setLoadError(err instanceof Error ? err.message : "Erreur de chargement");
+        }
       })
       .finally(() => setLoading(false));
   }, []);
@@ -38,6 +44,14 @@ export function DashboardPage() {
     recovered: "bg-blue-100 text-blue-800",
     transferred: "bg-gray-100 text-gray-800",
   };
+
+  if (backendDown) {
+    return (
+      <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+        <ServiceUnavailable />
+      </section>
+    );
+  }
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
@@ -59,13 +73,12 @@ export function DashboardPage() {
           >
             + {t.dashboard?.addItem ?? "Enregistrer un bien"}
           </Link>
-          <button
-            type="button"
-            onClick={() => logout()}
-            className="cursor-pointer rounded-lg border border-[var(--rcb-border)] px-4 py-2 text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-primary)]"
+          <Link
+            to="/declarer-vol"
+            className={getButtonClasses("outline", "sm")}
           >
-            {t.nav.logout}
-          </button>
+            {t.dashboard?.reportTheft ?? "Déclarer un vol"}
+          </Link>
         </div>
       </div>
 
@@ -114,7 +127,7 @@ export function DashboardPage() {
               <span
                 className={`rounded-full px-3 py-1 text-xs font-medium ${statusColors[item.status] ?? "bg-gray-100 text-gray-800"}`}
               >
-                {item.status}
+                {t.dashboard?.statuses?.[item.status] ?? item.status}
               </span>
             </div>
           ))}

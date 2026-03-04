@@ -1,7 +1,8 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { useLanguage } from "@/i18n/context";
-import { apiRequest } from "@/lib/api-client";
+import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 
 type Item = {
   id: string;
@@ -23,6 +24,7 @@ export function ReportTheftPage() {
   const [success, setSuccess] = useState(false);
   const [loadingItems, setLoadingItems] = useState(true);
   const [loadError, setLoadError] = useState("");
+  const [backendDown, setBackendDown] = useState(false);
 
   useEffect(() => {
     apiRequest<{ items: Item[] }>("/items")
@@ -30,6 +32,7 @@ export function ReportTheftPage() {
         setItems(data.items.filter((i) => i.status === "active"));
       })
       .catch((err) => {
+        if (isNetworkError(err)) { setBackendDown(true); return; }
         setLoadError(err instanceof Error ? err.message : "Erreur de chargement");
       })
       .finally(() => setLoadingItems(false));
@@ -54,6 +57,7 @@ export function ReportTheftPage() {
       });
       setSuccess(true);
     } catch (err) {
+      if (isNetworkError(err)) { setBackendDown(true); return; }
       setError(err instanceof Error ? err.message : "Erreur");
     } finally {
       setLoading(false);
@@ -76,6 +80,14 @@ export function ReportTheftPage() {
             Votre déclaration a été enregistrée. Le statut du bien a été mis à jour dans le registre.
           </p>
         </div>
+      </section>
+    );
+  }
+
+  if (backendDown) {
+    return (
+      <section className="min-h-[70vh] bg-[var(--rcb-white)]">
+        <ServiceUnavailable />
       </section>
     );
   }
