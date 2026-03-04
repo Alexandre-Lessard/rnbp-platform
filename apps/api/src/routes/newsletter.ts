@@ -5,7 +5,9 @@ import { getDb } from "../db/client.js";
 import { newsletterSubscribers } from "../db/schema.js";
 
 export async function newsletterRoutes(app: FastifyInstance) {
-  app.post("/newsletter/subscribe", async (request, reply) => {
+  app.post("/newsletter/subscribe", {
+    config: { rateLimit: { max: 5, timeWindow: "1 minute" } },
+  }, async (request, reply) => {
     const body = newsletterSubscribeSchema.parse(request.body);
     const db = getDb();
 

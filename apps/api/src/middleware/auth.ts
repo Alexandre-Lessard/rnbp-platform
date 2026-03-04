@@ -3,11 +3,12 @@ import { verifyToken } from "../utils/tokens.js";
 import { getDb } from "../db/client.js";
 import { users } from "../db/schema.js";
 import { eq } from "drizzle-orm";
-import { unauthorized } from "../utils/errors.js";
+import { unauthorized, forbidden } from "../utils/errors.js";
 
 declare module "fastify" {
   interface FastifyRequest {
     userId?: string;
+    emailVerified?: boolean;
   }
 }
 
@@ -38,6 +39,7 @@ export async function requireAuth(
   const [user] = await db
     .select({
       id: users.id,
+      emailVerified: users.emailVerified,
       tokenRevokedBefore: users.tokenRevokedBefore,
     })
     .from(users)
@@ -56,4 +58,15 @@ export async function requireAuth(
   }
 
   request.userId = user.id;
+  request.emailVerified = user.emailVerified;
+}
+
+export async function requireVerifiedEmail(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  await requireAuth(request, reply);
+  if (!request.emailVerified) {
+    throw forbidden("Veuillez vérifier votre adresse courriel avant de continuer.");
+  }
 }

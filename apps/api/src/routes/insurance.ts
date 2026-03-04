@@ -2,14 +2,14 @@ import type { FastifyInstance } from "fastify";
 import { insuranceRequestSchema, INSURERS } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { insuranceRequests } from "../db/schema.js";
-import { requireAuth } from "../middleware/auth.js";
+import { requireVerifiedEmail } from "../middleware/auth.js";
 
 export async function insuranceRoutes(app: FastifyInstance) {
   // ── Submit insurance request ─────────────────────────────────────
 
   app.post(
     "/insurance/request",
-    { preHandler: requireAuth },
+    { preHandler: requireVerifiedEmail },
     async (request, reply) => {
       const body = insuranceRequestSchema.parse(request.body);
       const db = getDb();

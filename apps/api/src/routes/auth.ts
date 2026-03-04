@@ -154,7 +154,9 @@ export async function authRoutes(app: FastifyInstance) {
 
   // ── Refresh ────────────────────────────────────────────────────────
 
-  app.post("/auth/refresh", async (request, reply) => {
+  app.post("/auth/refresh", {
+    config: { rateLimit: { max: 30, timeWindow: "1 minute" } },
+  }, async (request, reply) => {
     const { refreshToken } = request.body as { refreshToken?: string };
     if (!refreshToken) {
       throw badRequest("Refresh token requis");
@@ -310,7 +312,9 @@ export async function authRoutes(app: FastifyInstance) {
 
   // ── Reset Password ─────────────────────────────────────────────────
 
-  app.post("/auth/reset-password", async (request, reply) => {
+  app.post("/auth/reset-password", {
+    config: { rateLimit: { max: 5, timeWindow: "1 minute" } },
+  }, async (request, reply) => {
     const body = resetPasswordSchema.parse(request.body);
 
     const userId = verifySignedToken(body.token, "reset-password");
@@ -335,7 +339,9 @@ export async function authRoutes(app: FastifyInstance) {
 
   // ── Verify Email ──────────────────────────────────────────────────
 
-  app.post("/auth/verify-email", async (request, reply) => {
+  app.post("/auth/verify-email", {
+    config: { rateLimit: { max: 10, timeWindow: "1 minute" } },
+  }, async (request, reply) => {
     const { token } = request.body as { token?: string };
     if (!token) {
       throw badRequest("Token requis");
@@ -359,7 +365,7 @@ export async function authRoutes(app: FastifyInstance) {
 
   app.post(
     "/auth/resend-verification",
-    { preHandler: requireAuth },
+    { preHandler: requireAuth, config: { rateLimit: { max: 3, timeWindow: "1 minute" } } },
     async (request, reply) => {
       const db = getDb();
       const config = getConfig();

@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { createReportSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { theftReports, items } from "../db/schema.js";
-import { requireAuth } from "../middleware/auth.js";
+import { requireAuth, requireVerifiedEmail } from "../middleware/auth.js";
 import { notFound, forbidden, badRequest } from "../utils/errors.js";
 
 export async function reportRoutes(app: FastifyInstance) {
@@ -11,7 +11,7 @@ export async function reportRoutes(app: FastifyInstance) {
 
   app.post(
     "/reports",
-    { preHandler: requireAuth },
+    { preHandler: requireVerifiedEmail },
     async (request, reply) => {
       const body = createReportSchema.parse(request.body);
       const db = getDb();

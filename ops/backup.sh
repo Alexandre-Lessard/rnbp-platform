@@ -1,6 +1,6 @@
 #!/bin/bash
 # RNBP database backup script
-# Run daily via cron: 0 3 * * * /opt/rnbp/deploy/backup.sh
+# Run daily via cron: 0 3 * * * /opt/rnbp/repo/ops/backup.sh
 #
 # Prerequisites:
 # - rclone configured with a remote named "rnbp-backup" (Cloudflare R2 or S3-compatible)
@@ -36,6 +36,11 @@ if command -v rclone &> /dev/null && rclone listremotes | grep -q "rnbp-backup:"
 else
     echo "[$(date)] rclone not configured — local backup only"
 fi
+
+# Clean expired sessions
+psql "$DATABASE_URL" -c "DELETE FROM sessions WHERE expires_at < NOW();" 2>/dev/null && \
+    echo "[$(date)] Cleaned expired sessions" || \
+    echo "[$(date)] Session cleanup skipped (psql error)"
 
 # Clean old local backups
 find "$BACKUP_DIR" -name "rnbp_*.sql.gz" -mtime +$RETENTION_DAYS -delete
