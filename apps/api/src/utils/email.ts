@@ -43,6 +43,53 @@ export async function sendEmail(payload: EmailPayload): Promise<void> {
   }
 }
 
+// ── HTML sanitization ─────────────────────────────────────────────────
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// ── Contact notification ──────────────────────────────────────────────
+
+export function buildContactNotificationEmail(
+  name: string,
+  email: string,
+  company: string | undefined,
+  type: string,
+  message: string,
+): EmailPayload {
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeCompany = company ? escapeHtml(company) : "—";
+  const safeType = escapeHtml(type);
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
+
+  return {
+    to: "partenaires@rnbp.ca",
+    subject: `Nouveau message partenaire — ${name}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Nouveau message de contact partenaire</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr><td style="padding: 8px 0; font-weight: bold;">Nom</td><td style="padding: 8px 0;">${safeName}</td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold;">Courriel</td><td style="padding: 8px 0;"><a href="mailto:${safeEmail}">${safeEmail}</a></td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold;">Entreprise</td><td style="padding: 8px 0;">${safeCompany}</td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold;">Type</td><td style="padding: 8px 0;">${safeType}</td></tr>
+        </table>
+        <h3 style="margin-top: 24px;">Message</h3>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">${safeMessage}</div>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="color: #888; font-size: 12px;">RNBP — Formulaire de contact partenaires</p>
+      </div>
+    `,
+  };
+}
+
 // ── HMAC token helpers ────────────────────────────────────────────────
 
 /**

@@ -183,10 +183,19 @@ export type SiteContent = {
     description: string;
     whyPartner: string;
     benefits: string[];
-    ctaHeading: string;
     ctaDescription: string;
-    ctaButton: string;
-    contactEmail: string;
+    formHeading: string;
+    nameLabel: string;
+    emailLabel: string;
+    companyLabel: string;
+    typeLabel: string;
+    messageLabel: string;
+    typePlaceholder: string;
+    typeOptions: { insurer: string; retailer: string; security: string; other: string };
+    submitButton: string;
+    submitting: string;
+    successMessage: string;
+    errorMessage: string;
   };
   legal?: {
     privacyHeading: string;
@@ -203,6 +212,8 @@ export type SiteContent = {
     messageTemplate: string;
     sendButton: string;
     copiedToast: string;
+    emailSubject: string;
+    emailButton: string;
   };
   errors?: {
     serviceUnavailable: string;

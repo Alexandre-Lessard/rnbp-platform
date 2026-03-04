@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
-import { INSURERS } from "@rnbp/shared";
+import { INSURERS, INSURER_EMAILS } from "@rnbp/shared";
 
 export function InsuranceFormSection() {
   const { t } = useLanguage();
@@ -14,6 +14,14 @@ export function InsuranceFormSection() {
   const message = selectedInsurer
     ? ins.messageTemplate.replace("{{insurer}}", selectedInsurer)
     : "";
+
+  const insurerEmail = selectedInsurer
+    ? INSURER_EMAILS[selectedInsurer] ?? null
+    : null;
+
+  const mailtoHref = insurerEmail
+    ? `mailto:${insurerEmail}?subject=${encodeURIComponent(ins.emailSubject)}&body=${encodeURIComponent(message).replace(/%0A/g, "%0D%0A")}`
+    : null;
 
   async function handleCopy() {
     if (!message) return;
@@ -86,8 +94,21 @@ export function InsuranceFormSection() {
                 className="w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-white)] px-4 py-3 text-[var(--rcb-text-body)] focus:outline-none"
               />
 
-              <div className="mt-4 flex items-center gap-4">
-                <Button onClick={handleCopy} className="cursor-pointer">
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                {mailtoHref && (
+                  <a
+                    href={mailtoHref}
+                    className="inline-block rounded-xl bg-[var(--rcb-primary)] px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--rcb-primary-dark)]"
+                  >
+                    {ins.emailButton}
+                  </a>
+                )}
+                <Button
+                  onClick={handleCopy}
+                  variant={mailtoHref ? "outline" : "primary"}
+                  size="sm"
+                  className="cursor-pointer"
+                >
                   {ins.sendButton}
                 </Button>
                 {copied && (

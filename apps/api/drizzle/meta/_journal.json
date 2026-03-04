@@ -8,6 +8,13 @@
       "when": 1772590831885,
       "tag": "0000_chief_scalphunter",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1772658951034,
+      "tag": "0001_brief_pandemic",
+      "breakpoints": true
     }
   ]
 }

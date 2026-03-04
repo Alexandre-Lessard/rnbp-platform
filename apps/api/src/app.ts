@@ -9,6 +9,7 @@ import { registerWithItemRoutes } from "./routes/register-with-item.js";
 import { reportRoutes } from "./routes/reports.js";
 import { newsletterRoutes } from "./routes/newsletter.js";
 import { insuranceRoutes } from "./routes/insurance.js";
+import { contactRoutes } from "./routes/contact.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { securityHeaders } from "./middleware/security-headers.js";
 
@@ -51,6 +52,7 @@ export async function buildApp() {
   await app.register(reportRoutes, { prefix: "/api" });
   await app.register(newsletterRoutes, { prefix: "/api" });
   await app.register(insuranceRoutes, { prefix: "/api" });
+  await app.register(contactRoutes, { prefix: "/api" });
 
   return app;
 }

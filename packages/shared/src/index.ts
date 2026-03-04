@@ -10,6 +10,7 @@ export * from "./schemas/item.js";
 export * from "./schemas/report.js";
 export * from "./schemas/insurance.js";
 export * from "./schemas/newsletter.js";
+export * from "./schemas/contact.js";
 
 // Types
 export * from "./types/user.js";

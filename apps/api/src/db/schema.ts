@@ -219,6 +219,20 @@ export const partners = pgTable("partners", {
     .defaultNow(),
 });
 
+// ── Contact Messages ──────────────────────────────────────────────────
+
+export const contactMessages = pgTable("contact_messages", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 100 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  company: varchar("company", { length: 255 }),
+  type: partnerTypeEnum("type").notNull(),
+  message: text("message").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 // ── Newsletter Subscribers ─────────────────────────────────────────────
 
 export const newsletterSubscribers = pgTable("newsletter_subscribers", {

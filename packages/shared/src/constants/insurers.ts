@@ -24,3 +24,28 @@ export const INSURERS = [
 ] as const;
 
 export type Insurer = (typeof INSURERS)[number];
+
+export const INSURER_EMAILS: Record<string, string | null> = {
+  "Intact Financial / Intact Insurance": "customer.experience@intact.net",
+  "Aviva Canada": "info@avivacanada.com",
+  "Desjardins Assurances": null,
+  "Wawanesa Mutual Insurance": "TalkToUs@wawanesa.com",
+  "Co-operators General Insurance": "customer.service@cumis.com",
+  "TD Insurance": "tdinscc@TD.com",
+  "AIG Canada": "aigcanada.ah@aig.com",
+  "RBC Insurance": "feedback@rbcinsurance.com",
+  "Sonnet Insurance": "help@sonnet.ca",
+  "Promutuel Assurance": null,
+  "SSQ Assurance": "info@ssq.ca",
+  "Belairdirect / Belair Insurance": "customer.experience@belairdirect.com",
+  "Industrielle Alliance (iA Groupe financier)": "serviceclient@industrielleallianceauto.com",
+  "Optimum Insurance": null,
+  "The Personal Insurance Company": null,
+  "Chubb Insurance Company of Canada": "CustomerCare.Canada@chubb.com",
+  "Peace Hills General Insurance Company": "phi@phgic.com",
+  "Red River Mutual Insurance": "info@redrivermutual.com",
+  "Saskatchewan Mutual Insurance": null,
+  "Pafco Insurance": "contactus@pafco.ca",
+  "CAA-Québec Assurance": "info@caaquebec.com",
+  "Economical Insurance": null,
+};
