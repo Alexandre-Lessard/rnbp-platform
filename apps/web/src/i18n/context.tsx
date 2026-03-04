@@ -11,9 +11,16 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 function detectLocale(): SupportedLocale {
+  // 1. User's explicit choice (localStorage)
   const stored = localStorage.getItem("locale");
   if (stored && stored in locales) return stored as SupportedLocale;
 
+  // 2. Hostname-based default (rnbp.ca → FR, nrpp.ca → EN)
+  const hostname = window.location.hostname;
+  if (hostname.includes("nrpp")) return "en";
+  if (hostname.includes("rnbp")) return "fr";
+
+  // 3. Browser language
   const browserLang = navigator.language.slice(0, 2);
   if (browserLang in locales) return browserLang as SupportedLocale;
 

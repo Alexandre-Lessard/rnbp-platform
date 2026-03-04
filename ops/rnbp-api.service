@@ -5,8 +5,8 @@ Requires=postgresql.service
 
 [Service]
 Type=simple
-User=rnbp
-Group=rnbp
+User=prod
+Group=prod
 WorkingDirectory=/opt/rnbp/repo/apps/api
 ExecStart=/usr/bin/node dist/index.js
 Restart=always

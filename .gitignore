@@ -18,9 +18,6 @@ apps/api/uploads/
 *.pem
 
 # project-local
-Registre Canadiens des biens/
 design/
-design-refs/
+notes/
 *.code-workspace
-guide-dev-ia*
-INSURANCE-FORM-NOTES.md
