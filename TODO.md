@@ -1,3 +1,1 @@
-Doc complete
-
-Contacte form pour communicaitons de partenaires.
+Formulaire de contact pour communications de partenaires.

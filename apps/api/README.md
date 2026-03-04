@@ -136,6 +136,88 @@ Toutes les routes sont préfixées par `/api`.
 | POST | `/newsletter/subscribe` | Non | S'abonner à l'infolettre |
 | GET | `/health` | Non | Health check (statut DB) |
 
+## Flow d'authentification
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  INSCRIPTION                                                    │
+│                                                                 │
+│  POST /auth/register ──→ Crée user + session                   │
+│       │                   Retourne accessToken + refreshToken   │
+│       └──→ Email de vérification (fire & forget)                │
+│                                                                 │
+│  POST /auth/register-with-item ──→ Même chose + crée un bien   │
+│       (transaction atomique : user + item réussissent ou rien)  │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  CONNEXION / DÉCONNEXION                                        │
+│                                                                 │
+│  POST /auth/login ──→ Vérifie email + Argon2                   │
+│       Retourne accessToken (15m) + refreshToken (7j)            │
+│                                                                 │
+│  POST /auth/logout ──→ Supprime la session (ou toutes)          │
+│       Note: le JWT access reste valide jusqu'à expiration (15m) │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  RAFRAÎCHISSEMENT (refresh token rotation)                      │
+│                                                                 │
+│  POST /auth/refresh ──→ Vérifie refreshToken                   │
+│       1. Valide le JWT                                          │
+│       2. Cherche la session en DB (par hash SHA-256 du token)   │
+│       3. Vérifie tokenRevokedBefore (révocation de masse)       │
+│       4. Supprime l'ancienne session                            │
+│       5. Crée une nouvelle session + nouveaux tokens            │
+│       (= rotation : chaque refresh token est usage unique)      │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  RESET MOT DE PASSE                                             │
+│                                                                 │
+│  POST /auth/forgot-password ──→ Email avec token signé (1h)     │
+│       (réponse identique que le compte existe ou non)           │
+│                                                                 │
+│  POST /auth/reset-password ──→ Vérifie token signé             │
+│       1. Change le mot de passe                                 │
+│       2. Set tokenRevokedBefore = now (invalide TOUS les JWT)   │
+│       3. Supprime toutes les sessions                           │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  VÉRIFICATION EMAIL                                             │
+│                                                                 │
+│  POST /auth/verify-email ──→ Token signé (24h)                  │
+│  POST /auth/resend-verification ──→ Renvoie le courriel (auth)  │
+│                                                                 │
+│  Impact : requireVerifiedEmail bloque les déclarations de vol   │
+│           sans email vérifié. requireAuth seul permet le reste. │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Tokens
+
+| Type | Durée | Stockage | Révocation |
+|------|-------|----------|------------|
+| Access (JWT) | 15 min | Client seulement | Expire naturellement, ou via `tokenRevokedBefore` |
+| Refresh (JWT) | 7 jours | Hash SHA-256 en DB (table `sessions`) | Suppression de la session, ou `tokenRevokedBefore` |
+| Email verification | 24h | Token signé HMAC (pas en DB) | Expire naturellement |
+| Password reset | 1h | Token signé HMAC (pas en DB) | Expire naturellement |
+
+### Révocation de masse (`tokenRevokedBefore`)
+
+Champ timestamp sur `users`. Quand défini, tout JWT (access ou refresh) émis **avant** ce timestamp est refusé au middleware `requireAuth` et lors du `refresh`. Utilisé lors d'un reset de mot de passe pour forcer la reconnexion sur tous les appareils.
+
+### `requireAuth` vs `requireVerifiedEmail`
+
+- **`requireAuth`** — Vérifie le JWT access, vérifie `tokenRevokedBefore`. Utilisé sur la majorité des routes protégées.
+- **`requireVerifiedEmail`** — Appelle `requireAuth` + vérifie `emailVerified = true`. Utilisé pour les déclarations de vol (`POST /reports`).
+
+## Transactions atomiques
+
+Certaines opérations modifient plusieurs tables et doivent réussir ou échouer ensemble. On utilise `db.transaction()` pour garantir l'atomicité :
+
+- **`register-with-item`** — Vérifie unicité email + crée user + crée item. Sans transaction, un crash entre les deux inserts laisserait un user sans item (ou un numéro RNBP orphelin).
+- **`reports`** — Crée la déclaration de vol + met à jour le statut de l'item à `stolen`. Sans transaction, l'item pourrait être marqué volé sans déclaration associée.
+
+**Règle : utiliser `db.transaction()` dès qu'un endpoint modifie plus d'une table.**
+
 ## Architecture
 
 ```

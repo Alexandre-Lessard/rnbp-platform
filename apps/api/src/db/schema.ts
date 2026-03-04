@@ -12,6 +12,10 @@ import {
 
 // ── Enums ──────────────────────────────────────────────────────────────
 
+// Transitions d'état des items :
+//   active → stolen      (déclaration de vol via POST /reports)
+//   stolen → recovered   (récupération du bien — admin/futur)
+//   active → transferred (transfert de propriété — futur)
 export const itemStatusEnum = pgEnum("item_status", [
   "active",
   "stolen",
@@ -19,6 +23,10 @@ export const itemStatusEnum = pgEnum("item_status", [
   "transferred",
 ]);
 
+// Transitions d'état des déclarations de vol :
+//   pending → confirmed  (validation par admin — futur)
+//   pending → dismissed  (rejeté / annulé)
+//   confirmed → resolved (bien récupéré)
 export const reportStatusEnum = pgEnum("report_status", [
   "pending",
   "confirmed",
@@ -36,6 +44,8 @@ export const users = pgTable("users", {
   lastName: varchar("last_name", { length: 100 }).notNull(),
   phone: varchar("phone", { length: 20 }),
   emailVerified: boolean("email_verified").notNull().default(false),
+  // Révocation de masse : tous les tokens émis AVANT ce timestamp sont refusés.
+  // Mis à jour lors d'un reset de mot de passe pour invalider toutes les sessions.
   tokenRevokedBefore: timestamp("token_revoked_before", {
     withTimezone: true,
   }),
@@ -56,7 +66,7 @@ export const sessions = pgTable(
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    tokenHash: text("token_hash").notNull(),
+    tokenHash: text("token_hash").notNull(), // SHA-256 du refresh token (jamais stocké en clair)
     deviceInfo: text("device_info"),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -84,6 +94,8 @@ export const items = pgTable(
     estimatedValue: integer("estimated_value"),
     purchaseDate: timestamp("purchase_date", { withTimezone: true }),
     status: itemStatusEnum("status").notNull().default("active"),
+    // Format: RNBP-XXXXXXXX (nanoid 8 chars, alphabet sans ambiguïté: 0/1/I/L/O exclus)
+    // ~30 milliards de combinaisons — collision négligeable pour notre volume
     rnbpNumber: varchar("rnbp_number", { length: 13 }).notNull().unique(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -176,8 +188,8 @@ export const insuranceRequests = pgTable("insurance_requests", {
     .references(() => users.id, { onDelete: "cascade" }),
   insurerName: varchar("insurer_name", { length: 100 }).notNull(),
   messageContent: text("message_content").notNull(),
-  sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
-  createdAt: timestamp("created_at", { withTimezone: true })
+  sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(), // Quand l'email a été envoyé à l'assureur
+  createdAt: timestamp("created_at", { withTimezone: true }) // Quand la demande a été créée (peut différer si envoi différé)
     .notNull()
     .defaultNow(),
 });
