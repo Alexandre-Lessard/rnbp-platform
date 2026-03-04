@@ -4,7 +4,7 @@ export function RollingRegistrySection() {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-[var(--rcb-surface)]">
+    <section className="bg-[var(--rcb-white)]">
       <div className="section-shell py-14 sm:py-16 lg:py-20">
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           <div className="text-left">

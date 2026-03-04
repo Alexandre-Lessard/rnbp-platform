@@ -1,4 +1,5 @@
 import { drizzle } from "drizzle-orm/postgres-js";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 import { getConfig } from "../config.js";
 import * as schema from "./schema.js";
@@ -23,6 +24,11 @@ export function getDb() {
     db = createDb();
   }
   return db;
+}
+
+export async function runMigrations() {
+  const database = getDb();
+  await migrate(database, { migrationsFolder: "./drizzle" });
 }
 
 export async function closeDb() {

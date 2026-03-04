@@ -40,7 +40,8 @@ export function DashboardPage() {
   };
 
   return (
-    <section className="section-shell py-16">
+    <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <div className="section-shell py-16">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
@@ -119,6 +120,7 @@ export function DashboardPage() {
           ))}
         </div>
       )}
+      </div>
     </section>
   );
 }

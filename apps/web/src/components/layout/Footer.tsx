@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest } from "@/lib/api-client";
+import { Button } from "@/components/ui/Button";
 
 export function Footer() {
   const { t, locale } = useLanguage();
@@ -62,13 +63,15 @@ export function Footer() {
                 }}
                 className="h-11 w-full border-b border-[var(--rcb-border-muted)] bg-transparent px-1 text-lg text-[var(--rcb-text-body)] placeholder:text-[var(--rcb-text-light)] focus:outline-none"
               />
-              <button
+              <Button
                 type="submit"
+                variant="outline"
+                size="sm"
                 disabled={status === "loading"}
-                className="h-11 rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-5 text-sm font-semibold text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-surface)] disabled:opacity-50"
+                className="shrink-0 cursor-pointer disabled:opacity-50"
               >
                 {status === "loading" ? "..." : t.footer.sendButton}
-              </button>
+              </Button>
             </form>
             {status === "success" && (
               <p className="mt-3 text-sm font-medium text-green-600">Merci !</p>

@@ -83,7 +83,7 @@ export function InsuranceFormSection() {
                 readOnly
                 value={message}
                 rows={4}
-                className="w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-surface)] px-4 py-3 text-[var(--rcb-text-body)] focus:outline-none"
+                className="w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-white)] px-4 py-3 text-[var(--rcb-text-body)] focus:outline-none"
               />
 
               <div className="mt-4 flex items-center gap-4">

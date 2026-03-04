@@ -6,7 +6,7 @@ export function AllCategoriesSection() {
   const [open, setOpen] = useState(false);
 
   return (
-    <section id="all-categories" className="scroll-mt-24 bg-[var(--rcb-bg)]">
+    <section id="all-categories" className="scroll-mt-24 bg-[var(--rcb-gray-light)]">
       <div className="section-shell py-16 sm:py-20">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-6xl font-bold leading-tight text-[var(--rcb-text)] sm:text-7xl">
