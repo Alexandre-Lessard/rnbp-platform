@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="{{LANG}}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,46 +8,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet" />
-    <meta
-      name="description"
-      content="Registre national des biens personnels - protégez et retrouvez vos biens de valeur."
-    />
-    <title>Registre national des biens personnels</title>
+    <meta name="description" content="{{DESCRIPTION}}" />
+    <meta name="robots" content="{{ROBOTS}}" />
+    <title>{{TITLE}}</title>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="fr_CA" />
-    <meta property="og:locale:alternate" content="en_CA" />
-    <meta property="og:site_name" content="RNBP" />
-    <meta property="og:title" content="Registre national des biens personnels" />
-    <meta property="og:description" content="Protégez et retrouvez vos biens de valeur grâce au registre canadien des biens personnels." />
-    <meta property="og:url" content="https://rnbp.ca" />
-    <meta property="og:image" content="https://rnbp.ca/assets/og-image.png" />
+    <meta property="og:locale" content="{{OG_LOCALE}}" />
+    <meta property="og:locale:alternate" content="{{OG_LOCALE_ALT}}" />
+    <meta property="og:site_name" content="{{SITE_NAME}}" />
+    <meta property="og:title" content="{{TITLE}}" />
+    <meta property="og:description" content="{{DESCRIPTION}}" />
+    <meta property="og:url" content="{{OG_URL}}" />
+    <meta property="og:image" content="{{OG_IMAGE}}" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Registre national des biens personnels" />
-    <meta name="twitter:description" content="Protégez et retrouvez vos biens de valeur grâce au registre canadien des biens personnels." />
-    <meta name="twitter:image" content="https://rnbp.ca/assets/og-image.png" />
+    <meta name="twitter:title" content="{{TITLE}}" />
+    <meta name="twitter:description" content="{{DESCRIPTION}}" />
+    <meta name="twitter:image" content="{{OG_IMAGE}}" />
 
     <!-- Canonical & hreflang -->
-    <link rel="canonical" href="https://rnbp.ca" />
-    <link rel="alternate" hreflang="fr" href="https://rnbp.ca/" />
-    <link rel="alternate" hreflang="en" href="https://nrpp.ca/" />
-    <link rel="alternate" hreflang="x-default" href="https://rnbp.ca/" />
+    <link rel="canonical" href="{{CANONICAL}}" />
+    <link rel="alternate" hreflang="fr" href="{{HREFLANG_FR}}" />
+    <link rel="alternate" hreflang="en" href="{{HREFLANG_EN}}" />
+    <link rel="alternate" hreflang="x-default" href="{{HREFLANG_FR}}" />
 
     <!-- JSON-LD -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Registre national des biens personnels",
-        "alternateName": "RNBP",
-        "url": "https://rnbp.ca",
-        "logo": "https://rnbp.ca/assets/logo-texte-fr.png",
-        "description": "Registre national des biens personnels — protégez et retrouvez vos biens de valeur."
-      }
-    </script>
+    {{JSON_LD}}
   </head>
   <body>
     <div id="root"></div>

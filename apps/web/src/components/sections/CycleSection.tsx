@@ -34,8 +34,11 @@ export function CycleSection() {
 
           <figure className="mx-auto w-full max-w-[430px]">
             <img
-              src="/assets/cycle-police.png"
+              src="/assets/cycle-police.webp"
               alt={t.cycle.imageAlt}
+              width={506}
+              height={759}
+              loading="lazy"
               className="h-auto w-full rounded-[2.2rem] object-cover"
             />
           </figure>

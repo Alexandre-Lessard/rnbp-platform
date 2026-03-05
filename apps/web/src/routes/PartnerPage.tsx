@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest, type ApiError } from "@/lib/api-client";
 
@@ -57,6 +58,10 @@ export function PartnerPage() {
 
   return (
     <section className="min-h-[70vh] bg-[var(--rcb-white)]">
+      <Helmet>
+        <title>{t.pages.partners.title}</title>
+        <meta name="description" content={t.pages.partners.description} />
+      </Helmet>
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {p.heading}

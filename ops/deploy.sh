@@ -112,7 +112,7 @@ ok "Build complete"
 
 deploy_web() {
   log "Deploying frontend to Cloudflare Pages..."
-  npx wrangler pages deploy apps/web/dist --project-name "$CF_PROJECT"
+  CLOUDFLARE_ACCOUNT_ID=3aa12f83f9d4006cfd805489b6d65eb8 npx wrangler pages deploy dist --project-name "$CF_PROJECT" --cwd apps/web
   ok "Frontend deployed"
 }
 

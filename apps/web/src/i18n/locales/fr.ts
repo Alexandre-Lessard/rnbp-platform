@@ -6,6 +6,40 @@ const fr: SiteContent = {
     description:
       "Registre national des biens personnels \u2014 prot\u00e9gez et retrouvez vos biens de valeur.",
   },
+  pages: {
+    home: {
+      title: "Protégez et retrouvez vos biens de valeur | RNBP Canada",
+      description: "Enregistrez vos biens de valeur dans un registre sécurisé. Protégez et retrouvez vos biens en cas de perte ou de vol.",
+    },
+    faq: {
+      title: "Questions fréquentes | RNBP",
+      description: "Trouvez les réponses aux questions courantes sur l'enregistrement de vos biens au Registre national des biens personnels.",
+    },
+    partners: {
+      title: "Devenez partenaire | RNBP",
+      description: "Collaborez avec le RNBP : assureurs, détaillants et organismes de sécurité publique à travers le Canada.",
+    },
+    privacy: {
+      title: "Politique de confidentialité | RNBP",
+      description: "Découvrez comment le RNBP protège vos renseignements personnels et respecte les lois fédérales sur la vie privée.",
+    },
+    terms: {
+      title: "Conditions d'utilisation | RNBP",
+      description: "Consultez les conditions d'utilisation du Registre national des biens personnels.",
+    },
+    lookup: {
+      title: "Vérifier un bien | RNBP",
+      description: "Entrez un numéro RNBP pour vérifier le statut d'un bien enregistré dans le registre.",
+    },
+    login: {
+      title: "Connexion | RNBP",
+      description: "Connectez-vous à votre compte RNBP pour gérer vos biens enregistrés.",
+    },
+    register: {
+      title: "Créer un compte | RNBP",
+      description: "Inscrivez-vous gratuitement au RNBP pour enregistrer et protéger vos biens de valeur.",
+    },
+  },
   nav: {
     items: [
       { label: "Accueil", href: "#accueil" },

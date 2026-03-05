@@ -51,8 +51,10 @@ export function HeroSection() {
             className="pointer-events-none absolute -top-5 -right-5 w-[210px] opacity-90 sm:-top-10 sm:-right-10 sm:w-[420px]"
           />
           <img
-            src="/assets/hero-items.png"
+            src="/assets/hero-items.webp"
             alt={t.hero.imageAlt}
+            width={1536}
+            height={1024}
             className="relative z-10 w-full drop-shadow-[0_30px_40px_rgba(16,25,40,0.2)]"
           />
         </div>

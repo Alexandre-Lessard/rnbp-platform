@@ -177,8 +177,11 @@ export function StepItemDetails({
 
       <div className="hidden items-start justify-center lg:flex">
         <img
-          src="/assets/hero-items.png"
+          src="/assets/hero-items.webp"
           alt=""
+          width={1536}
+          height={1024}
+          loading="lazy"
           className="w-full max-w-md rounded-2xl"
         />
       </div>

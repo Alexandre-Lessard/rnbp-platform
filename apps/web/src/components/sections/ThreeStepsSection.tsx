@@ -26,7 +26,7 @@ export function ThreeStepsSection() {
                   {t.threeSteps.learnMoreLink} &gt;
                 </Link>
               </div>
-              <img src={step.image} alt={step.title} className="h-52 w-full object-cover object-bottom" />
+              <img src={step.image} alt={step.title} loading="lazy" className="h-52 w-full object-cover object-bottom" />
             </article>
           ))}
         </div>

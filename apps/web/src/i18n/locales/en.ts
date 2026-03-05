@@ -6,6 +6,40 @@ const en: SiteContent = {
     description:
       "National Registry of Personal Property \u2014 protect and recover your valuable belongings.",
   },
+  pages: {
+    home: {
+      title: "Protect and recover your valuable belongings | NRPP",
+      description: "Register your valuable belongings in a secure registry. Protect and recover your items in case of loss or theft.",
+    },
+    faq: {
+      title: "Frequently Asked Questions | NRPP",
+      description: "Find answers to common questions about registering your belongings in the National Registry of Personal Property.",
+    },
+    partners: {
+      title: "Become a Partner | NRPP",
+      description: "Partner with the NRPP: insurers, retailers and public safety organizations across Canada.",
+    },
+    privacy: {
+      title: "Privacy Policy | NRPP",
+      description: "Learn how the NRPP protects your personal information and complies with federal privacy laws.",
+    },
+    terms: {
+      title: "Terms of Service | NRPP",
+      description: "Review the terms of service for the National Registry of Personal Property.",
+    },
+    lookup: {
+      title: "Verify an Item | NRPP",
+      description: "Enter a NRPP number to check the status of a registered item.",
+    },
+    login: {
+      title: "Login | NRPP",
+      description: "Sign in to your NRPP account to manage your registered items.",
+    },
+    register: {
+      title: "Create an Account | NRPP",
+      description: "Sign up for free to register and protect your valuable belongings.",
+    },
+  },
   nav: {
     items: [
       { label: "Home", href: "#accueil" },

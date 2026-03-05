@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
 
 export function PrivacyPolicyPage() {
@@ -6,6 +7,10 @@ export function PrivacyPolicyPage() {
 
   return (
     <section className="section-shell py-16">
+      <Helmet>
+        <title>{t.pages.privacy.title}</title>
+        <meta name="description" content={t.pages.privacy.description} />
+      </Helmet>
       <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
         {legal.privacyHeading}
       </h1>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { PlusMinus } from "@/components/icons/PlusMinus";
 import { useLanguage } from "@/i18n/context";
 
@@ -14,6 +15,10 @@ export function FaqPage() {
 
   return (
     <section className="bg-[var(--rcb-bg)]">
+      <Helmet>
+        <title>{t.pages.faq.title}</title>
+        <meta name="description" content={t.pages.faq.description} />
+      </Helmet>
       <div className="section-shell py-16 sm:py-20">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="text-6xl font-bold text-[var(--rcb-text)] sm:text-7xl">{t.faq.heading}</h1>

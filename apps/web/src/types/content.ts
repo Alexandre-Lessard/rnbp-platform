@@ -26,11 +26,17 @@ export type TrustBadge = {
   label: string;
 };
 
+export type PageSeo = {
+  title: string;
+  description: string;
+};
+
 export type SiteContent = {
   meta: {
     title: string;
     description: string;
   };
+  pages: Record<string, PageSeo>;
   nav: {
     items: NavItem[];
     partners: string;

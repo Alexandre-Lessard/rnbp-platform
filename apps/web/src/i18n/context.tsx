@@ -37,7 +37,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = locale === "fr" ? "fr-CA" : "en-CA";
-    document.title = locales[locale].meta.title;
   }, [locale]);
 
   return (
