@@ -8,6 +8,7 @@ import { InsuranceFormSection } from "@/components/sections/InsuranceFormSection
 import { ProtectionCtaSection } from "@/components/sections/ProtectionCtaSection";
 import { RollingRegistrySection } from "@/components/sections/RollingRegistrySection";
 import { ThreeStepsSection } from "@/components/sections/ThreeStepsSection";
+import { VerifyBeforeBuySection } from "@/components/sections/VerifyBeforeBuySection";
 
 export function LandingPage() {
   const { t } = useLanguage();
@@ -24,6 +25,7 @@ export function LandingPage() {
       <ProtectionCtaSection />
       <ThreeStepsSection />
       <InsuranceFormSection />
+      <VerifyBeforeBuySection />
       <FaqSection />
     </>
   );

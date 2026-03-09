@@ -39,6 +39,10 @@ const fr: SiteContent = {
       title: "Créer un compte | RNBP",
       description: "Inscrivez-vous gratuitement au RNBP pour enregistrer et protéger vos biens de valeur.",
     },
+    contact: {
+      title: "Contactez-nous | RNBP",
+      description: "Une question ou un commentaire\u00a0? Envoyez-nous un message et nous vous répondrons dans les plus brefs délais.",
+    },
   },
   nav: {
     items: [
@@ -46,7 +50,7 @@ const fr: SiteContent = {
       { label: "\u00c0 propos", href: "#cycle" },
       { label: "Enregistrer", href: "#inscription" },
       { label: "FAQ", href: "/faq" },
-      { label: "Contact", href: "#contact" },
+      { label: "Contact", href: "/contact" },
     ],
     partners: "Partenaires",
     login: "Connexion",
@@ -474,6 +478,18 @@ const fr: SiteContent = {
     successMessage: "Merci ! Votre message a été envoyé. Nous vous répondrons dans les plus brefs délais.",
     errorMessage: "Une erreur est survenue. Veuillez réessayer plus tard.",
   },
+  contact: {
+    heading: "Contactez-nous",
+    description: "Une question, un commentaire ou une suggestion\u00a0? Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.",
+    nameLabel: "Nom complet",
+    emailLabel: "Adresse courriel",
+    messageLabel: "Message",
+    submitButton: "Envoyer",
+    submitting: "Envoi en cours\u2026",
+    successMessage: "Merci\u00a0! Votre message a été envoyé. Nous vous répondrons dans les plus brefs délais.",
+    emailError: "Veuillez entrer une adresse courriel valide.",
+    errorMessage: "Une erreur est survenue. Veuillez réessayer plus tard.",
+  },
   insurance: {
     heading: "Obtenez un rabais sur votre assurance",
     description: "La plupart des assureurs offrent un rabais aux membres du RNBP. Sélectionnez votre assureur et contactez-le pour vérifier si vous êtes éligible.",
@@ -565,6 +581,14 @@ const fr: SiteContent = {
         body: "Le RNBP se réserve le droit de modifier les présentes conditions à tout moment. Les modifications entreront en vigueur dès leur publication sur le site. L'utilisation continue du service après une modification constitue votre acceptation des nouvelles conditions.",
       },
     ],
+  },
+  verifyBeforeBuy: {
+    headingAccent: "Vérifiez",
+    heading: "avant d'acheter",
+    description:
+      "Consultez le registre pour savoir si un bien a été déclaré volé avant de l'acheter. Protégez-vous contre les achats frauduleux en quelques secondes.",
+    buttonText: "Vérifier un bien",
+    imageAlt: "Vérification d'un bien avant achat",
   },
   errors: {
     serviceUnavailable: "Service temporairement indisponible",

@@ -20,7 +20,7 @@ export function Navbar() {
           <img src={`/assets/logo-texte-${locale}.png`} alt={t.a11y.logoAlt} className="h-10" />
         </Link>
 
-        <nav aria-label={t.a11y.mainNav} className="hidden items-center gap-9 text-[1.1rem] font-medium text-[var(--rcb-text-strong)] lg:flex">
+        <nav aria-label={t.a11y.mainNav} className="hidden items-center gap-9 text-base font-medium text-[var(--rcb-text-strong)] lg:flex">
           {t.nav.items.map((item) => {
             const isHash = item.href.startsWith("#");
             const cls = "flex items-center justify-center gap-1 min-w-[4rem] transition-colors hover:text-[var(--rcb-primary)]";

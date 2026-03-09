@@ -21,11 +21,11 @@ export function CycleSection() {
                 key={action.number}
                 className="border-t border-[var(--rcb-border-muted)] pt-6"
               >
-                <div className="flex items-center gap-3 text-4xl font-bold">
-                  <span className="text-3xl text-[var(--rcb-primary)]">{action.number}</span>
+                <div className="flex items-center gap-3 text-3xl font-bold">
+                  <span className="text-xl text-[var(--rcb-primary)]">{action.number}</span>
                   <h3>{action.title}</h3>
                 </div>
-                <p className="mt-4 text-3xl text-[var(--rcb-text-body)]">
+                <p className="mt-4 text-xl text-[var(--rcb-text-body)]">
                   {action.description}
                 </p>
               </article>

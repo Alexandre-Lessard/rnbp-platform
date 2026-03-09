@@ -46,7 +46,7 @@ export function InsuranceFormSection() {
     <section className="bg-[var(--rcb-bg)]">
       <div className="section-shell py-16 sm:py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-5xl font-bold text-[var(--rcb-text)] sm:text-6xl">
+          <h2 className="text-4xl font-bold text-[var(--rcb-text)] sm:text-5xl">
             {ins.heading}
           </h2>
           <p className="mt-6 text-xl leading-relaxed text-[var(--rcb-text-muted)]">

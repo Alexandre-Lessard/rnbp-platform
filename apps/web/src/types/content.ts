@@ -203,6 +203,18 @@ export type SiteContent = {
     successMessage: string;
     errorMessage: string;
   };
+  contact?: {
+    heading: string;
+    description: string;
+    nameLabel: string;
+    emailLabel: string;
+    messageLabel: string;
+    submitButton: string;
+    submitting: string;
+    successMessage: string;
+    emailError: string;
+    errorMessage: string;
+  };
   legal?: {
     privacyHeading: string;
     privacyContent: { title: string; body: string }[];
@@ -220,6 +232,13 @@ export type SiteContent = {
     copiedToast: string;
     emailSubject: string;
     emailButton: string;
+  };
+  verifyBeforeBuy?: {
+    headingAccent: string;
+    heading: string;
+    description: string;
+    buttonText: string;
+    imageAlt: string;
   };
   errors?: {
     serviceUnavailable: string;

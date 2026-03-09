@@ -25,7 +25,7 @@ export function ProtectionCtaSection() {
                 <br />
                 {t.protectionCta.headingLine2}
               </h2>
-              <p className="mt-8 max-w-3xl text-3xl leading-relaxed text-[var(--rcb-text-muted)]">
+              <p className="mt-8 max-w-3xl text-xl leading-relaxed text-[var(--rcb-text-muted)]">
                 {t.protectionCta.description}
               </p>
 

@@ -31,6 +31,7 @@ import { PartnerPage } from "@/routes/PartnerPage";
 import { PrivacyPolicyPage } from "@/routes/PrivacyPolicyPage";
 import { TermsOfServicePage } from "@/routes/TermsOfServicePage";
 import { FaqPage } from "@/routes/FaqPage";
+import { ContactPage } from "@/routes/ContactPage";
 import { NotFoundPage } from "@/routes/NotFoundPage";
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
           <Route path="/confidentialite" element={<PrivacyPolicyPage />} />
           <Route path="/conditions" element={<TermsOfServicePage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route
             path="/tableau-de-bord"
             element={

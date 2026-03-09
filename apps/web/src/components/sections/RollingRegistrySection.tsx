@@ -13,15 +13,15 @@ export function RollingRegistrySection() {
               <br />
               {t.rollingRegistry.headingLine2}
             </h2>
-            <p className="mt-6 max-w-3xl text-3xl leading-relaxed text-[var(--rcb-text-muted)]">
+            <p className="mt-6 max-w-3xl text-xl leading-relaxed text-[var(--rcb-text-muted)]">
               {t.rollingRegistry.description}
             </p>
-            <p className="mt-6 text-2xl font-semibold text-[var(--rcb-text-strong)]">
+            <p className="mt-6 text-lg font-semibold text-[var(--rcb-text-strong)]">
               {t.rollingRegistry.tagline}
             </p>
             <a
               href="#all-categories"
-              className="mt-6 inline-block text-2xl font-semibold underline"
+              className="mt-6 inline-block text-lg font-semibold underline"
             >
               {t.rollingRegistry.viewCategoriesLink} &gt;
             </a>

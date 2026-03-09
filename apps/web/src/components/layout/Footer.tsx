@@ -28,7 +28,7 @@ export function Footer() {
   }
 
   return (
-    <footer id="contact" className="bg-[var(--rcb-header)]">
+    <footer className="bg-[var(--rcb-header)]">
       <div className="section-shell py-16">
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
@@ -38,11 +38,17 @@ export function Footer() {
             <nav aria-label={t.a11y.mainNav} className="mt-8 flex flex-wrap gap-8 text-sm font-medium text-[var(--rcb-text-strong)]">
               {t.nav.items
                 .filter((item) => !item.withChevron)
-                .map((item) => (
-                  <a key={item.href} href={item.href}>
-                    {item.label}
-                  </a>
-                ))}
+                .map((item) =>
+                  item.href.startsWith("/") ? (
+                    <Link key={item.href} to={item.href}>
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <a key={item.href} href={item.href}>
+                      {item.label}
+                    </a>
+                  ),
+                )}
             </nav>
           </div>
 

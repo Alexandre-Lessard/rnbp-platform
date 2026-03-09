@@ -13,7 +13,7 @@ export function AllCategoriesSection() {
           <h2 className="text-6xl font-bold leading-tight text-[var(--rcb-text)] sm:text-7xl">
             {t.allCategories.heading}
           </h2>
-          <p className="mt-7 text-3xl leading-relaxed text-[var(--rcb-text-muted)]">
+          <p className="mt-7 text-xl leading-relaxed text-[var(--rcb-text-muted)]">
             {t.allCategories.description}
           </p>
 

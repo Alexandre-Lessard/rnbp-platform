@@ -39,6 +39,10 @@ const en: SiteContent = {
       title: "Create an Account | NRPP",
       description: "Sign up for free to register and protect your valuable belongings.",
     },
+    contact: {
+      title: "Contact Us | NRPP",
+      description: "Have a question or comment? Send us a message and we\u2019ll get back to you as soon as possible.",
+    },
   },
   nav: {
     items: [
@@ -46,7 +50,7 @@ const en: SiteContent = {
       { label: "About", href: "#cycle" },
       { label: "Register", href: "#inscription" },
       { label: "FAQ", href: "/faq" },
-      { label: "Contact", href: "#contact" },
+      { label: "Contact", href: "/contact" },
     ],
     partners: "Partners",
     login: "Login",
@@ -468,6 +472,18 @@ const en: SiteContent = {
     successMessage: "Thank you! Your message has been sent. We will get back to you shortly.",
     errorMessage: "An error occurred. Please try again later.",
   },
+  contact: {
+    heading: "Contact Us",
+    description: "Have a question, comment, or suggestion? Fill out the form below and we\u2019ll get back to you as soon as possible.",
+    nameLabel: "Full name",
+    emailLabel: "Email address",
+    messageLabel: "Message",
+    submitButton: "Send",
+    submitting: "Sending\u2026",
+    successMessage: "Thank you! Your message has been sent. We\u2019ll get back to you shortly.",
+    emailError: "Please enter a valid email address.",
+    errorMessage: "An error occurred. Please try again later.",
+  },
   insurance: {
     heading: "Get a discount on your insurance",
     description: "Most insurers offer a discount to NRPP members. Select your insurer and contact them to check if you're eligible.",
@@ -559,6 +575,14 @@ const en: SiteContent = {
         body: "The NRPP reserves the right to modify these terms at any time. Changes will take effect upon publication on the site. Continued use of the service after a change constitutes your acceptance of the new terms.",
       },
     ],
+  },
+  verifyBeforeBuy: {
+    headingAccent: "Verify",
+    heading: "before you buy",
+    description:
+      "Check the registry to find out if an item has been reported stolen before purchasing it. Protect yourself from fraudulent purchases in seconds.",
+    buttonText: "Verify an item",
+    imageAlt: "Verifying an item before purchase",
   },
   errors: {
     serviceUnavailable: "Service temporarily unavailable",

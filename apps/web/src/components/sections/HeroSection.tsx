@@ -11,18 +11,18 @@ export function HeroSection() {
     <section id="accueil" className="scroll-mt-28 bg-[var(--rcb-bg)]">
       <div className="section-shell grid items-center gap-10 py-16 lg:grid-cols-[1fr_1.1fr] lg:py-20">
         <div className="animate-rise">
-          <p className="text-4xl font-medium leading-tight text-[var(--rcb-text)] sm:text-5xl">
+          <p className="text-3xl font-medium leading-tight text-[var(--rcb-text)] sm:text-4xl">
             {t.hero.subtitleLine1}
           </p>
-          <h1 className="mt-2 text-7xl font-bold leading-[0.95] text-[var(--rcb-primary)] sm:text-8xl">
+          <h1 className="mt-2 text-6xl font-bold leading-[0.95] text-[var(--rcb-primary)] sm:text-7xl">
             {t.hero.titleLine1}
           </h1>
 
-          <p className="mt-8 border-l-2 border-[var(--rcb-primary)] pl-4 text-4xl text-[var(--rcb-text)] sm:text-[2.2rem]">
+          <p className="mt-8 border-l-2 border-[var(--rcb-primary)] pl-4 text-xl text-[var(--rcb-text)]">
             {t.hero.tagline}
           </p>
 
-          <p className="mt-8 max-w-xl text-2xl leading-relaxed text-[var(--rcb-text-muted)]">
+          <p className="mt-8 max-w-xl text-lg leading-relaxed text-[var(--rcb-text-muted)] sm:text-xl">
             {t.hero.description}
           </p>
 

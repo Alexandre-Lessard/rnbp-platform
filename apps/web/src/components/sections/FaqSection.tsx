@@ -23,7 +23,7 @@ export function FaqSection() {
       <div className="section-shell py-16 sm:py-20">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-6xl font-bold text-[var(--rcb-text)] sm:text-7xl">{t.faq.heading}</h2>
-          <p className="mt-7 text-3xl leading-relaxed text-[var(--rcb-text-muted)]">
+          <p className="mt-7 text-xl leading-relaxed text-[var(--rcb-text-muted)]">
             {t.faq.description}
           </p>
         </div>
@@ -33,7 +33,7 @@ export function FaqSection() {
             const isOpen = openItems.includes(index);
 
             return (
-              <article key={item.question} className="rounded-2xl border border-[var(--rcb-border-muted)] bg-[var(--rcb-bg)] p-7">
+              <article key={item.question} className="rounded-2xl border border-[var(--rcb-border-muted)] border-l-4 border-l-[var(--rcb-primary)] bg-[var(--rcb-bg)] p-7">
                 <button
                   type="button"
                   onClick={() => toggle(index)}
@@ -42,7 +42,7 @@ export function FaqSection() {
                 >
                   <h3 className="text-xl font-bold text-[var(--rcb-text)] sm:text-2xl">{item.question}</h3>
                   <span className="mt-1">
-                    <PlusMinus open={isOpen} className="h-8 w-8 text-[var(--rcb-navy)]" />
+                    <PlusMinus open={isOpen} className="h-8 w-8 text-[var(--rcb-primary)]" />
                   </span>
                 </button>
                 {isOpen ? (
