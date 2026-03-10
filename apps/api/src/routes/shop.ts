@@ -30,14 +30,25 @@ function getStripe(): Stripe {
 }
 
 export async function shopRoutes(app: FastifyInstance) {
+  // ── Shop availability ──────────────────────────────────────────
+
+  app.get("/shop/status", async (_request, reply) => {
+    const config = getConfig();
+    return reply.send({ available: !!config.STRIPE_SECRET_KEY });
+  });
+
   // ── Create checkout session ──────────────────────────────────────
 
   app.post(
     "/shop/checkout",
     { preHandler: tryAuth },
     async (request, reply) => {
-      const body = checkoutSchema.parse(request.body);
       const config = getConfig();
+      if (!config.STRIPE_SECRET_KEY) {
+        return reply.status(503).send({ error: "shop_unavailable" });
+      }
+
+      const body = checkoutSchema.parse(request.body);
       const stripe = getStripe();
       const db = getDb();
 

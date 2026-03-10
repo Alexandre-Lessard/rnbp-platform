@@ -41,6 +41,13 @@ export function BoutiquePage() {
   const [loadingItems, setLoadingItems] = useState(!!user);
   const [showModal, setShowModal] = useState(false);
   const [modalSelection, setModalSelection] = useState("");
+  const [shopAvailable, setShopAvailable] = useState(false);
+
+  useEffect(() => {
+    apiRequest<{ available: boolean }>("/shop/status")
+      .then((data) => setShopAvailable(data.available))
+      .catch(() => setShopAvailable(false));
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -145,7 +152,11 @@ export function BoutiquePage() {
             </ul>
 
             <div className="mt-8">
-              {!user ? (
+              {!shopAvailable ? (
+                <p className="text-sm text-[var(--rcb-text-muted)]">
+                  {shop.comingSoonBanner}
+                </p>
+              ) : !user ? (
                 <p className="text-sm text-[var(--rcb-text-muted)]">
                   {shop.loginRequired}{" "}
                   <Link to="/connexion" className="font-medium text-[var(--rcb-primary)] hover:underline">
@@ -188,7 +199,7 @@ export function BoutiquePage() {
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
               <p className="mt-4 text-[var(--rcb-text-muted)]">{shop.cartEmpty}</p>
-              {user && userItems.length > 0 && (
+              {shopAvailable && user && userItems.length > 0 && (
                 <button
                   type="button"
                   onClick={handleBuyClick}
@@ -249,10 +260,10 @@ export function BoutiquePage() {
               <div className="pt-3">
                 <Button
                   onClick={handleCheckout}
-                  disabled={checkingOut}
+                  disabled={checkingOut || !shopAvailable}
                   className="w-full"
                 >
-                  {checkingOut ? shop.checkingOut : shop.checkout}
+                  {!shopAvailable ? shop.comingSoonCheckout : checkingOut ? shop.checkingOut : shop.checkout}
                 </Button>
               </div>
             </div>
