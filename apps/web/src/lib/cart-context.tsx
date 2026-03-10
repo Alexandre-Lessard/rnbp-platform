@@ -9,8 +9,8 @@ import {
 // ── Types ────────────────────────────────────────────────────────────
 
 export type CartItem = {
-  rnbpNumber: string; // identifiant du bien, ou "generic" si achat sans bien
-  itemName: string;   // nom du bien (ex: "Tracteur à gazon") ou label générique
+  rnbpNumber: string; // identifiant RNBP du bien
+  itemName: string;   // nom du bien (ex: "Tracteur à gazon")
   productName?: string; // nom du produit (ex: "Feuille de 20 autocollants...")
   quantity: number;
 };
@@ -20,6 +20,7 @@ type CartContextType = {
   addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
   removeItem: (rnbpNumber: string) => void;
   updateQuantity: (rnbpNumber: string, quantity: number) => void;
+  updateRnbpNumber: (oldRnbpNumber: string, newRnbpNumber: string) => void;
   clearCart: () => void;
   cartCount: number;
 };
@@ -31,7 +32,12 @@ const STORAGE_KEY = "rnbp_cart";
 function loadCart(): CartItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const items: CartItem[] = JSON.parse(raw);
+    // Nettoyage : retirer les items "generic" ou "pending:" orphelins (ancienne logique)
+    const cleaned = items.filter((i) => i.rnbpNumber !== "generic" && !i.rnbpNumber.startsWith("pending:"));
+    if (cleaned.length !== items.length) saveCart(cleaned);
+    return cleaned;
   } catch {
     return [];
   }
@@ -91,6 +97,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [removeItem],
   );
 
+  const updateRnbpNumber = useCallback(
+    (oldRnbpNumber: string, newRnbpNumber: string) => {
+      setCart((prev) => {
+        const next = prev.map((i) =>
+          i.rnbpNumber === oldRnbpNumber ? { ...i, rnbpNumber: newRnbpNumber } : i,
+        );
+        saveCart(next);
+        return next;
+      });
+    },
+    [],
+  );
+
   const clearCart = useCallback(() => {
     setCart([]);
     saveCart([]);
@@ -100,7 +119,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, addItem, removeItem, updateQuantity, clearCart, cartCount }}
+      value={{ cart, addItem, removeItem, updateQuantity, updateRnbpNumber, clearCart, cartCount }}
     >
       {children}
     </CartContext.Provider>

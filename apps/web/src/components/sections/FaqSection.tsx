@@ -46,7 +46,13 @@ export function FaqSection() {
                   </span>
                 </button>
                 {isOpen ? (
-                  <p className="mt-4 max-w-5xl text-base leading-relaxed text-[var(--rcb-text-muted)] sm:text-lg">{item.answer}</p>
+                  <div className="mt-4 max-w-5xl text-base leading-relaxed text-[var(--rcb-text-muted)] sm:text-lg">
+                    {typeof item.answer === "string" ? (
+                      <p>{item.answer}</p>
+                    ) : (
+                      <p>{item.answer.intro}</p>
+                    )}
+                  </div>
                 ) : null}
               </article>
             );

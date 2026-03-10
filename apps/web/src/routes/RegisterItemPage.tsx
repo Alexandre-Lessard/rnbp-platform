@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "@/i18n/context";
 import { useAuth, setRefreshToken } from "@/lib/auth-context";
 import { apiRequest, setAccessToken, isNetworkError } from "@/lib/api-client";
+import { useCart } from "@/lib/cart-context";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { StepIndicator } from "@/components/registration/StepIndicator";
 import { StepItemDetails } from "@/components/registration/StepItemDetails";
@@ -70,6 +71,7 @@ const emptyAccount: AccountData = {
 export function RegisterItemPage() {
   const { t } = useLanguage();
   const { user, refreshAuth } = useAuth();
+  const { updateRnbpNumber } = useCart();
   const reg = t.registration;
 
   const draft = loadDraft();
@@ -125,6 +127,8 @@ export function RegisterItemPage() {
       );
 
       clearDraft();
+      // Mettre à jour le panier si un autocollant a été ajouté pendant l'enregistrement
+      updateRnbpNumber(`pending:${itemData.name}`, res.item.rnbpNumber);
       setRnbpNumber(res.item.rnbpNumber);
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
@@ -133,7 +137,7 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [buildItemBody, totalSteps]);
+  }, [buildItemBody, totalSteps, itemData.name, updateRnbpNumber]);
 
   const handleSubmitWithAccount = useCallback(async () => {
     setLoading(true);
@@ -163,6 +167,8 @@ export function RegisterItemPage() {
       await refreshAuth();
 
       clearDraft();
+      // Mettre à jour le panier si un autocollant a été ajouté pendant l'enregistrement
+      updateRnbpNumber(`pending:${itemData.name}`, res.item.rnbpNumber);
       setRnbpNumber(res.item.rnbpNumber);
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
@@ -171,7 +177,7 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [accountData, buildItemBody, totalSteps, refreshAuth]);
+  }, [accountData, buildItemBody, totalSteps, refreshAuth, itemData.name, updateRnbpNumber]);
 
   if (backendDown) {
     return (
@@ -227,6 +233,7 @@ export function RegisterItemPage() {
 
         {step === 3 && (
           <StepStickerUpsell
+            itemName={itemData.name}
             onNext={() => {
               if (user) {
                 handleSubmitLoggedIn();

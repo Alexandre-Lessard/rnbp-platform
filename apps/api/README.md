@@ -62,6 +62,9 @@ pnpm dev:api
 | `theft_reports` | Déclarations de vol |
 | `insurance_requests` | Demandes d'assurance |
 | `partners` | Partenaires (assureurs, détaillants) |
+| `orders` | Commandes Stripe (statut, montant) |
+| `order_items` | Lignes de commande (numéro RNBP, quantité) |
+| `contact_messages` | Messages du formulaire de contact |
 | `newsletter_subscribers` | Abonnés infolettre |
 
 ### Migrations
@@ -128,6 +131,19 @@ Toutes les routes sont préfixées par `/api`.
 |---------|------|------|-------------|
 | POST | `/insurance/request` | Oui | Soumettre une demande d'assurance |
 | GET | `/insurance/insurers` | Non | Liste des assureurs disponibles |
+
+### Boutique (`/shop`)
+
+| Méthode | Path | Auth | Description |
+|---------|------|------|-------------|
+| POST | `/shop/checkout` | Opt. | Créer une session Stripe Checkout |
+| POST | `/shop/webhook` | Non | Webhook Stripe (confirmation paiement) |
+
+### Contact (`/contact`)
+
+| Méthode | Path | Auth | Limite | Description |
+|---------|------|------|--------|-------------|
+| POST | `/contact` | Non | 5/15min | Envoyer un message de contact |
 
 ### Autres
 

@@ -7,18 +7,21 @@ import { Button } from "@/components/ui/Button";
 type StepStickerUpsellProps = {
   onNext: () => void;
   onBack: () => void;
+  itemName: string;
 };
 
-export function StepStickerUpsell({ onNext, onBack }: StepStickerUpsellProps) {
+export function StepStickerUpsell({ onNext, onBack, itemName }: StepStickerUpsellProps) {
   const { t } = useLanguage();
   const { addItem } = useCart();
   const reg = t.registration!;
   const [added, setAdded] = useState(false);
 
   function handleAddToCart() {
+    // Ajoute au panier avec un rnbpNumber temporaire "pending:<itemName>"
+    // qui sera remplacé par le vrai numéro RNBP après la création de l'item
     addItem({
-      rnbpNumber: "generic",
-      itemName: t.shop?.selectItemGeneric ?? "Usage général",
+      rnbpNumber: `pending:${itemName}`,
+      itemName,
       productName: t.shop?.productName,
     });
     setAdded(true);

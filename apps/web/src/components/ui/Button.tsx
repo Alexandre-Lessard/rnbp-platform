@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { getButtonClasses } from "@/lib/button-styles";
 
 type ButtonProps = {
   variant?: "primary" | "outline";
@@ -14,24 +15,10 @@ export function Button({
   className = "",
   ...props
 }: ButtonProps) {
-  const base = "rounded-xl font-medium transition-colors";
-
-  const sizes = {
-    sm: "px-6 py-2 text-sm",
-    lg: "px-8 py-4 text-lg",
-  };
-
-  const variants = {
-    primary:
-      "bg-[var(--rcb-primary)] text-white hover:bg-[var(--rcb-primary-dark)]",
-    outline:
-      "border border-[var(--rcb-primary)] bg-[var(--rcb-bg)] text-[var(--rcb-text-strong)] hover:bg-[var(--rcb-red-light)] hover:text-black",
-  };
-
   return (
     <button
       type="button"
-      className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}
+      className={getButtonClasses(variant, size, `cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${className}`)}
       {...props}
     >
       {children}

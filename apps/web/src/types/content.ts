@@ -17,9 +17,14 @@ export type StepCard = {
   image: string;
 };
 
+export type FaqAnswer = string | {
+  intro: string;
+  bullets: { label: string; text: string }[];
+};
+
 export type FaqItem = {
   question: string;
-  answer: string;
+  answer: FaqAnswer;
 };
 
 export type TrustBadge = {
@@ -207,7 +212,10 @@ export type SiteContent = {
     backToHome: string;
     orderStickers: string;
     selectItemLabel: string;
-    selectItemGeneric: string;
+    noItemsMessage: string;
+    noItemsLink: string;
+    loginRequired: string;
+    loginLink: string;
     addButton: string;
     comingSoonBanner: string;
     comingSoonCheckout: string;
@@ -231,6 +239,19 @@ export type SiteContent = {
     description: string;
     whyPartner: string;
     benefits: string[];
+    policeAccordion: {
+      title: string;
+      intro: string;
+      subheading: string;
+      advantages: { title: string; text: string }[];
+    };
+    insurerAccordion: {
+      title: string;
+      intro: string;
+      subheading: string;
+      advantages: { title: string; text: string }[];
+      quote: string;
+    };
     ctaDescription: string;
     formHeading: string;
     nameLabel: string;

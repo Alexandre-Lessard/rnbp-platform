@@ -12,7 +12,7 @@ const checkoutSchema = z.object({
   items: z
     .array(
       z.object({
-        rnbpNumber: z.string().optional(),
+        rnbpNumber: z.string().min(1),
         quantity: z.number().int().min(1).max(50),
       }),
     )
@@ -70,7 +70,7 @@ export async function shopRoutes(app: FastifyInstance) {
       await db.insert(orderItems).values(
         body.items.map((item) => ({
           orderId: order.id,
-          rnbpNumber: item.rnbpNumber || null,
+          rnbpNumber: item.rnbpNumber,
           productType: "sticker_sheet",
           quantity: item.quantity,
           unitPriceCents: 0, // Le prix réel vient de Stripe

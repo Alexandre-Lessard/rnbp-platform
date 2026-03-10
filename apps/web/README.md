@@ -36,6 +36,10 @@ Accessible sur `http://localhost:5173`.
 | `/inscription` | `RegisterAccountPage` | Création de compte |
 | `/enregistrer` | `RegisterItemPage` | Enregistrement d'un bien (formulaire multi-étapes) |
 | `/verifier` | `LookupPage` | Vérification publique par numéro RNBP |
+| `/faq` | `FaqPage` | Foire aux questions |
+| `/contact` | `ContactPage` | Formulaire de contact |
+| `/boutique` | `BoutiquePage` | Boutique (autocollants) |
+| `/boutique/succes` | `BoutiqueSuccessPage` | Confirmation post-achat |
 | `/partenaires` | `PartnerPage` | Page partenaires |
 | `/confidentialite` | `PrivacyPolicyPage` | Politique de confidentialité |
 | `/conditions` | `TermsOfServicePage` | Conditions d'utilisation |
@@ -64,6 +68,7 @@ src/
 ├── lib/
 │   ├── api-client.ts   # Client HTTP pour l'API
 │   ├── auth-context.tsx # Contexte d'authentification
+│   ├── cart-context.tsx # Panier (localStorage, Stripe checkout)
 │   └── button-styles.ts # Styles partagés des boutons
 ├── routes/             # Pages (une par route)
 ├── types/              # Types TypeScript (SiteContent)

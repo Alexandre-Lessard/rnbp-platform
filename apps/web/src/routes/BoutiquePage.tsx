@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
@@ -37,36 +38,34 @@ export function BoutiquePage() {
   const [activeImage, setActiveImage] = useState(0);
 
   const [userItems, setUserItems] = useState<UserItem[]>([]);
+  const [loadingItems, setLoadingItems] = useState(!!user);
   const [showModal, setShowModal] = useState(false);
-  const [modalSelection, setModalSelection] = useState("generic");
+  const [modalSelection, setModalSelection] = useState("");
 
   useEffect(() => {
     if (!user) return;
     apiRequest<{ items: UserItem[] }>("/items")
       .then((data) => setUserItems(data.items))
-      .catch(() => { /* ignore */ });
+      .catch(() => { /* ignore */ })
+      .finally(() => setLoadingItems(false));
   }, [user]);
 
   function handleBuyClick() {
     if (user && userItems.length > 0) {
-      setModalSelection("generic");
+      setModalSelection(userItems[0].rnbpNumber);
       setShowModal(true);
-    } else {
-      addItem({ rnbpNumber: "generic", itemName: shop.selectItemGeneric, productName: shop.productName });
     }
+    // Si pas connecté ou pas d'items, on ne fait rien (le bouton affiche un message)
   }
 
   function handleModalConfirm() {
-    if (modalSelection === "generic") {
-      addItem({ rnbpNumber: "generic", itemName: shop.selectItemGeneric, productName: shop.productName });
-    } else {
-      const item = userItems.find((i) => i.rnbpNumber === modalSelection);
-      addItem({
-        rnbpNumber: modalSelection,
-        itemName: item?.name ?? shop.selectItemGeneric,
-        productName: shop.productName,
-      });
-    }
+    const item = userItems.find((i) => i.rnbpNumber === modalSelection);
+    if (!item) return;
+    addItem({
+      rnbpNumber: modalSelection,
+      itemName: item.name,
+      productName: shop.productName,
+    });
     setShowModal(false);
   }
 
@@ -78,7 +77,7 @@ export function BoutiquePage() {
         method: "POST",
         body: {
           items: cart.map((i) => ({
-            rnbpNumber: i.rnbpNumber === "generic" ? undefined : i.rnbpNumber,
+            rnbpNumber: i.rnbpNumber,
             quantity: i.quantity,
           })),
         },
@@ -146,9 +145,25 @@ export function BoutiquePage() {
             </ul>
 
             <div className="mt-8">
-              <Button onClick={handleBuyClick}>
-                {shop.addButton}
-              </Button>
+              {!user ? (
+                <p className="text-sm text-[var(--rcb-text-muted)]">
+                  {shop.loginRequired}{" "}
+                  <Link to="/connexion" className="font-medium text-[var(--rcb-primary)] hover:underline">
+                    {shop.loginLink}
+                  </Link>
+                </p>
+              ) : loadingItems ? null : userItems.length === 0 ? (
+                <p className="text-sm text-[var(--rcb-text-muted)]">
+                  {shop.noItemsMessage}{" "}
+                  <Link to="/enregistrer" className="font-medium text-[var(--rcb-primary)] hover:underline">
+                    {shop.noItemsLink}
+                  </Link>
+                </p>
+              ) : (
+                <Button onClick={handleBuyClick}>
+                  {shop.addButton}
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -173,13 +188,15 @@ export function BoutiquePage() {
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
               <p className="mt-4 text-[var(--rcb-text-muted)]">{shop.cartEmpty}</p>
-              <button
-                type="button"
-                onClick={handleBuyClick}
-                className="mt-3 cursor-pointer text-sm font-medium text-[var(--rcb-primary)] transition-colors hover:underline"
-              >
-                {shop.cartEmptyAction}
-              </button>
+              {user && userItems.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleBuyClick}
+                  className="mt-3 cursor-pointer text-sm font-medium text-[var(--rcb-primary)] transition-colors hover:underline"
+                >
+                  {shop.cartEmptyAction}
+                </button>
+              )}
             </div>
           ) : (
             <div className="mt-6 space-y-3">
@@ -233,7 +250,7 @@ export function BoutiquePage() {
                 <Button
                   onClick={handleCheckout}
                   disabled={checkingOut}
-                  className="w-full disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full"
                 >
                   {checkingOut ? shop.checkingOut : shop.checkout}
                 </Button>
@@ -252,20 +269,6 @@ export function BoutiquePage() {
             </h3>
 
             <div className="mt-4 space-y-2">
-              <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-[var(--rcb-border)] p-3 transition-colors hover:bg-[var(--rcb-surface)]">
-                <input
-                  type="radio"
-                  name="item-select"
-                  value="generic"
-                  checked={modalSelection === "generic"}
-                  onChange={() => setModalSelection("generic")}
-                  className="accent-[var(--rcb-primary)]"
-                />
-                <span className="text-sm text-[var(--rcb-text-body)]">
-                  {shop.selectItemGeneric}
-                </span>
-              </label>
-
               {userItems.map((item) => (
                 <label
                   key={item.rnbpNumber}
