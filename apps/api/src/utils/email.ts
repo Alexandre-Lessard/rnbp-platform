@@ -90,6 +90,89 @@ export function buildContactNotificationEmail(
   };
 }
 
+// ── Order admin notification ──────────────────────────────────────────
+
+export function buildOrderNotificationEmail(opts: {
+  orderId: string;
+  email: string;
+  totalAmountCents: number;
+  taxAmountCents: number;
+  quantity: number;
+  productLines: { name: string; quantity: number; amountCents: number }[];
+  shippingName: string | null;
+  shippingAddress: string | null;
+}): EmailPayload {
+  const config = getConfig();
+  const adminEmail =
+    config.ADMIN_ORDER_EMAIL ||
+    (config.NODE_ENV === "production" ? "commandes@rnbp.ca" : "dev@rnbp.ca");
+
+  const total = (opts.totalAmountCents / 100).toFixed(2);
+  const tax = (opts.taxAmountCents / 100).toFixed(2);
+  const subtotal = ((opts.totalAmountCents - opts.taxAmountCents) / 100).toFixed(2);
+  const safeEmail = escapeHtml(opts.email);
+  const safeName = opts.shippingName ? escapeHtml(opts.shippingName) : "—";
+
+  let addressHtml = "—";
+  if (opts.shippingAddress) {
+    try {
+      const addr = JSON.parse(opts.shippingAddress);
+      addressHtml = escapeHtml(
+        [addr.line1, addr.line2, `${addr.city}, ${addr.state} ${addr.postal_code}`, addr.country]
+          .filter(Boolean)
+          .join(", "),
+      );
+    } catch {
+      addressHtml = escapeHtml(opts.shippingAddress);
+    }
+  }
+
+  // Détail des produits
+  const productRowsHtml = opts.productLines
+    .map(
+      (p) =>
+        `<tr><td style="padding: 6px 0;">${escapeHtml(p.name)}</td><td style="padding: 6px 0; text-align: center;">×${p.quantity}</td><td style="padding: 6px 0; text-align: right;">${(p.amountCents / 100).toFixed(2)} $</td></tr>`,
+    )
+    .join("");
+
+  // Numéros de taxes (placeholders — à remplacer quand disponibles)
+  const TPS_NUMBER = "XXXXX XXXX RT0001"; // TODO: remplacer par le vrai numéro TPS
+  const TVQ_NUMBER = "XXXX XXXX XXXX TQ0001"; // TODO: remplacer par le vrai numéro TVQ
+
+  return {
+    to: adminEmail,
+    subject: `Nouvelle commande #${opts.orderId.slice(0, 8)} — ${total} $ CAD`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #1a2e44;">Nouvelle commande reçue</h2>
+
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr><td style="padding: 8px 0; font-weight: bold;">Commande</td><td style="padding: 8px 0;">${escapeHtml(opts.orderId)}</td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold;">Client</td><td style="padding: 8px 0;"><a href="mailto:${safeEmail}">${safeEmail}</a></td></tr>
+        </table>
+
+        <h3 style="margin-top: 20px; font-size: 14px; color: #1a2e44;">Produits</h3>
+        <table style="width: 100%; border-collapse: collapse; border-top: 1px solid #eee;">
+          ${productRowsHtml}
+          <tr style="border-top: 1px solid #eee;"><td style="padding: 6px 0; font-weight: bold;" colspan="2">Sous-total</td><td style="padding: 6px 0; text-align: right;">${subtotal} $</td></tr>
+          <tr><td style="padding: 6px 0; color: #666;" colspan="2">Taxes (TPS/TVQ)</td><td style="padding: 6px 0; text-align: right; color: #666;">${tax} $</td></tr>
+          <tr style="border-top: 2px solid #1a2e44;"><td style="padding: 8px 0; font-weight: bold; font-size: 16px;" colspan="2">Total</td><td style="padding: 8px 0; text-align: right; font-weight: bold; font-size: 16px;">${total} $ CAD</td></tr>
+        </table>
+
+        <h3 style="margin-top: 20px; font-size: 14px; color: #1a2e44;">Livraison</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr><td style="padding: 6px 0; font-weight: bold; width: 120px;">Nom</td><td style="padding: 6px 0;">${safeName}</td></tr>
+          <tr><td style="padding: 6px 0; font-weight: bold;">Adresse</td><td style="padding: 6px 0;">${addressHtml}</td></tr>
+        </table>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="color: #888; font-size: 11px;">TPS : ${TPS_NUMBER} | TVQ : ${TVQ_NUMBER}</p>
+        <p style="color: #888; font-size: 12px;">RNBP — Notification automatique de commande</p>
+      </div>
+    `,
+  };
+}
+
 // ── HMAC token helpers ────────────────────────────────────────────────
 
 /**

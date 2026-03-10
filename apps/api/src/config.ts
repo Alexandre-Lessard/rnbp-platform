@@ -33,6 +33,14 @@ const envSchema = z.object({
 
   // Frontend URL (for email links)
   FRONTEND_URL: z.string().url().default("http://localhost:5173"),
+
+  // Stripe (boutique)
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
+  STRIPE_PRICE_STICKER_SHEET: z.string().optional(),
+
+  // Admin notifications
+  ADMIN_ORDER_EMAIL: z.string().email().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

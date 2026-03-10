@@ -141,6 +141,11 @@ export type SiteContent = {
     addItem: string;
     reportTheft: string;
     statuses: Record<string, string>;
+    alreadyInCartTitle: string;
+    alreadyInCartDescription: string;
+    alreadyInCartConfirm: string;
+    alreadyInCartCancel: string;
+    alreadyInCartViewCart: string;
   };
   registration?: {
     heading: string;
@@ -148,12 +153,15 @@ export type SiteContent = {
     step1Title: string;
     step2Title: string;
     step3Title: string;
+    step4Title: string;
     categoryLabel: string;
     categoryPlaceholder: string;
     nameLabel: string;
     brandLabel: string;
     modelLabel: string;
+    yearLabel: string;
     serialLabel: string;
+    serialExplanation: string;
     valueLabel: string;
     descriptionLabel: string;
     termsCheckbox: string;
@@ -169,6 +177,40 @@ export type SiteContent = {
     successDescription: string;
     rnbpNumberLabel: string;
     goToDashboard: string;
+    stickerHeading: string;
+    stickerPitch: string;
+    stickerCta: string;
+    addToCart: string;
+    addedToCart: string;
+    viewShop: string;
+  };
+  shop?: {
+    heading: string;
+    productName: string;
+    productDescription: string;
+    productFeatures: string[];
+    productImageAlt: string;
+    priceLabel: string;
+    quantityLabel: string;
+    buyButton: string;
+    cartTitle: string;
+    cartEmpty: string;
+    cartEmptyAction: string;
+    checkout: string;
+    checkingOut: string;
+    removeItem: string;
+    subtotal: string;
+    perSheet: string;
+    successHeading: string;
+    successDescription: string;
+    backToShop: string;
+    backToHome: string;
+    orderStickers: string;
+    selectItemLabel: string;
+    selectItemGeneric: string;
+    addButton: string;
+    comingSoonBanner: string;
+    comingSoonCheckout: string;
   };
   report?: {
     heading: string;

@@ -48,6 +48,7 @@ export async function itemRoutes(app: FastifyInstance) {
           category: body.category,
           brand: body.brand ?? null,
           model: body.model ?? null,
+          year: body.year ?? null,
           serialNumber: body.serialNumber ?? null,
           estimatedValue: body.estimatedValue ?? null,
           purchaseDate: body.purchaseDate

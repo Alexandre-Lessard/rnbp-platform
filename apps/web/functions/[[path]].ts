@@ -69,6 +69,16 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description: "Enregistrez un bien dans le registre.",
         robots: "noindex, nofollow",
       },
+      "/boutique": {
+        title: "Boutique | RNBP",
+        description:
+          "Achetez des étiquettes d'identification RNBP pour protéger vos biens de valeur.",
+      },
+      "/boutique/succes": {
+        title: "Commande confirmée | RNBP",
+        description: "Votre commande a été confirmée avec succès.",
+        robots: "noindex, nofollow",
+      },
     },
   },
   en: {
@@ -131,6 +141,16 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
       "/enregistrer": {
         title: "Register an Item | NRPP",
         description: "Register an item in the registry.",
+        robots: "noindex, nofollow",
+      },
+      "/boutique": {
+        title: "Shop | NRPP",
+        description:
+          "Buy NRPP identification stickers to protect your valuable belongings.",
+      },
+      "/boutique/succes": {
+        title: "Order Confirmed | NRPP",
+        description: "Your order has been successfully confirmed.",
         robots: "noindex, nofollow",
       },
     },

@@ -15,6 +15,13 @@
       "when": 1772658951034,
       "tag": "0001_brief_pandemic",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773083874765,
+      "tag": "0002_cuddly_greymalkin",
+      "breakpoints": true
     }
   ]
 }

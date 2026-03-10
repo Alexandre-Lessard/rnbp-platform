@@ -8,6 +8,7 @@ export const createItemSchema = z.object({
   }),
   brand: z.string().max(100).optional(),
   model: z.string().max(100).optional(),
+  year: z.number().int().min(1900).max(2100).optional(),
   serialNumber: z.string().max(255).optional(),
   estimatedValue: z.number().int().min(1000, "Valeur minimale de 1 000 $").optional(),
   purchaseDate: z.string().datetime().optional(),

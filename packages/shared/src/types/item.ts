@@ -9,6 +9,7 @@ export type Item = {
   category: ItemCategory;
   brand: string | null;
   model: string | null;
+  year: number | null;
   serialNumber: string | null;
   estimatedValue: string | null;
   purchaseDate: string | null;

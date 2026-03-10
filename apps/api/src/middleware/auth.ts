@@ -61,6 +61,35 @@ export async function requireAuth(
   request.emailVerified = user.emailVerified;
 }
 
+// Tente d'extraire l'user sans bloquer (auth optionnelle)
+export async function tryAuth(
+  request: FastifyRequest,
+  _reply: FastifyReply,
+) {
+  const header = request.headers.authorization;
+  if (!header?.startsWith("Bearer ")) return;
+
+  const token = header.slice(7);
+  try {
+    const payload = await verifyToken(token);
+    if (payload.type !== "access") return;
+
+    const db = getDb();
+    const [user] = await db
+      .select({ id: users.id, emailVerified: users.emailVerified })
+      .from(users)
+      .where(eq(users.id, payload.sub))
+      .limit(1);
+
+    if (user) {
+      request.userId = user.id;
+      request.emailVerified = user.emailVerified;
+    }
+  } catch {
+    // Silently ignore — user stays unauthenticated
+  }
+}
+
 export async function requireVerifiedEmail(
   request: FastifyRequest,
   reply: FastifyReply,

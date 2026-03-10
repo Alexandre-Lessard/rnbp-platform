@@ -20,6 +20,7 @@ function ScrollToTop() {
   return null;
 }
 
+import { CartProvider } from "@/lib/cart-context";
 import { LandingPage } from "@/routes/LandingPage";
 import { LoginPage } from "@/routes/LoginPage";
 import { RegisterAccountPage } from "@/routes/RegisterAccountPage";
@@ -32,12 +33,15 @@ import { PrivacyPolicyPage } from "@/routes/PrivacyPolicyPage";
 import { TermsOfServicePage } from "@/routes/TermsOfServicePage";
 import { FaqPage } from "@/routes/FaqPage";
 import { ContactPage } from "@/routes/ContactPage";
+import { BoutiquePage } from "@/routes/BoutiquePage";
+import { BoutiqueSuccessPage } from "@/routes/BoutiqueSuccessPage";
 import { NotFoundPage } from "@/routes/NotFoundPage";
 
 function App() {
   const { t } = useLanguage();
 
   return (
+    <CartProvider>
     <div className="min-h-screen">
       <a
         href="#main-content"
@@ -59,6 +63,8 @@ function App() {
           <Route path="/conditions" element={<TermsOfServicePage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/boutique" element={<BoutiquePage />} />
+          <Route path="/boutique/succes" element={<BoutiqueSuccessPage />} />
           <Route
             path="/tableau-de-bord"
             element={
@@ -80,6 +86,7 @@ function App() {
       </main>
       <Footer />
     </div>
+    </CartProvider>
   );
 }
 

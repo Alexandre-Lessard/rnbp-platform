@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
+import rawBody from "fastify-raw-body";
 import { getConfig } from "./config.js";
 import { healthRoutes } from "./routes/health.js";
 import { authRoutes } from "./routes/auth.js";
@@ -10,6 +11,7 @@ import { reportRoutes } from "./routes/reports.js";
 import { newsletterRoutes } from "./routes/newsletter.js";
 import { insuranceRoutes } from "./routes/insurance.js";
 import { contactRoutes } from "./routes/contact.js";
+import { shopRoutes } from "./routes/shop.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { securityHeaders } from "./middleware/security-headers.js";
 
@@ -38,6 +40,9 @@ export async function buildApp() {
   // Security headers
   await app.register(securityHeaders);
 
+  // Raw body (pour webhook Stripe)
+  await app.register(rawBody, { global: false, runFirst: true });
+
   // Rate limiting (global baseline)
   await app.register(rateLimit, {
     max: 100,
@@ -53,6 +58,7 @@ export async function buildApp() {
   await app.register(newsletterRoutes, { prefix: "/api" });
   await app.register(insuranceRoutes, { prefix: "/api" });
   await app.register(contactRoutes, { prefix: "/api" });
+  await app.register(shopRoutes, { prefix: "/api" });
 
   return app;
 }

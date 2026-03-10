@@ -9,11 +9,13 @@ export function StepIndicator({ currentStep, totalSteps }: StepIndicatorProps) {
   const { t } = useLanguage();
   const reg = t.registration;
 
-  const labels = [
+  const allLabels = [
     reg?.step1Title ?? "Step 1",
     reg?.step2Title ?? "Step 2",
     reg?.step3Title ?? "Step 3",
+    reg?.step4Title ?? "Step 4",
   ];
+  const labels = allLabels.slice(0, totalSteps);
 
   return (
     <div className="flex items-center justify-center gap-0" role="group" aria-label="Progress">
@@ -45,7 +47,7 @@ export function StepIndicator({ currentStep, totalSteps }: StepIndicatorProps) {
                 )}
               </div>
               <span
-                className={`mt-2 text-xs font-medium ${
+                className={`mt-2 hidden text-xs font-medium sm:block ${
                   isActive || isCompleted
                     ? "text-[var(--rcb-text-strong)]"
                     : "text-[var(--rcb-text-muted)]"
@@ -56,7 +58,7 @@ export function StepIndicator({ currentStep, totalSteps }: StepIndicatorProps) {
             </div>
             {step < totalSteps && (
               <div
-                className={`mx-3 mb-6 h-0.5 w-16 sm:w-24 ${
+                className={`mx-3 mb-0 h-0.5 w-10 sm:mb-6 sm:w-24 ${
                   isCompleted
                     ? "bg-[var(--rcb-primary)]"
                     : "bg-[var(--rcb-border)]"

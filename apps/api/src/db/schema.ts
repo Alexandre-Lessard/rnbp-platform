@@ -90,6 +90,7 @@ export const items = pgTable(
     category: varchar("category", { length: 100 }).notNull(),
     brand: varchar("brand", { length: 100 }),
     model: varchar("model", { length: 100 }),
+    year: integer("year"),
     serialNumber: varchar("serial_number", { length: 255 }),
     estimatedValue: integer("estimated_value"),
     purchaseDate: timestamp("purchase_date", { withTimezone: true }),
@@ -242,3 +243,56 @@ export const newsletterSubscribers = pgTable("newsletter_subscribers", {
     .notNull()
     .defaultNow(),
 });
+
+// ── Orders (Boutique Stripe) ──────────────────────────────────────────
+
+export const orderStatusEnum = pgEnum("order_status", [
+  "pending",
+  "paid",
+  "shipped",
+  "cancelled",
+]);
+
+export const orders = pgTable(
+  "orders",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    email: varchar("email", { length: 255 }).notNull(),
+    userId: uuid("user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    stripeSessionId: varchar("stripe_session_id", { length: 255 }).unique(),
+    stripePaymentIntentId: varchar("stripe_payment_intent_id", {
+      length: 255,
+    }),
+    totalAmountCents: integer("total_amount_cents").notNull(),
+    status: orderStatusEnum("status").notNull().default("pending"),
+    shippingName: varchar("shipping_name", { length: 255 }),
+    shippingAddress: text("shipping_address"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("orders_user_id_idx").on(table.userId),
+    index("orders_stripe_session_id_idx").on(table.stripeSessionId),
+  ],
+);
+
+export const orderItems = pgTable(
+  "order_items",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orderId: uuid("order_id")
+      .notNull()
+      .references(() => orders.id, { onDelete: "cascade" }),
+    rnbpNumber: varchar("rnbp_number", { length: 13 }),
+    productType: varchar("product_type", { length: 50 }).notNull(),
+    quantity: integer("quantity").notNull(),
+    unitPriceCents: integer("unit_price_cents").notNull(),
+  },
+  (table) => [index("order_items_order_id_idx").on(table.orderId)],
+);

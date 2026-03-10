@@ -6,6 +6,7 @@ import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { StepIndicator } from "@/components/registration/StepIndicator";
 import { StepItemDetails } from "@/components/registration/StepItemDetails";
 import { StepDocuments } from "@/components/registration/StepDocuments";
+import { StepStickerUpsell } from "@/components/registration/StepStickerUpsell";
 import { StepAccount } from "@/components/registration/StepAccount";
 import { RegistrationConfirmation } from "@/components/registration/RegistrationConfirmation";
 
@@ -14,6 +15,7 @@ type ItemData = {
   category: string;
   brand: string;
   model: string;
+  year: string;
   serialNumber: string;
   estimatedValue: string;
   description: string;
@@ -51,6 +53,7 @@ const emptyItem: ItemData = {
   category: "",
   brand: "",
   model: "",
+  year: "",
   serialNumber: "",
   estimatedValue: "",
   description: "",
@@ -81,8 +84,13 @@ export function RegisterItemPage() {
   const [backendDown, setBackendDown] = useState(false);
   const [rnbpNumber, setRnbpNumber] = useState("");
 
-  // Auth-aware: if logged in, only 2 steps
-  const totalSteps = user ? 2 : 3;
+  // Connecté = 3 steps, non connecté = 4
+  const totalSteps = user ? 3 : 4;
+
+  // Scroll to top on step change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [step]);
 
   // Debounced save to sessionStorage
   useEffect(() => {
@@ -92,23 +100,25 @@ export function RegisterItemPage() {
     return () => clearTimeout(timeout);
   }, [itemData, accountData, termsAccepted]);
 
+  const buildItemBody = useCallback((): Record<string, unknown> => ({
+    name: itemData.name,
+    category: itemData.category,
+    description: itemData.description || undefined,
+    brand: itemData.brand || undefined,
+    model: itemData.model || undefined,
+    year: itemData.year ? Number(itemData.year) : undefined,
+    serialNumber: itemData.serialNumber || undefined,
+    estimatedValue: itemData.estimatedValue
+      ? Number(itemData.estimatedValue)
+      : undefined,
+  }), [itemData]);
+
   const handleSubmitLoggedIn = useCallback(async () => {
     setLoading(true);
     setError("");
 
     try {
-      const body: Record<string, unknown> = {
-        name: itemData.name,
-        category: itemData.category,
-        description: itemData.description || undefined,
-        brand: itemData.brand || undefined,
-        model: itemData.model || undefined,
-        serialNumber: itemData.serialNumber || undefined,
-        estimatedValue: itemData.estimatedValue
-          ? Number(itemData.estimatedValue)
-          : undefined,
-      };
-
+      const body = buildItemBody();
       const res = await apiRequest<{ item: { rnbpNumber: string } }>(
         "/items",
         { method: "POST", body },
@@ -123,7 +133,7 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [itemData, totalSteps]);
+  }, [buildItemBody, totalSteps]);
 
   const handleSubmitWithAccount = useCallback(async () => {
     setLoading(true);
@@ -144,25 +154,12 @@ export function RegisterItemPage() {
             lastName: accountData.lastName,
             phone: accountData.phone || undefined,
           },
-          item: {
-            name: itemData.name,
-            category: itemData.category,
-            description: itemData.description || undefined,
-            brand: itemData.brand || undefined,
-            model: itemData.model || undefined,
-            serialNumber: itemData.serialNumber || undefined,
-            estimatedValue: itemData.estimatedValue
-              ? Number(itemData.estimatedValue)
-              : undefined,
-          },
+          item: buildItemBody(),
         },
       });
 
-      // Store tokens
       setAccessToken(res.accessToken);
       setRefreshToken(res.refreshToken);
-
-      // Refresh auth context
       await refreshAuth();
 
       clearDraft();
@@ -174,7 +171,7 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [accountData, itemData, totalSteps, refreshAuth]);
+  }, [accountData, buildItemBody, totalSteps, refreshAuth]);
 
   if (backendDown) {
     return (
@@ -188,7 +185,7 @@ export function RegisterItemPage() {
   if (rnbpNumber) {
     return (
       <section className="section-shell py-16">
-        <RegistrationConfirmation rnbpNumber={rnbpNumber} />
+        <RegistrationConfirmation rnbpNumber={rnbpNumber} totalSteps={totalSteps} />
       </section>
     );
   }
@@ -223,23 +220,30 @@ export function RegisterItemPage() {
             documents={documents}
             onPhotosChange={setPhotos}
             onDocumentsChange={setDocuments}
-            onNext={() => {
-              if (user) {
-                handleSubmitLoggedIn();
-              } else {
-                setStep(3);
-              }
-            }}
+            onNext={() => setStep(3)}
             onBack={() => setStep(1)}
           />
         )}
 
-        {step === 3 && !user && (
+        {step === 3 && (
+          <StepStickerUpsell
+            onNext={() => {
+              if (user) {
+                handleSubmitLoggedIn();
+              } else {
+                setStep(4);
+              }
+            }}
+            onBack={() => setStep(2)}
+          />
+        )}
+
+        {step === 4 && !user && (
           <StepAccount
             data={accountData}
             onChange={setAccountData}
             onSubmit={handleSubmitWithAccount}
-            onBack={() => setStep(2)}
+            onBack={() => setStep(3)}
             loading={loading}
             error={error}
           />

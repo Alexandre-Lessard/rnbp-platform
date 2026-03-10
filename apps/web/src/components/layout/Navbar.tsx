@@ -3,11 +3,13 @@ import { Link, useLocation } from "react-router";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
+import { useCart } from "@/lib/cart-context";
 import { getButtonClasses } from "@/lib/button-styles";
 
 export function Navbar() {
   const { t, locale } = useLanguage();
   const { user, logout } = useAuth();
+  const { cartCount } = useCart();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -49,24 +51,42 @@ export function Navbar() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <LanguageSwitcher />
-          <Link to="/partenaires" className={getButtonClasses("outline", "sm", "w-[140px] whitespace-nowrap text-center")}>
-            {t.nav.partners}
+          <Link
+            to="/boutique"
+            className="relative flex h-9 w-9 items-center justify-center rounded-lg text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-border)] hover:text-[var(--rcb-primary)]"
+            aria-label={t.shop?.heading ?? "Boutique"}
+          >
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
+            {cartCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--rcb-primary)] px-1 text-[10px] font-bold text-white">
+                {cartCount}
+              </span>
+            )}
           </Link>
           {user ? (
             <>
-              <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm", "w-[140px] whitespace-nowrap text-center")}>
+              <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm", "whitespace-nowrap text-center")}>
                 {t.nav.myAccount}
               </Link>
               <button
                 type="button"
                 onClick={() => logout()}
-                className="w-[100px] cursor-pointer text-center text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-primary)]"
+                className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-[var(--rcb-text-muted)] transition-colors hover:bg-[var(--rcb-border)] hover:text-[var(--rcb-primary)]"
+                aria-label={t.nav.logout}
               >
-                {t.nav.logout}
+                <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
               </button>
             </>
           ) : (
-            <Link to="/connexion" className={getButtonClasses("primary", "sm", "w-[140px] whitespace-nowrap text-center")}>
+            <Link to="/connexion" className={getButtonClasses("primary", "sm", "whitespace-nowrap text-center")}>
               {t.nav.login}
             </Link>
           )}
@@ -133,11 +153,12 @@ export function Navbar() {
               </div>
               <div className="mt-4 flex flex-col gap-2 px-4">
                 <Link
-                  to="/partenaires"
+                  to="/boutique"
                   onClick={() => setMenuOpen(false)}
                   className={getButtonClasses("outline", "sm", "w-full")}
                 >
-                  {t.nav.partners}
+                  {t.shop?.heading ?? "Boutique"}
+                  {cartCount > 0 && ` (${cartCount})`}
                 </Link>
                 {user ? (
                   <>
