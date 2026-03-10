@@ -12,7 +12,8 @@
     "test": "pnpm -r test",
     "deploy": "./ops/deploy.sh",
     "deploy:web": "./ops/deploy.sh web",
-    "deploy:api": "./ops/deploy.sh api"
+    "deploy:api": "./ops/deploy.sh api",
+    "rollback": "./ops/rollback.sh"
   },
   "engines": {
     "node": ">=20.0.0",

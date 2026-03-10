@@ -453,6 +453,31 @@ pnpm run deploy:api
 4. Commit et push
 5. Déployer : `pnpm run deploy:api` — le script propose d'exécuter les migrations
 
+### Rollback
+
+Le script de deploy crée un snapshot de `apps/api/dist/` et `apps/api/node_modules/` avant chaque deploy. En cas de problème :
+
+**Automatique** : Si le health check échoue après un deploy, le script propose un rollback automatique (ou le fait sans demander en mode non-interactif).
+
+**Manuel** :
+```bash
+# Rollback au dernier snapshot
+pnpm run rollback
+
+# Rollback à un snapshot spécifique (2 = avant-dernier)
+pnpm run rollback 2
+```
+
+**Snapshots** : Stockés dans `/opt/rnbp/backups/rollback/` sur le serveur prod. Rétention : 3 derniers.
+
+**Rollback DB** : Si une migration a été appliquée, les dumps sont dans `/opt/rnbp/backups/rollback/db_*.sql.gz`. Pour restaurer :
+```bash
+ssh prod@192.168.50.241
+gunzip -c /opt/rnbp/backups/rollback/db_YYYYMMDD_HHMMSS.sql.gz | psql "$DATABASE_URL"
+```
+
+**Désactiver l'auto-rollback** : `pnpm run deploy:api -- --no-auto-rollback`
+
 ---
 
 ## 11. Monitoring
