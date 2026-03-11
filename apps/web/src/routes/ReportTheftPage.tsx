@@ -7,7 +7,7 @@ import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 type Item = {
   id: string;
   name: string;
-  rnbpNumber: string;
+  rnbpNumber: string | null;
   status: string;
 };
 
@@ -137,7 +137,7 @@ export function ReportTheftPage() {
               <option value="">Sélectionnez un bien</option>
               {items.map((item) => (
                 <option key={item.id} value={item.id}>
-                  {item.name} ({item.rnbpNumber})
+                  {item.name}{item.rnbpNumber ? ` (${item.rnbpNumber})` : ""}
                 </option>
               ))}
             </select>

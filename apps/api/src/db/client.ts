@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
@@ -28,7 +29,9 @@ export function getDb() {
 
 export async function runMigrations() {
   const database = getDb();
-  await migrate(database, { migrationsFolder: "./drizzle" });
+  // resolve from CWD (apps/api/) in dev, or use __dirname fallback for bundled prod
+  const migrationsPath = resolve(process.cwd(), "drizzle");
+  await migrate(database, { migrationsFolder: migrationsPath });
 }
 
 export async function closeDb() {

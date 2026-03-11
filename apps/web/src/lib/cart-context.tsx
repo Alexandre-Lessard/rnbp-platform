@@ -9,8 +9,8 @@ import {
 // ── Types ────────────────────────────────────────────────────────────
 
 export type CartItem = {
-  rnbpNumber: string; // identifiant RNBP du bien
-  itemName: string;   // nom du bien (ex: "Tracteur à gazon")
+  itemId: string;       // UUID de l'item (ou "pending:<nom>" temporaire)
+  itemName: string;     // nom du bien (ex: "Tracteur à gazon")
   productName?: string; // nom du produit (ex: "Feuille de 20 autocollants...")
   quantity: number;
 };
@@ -18,9 +18,9 @@ export type CartItem = {
 type CartContextType = {
   cart: CartItem[];
   addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
-  removeItem: (rnbpNumber: string) => void;
-  updateQuantity: (rnbpNumber: string, quantity: number) => void;
-  updateRnbpNumber: (oldRnbpNumber: string, newRnbpNumber: string) => void;
+  removeItem: (itemId: string) => void;
+  updateQuantity: (itemId: string, quantity: number) => void;
+  updateItemId: (oldItemId: string, newItemId: string) => void;
   clearCart: () => void;
   cartCount: number;
 };
@@ -33,10 +33,18 @@ function loadCart(): CartItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
-    const items: CartItem[] = JSON.parse(raw);
-    // Nettoyage : retirer les items "generic" ou "pending:" orphelins (ancienne logique)
-    const cleaned = items.filter((i) => i.rnbpNumber !== "generic" && !i.rnbpNumber.startsWith("pending:"));
-    if (cleaned.length !== items.length) saveCart(cleaned);
+    const parsed = JSON.parse(raw);
+    // Migration : convertir les anciens items (rnbpNumber → itemId)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cleaned = (parsed as any[])
+      .map((i) => ({
+        itemId: i.itemId || "",
+        itemName: i.itemName || "",
+        productName: i.productName,
+        quantity: i.quantity || 1,
+      }))
+      .filter((i) => i.itemId);
+    if (cleaned.length !== parsed.length) saveCart(cleaned);
     return cleaned;
   } catch {
     return [];
@@ -57,10 +65,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const addItem = useCallback(
     (item: Omit<CartItem, "quantity"> & { quantity?: number }) => {
       setCart((prev) => {
-        const existing = prev.find((i) => i.rnbpNumber === item.rnbpNumber);
+        const existing = prev.find((i) => i.itemId === item.itemId);
         const next = existing
           ? prev.map((i) =>
-              i.rnbpNumber === item.rnbpNumber
+              i.itemId === item.itemId
                 ? { ...i, quantity: i.quantity + (item.quantity ?? 1) }
                 : i,
             )
@@ -73,9 +81,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 
   const removeItem = useCallback(
-    (rnbpNumber: string) => {
+    (itemId: string) => {
       setCart((prev) => {
-        const next = prev.filter((i) => i.rnbpNumber !== rnbpNumber);
+        const next = prev.filter((i) => i.itemId !== itemId);
         saveCart(next);
         return next;
       });
@@ -84,11 +92,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 
   const updateQuantity = useCallback(
-    (rnbpNumber: string, quantity: number) => {
-      if (quantity < 1) return removeItem(rnbpNumber);
+    (itemId: string, quantity: number) => {
+      if (quantity < 1) return removeItem(itemId);
       setCart((prev) => {
         const next = prev.map((i) =>
-          i.rnbpNumber === rnbpNumber ? { ...i, quantity } : i,
+          i.itemId === itemId ? { ...i, quantity } : i,
         );
         saveCart(next);
         return next;
@@ -97,11 +105,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [removeItem],
   );
 
-  const updateRnbpNumber = useCallback(
-    (oldRnbpNumber: string, newRnbpNumber: string) => {
+  const updateItemId = useCallback(
+    (oldItemId: string, newItemId: string) => {
       setCart((prev) => {
         const next = prev.map((i) =>
-          i.rnbpNumber === oldRnbpNumber ? { ...i, rnbpNumber: newRnbpNumber } : i,
+          i.itemId === oldItemId ? { ...i, itemId: newItemId } : i,
         );
         saveCart(next);
         return next;
@@ -119,7 +127,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, addItem, removeItem, updateQuantity, updateRnbpNumber, clearCart, cartCount }}
+      value={{ cart, addItem, removeItem, updateQuantity, updateItemId, clearCart, cartCount }}
     >
       {children}
     </CartContext.Provider>

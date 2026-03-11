@@ -5,7 +5,6 @@ import { createItemSchema, updateItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { items, itemPhotos, itemDocuments } from "../db/schema.js";
 import { requireAuth } from "../middleware/auth.js";
-import { generateRnbpNumber } from "../utils/rnbp-number.js";
 import { notFound, forbidden, badRequest } from "../utils/errors.js";
 
 const uuidSchema = z.string().uuid("Identifiant invalide");
@@ -37,8 +36,6 @@ export async function itemRoutes(app: FastifyInstance) {
       const body = createItemSchema.parse(request.body);
       const db = getDb();
 
-      const rnbpNumber = generateRnbpNumber();
-
       const [item] = await db
         .insert(items)
         .values({
@@ -54,7 +51,6 @@ export async function itemRoutes(app: FastifyInstance) {
           purchaseDate: body.purchaseDate
             ? new Date(body.purchaseDate)
             : null,
-          rnbpNumber,
         })
         .returning();
 

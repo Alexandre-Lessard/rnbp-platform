@@ -71,7 +71,7 @@ const emptyAccount: AccountData = {
 export function RegisterItemPage() {
   const { t } = useLanguage();
   const { user, refreshAuth } = useAuth();
-  const { updateRnbpNumber } = useCart();
+  const { updateItemId } = useCart();
   const reg = t.registration;
 
   const draft = loadDraft();
@@ -84,7 +84,7 @@ export function RegisterItemPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [backendDown, setBackendDown] = useState(false);
-  const [rnbpNumber, setRnbpNumber] = useState("");
+  const [completed, setCompleted] = useState(false);
 
   // Connecté = 3 steps, non connecté = 4
   const totalSteps = user ? 3 : 4;
@@ -121,15 +121,15 @@ export function RegisterItemPage() {
 
     try {
       const body = buildItemBody();
-      const res = await apiRequest<{ item: { rnbpNumber: string } }>(
+      const res = await apiRequest<{ item: { id: string } }>(
         "/items",
         { method: "POST", body },
       );
 
       clearDraft();
       // Mettre à jour le panier si un autocollant a été ajouté pendant l'enregistrement
-      updateRnbpNumber(`pending:${itemData.name}`, res.item.rnbpNumber);
-      setRnbpNumber(res.item.rnbpNumber);
+      updateItemId(`pending:${itemData.name}`, res.item.id);
+      setCompleted(true);
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
       if (isNetworkError(err)) { setBackendDown(true); return; }
@@ -137,7 +137,7 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [buildItemBody, totalSteps, itemData.name, updateRnbpNumber]);
+  }, [buildItemBody, totalSteps, itemData.name, updateItemId]);
 
   const handleSubmitWithAccount = useCallback(async () => {
     setLoading(true);
@@ -145,7 +145,7 @@ export function RegisterItemPage() {
 
     try {
       const res = await apiRequest<{
-        item: { rnbpNumber: string };
+        item: { id: string };
         accessToken: string;
         refreshToken: string;
       }>("/auth/register-with-item", {
@@ -168,8 +168,8 @@ export function RegisterItemPage() {
 
       clearDraft();
       // Mettre à jour le panier si un autocollant a été ajouté pendant l'enregistrement
-      updateRnbpNumber(`pending:${itemData.name}`, res.item.rnbpNumber);
-      setRnbpNumber(res.item.rnbpNumber);
+      updateItemId(`pending:${itemData.name}`, res.item.id);
+      setCompleted(true);
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
       if (isNetworkError(err)) { setBackendDown(true); return; }
@@ -177,7 +177,7 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [accountData, buildItemBody, totalSteps, refreshAuth, itemData.name, updateRnbpNumber]);
+  }, [accountData, buildItemBody, totalSteps, refreshAuth, itemData.name, updateItemId]);
 
   if (backendDown) {
     return (
@@ -188,10 +188,10 @@ export function RegisterItemPage() {
   }
 
   // Confirmation screen
-  if (rnbpNumber) {
+  if (completed) {
     return (
       <section className="section-shell py-16">
-        <RegistrationConfirmation rnbpNumber={rnbpNumber} totalSteps={totalSteps} />
+        <RegistrationConfirmation totalSteps={totalSteps} />
       </section>
     );
   }

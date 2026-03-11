@@ -56,20 +56,20 @@ pnpm dev:api
 |-------|-------------|
 | `users` | Comptes utilisateurs (email, mot de passe hashé, vérification email) |
 | `sessions` | Sessions actives (hash du refresh token, expiration) |
-| `items` | Biens enregistrés (numéro RNBP unique, statut, propriétaire) |
+| `items` | Biens enregistrés (numéro RNBP nullable, assigné par l'admin, statut, propriétaire) |
 | `item_photos` | Photos associées aux biens |
 | `item_documents` | Documents (reçus, garanties, factures) |
 | `theft_reports` | Déclarations de vol |
 | `insurance_requests` | Demandes d'assurance |
 | `partners` | Partenaires (assureurs, détaillants) |
 | `orders` | Commandes Stripe (statut, montant) |
-| `order_items` | Lignes de commande (numéro RNBP, quantité) |
+| `order_items` | Lignes de commande (référence item, quantité, numéro RNBP assigné) |
 | `contact_messages` | Messages du formulaire de contact |
 | `newsletter_subscribers` | Abonnés infolettre |
 
 ### Migrations
 
-Les migrations sont gérées avec Drizzle Kit (dev) et un runner standalone (prod).
+Les migrations Drizzle sont automatiques au démarrage du backend (dev et prod).
 
 ```bash
 # Workflow de migration :
@@ -81,11 +81,8 @@ pnpm db:generate
 
 # 3. Vérifier le fichier SQL généré dans drizzle/
 
-# 4. Appliquer en dev (automatique au démarrage)
+# 4. Démarrer le backend — les migrations s'appliquent automatiquement
 pnpm dev:api
-
-# 5. En prod : le script de déploiement propose d'exécuter les migrations
-pnpm run deploy:api
 ```
 
 ## Routes API
@@ -138,6 +135,15 @@ Toutes les routes sont préfixées par `/api`.
 |---------|------|------|-------------|
 | POST | `/shop/checkout` | Opt. | Créer une session Stripe Checkout |
 | POST | `/shop/webhook` | Non | Webhook Stripe (confirmation paiement) |
+
+### Administration (`/admin`)
+
+| Méthode | Path | Auth | Description |
+|---------|------|------|-------------|
+| GET | `/admin/orders` | Admin | Lister les commandes (filtre par statut) |
+| GET | `/admin/orders/:id` | Admin | Détail d'une commande |
+| PATCH | `/admin/orders/:id/items/:orderItemId/assign` | Admin | Assigner un numéro RNBP à un item |
+| PATCH | `/admin/orders/:id/ship` | Admin | Marquer une commande comme expédiée |
 
 ### Contact (`/contact`)
 
@@ -229,7 +235,7 @@ Champ timestamp sur `users`. Quand défini, tout JWT (access ou refresh) émis *
 
 Certaines opérations modifient plusieurs tables et doivent réussir ou échouer ensemble. On utilise `db.transaction()` pour garantir l'atomicité :
 
-- **`register-with-item`** — Vérifie unicité email + crée user + crée item. Sans transaction, un crash entre les deux inserts laisserait un user sans item (ou un numéro RNBP orphelin).
+- **`register-with-item`** — Vérifie unicité email + crée user + crée item. Sans transaction, un crash entre les deux inserts laisserait un user sans item.
 - **`reports`** — Crée la déclaration de vol + met à jour le statut de l'item à `stolen`. Sans transaction, l'item pourrait être marqué volé sans déclaration associée.
 
 **Règle : utiliser `db.transaction()` dès qu'un endpoint modifie plus d'une table.**
@@ -251,7 +257,7 @@ src/
 
 ### Middleware
 
-- **Auth** — Vérifie le JWT EdDSA, supporte la révocation de tokens
+- **Auth** — Vérifie le JWT EdDSA, supporte la révocation de tokens (`requireAuth`, `requireVerifiedEmail`, `requireAdmin`)
 - **Error handler** — Formate les erreurs (AppError, ZodError, Fastify validation)
 - **Security headers** — HSTS, X-Frame-Options, CSP-adjacent headers
 - **Rate limiting** — 100 req/min global, limites spécifiques par route

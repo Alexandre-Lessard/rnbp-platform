@@ -19,6 +19,8 @@ type User = {
   lastName: string;
   phone: string | null;
   emailVerified: boolean;
+  isAdmin: boolean;
+  clientNumber: string | null;
   createdAt: string;
 };
 

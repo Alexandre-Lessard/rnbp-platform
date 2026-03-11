@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from "react-router";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { AdminRoute } from "@/components/auth/AdminRoute";
 import { useLanguage } from "@/i18n/context";
 
 function ScrollToTop() {
@@ -35,6 +36,9 @@ import { FaqPage } from "@/routes/FaqPage";
 import { ContactPage } from "@/routes/ContactPage";
 import { BoutiquePage } from "@/routes/BoutiquePage";
 import { BoutiqueSuccessPage } from "@/routes/BoutiqueSuccessPage";
+import { AdminOrdersPage } from "@/routes/AdminOrdersPage";
+import { AdminOrderDetailPage } from "@/routes/AdminOrderDetailPage";
+import { VerifyEmailPage } from "@/routes/VerifyEmailPage";
 import { NotFoundPage } from "@/routes/NotFoundPage";
 
 function App() {
@@ -65,6 +69,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/boutique" element={<BoutiquePage />} />
           <Route path="/boutique/succes" element={<BoutiqueSuccessPage />} />
+          <Route path="/verifier-courriel" element={<VerifyEmailPage />} />
           <Route
             path="/tableau-de-bord"
             element={
@@ -79,6 +84,22 @@ function App() {
               <ProtectedRoute>
                 <ReportTheftPage />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/commandes"
+            element={
+              <AdminRoute>
+                <AdminOrdersPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/commandes/:id"
+            element={
+              <AdminRoute>
+                <AdminOrderDetailPage />
+              </AdminRoute>
             }
           />
           <Route path="*" element={<NotFoundPage />} />

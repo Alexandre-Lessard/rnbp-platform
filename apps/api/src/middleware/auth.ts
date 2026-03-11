@@ -9,6 +9,7 @@ declare module "fastify" {
   interface FastifyRequest {
     userId?: string;
     emailVerified?: boolean;
+    isAdmin?: boolean;
   }
 }
 
@@ -40,6 +41,7 @@ export async function requireAuth(
     .select({
       id: users.id,
       emailVerified: users.emailVerified,
+      isAdmin: users.isAdmin,
       tokenRevokedBefore: users.tokenRevokedBefore,
     })
     .from(users)
@@ -59,6 +61,17 @@ export async function requireAuth(
 
   request.userId = user.id;
   request.emailVerified = user.emailVerified;
+  request.isAdmin = user.isAdmin;
+}
+
+export async function requireAdmin(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  await requireAuth(request, reply);
+  if (!request.isAdmin) {
+    throw forbidden("Accès administrateur requis");
+  }
 }
 
 // Tente d'extraire l'user sans bloquer (auth optionnelle)

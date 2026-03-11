@@ -20,7 +20,7 @@ export function StepStickerUpsell({ onNext, onBack, itemName }: StepStickerUpsel
     // Ajoute au panier avec un rnbpNumber temporaire "pending:<itemName>"
     // qui sera remplacé par le vrai numéro RNBP après la création de l'item
     addItem({
-      rnbpNumber: `pending:${itemName}`,
+      itemId: `pending:${itemName}`,
       itemName,
       productName: t.shop?.productName,
     });

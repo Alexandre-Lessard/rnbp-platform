@@ -4,12 +4,10 @@ import { getButtonClasses } from "@/lib/button-styles";
 import { StepIndicator } from "@/components/registration/StepIndicator";
 
 type RegistrationConfirmationProps = {
-  rnbpNumber: string;
   totalSteps: number;
 };
 
 export function RegistrationConfirmation({
-  rnbpNumber,
   totalSteps,
 }: RegistrationConfirmationProps) {
   const { t } = useLanguage();
@@ -33,20 +31,25 @@ export function RegistrationConfirmation({
       </p>
 
       <div className="mt-8 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-6">
-        <p className="text-sm font-medium text-[var(--rcb-text-muted)]">
-          {reg.rnbpNumberLabel}
-        </p>
-        <p className="mt-2 text-3xl font-bold tracking-wider text-[var(--rcb-primary)]">
-          {rnbpNumber}
+        <p className="text-sm text-[var(--rcb-text-muted)]">
+          {reg.successNoNumber ?? "Commandez des autocollants dans la boutique pour recevoir votre numéro RNBP unique."}
         </p>
       </div>
 
-      <Link
-        to="/tableau-de-bord"
-        className={`${getButtonClasses("primary")} mt-8`}
-      >
-        {reg.goToDashboard}
-      </Link>
+      <div className="mt-6 flex flex-col items-center gap-3">
+        <Link
+          to="/boutique"
+          className={getButtonClasses("primary")}
+        >
+          {t.shop?.heading ?? "Boutique"}
+        </Link>
+        <Link
+          to="/tableau-de-bord"
+          className="text-sm font-medium text-[var(--rcb-primary)] hover:underline"
+        >
+          {reg.goToDashboard}
+        </Link>
+      </div>
     </div>
   );
 }

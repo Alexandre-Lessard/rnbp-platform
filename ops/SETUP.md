@@ -201,6 +201,9 @@ sudo -u prod pnpm --filter @rnbp/api build
 
 ### Migrations
 
+Les migrations Drizzle s'appliquent automatiquement au démarrage du backend. Aucune étape manuelle requise.
+
+Pour exécuter manuellement en cas de besoin :
 ```bash
 cd /opt/rnbp/repo/apps/api
 sudo -u prod node --env-file=/opt/rnbp/.env dist/migrate.js
@@ -451,7 +454,7 @@ pnpm run deploy:api
 2. Générer le SQL : `cd apps/api && pnpm db:generate`
 3. Vérifier le fichier SQL dans `apps/api/drizzle/`
 4. Commit et push
-5. Déployer : `pnpm run deploy:api` — le script propose d'exécuter les migrations
+5. Déployer : `pnpm run deploy:api` — les migrations s'appliquent automatiquement au redémarrage
 
 ### Rollback
 
@@ -530,6 +533,8 @@ sudo systemctl restart cloudflared
 
 ### Les migrations échouent
 
+Les migrations s'appliquent automatiquement au démarrage. Si le backend ne démarre pas à cause d'une migration :
+
 ```bash
 # Vérifier la connexion DB
 psql -h 192.168.50.239 -U rnbp -d rnbp_prod -c "SELECT 1;"
@@ -537,7 +542,7 @@ psql -h 192.168.50.239 -U rnbp -d rnbp_prod -c "SELECT 1;"
 # Vérifier les fichiers SQL
 ls -la /opt/rnbp/repo/apps/api/drizzle/
 
-# Exécuter manuellement
+# Exécuter manuellement (debug)
 cd /opt/rnbp/repo/apps/api
 sudo -u prod node --env-file=/opt/rnbp/.env dist/migrate.js
 ```

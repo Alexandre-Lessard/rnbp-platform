@@ -151,6 +151,8 @@ export type SiteContent = {
     alreadyInCartConfirm: string;
     alreadyInCartCancel: string;
     alreadyInCartViewCart: string;
+    awaitingNumber: string;
+    clientNumber: string;
   };
   registration?: {
     heading: string;
@@ -180,6 +182,7 @@ export type SiteContent = {
     confirmButton: string;
     successHeading: string;
     successDescription: string;
+    successNoNumber: string;
     rnbpNumberLabel: string;
     goToDashboard: string;
     stickerHeading: string;

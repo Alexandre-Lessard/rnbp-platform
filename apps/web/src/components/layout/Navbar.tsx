@@ -69,6 +69,14 @@ export function Navbar() {
           </Link>
           {user ? (
             <>
+              {user.isAdmin && (
+                <Link
+                  to="/admin/commandes"
+                  className="flex h-9 items-center rounded-lg px-3 text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:bg-[var(--rcb-border)] hover:text-[var(--rcb-primary)]"
+                >
+                  Admin
+                </Link>
+              )}
               <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm", "whitespace-nowrap text-center")}>
                 {t.nav.myAccount}
               </Link>
@@ -162,6 +170,15 @@ export function Navbar() {
                 </Link>
                 {user ? (
                   <>
+                    {user.isAdmin && (
+                      <Link
+                        to="/admin/commandes"
+                        onClick={() => setMenuOpen(false)}
+                        className={getButtonClasses("outline", "sm", "w-full")}
+                      >
+                        Admin
+                      </Link>
+                    )}
                     <Link
                       to="/tableau-de-bord"
                       onClick={() => setMenuOpen(false)}

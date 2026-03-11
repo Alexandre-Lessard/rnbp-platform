@@ -2,17 +2,19 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { eq, and } from "drizzle-orm";
 import Stripe from "stripe";
+import { inArray } from "drizzle-orm";
 import { getDb } from "../db/client.js";
-import { orders, orderItems, users } from "../db/schema.js";
+import { orders, orderItems, items, users } from "../db/schema.js";
 import { getConfig } from "../config.js";
-import { tryAuth } from "../middleware/auth.js";
+import { requireAuth } from "../middleware/auth.js";
 import { sendEmail, buildOrderNotificationEmail } from "../utils/email.js";
+import { forbidden } from "../utils/errors.js";
 
 const checkoutSchema = z.object({
   items: z
     .array(
       z.object({
-        rnbpNumber: z.string().min(1),
+        itemId: z.string().uuid(),
         quantity: z.number().int().min(1).max(50),
       }),
     )
@@ -41,7 +43,7 @@ export async function shopRoutes(app: FastifyInstance) {
 
   app.post(
     "/shop/checkout",
-    { preHandler: tryAuth },
+    { preHandler: requireAuth },
     async (request, reply) => {
       const config = getConfig();
       if (!config.STRIPE_SECRET_KEY) {
@@ -51,6 +53,20 @@ export async function shopRoutes(app: FastifyInstance) {
       const body = checkoutSchema.parse(request.body);
       const stripe = getStripe();
       const db = getDb();
+
+      // Valider que tous les items appartiennent au user
+      const itemIds = body.items.map((i) => i.itemId);
+      const ownedItems = await db
+        .select({ id: items.id })
+        .from(items)
+        .where(and(inArray(items.id, itemIds), eq(items.ownerId, request.userId!)));
+
+      const ownedIds = new Set(ownedItems.map((i) => i.id));
+      for (const itemId of itemIds) {
+        if (!ownedIds.has(itemId)) {
+          throw forbidden("Un ou plusieurs biens ne vous appartiennent pas");
+        }
+      }
 
       // Somme des quantités pour Stripe (un seul Price ID)
       const totalQuantity = body.items.reduce((sum, i) => sum + i.quantity, 0);
@@ -81,7 +97,7 @@ export async function shopRoutes(app: FastifyInstance) {
       await db.insert(orderItems).values(
         body.items.map((item) => ({
           orderId: order.id,
-          rnbpNumber: item.rnbpNumber,
+          itemId: item.itemId,
           productType: "sticker_sheet",
           quantity: item.quantity,
           unitPriceCents: 0, // Le prix réel vient de Stripe

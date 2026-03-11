@@ -423,6 +423,8 @@ const en: SiteContent = {
     alreadyInCartConfirm: "Yes, add",
     alreadyInCartCancel: "No thanks",
     alreadyInCartViewCart: "View cart",
+    awaitingNumber: "Awaiting assignment",
+    clientNumber: "Client no.",
   },
   registration: {
     heading: "Register an item",
@@ -451,7 +453,8 @@ const en: SiteContent = {
     documentsDescription: "Proof of purchase, certificate of authenticity (optional).",
     confirmButton: "Confirm registration",
     successHeading: "Item registered successfully!",
-    successDescription: "Your item has been registered in the NRPP. Keep your RNBP number.",
+    successDescription: "Your item has been registered in the NRPP.",
+    successNoNumber: "Order stickers from the shop to receive your unique RNBP number.",
     rnbpNumberLabel: "Your RNBP number",
     goToDashboard: "Go to dashboard",
     stickerHeading: "Protect your item with our identification stickers",

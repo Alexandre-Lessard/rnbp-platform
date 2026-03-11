@@ -429,6 +429,8 @@ const fr: SiteContent = {
     alreadyInCartConfirm: "Oui, ajouter",
     alreadyInCartCancel: "Non merci",
     alreadyInCartViewCart: "Voir le panier",
+    awaitingNumber: "En attente d'attribution",
+    clientNumber: "No. client",
   },
   registration: {
     heading: "Enregistrer un bien",
@@ -457,7 +459,8 @@ const fr: SiteContent = {
     documentsDescription: "Preuve d'achat, certificat d'authenticité (optionnel).",
     confirmButton: "Confirmer l'enregistrement",
     successHeading: "Bien enregistré avec succès !",
-    successDescription: "Votre bien a été enregistré dans le RNBP. Conservez votre numéro RNBP.",
+    successDescription: "Votre bien a été enregistré dans le RNBP.",
+    successNoNumber: "Commandez des autocollants dans la boutique pour recevoir votre numéro RNBP unique.",
     rnbpNumberLabel: "Votre numéro RNBP",
     goToDashboard: "Voir mon tableau de bord",
     stickerHeading: "Protégez votre bien avec nos étiquettes d'identification",

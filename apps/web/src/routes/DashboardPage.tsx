@@ -14,8 +14,9 @@ type Item = {
   category: string;
   brand: string | null;
   model: string | null;
+  serialNumber: string | null;
   status: string;
-  rnbpNumber: string;
+  rnbpNumber: string | null;
   createdAt: string;
 };
 
@@ -46,7 +47,7 @@ export function DashboardPage() {
   }, []);
 
   function doAddItem(item: Item) {
-    addItem({ rnbpNumber: item.rnbpNumber, itemName: item.name, productName: t.shop?.productName });
+    addItem({ itemId: item.id, itemName: item.name, productName: t.shop?.productName });
     setAddedId(item.id);
     setTimeout(() => setAddedId(null), 2500);
   }
@@ -54,7 +55,7 @@ export function DashboardPage() {
   function handleOrderStickers(item: Item) {
     if (addedId === item.id) return;
 
-    const alreadyInCart = cart.some((c) => c.rnbpNumber === item.rnbpNumber);
+    const alreadyInCart = cart.some((c) => c.itemId === item.id);
     if (alreadyInCart) {
       setConfirmItem(item);
     } else {
@@ -91,6 +92,11 @@ export function DashboardPage() {
             {dash?.welcome?.replace("{{name}}", user?.firstName ?? "") ??
               `Bienvenue, ${user?.firstName}`}
           </p>
+          {user?.clientNumber && (
+            <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
+              {dash?.clientNumber ?? "No. client"} : {user.clientNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")}
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <Link
@@ -144,10 +150,21 @@ export function DashboardPage() {
                 <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
                   {item.brand}
                   {item.model ? ` ${item.model}` : ""}
-                  {" — "}
-                  <span className="font-mono text-xs tracking-wider">
-                    {item.rnbpNumber}
-                  </span>
+                  {item.rnbpNumber ? (
+                    <>
+                      {" — "}
+                      <span className="font-mono text-xs tracking-wider">
+                        {item.rnbpNumber}
+                      </span>
+                    </>
+                  ) : item.serialNumber ? (
+                    <>
+                      {" — "}
+                      <span className="text-xs text-[var(--rcb-text-muted)]">
+                        S/N {item.serialNumber}
+                      </span>
+                    </>
+                  ) : null}
                 </p>
               </div>
               <div className="flex items-center gap-3">

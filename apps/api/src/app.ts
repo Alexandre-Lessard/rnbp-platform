@@ -12,6 +12,7 @@ import { newsletterRoutes } from "./routes/newsletter.js";
 import { insuranceRoutes } from "./routes/insurance.js";
 import { contactRoutes } from "./routes/contact.js";
 import { shopRoutes } from "./routes/shop.js";
+import { adminRoutes } from "./routes/admin.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { securityHeaders } from "./middleware/security-headers.js";
 
@@ -35,6 +36,7 @@ export async function buildApp() {
   await app.register(cors, {
     origin: config.CORS_ORIGINS,
     credentials: true,
+    methods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH"],
   });
 
   // Security headers
@@ -59,6 +61,7 @@ export async function buildApp() {
   await app.register(insuranceRoutes, { prefix: "/api" });
   await app.register(contactRoutes, { prefix: "/api" });
   await app.register(shopRoutes, { prefix: "/api" });
+  await app.register(adminRoutes, { prefix: "/api" });
 
   return app;
 }

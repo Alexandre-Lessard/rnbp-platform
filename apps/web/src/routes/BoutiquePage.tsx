@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/Button";
 type UserItem = {
   id: string;
   name: string;
-  rnbpNumber: string;
 };
 
 // ── Feature icon (checkmark in circle) ──────────────────────────────
@@ -59,17 +58,17 @@ export function BoutiquePage() {
 
   function handleBuyClick() {
     if (user && userItems.length > 0) {
-      setModalSelection(userItems[0].rnbpNumber);
+      setModalSelection(userItems[0].id);
       setShowModal(true);
     }
     // Si pas connecté ou pas d'items, on ne fait rien (le bouton affiche un message)
   }
 
   function handleModalConfirm() {
-    const item = userItems.find((i) => i.rnbpNumber === modalSelection);
+    const item = userItems.find((i) => i.id === modalSelection);
     if (!item) return;
     addItem({
-      rnbpNumber: modalSelection,
+      itemId: item.id,
       itemName: item.name,
       productName: shop.productName,
     });
@@ -84,7 +83,7 @@ export function BoutiquePage() {
         method: "POST",
         body: {
           items: cart.map((i) => ({
-            rnbpNumber: i.rnbpNumber,
+            itemId: i.itemId,
             quantity: i.quantity,
           })),
         },
@@ -213,7 +212,7 @@ export function BoutiquePage() {
             <div className="mt-6 space-y-3">
               {cart.map((item) => (
                 <div
-                  key={item.rnbpNumber}
+                  key={item.itemId}
                   className="flex items-center justify-between gap-4 rounded-xl border border-[var(--rcb-border)] px-5 py-4"
                 >
                   <div className="min-w-0 flex-1">
@@ -227,7 +226,7 @@ export function BoutiquePage() {
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => updateQuantity(item.rnbpNumber, item.quantity - 1)}
+                      onClick={() => updateQuantity(item.itemId, item.quantity - 1)}
                       className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--rcb-border)] text-sm font-medium transition-colors hover:bg-[var(--rcb-border)]"
                     >
                       −
@@ -237,14 +236,14 @@ export function BoutiquePage() {
                     </span>
                     <button
                       type="button"
-                      onClick={() => updateQuantity(item.rnbpNumber, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.itemId, item.quantity + 1)}
                       className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--rcb-border)] text-sm font-medium transition-colors hover:bg-[var(--rcb-border)]"
                     >
                       +
                     </button>
                     <button
                       type="button"
-                      onClick={() => removeItem(item.rnbpNumber)}
+                      onClick={() => removeItem(item.itemId)}
                       className="ml-2 cursor-pointer text-sm text-red-500 transition-colors hover:text-red-700"
                     >
                       {shop.removeItem}
@@ -282,23 +281,20 @@ export function BoutiquePage() {
             <div className="mt-4 space-y-2">
               {userItems.map((item) => (
                 <label
-                  key={item.rnbpNumber}
+                  key={item.id}
                   className="flex cursor-pointer items-center gap-3 rounded-lg border border-[var(--rcb-border)] p-3 transition-colors hover:bg-[var(--rcb-surface)]"
                 >
                   <input
                     type="radio"
                     name="item-select"
-                    value={item.rnbpNumber}
-                    checked={modalSelection === item.rnbpNumber}
-                    onChange={() => setModalSelection(item.rnbpNumber)}
+                    value={item.id}
+                    checked={modalSelection === item.id}
+                    onChange={() => setModalSelection(item.id)}
                     className="accent-[var(--rcb-primary)]"
                   />
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-[var(--rcb-text-strong)]">
                       {item.name}
-                    </p>
-                    <p className="text-xs text-[var(--rcb-text-muted)]">
-                      {item.rnbpNumber}
                     </p>
                   </div>
                 </label>

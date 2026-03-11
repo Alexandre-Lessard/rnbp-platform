@@ -6,8 +6,8 @@ import { getDb } from "../db/client.js";
 import { users, items, sessions } from "../db/schema.js";
 import { hashPassword } from "../utils/password.js";
 import { signAccessToken, signRefreshToken, hashToken } from "../utils/tokens.js";
-import { generateRnbpNumber } from "../utils/rnbp-number.js";
 import { conflict } from "../utils/errors.js";
+import { generateClientNumber } from "../utils/client-number.js";
 import {
   sendEmail,
   createSignedToken,
@@ -27,7 +27,6 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
     const db = getDb();
 
     const passwordHash = await hashPassword(body.account.password);
-    const rnbpNumber = generateRnbpNumber();
 
     // Atomic transaction: check uniqueness + create user + item (prevents TOCTOU)
     const result = await db.transaction(async (tx) => {
@@ -41,6 +40,8 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
         throw conflict("Un compte avec cette adresse courriel existe déjà");
       }
 
+      const clientNumber = await generateClientNumber(tx);
+
       const [user] = await tx
         .insert(users)
         .values({
@@ -49,6 +50,7 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
           firstName: body.account.firstName,
           lastName: body.account.lastName,
           phone: body.account.phone ?? null,
+          clientNumber,
         })
         .returning({
           id: users.id,
@@ -57,6 +59,8 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
           lastName: users.lastName,
           phone: users.phone,
           emailVerified: users.emailVerified,
+          isAdmin: users.isAdmin,
+          clientNumber: users.clientNumber,
           createdAt: users.createdAt,
         });
 
@@ -75,7 +79,6 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
           purchaseDate: body.item.purchaseDate
             ? new Date(body.item.purchaseDate)
             : null,
-          rnbpNumber,
         })
         .returning();
 
@@ -108,6 +111,8 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
         lastName: result.user.lastName,
         phone: result.user.phone,
         emailVerified: result.user.emailVerified,
+        isAdmin: result.user.isAdmin,
+        clientNumber: result.user.clientNumber,
         createdAt: result.user.createdAt.toISOString(),
       },
       item: result.item,

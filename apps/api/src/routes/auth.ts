@@ -17,6 +17,7 @@ import {
 } from "../utils/tokens.js";
 import { conflict, unauthorized, badRequest } from "../utils/errors.js";
 import { requireAuth } from "../middleware/auth.js";
+import { generateClientNumber } from "../utils/client-number.js";
 import {
   sendEmail,
   createSignedToken,
@@ -49,6 +50,8 @@ export async function authRoutes(app: FastifyInstance) {
         throw conflict("Un compte avec cette adresse courriel existe déjà");
       }
 
+      const clientNumber = await generateClientNumber(tx);
+
       const [created] = await tx
         .insert(users)
         .values({
@@ -57,6 +60,7 @@ export async function authRoutes(app: FastifyInstance) {
           firstName: body.firstName,
           lastName: body.lastName,
           phone: body.phone ?? null,
+          clientNumber,
         })
         .returning({
           id: users.id,
@@ -65,6 +69,8 @@ export async function authRoutes(app: FastifyInstance) {
           lastName: users.lastName,
           phone: users.phone,
           emailVerified: users.emailVerified,
+          isAdmin: users.isAdmin,
+          clientNumber: users.clientNumber,
           createdAt: users.createdAt,
         });
 
@@ -97,6 +103,8 @@ export async function authRoutes(app: FastifyInstance) {
         lastName: user.lastName,
         phone: user.phone,
         emailVerified: user.emailVerified,
+        isAdmin: user.isAdmin,
+        clientNumber: user.clientNumber,
         createdAt: user.createdAt.toISOString(),
       },
       accessToken,
@@ -145,6 +153,8 @@ export async function authRoutes(app: FastifyInstance) {
         lastName: user.lastName,
         phone: user.phone,
         emailVerified: user.emailVerified,
+        isAdmin: user.isAdmin,
+        clientNumber: user.clientNumber,
         createdAt: user.createdAt.toISOString(),
       },
       accessToken,
@@ -265,6 +275,8 @@ export async function authRoutes(app: FastifyInstance) {
           lastName: users.lastName,
           phone: users.phone,
           emailVerified: users.emailVerified,
+          isAdmin: users.isAdmin,
+          clientNumber: users.clientNumber,
           createdAt: users.createdAt,
         })
         .from(users)

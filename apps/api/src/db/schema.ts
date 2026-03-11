@@ -44,6 +44,8 @@ export const users = pgTable("users", {
   lastName: varchar("last_name", { length: 100 }).notNull(),
   phone: varchar("phone", { length: 20 }),
   emailVerified: boolean("email_verified").notNull().default(false),
+  isAdmin: boolean("is_admin").notNull().default(false),
+  clientNumber: varchar("client_number", { length: 9 }).unique(),
   // Révocation de masse : tous les tokens émis AVANT ce timestamp sont refusés.
   // Mis à jour lors d'un reset de mot de passe pour invalider toutes les sessions.
   tokenRevokedBefore: timestamp("token_revoked_before", {
@@ -95,9 +97,9 @@ export const items = pgTable(
     estimatedValue: integer("estimated_value"),
     purchaseDate: timestamp("purchase_date", { withTimezone: true }),
     status: itemStatusEnum("status").notNull().default("active"),
-    // Format: RNBP-XXXXXXXX (nanoid 8 chars, alphabet sans ambiguïté: 0/1/I/L/O exclus)
-    // ~30 milliards de combinaisons — collision négligeable pour notre volume
-    rnbpNumber: varchar("rnbp_number", { length: 13 }).notNull().unique(),
+    // Format: RNBP-XXXXXXXX — assigné manuellement par l'admin lors du traitement des commandes
+    // Null = pas encore assigné (en attente d'achat de stickers)
+    rnbpNumber: varchar("rnbp_number", { length: 13 }).unique(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -289,10 +291,16 @@ export const orderItems = pgTable(
     orderId: uuid("order_id")
       .notNull()
       .references(() => orders.id, { onDelete: "cascade" }),
+    itemId: uuid("item_id").references(() => items.id, {
+      onDelete: "set null",
+    }),
     rnbpNumber: varchar("rnbp_number", { length: 13 }),
     productType: varchar("product_type", { length: 50 }).notNull(),
     quantity: integer("quantity").notNull(),
     unitPriceCents: integer("unit_price_cents").notNull(),
   },
-  (table) => [index("order_items_order_id_idx").on(table.orderId)],
+  (table) => [
+    index("order_items_order_id_idx").on(table.orderId),
+    index("order_items_item_id_idx").on(table.itemId),
+  ],
 );

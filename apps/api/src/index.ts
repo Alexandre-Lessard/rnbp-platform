@@ -5,12 +5,10 @@ import { closeDb, runMigrations } from "./db/client.js";
 async function main() {
   const config = loadConfig();
 
-  // Auto-migrate in development
-  if (config.NODE_ENV === "development") {
-    console.log("Running database migrations...");
-    await runMigrations();
-    console.log("Migrations complete.");
-  }
+  // Auto-migrate at startup
+  console.log("Running database migrations...");
+  await runMigrations();
+  console.log("Migrations complete.");
 
   const app = await buildApp();
 

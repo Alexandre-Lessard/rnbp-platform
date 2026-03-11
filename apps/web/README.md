@@ -43,6 +43,7 @@ Accessible sur `http://localhost:5173`.
 | `/partenaires` | `PartnerPage` | Page partenaires |
 | `/confidentialite` | `PrivacyPolicyPage` | Politique de confidentialité |
 | `/conditions` | `TermsOfServicePage` | Conditions d'utilisation |
+| `/verifier-courriel` | `VerifyEmailPage` | Vérification du courriel |
 
 ### Protégées (requièrent authentification)
 
@@ -51,12 +52,19 @@ Accessible sur `http://localhost:5173`.
 | `/tableau-de-bord` | `DashboardPage` | Tableau de bord utilisateur |
 | `/declarer-vol` | `ReportTheftPage` | Déclaration de vol |
 
+### Admin (requièrent `isAdmin`)
+
+| Path | Composant | Description |
+|------|-----------|-------------|
+| `/admin/commandes` | `AdminOrdersPage` | Liste des commandes |
+| `/admin/commandes/:id` | `AdminOrderDetailPage` | Détail commande + assignation RNBP |
+
 ## Structure
 
 ```
 src/
 ├── components/
-│   ├── auth/           # ProtectedRoute, ServiceUnavailable
+│   ├── auth/           # ProtectedRoute, AdminRoute, ServiceUnavailable
 │   ├── layout/         # Navbar, Footer
 │   ├── sections/       # Sections de la landing page
 │   ├── registration/   # Étapes du formulaire d'enregistrement
