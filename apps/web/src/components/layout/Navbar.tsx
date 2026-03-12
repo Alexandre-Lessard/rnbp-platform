@@ -5,6 +5,7 @@ import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ROUTES } from "@/routes/routes";
 
 export function Navbar() {
   const { t, locale } = useLanguage();
@@ -52,7 +53,7 @@ export function Navbar() {
         <div className="hidden items-center gap-3 lg:flex">
           <LanguageSwitcher />
           <Link
-            to="/boutique"
+            to={ROUTES.shop}
             className="relative flex h-9 w-9 items-center justify-center rounded-lg text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-border)] hover:text-[var(--rcb-primary)]"
             aria-label={t.shop?.heading ?? "Boutique"}
           >
@@ -71,13 +72,13 @@ export function Navbar() {
             <>
               {user.isAdmin && (
                 <Link
-                  to="/admin/commandes"
+                  to={ROUTES.adminOrders}
                   className="flex h-9 items-center rounded-lg px-3 text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:bg-[var(--rcb-border)] hover:text-[var(--rcb-primary)]"
                 >
                   Admin
                 </Link>
               )}
-              <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm", "whitespace-nowrap text-center")}>
+              <Link to={ROUTES.dashboard} className={getButtonClasses("primary", "sm", "whitespace-nowrap text-center")}>
                 {t.nav.myAccount}
               </Link>
               <button
@@ -94,7 +95,7 @@ export function Navbar() {
               </button>
             </>
           ) : (
-            <Link to="/connexion" className={getButtonClasses("primary", "sm", "whitespace-nowrap text-center")}>
+            <Link to={ROUTES.login} className={getButtonClasses("primary", "sm", "whitespace-nowrap text-center")}>
               {t.nav.login}
             </Link>
           )}
@@ -161,7 +162,7 @@ export function Navbar() {
               </div>
               <div className="mt-4 flex flex-col gap-2 px-4">
                 <Link
-                  to="/boutique"
+                  to={ROUTES.shop}
                   onClick={() => setMenuOpen(false)}
                   className={getButtonClasses("outline", "sm", "w-full")}
                 >
@@ -172,7 +173,7 @@ export function Navbar() {
                   <>
                     {user.isAdmin && (
                       <Link
-                        to="/admin/commandes"
+                        to={ROUTES.adminOrders}
                         onClick={() => setMenuOpen(false)}
                         className={getButtonClasses("outline", "sm", "w-full")}
                       >
@@ -180,7 +181,7 @@ export function Navbar() {
                       </Link>
                     )}
                     <Link
-                      to="/tableau-de-bord"
+                      to={ROUTES.dashboard}
                       onClick={() => setMenuOpen(false)}
                       className={getButtonClasses("primary", "sm", "w-full")}
                     >
@@ -199,7 +200,7 @@ export function Navbar() {
                   </>
                 ) : (
                   <Link
-                    to="/connexion"
+                    to={ROUTES.login}
                     onClick={() => setMenuOpen(false)}
                     className={getButtonClasses("primary", "sm", "w-full")}
                   >

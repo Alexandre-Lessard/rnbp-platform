@@ -6,12 +6,13 @@ import { useLanguage } from "@/i18n/context";
 import { isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
+import { ROUTES } from "@/routes/routes";
 
 export function LoginPage() {
   const { login, backendAvailable } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/tableau-de-bord";
+  const redirect = searchParams.get("redirect") || ROUTES.dashboard;
   const { t } = useLanguage();
 
   const [email, setEmail] = useState("");
@@ -121,7 +122,7 @@ export function LoginPage() {
         <p className="mt-6 text-center text-sm text-[var(--rcb-text-muted)]">
           {t.auth?.noAccount ?? "Pas encore de compte?"}{" "}
           <Link
-            to="/inscription"
+            to={ROUTES.register}
             className="font-medium text-[var(--rcb-primary)] hover:underline"
           >
             {t.auth?.registerLink ?? "Créer un compte"}

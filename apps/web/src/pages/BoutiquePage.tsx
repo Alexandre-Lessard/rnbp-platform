@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
 import { apiRequest } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { ROUTES } from "@/routes/routes";
 
 type UserItem = {
   id: string;
@@ -158,14 +159,14 @@ export function BoutiquePage() {
               ) : !user ? (
                 <p className="text-sm text-[var(--rcb-text-muted)]">
                   {shop.loginRequired}{" "}
-                  <Link to="/connexion" className="font-medium text-[var(--rcb-primary)] hover:underline">
+                  <Link to={ROUTES.login} className="font-medium text-[var(--rcb-primary)] hover:underline">
                     {shop.loginLink}
                   </Link>
                 </p>
               ) : loadingItems ? null : userItems.length === 0 ? (
                 <p className="text-sm text-[var(--rcb-text-muted)]">
                   {shop.noItemsMessage}{" "}
-                  <Link to="/enregistrer" className="font-medium text-[var(--rcb-primary)] hover:underline">
+                  <Link to={ROUTES.registerItem} className="font-medium text-[var(--rcb-primary)] hover:underline">
                     {shop.noItemsLink}
                   </Link>
                 </p>

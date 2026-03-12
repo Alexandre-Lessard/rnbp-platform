@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { ROUTES } from "@/routes/routes";
 
 export function Footer() {
   const { t, locale } = useLanguage();
@@ -97,8 +98,8 @@ export function Footer() {
         <div className="mt-14 border-t border-[var(--rcb-border)] pt-8 text-sm text-[var(--rcb-text-body)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex flex-wrap gap-6">
-              <Link to="/confidentialite" className="transition-colors hover:text-[var(--rcb-primary)]">{t.footer.privacyPolicy}</Link>
-              <Link to="/conditions" className="transition-colors hover:text-[var(--rcb-primary)]">{t.footer.termsOfUse}</Link>
+              <Link to={ROUTES.privacy} className="transition-colors hover:text-[var(--rcb-primary)]">{t.footer.privacyPolicy}</Link>
+              <Link to={ROUTES.terms} className="transition-colors hover:text-[var(--rcb-primary)]">{t.footer.termsOfUse}</Link>
               <span className="cursor-not-allowed opacity-50">{t.footer.cookieSettings}</span>
             </div>
             <p>{t.footer.copyright.replace("{{year}}", String(year))}</p>

@@ -7,6 +7,7 @@ import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { getButtonClasses } from "@/lib/button-styles";
 import { Button } from "@/components/ui/Button";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
+import { ROUTES } from "@/routes/routes";
 
 type Item = {
   id: string;
@@ -100,13 +101,13 @@ export function DashboardPage() {
         </div>
         <div className="flex items-center gap-3">
           <Link
-            to="/enregistrer"
+            to={ROUTES.registerItem}
             className={getButtonClasses("primary", "sm", "w-[170px] whitespace-nowrap text-center")}
           >
             + {dash?.addItem ?? "Enregistrer un bien"}
           </Link>
           <Link
-            to="/declarer-vol"
+            to={ROUTES.reportTheft}
             className={getButtonClasses("outline", "sm", "w-[170px] whitespace-nowrap text-center")}
           >
             {dash?.reportTheft ?? "Déclarer un vol"}
@@ -130,7 +131,7 @@ export function DashboardPage() {
             {dash?.noItems ?? "Aucun bien enregistré pour le moment."}
           </p>
           <Link
-            to="/enregistrer"
+            to={ROUTES.registerItem}
             className={`${getButtonClasses("primary", "lg")} mt-6`}
           >
             {dash?.addItem ?? "Enregistrer un bien"}
@@ -170,7 +171,7 @@ export function DashboardPage() {
               <div className="flex items-center gap-3">
                 {item.status === "active" && (
                   <Link
-                    to={`/modifier/${item.id}`}
+                    to={ROUTES.edit(item.id)}
                     className={getButtonClasses("outline", "sm", "!px-4 !py-1.5 !text-xs")}
                   >
                     {dash?.editItem ?? "Modifier"}
@@ -220,7 +221,7 @@ export function DashboardPage() {
                 {dash?.alreadyInCartConfirm ?? "Oui, ajouter"}
               </Button>
               <Link
-                to="/boutique"
+                to={ROUTES.shop}
                 onClick={() => setConfirmItem(null)}
                 className={getButtonClasses("outline", "sm", "w-full")}
               >

@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ROUTES } from "@/routes/routes";
 
 export function HeroSection() {
   const { t } = useLanguage();
@@ -27,9 +28,9 @@ export function HeroSection() {
           </p>
 
           <div className="mt-12 flex flex-wrap items-center gap-4">
-            <Link to="/enregistrer" className={getButtonClasses("primary")}>{t.buttons.registerItem}</Link>
+            <Link to={ROUTES.registerItem} className={getButtonClasses("primary")}>{t.buttons.registerItem}</Link>
             <Link
-              to={user ? "/declarer-vol" : "/connexion?redirect=/declarer-vol"}
+              to={user ? ROUTES.reportTheft : `${ROUTES.login}?redirect=${ROUTES.reportTheft}`}
               className={getButtonClasses("outline")}
             >
               {t.buttons.declareStolen}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
+import { ROUTES } from "@/routes/routes";
 import { useCart } from "@/lib/cart-context";
 import { Button } from "@/components/ui/Button";
 
@@ -58,7 +59,7 @@ export function StepStickerUpsell({ onNext, onBack, itemName }: StepStickerUpsel
           </Button>
 
           <Link
-            to="/boutique"
+            to={ROUTES.shop}
             className="text-sm font-medium text-[var(--rcb-primary)] transition-colors hover:underline"
           >
             {reg.viewShop} &rarr;

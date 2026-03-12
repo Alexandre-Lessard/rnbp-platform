@@ -3,6 +3,7 @@ import { useSearchParams, Link } from "react-router";
 import { apiRequest } from "@/lib/api-client";
 import { getButtonClasses } from "@/lib/button-styles";
 import { useAuth } from "@/lib/auth-context";
+import { ROUTES } from "@/routes/routes";
 
 export function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
@@ -46,11 +47,11 @@ export function VerifyEmailPage() {
             </div>
             <h1 className="text-2xl font-bold text-[var(--rcb-text-strong)]">{message}</h1>
             {user ? (
-              <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm") + " mt-6"}>
+              <Link to={ROUTES.dashboard} className={getButtonClasses("primary", "sm") + " mt-6"}>
                 Tableau de bord
               </Link>
             ) : (
-              <Link to="/connexion" className={getButtonClasses("primary", "sm") + " mt-6"}>
+              <Link to={ROUTES.login} className={getButtonClasses("primary", "sm") + " mt-6"}>
                 Se connecter
               </Link>
             )}

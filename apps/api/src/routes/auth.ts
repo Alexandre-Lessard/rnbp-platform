@@ -90,7 +90,7 @@ export async function authRoutes(app: FastifyInstance) {
     // Send verification email (fire & forget)
     const config = getConfig();
     const verifyTokenStr = createSignedToken(user.id, "verify-email", TOKEN_EXPIRY.EMAIL_VERIFICATION);
-    const verifyUrl = `${config.FRONTEND_URL}/verifier-courriel?token=${verifyTokenStr}`;
+    const verifyUrl = `${config.FRONTEND_URL}/verify-email?token=${verifyTokenStr}`;
     sendEmail(buildVerificationEmail(user.firstName, user.email, verifyUrl)).catch((err) => {
       app.log.error(err, "Failed to send verification email");
     });
@@ -402,7 +402,7 @@ export async function authRoutes(app: FastifyInstance) {
       }
 
       const token = createSignedToken(user.id, "verify-email", TOKEN_EXPIRY.EMAIL_VERIFICATION);
-      const verifyUrl = `${config.FRONTEND_URL}/verifier-courriel?token=${token}`;
+      const verifyUrl = `${config.FRONTEND_URL}/verify-email?token=${token}`;
       await sendEmail(buildVerificationEmail(user.firstName, user.email, verifyUrl));
 
       return reply.send({ message: "Courriel de vérification envoyé." });

@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { useCart } from "@/lib/cart-context";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ROUTES } from "@/routes/routes";
 
 export function BoutiqueSuccessPage() {
   const { t } = useLanguage();
@@ -36,7 +37,7 @@ export function BoutiqueSuccessPage() {
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <Link to="/boutique" className={getButtonClasses("outline")}>
+          <Link to={ROUTES.shop} className={getButtonClasses("outline")}>
             {shop.backToShop}
           </Link>
           <Link to="/" className={getButtonClasses("primary")}>

@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
+import { ROUTES } from "@/routes/routes";
 import { Button } from "@/components/ui/Button";
 import { ITEM_CATEGORIES } from "@rnbp/shared";
 
@@ -178,7 +179,7 @@ export function StepItemDetails({
         />
         <label htmlFor="reg-terms" className="text-sm text-[var(--rcb-text-body)]">
           {reg.termsCheckbox}{" "}
-          <Link to="/conditions" className="text-[var(--rcb-primary)] hover:underline" target="_blank">
+          <Link to={ROUTES.terms} className="text-[var(--rcb-primary)] hover:underline" target="_blank">
             &rarr;
           </Link>
         </label>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import type { TabItem } from "@/components/ui/Tabs";
 import { Modal } from "@/components/ui/Modal";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ROUTES } from "@/routes/routes";
 
 type FormState = "idle" | "loading" | "success" | "error";
 type Tab = "citizen" | "police" | "insurer";
@@ -122,16 +123,16 @@ export function PartnerPage() {
   // Action button (same position for all tabs — right-aligned on tabs row)
   const actionButton = activeTab === "citizen" ? (
     user ? (
-      <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
+      <Link to={ROUTES.dashboard} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
         {p.citizenDashboardButton}
       </Link>
     ) : (
-      <Link to="/inscription" className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
+      <Link to={ROUTES.register} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
         {p.citizenSignupButton}
       </Link>
     )
   ) : (
-    <Link to="/connexion" className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
+    <Link to={ROUTES.login} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
       {activeTab === "police" ? p.policeLoginButton : p.insurerLoginButton}
     </Link>
   );

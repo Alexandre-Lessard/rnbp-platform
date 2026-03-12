@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ROUTES } from "@/routes/routes";
 
 export function VerifyBeforeBuySection() {
   const { t } = useLanguage();
@@ -22,7 +23,7 @@ export function VerifyBeforeBuySection() {
                 {content.description}
               </p>
               <div className="mt-12 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-                <Link to="/verifier" className={getButtonClasses("primary")}>
+                <Link to={ROUTES.lookup} className={getButtonClasses("primary")}>
                   {content.buttonText}
                 </Link>
               </div>

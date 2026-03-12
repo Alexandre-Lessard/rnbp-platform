@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router";
 import { useAuth } from "@/lib/auth-context";
 import { ServiceUnavailable } from "./ServiceUnavailable";
+import { ROUTES } from "@/routes/routes";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading, backendAvailable } = useAuth();
@@ -21,14 +22,14 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (!user) {
     return (
       <Navigate
-        to={`/connexion?redirect=${encodeURIComponent(location.pathname)}`}
+        to={`${ROUTES.login}?redirect=${encodeURIComponent(location.pathname)}`}
         replace
       />
     );
   }
 
   if (!user.emailVerified) {
-    return <Navigate to="/verification-en-attente" replace />;
+    return <Navigate to={ROUTES.emailPending} replace />;
   }
 
   return <>{children}</>;

@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ROUTES } from "@/routes/routes";
 import { StepIndicator } from "@/components/registration/StepIndicator";
 
 type RegistrationConfirmationProps = {
@@ -38,13 +39,13 @@ export function RegistrationConfirmation({
 
       <div className="mt-6 flex flex-col items-center gap-3">
         <Link
-          to="/boutique"
+          to={ROUTES.shop}
           className={getButtonClasses("primary")}
         >
           {t.shop?.heading ?? "Boutique"}
         </Link>
         <Link
-          to="/tableau-de-bord"
+          to={ROUTES.dashboard}
           className="text-sm font-medium text-[var(--rcb-primary)] hover:underline"
         >
           {reg.goToDashboard}

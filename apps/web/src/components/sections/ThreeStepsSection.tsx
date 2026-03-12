@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
+import { ROUTES } from "@/routes/routes";
 
 export function ThreeStepsSection() {
   const { t } = useLanguage();
@@ -22,7 +23,7 @@ export function ThreeStepsSection() {
                 <p className="text-xl font-bold text-[var(--rcb-text-light)]">{step.step}</p>
                 <h3 className="mt-5 self-start text-3xl font-bold leading-tight text-[var(--rcb-text)]">{step.title}</h3>
                 <p className="mt-6 text-xl leading-relaxed text-[var(--rcb-text-muted)]">{step.description}</p>
-                <Link to="/enregistrer" className="mt-6 inline-block text-lg font-semibold text-[var(--rcb-text-strong)]">
+                <Link to={ROUTES.registerItem} className="mt-6 inline-block text-lg font-semibold text-[var(--rcb-text-strong)]">
                   {t.threeSteps.learnMoreLink} &gt;
                 </Link>
               </div>

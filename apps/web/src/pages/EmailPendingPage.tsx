@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { ROUTES } from "@/routes/routes";
 
 export function EmailPendingPage() {
   const { user, logout, refreshUser } = useAuth();
@@ -14,11 +15,11 @@ export function EmailPendingPage() {
   const [checkStatus, setCheckStatus] = useState<"idle" | "checking" | "not_verified">("idle");
 
   if (!user) {
-    return <Navigate to="/connexion" replace />;
+    return <Navigate to={ROUTES.login} replace />;
   }
 
   if (user.emailVerified) {
-    return <Navigate to="/tableau-de-bord" replace />;
+    return <Navigate to={ROUTES.dashboard} replace />;
   }
 
   async function handleResend() {

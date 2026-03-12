@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router";
 import { apiRequest } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { ROUTES } from "@/routes/routes";
 
 type OrderItem = {
   id: string;
@@ -110,7 +111,7 @@ export function AdminOrderDetailPage() {
       <section className="min-h-[80vh] bg-[var(--rcb-white)]">
         <div className="section-shell py-16">
           <p className="text-red-600">{error || "Commande introuvable"}</p>
-          <Link to="/admin/commandes" className="mt-4 inline-block text-sm font-medium text-[var(--rcb-primary)] hover:underline">
+          <Link to={ROUTES.adminOrders} className="mt-4 inline-block text-sm font-medium text-[var(--rcb-primary)] hover:underline">
             &larr; Retour aux commandes
           </Link>
         </div>
@@ -123,7 +124,7 @@ export function AdminOrderDetailPage() {
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
       <div className="section-shell py-16">
-        <Link to="/admin/commandes" className="text-sm font-medium text-[var(--rcb-primary)] hover:underline">
+        <Link to={ROUTES.adminOrders} className="text-sm font-medium text-[var(--rcb-primary)] hover:underline">
           &larr; Retour aux commandes
         </Link>
 

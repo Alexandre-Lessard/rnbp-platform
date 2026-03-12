@@ -6,6 +6,7 @@ import { useLanguage } from "@/i18n/context";
 import { isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
+import { ROUTES } from "@/routes/routes";
 
 export function RegisterAccountPage() {
   const { register, backendAvailable } = useAuth();
@@ -40,7 +41,7 @@ export function RegisterAccountPage() {
         lastName: form.lastName,
         phone: form.phone || undefined,
       });
-      navigate("/tableau-de-bord", { replace: true });
+      navigate(ROUTES.dashboard, { replace: true });
     } catch (err) {
       if (isNetworkError(err)) {
         setBackendDown(true);
@@ -191,7 +192,7 @@ export function RegisterAccountPage() {
         <p className="mt-6 text-center text-sm text-[var(--rcb-text-muted)]">
           {t.auth?.hasAccount ?? "Déjà un compte?"}{" "}
           <Link
-            to="/connexion"
+            to={ROUTES.login}
             className="font-medium text-[var(--rcb-primary)] hover:underline"
           >
             {t.auth?.loginLink ?? "Se connecter"}

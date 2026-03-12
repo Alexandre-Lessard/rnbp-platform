@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ROUTES } from "@/routes/routes";
 
 export function CycleSection() {
   const { t } = useLanguage();
@@ -46,7 +47,7 @@ export function CycleSection() {
 
         <div className="mt-14 text-center">
           <Link
-            to={user ? "/declarer-vol" : "/connexion?redirect=/declarer-vol"}
+            to={user ? ROUTES.reportTheft : `${ROUTES.login}?redirect=${ROUTES.reportTheft}`}
             className={getButtonClasses("outline")}
           >
             {t.buttons.declareStolen}

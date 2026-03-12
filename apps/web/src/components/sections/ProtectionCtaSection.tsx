@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ROUTES } from "@/routes/routes";
 
 export function ProtectionCtaSection() {
   const { t } = useLanguage();
@@ -30,8 +31,8 @@ export function ProtectionCtaSection() {
               </p>
 
               <div className="mt-12 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-                <Link to="/enregistrer" className={getButtonClasses("primary")}>{t.buttons.signUp}</Link>
-                <Link to="/verifier" className={getButtonClasses("outline")}>{t.buttons.verifyItem}</Link>
+                <Link to={ROUTES.registerItem} className={getButtonClasses("primary")}>{t.buttons.signUp}</Link>
+                <Link to={ROUTES.lookup} className={getButtonClasses("outline")}>{t.buttons.verifyItem}</Link>
               </div>
             </div>
           </div>

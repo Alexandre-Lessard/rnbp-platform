@@ -29,52 +29,52 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description:
           "Consultez le registre pour vérifier un bien. Citoyens, services policiers et compagnies d'assurance.",
       },
-      "/confidentialite": {
+      "/privacy": {
         title: "Politique de confidentialité | RNBP",
         description:
           "Découvrez comment le RNBP protège vos renseignements personnels et respecte les lois fédérales sur la vie privée.",
       },
-      "/conditions": {
+      "/terms": {
         title: "Conditions d'utilisation | RNBP",
         description:
           "Consultez les conditions d'utilisation du Registre national des biens personnels.",
       },
-      "/verifier": {
+      "/lookup": {
         title: "Vérifier un bien | RNBP",
         description:
           "Entrez un numéro RNBP pour vérifier le statut d'un bien enregistré dans le registre.",
       },
-      "/connexion": {
+      "/login": {
         title: "Connexion | RNBP",
         description:
           "Connectez-vous à votre compte RNBP pour gérer vos biens enregistrés.",
       },
-      "/inscription": {
+      "/register": {
         title: "Créer un compte | RNBP",
         description:
           "Inscrivez-vous gratuitement au RNBP pour enregistrer et protéger vos biens de valeur.",
       },
-      "/tableau-de-bord": {
+      "/dashboard": {
         title: "Tableau de bord | RNBP",
         description: "Gérez vos biens enregistrés.",
         robots: "noindex, nofollow",
       },
-      "/declarer-vol": {
+      "/report-theft": {
         title: "Déclarer un vol | RNBP",
         description: "Déclarez un bien volé.",
         robots: "noindex, nofollow",
       },
-      "/enregistrer": {
+      "/register-item": {
         title: "Enregistrer un bien | RNBP",
         description: "Enregistrez un bien dans le registre.",
         robots: "noindex, nofollow",
       },
-      "/boutique": {
+      "/shop": {
         title: "Boutique | RNBP",
         description:
           "Achetez des étiquettes d'identification RNBP pour protéger vos biens de valeur.",
       },
-      "/boutique/succes": {
+      "/shop/success": {
         title: "Commande confirmée | RNBP",
         description: "Votre commande a été confirmée avec succès.",
         robots: "noindex, nofollow",
@@ -84,17 +84,17 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description:
           "Contactez l'équipe du Registre national des biens personnels pour toute question ou demande.",
       },
-      "/verifier-courriel": {
+      "/verify-email": {
         title: "Vérification du courriel | RNBP",
         description: "Vérifiez votre adresse courriel.",
         robots: "noindex, nofollow",
       },
-      "/verification-en-attente": {
+      "/email-pending": {
         title: "Vérification en attente | RNBP",
         description: "Vérification de votre courriel en cours.",
         robots: "noindex, nofollow",
       },
-      "/admin/commandes": {
+      "/admin/orders": {
         title: "Admin — Commandes | RNBP",
         description: "Gestion des commandes.",
         robots: "noindex, nofollow",
@@ -123,52 +123,52 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description:
           "Consult the registry to verify an item. Citizens, law enforcement and insurance companies.",
       },
-      "/confidentialite": {
+      "/privacy": {
         title: "Privacy Policy | NRPP",
         description:
           "Learn how the NRPP protects your personal information and complies with federal privacy laws.",
       },
-      "/conditions": {
+      "/terms": {
         title: "Terms of Service | NRPP",
         description:
           "Review the terms of service for the National Registry of Personal Property.",
       },
-      "/verifier": {
+      "/lookup": {
         title: "Verify an Item | NRPP",
         description:
           "Enter a NRPP number to check the status of a registered item.",
       },
-      "/connexion": {
+      "/login": {
         title: "Login | NRPP",
         description:
           "Sign in to your NRPP account to manage your registered items.",
       },
-      "/inscription": {
+      "/register": {
         title: "Create an Account | NRPP",
         description:
           "Sign up for free to register and protect your valuable belongings.",
       },
-      "/tableau-de-bord": {
+      "/dashboard": {
         title: "Dashboard | NRPP",
         description: "Manage your registered items.",
         robots: "noindex, nofollow",
       },
-      "/declarer-vol": {
+      "/report-theft": {
         title: "Report a Theft | NRPP",
         description: "Report a stolen item.",
         robots: "noindex, nofollow",
       },
-      "/enregistrer": {
+      "/register-item": {
         title: "Register an Item | NRPP",
         description: "Register an item in the registry.",
         robots: "noindex, nofollow",
       },
-      "/boutique": {
+      "/shop": {
         title: "Shop | NRPP",
         description:
           "Buy NRPP identification stickers to protect your valuable belongings.",
       },
-      "/boutique/succes": {
+      "/shop/success": {
         title: "Order Confirmed | NRPP",
         description: "Your order has been successfully confirmed.",
         robots: "noindex, nofollow",
@@ -178,17 +178,17 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description:
           "Contact the National Registry of Personal Property team for any questions or inquiries.",
       },
-      "/verifier-courriel": {
+      "/verify-email": {
         title: "Email Verification | NRPP",
         description: "Verify your email address.",
         robots: "noindex, nofollow",
       },
-      "/verification-en-attente": {
+      "/email-pending": {
         title: "Verification Pending | NRPP",
         description: "Email verification in progress.",
         robots: "noindex, nofollow",
       },
-      "/admin/commandes": {
+      "/admin/orders": {
         title: "Admin — Orders | NRPP",
         description: "Order management.",
         robots: "noindex, nofollow",
@@ -261,7 +261,7 @@ const NOINDEX_PATHS = Object.entries(META.fr.pages)
   .map(([path]) => path);
 
 const ALL_KNOWN_PATHS = Object.keys(META.fr.pages);
-const PREFIX_PATHS = ["/admin/commandes"];
+const PREFIX_PATHS = ["/admin/orders"];
 
 function detectLocale(hostname: string): "fr" | "en" {
   if (hostname.includes("nrpp")) return "en";

@@ -7,6 +7,7 @@ import { getButtonClasses } from "@/lib/button-styles";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { ITEM_CATEGORIES } from "@rnbp/shared";
 import type { ItemWithFiles } from "@rnbp/shared";
+import { ROUTES } from "@/routes/routes";
 
 type FormData = {
   name: string;
@@ -92,7 +93,7 @@ export function EditItemPage() {
 
     try {
       await apiRequest(`/items/${id}`, { method: "PATCH", body });
-      navigate("/tableau-de-bord");
+      navigate(ROUTES.dashboard);
     } catch (err) {
       setError(err instanceof Error ? err.message : (edit?.error ?? "Erreur"));
     } finally {
@@ -137,7 +138,7 @@ export function EditItemPage() {
             {edit?.notFound ?? "Bien introuvable."}
           </p>
           <Link
-            to="/tableau-de-bord"
+            to={ROUTES.dashboard}
             className={`${getButtonClasses("primary", "sm")} mt-6`}
           >
             {edit?.backToDashboard ?? "Retour au tableau de bord"}
@@ -155,7 +156,7 @@ export function EditItemPage() {
             {edit?.heading ?? "Modifier le bien"}
           </h1>
           <Link
-            to="/tableau-de-bord"
+            to={ROUTES.dashboard}
             className="text-sm font-medium text-[var(--rcb-primary)] hover:underline"
           >
             {edit?.backToDashboard ?? "Retour au tableau de bord"}

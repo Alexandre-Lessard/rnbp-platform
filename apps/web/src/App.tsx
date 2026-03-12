@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router";
+import { Routes, Route, Navigate, useLocation, useParams, useSearchParams } from "react-router";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import { useLanguage } from "@/i18n/context";
+import { ROUTES } from "@/routes/routes";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -21,27 +22,42 @@ function ScrollToTop() {
   return null;
 }
 
+// Redirects temporaires — anciennes routes FR (retirer apres juillet 2026)
+function RedirectWithSearch({ to }: { to: string }) {
+  const [searchParams] = useSearchParams();
+  const search = searchParams.toString();
+  return <Navigate to={search ? `${to}?${search}` : to} replace />;
+}
+function RedirectEdit() {
+  const { id } = useParams();
+  return <Navigate to={ROUTES.edit(id!)} replace />;
+}
+function RedirectAdminOrder() {
+  const { id } = useParams();
+  return <Navigate to={ROUTES.adminOrderDetail(id!)} replace />;
+}
+
 import { CartProvider } from "@/lib/cart-context";
-import { LandingPage } from "@/routes/LandingPage";
-import { LoginPage } from "@/routes/LoginPage";
-import { RegisterAccountPage } from "@/routes/RegisterAccountPage";
-import { RegisterItemPage } from "@/routes/RegisterItemPage";
-import { DashboardPage } from "@/routes/DashboardPage";
-import { ReportTheftPage } from "@/routes/ReportTheftPage";
-import { LookupPage } from "@/routes/LookupPage";
-import { PartnerPage } from "@/routes/PartnerPage";
-import { PrivacyPolicyPage } from "@/routes/PrivacyPolicyPage";
-import { TermsOfServicePage } from "@/routes/TermsOfServicePage";
-import { FaqPage } from "@/routes/FaqPage";
-import { ContactPage } from "@/routes/ContactPage";
-import { BoutiquePage } from "@/routes/BoutiquePage";
-import { BoutiqueSuccessPage } from "@/routes/BoutiqueSuccessPage";
-import { AdminOrdersPage } from "@/routes/AdminOrdersPage";
-import { AdminOrderDetailPage } from "@/routes/AdminOrderDetailPage";
-import { VerifyEmailPage } from "@/routes/VerifyEmailPage";
-import { EmailPendingPage } from "@/routes/EmailPendingPage";
-import { EditItemPage } from "@/routes/EditItemPage";
-import { NotFoundPage } from "@/routes/NotFoundPage";
+import { LandingPage } from "@/pages/LandingPage";
+import { LoginPage } from "@/pages/LoginPage";
+import { RegisterAccountPage } from "@/pages/RegisterAccountPage";
+import { RegisterItemPage } from "@/pages/RegisterItemPage";
+import { DashboardPage } from "@/pages/DashboardPage";
+import { ReportTheftPage } from "@/pages/ReportTheftPage";
+import { LookupPage } from "@/pages/LookupPage";
+import { PartnerPage } from "@/pages/PartnerPage";
+import { PrivacyPolicyPage } from "@/pages/PrivacyPolicyPage";
+import { TermsOfServicePage } from "@/pages/TermsOfServicePage";
+import { FaqPage } from "@/pages/FaqPage";
+import { ContactPage } from "@/pages/ContactPage";
+import { BoutiquePage } from "@/pages/BoutiquePage";
+import { BoutiqueSuccessPage } from "@/pages/BoutiqueSuccessPage";
+import { AdminOrdersPage } from "@/pages/AdminOrdersPage";
+import { AdminOrderDetailPage } from "@/pages/AdminOrderDetailPage";
+import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
+import { EmailPendingPage } from "@/pages/EmailPendingPage";
+import { EditItemPage } from "@/pages/EditItemPage";
+import { NotFoundPage } from "@/pages/NotFoundPage";
 
 function App() {
   const { t } = useLanguage();
@@ -59,22 +75,22 @@ function App() {
       <Navbar />
       <main id="main-content">
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/connexion" element={<LoginPage />} />
-          <Route path="/inscription" element={<RegisterAccountPage />} />
-          <Route path="/enregistrer" element={<RegisterItemPage />} />
-          <Route path="/verifier" element={<LookupPage />} />
-          <Route path="/registry" element={<PartnerPage />} />
-          <Route path="/confidentialite" element={<PrivacyPolicyPage />} />
-          <Route path="/conditions" element={<TermsOfServicePage />} />
-          <Route path="/faq" element={<FaqPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/boutique" element={<BoutiquePage />} />
-          <Route path="/boutique/succes" element={<BoutiqueSuccessPage />} />
-          <Route path="/verifier-courriel" element={<VerifyEmailPage />} />
-          <Route path="/verification-en-attente" element={<EmailPendingPage />} />
+          <Route path={ROUTES.home} element={<LandingPage />} />
+          <Route path={ROUTES.login} element={<LoginPage />} />
+          <Route path={ROUTES.register} element={<RegisterAccountPage />} />
+          <Route path={ROUTES.registerItem} element={<RegisterItemPage />} />
+          <Route path={ROUTES.lookup} element={<LookupPage />} />
+          <Route path={ROUTES.registry} element={<PartnerPage />} />
+          <Route path={ROUTES.privacy} element={<PrivacyPolicyPage />} />
+          <Route path={ROUTES.terms} element={<TermsOfServicePage />} />
+          <Route path={ROUTES.faq} element={<FaqPage />} />
+          <Route path={ROUTES.contact} element={<ContactPage />} />
+          <Route path={ROUTES.shop} element={<BoutiquePage />} />
+          <Route path={ROUTES.shopSuccess} element={<BoutiqueSuccessPage />} />
+          <Route path={ROUTES.verifyEmail} element={<VerifyEmailPage />} />
+          <Route path={ROUTES.emailPending} element={<EmailPendingPage />} />
           <Route
-            path="/tableau-de-bord"
+            path={ROUTES.dashboard}
             element={
               <ProtectedRoute>
                 <DashboardPage />
@@ -82,7 +98,7 @@ function App() {
             }
           />
           <Route
-            path="/modifier/:id"
+            path="/edit/:id"
             element={
               <ProtectedRoute>
                 <EditItemPage />
@@ -90,7 +106,7 @@ function App() {
             }
           />
           <Route
-            path="/declarer-vol"
+            path={ROUTES.reportTheft}
             element={
               <ProtectedRoute>
                 <ReportTheftPage />
@@ -98,7 +114,7 @@ function App() {
             }
           />
           <Route
-            path="/admin/commandes"
+            path={ROUTES.adminOrders}
             element={
               <AdminRoute>
                 <AdminOrdersPage />
@@ -106,13 +122,31 @@ function App() {
             }
           />
           <Route
-            path="/admin/commandes/:id"
+            path="/admin/orders/:id"
             element={
               <AdminRoute>
                 <AdminOrderDetailPage />
               </AdminRoute>
             }
           />
+
+          {/* Redirects temporaires — anciennes routes FR (retirer apres juillet 2026) */}
+          <Route path="/connexion" element={<RedirectWithSearch to={ROUTES.login} />} />
+          <Route path="/inscription" element={<Navigate to={ROUTES.register} replace />} />
+          <Route path="/enregistrer" element={<Navigate to={ROUTES.registerItem} replace />} />
+          <Route path="/verifier" element={<Navigate to={ROUTES.lookup} replace />} />
+          <Route path="/confidentialite" element={<Navigate to={ROUTES.privacy} replace />} />
+          <Route path="/conditions" element={<Navigate to={ROUTES.terms} replace />} />
+          <Route path="/boutique/succes" element={<Navigate to={ROUTES.shopSuccess} replace />} />
+          <Route path="/boutique" element={<Navigate to={ROUTES.shop} replace />} />
+          <Route path="/verifier-courriel" element={<Navigate to={ROUTES.verifyEmail} replace />} />
+          <Route path="/verification-en-attente" element={<Navigate to={ROUTES.emailPending} replace />} />
+          <Route path="/tableau-de-bord" element={<Navigate to={ROUTES.dashboard} replace />} />
+          <Route path="/modifier/:id" element={<RedirectEdit />} />
+          <Route path="/declarer-vol" element={<Navigate to={ROUTES.reportTheft} replace />} />
+          <Route path="/admin/commandes/:id" element={<RedirectAdminOrder />} />
+          <Route path="/admin/commandes" element={<Navigate to={ROUTES.adminOrders} replace />} />
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>

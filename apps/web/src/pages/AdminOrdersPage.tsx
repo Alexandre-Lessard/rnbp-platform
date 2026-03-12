@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { apiRequest } from "@/lib/api-client";
+import { ROUTES } from "@/routes/routes";
 
 type Order = {
   id: string;
@@ -85,7 +86,7 @@ export function AdminOrdersPage() {
             {orders.map((order) => (
               <Link
                 key={order.id}
-                to={`/admin/commandes/${order.id}`}
+                to={ROUTES.adminOrderDetail(order.id)}
                 className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-bg)] p-5 transition-colors hover:bg-[var(--rcb-surface)]"
               >
                 <div className="flex-1">

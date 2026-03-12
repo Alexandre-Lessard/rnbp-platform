@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { PlusMinus } from "@/components/icons/PlusMinus";
 import { useLanguage } from "@/i18n/context";
 import { getButtonClasses } from "@/lib/button-styles";
+import { ROUTES } from "@/routes/routes";
 
 const PREVIEW_COUNT = 3;
 
@@ -60,7 +61,7 @@ export function FaqSection() {
         </div>
 
         <div className="mt-10 text-center">
-          <Link to="/faq" className={getButtonClasses("primary")}>
+          <Link to={ROUTES.faq} className={getButtonClasses("primary")}>
             {t.faq.buttonText}
           </Link>
         </div>

@@ -98,7 +98,7 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
     // Send verification email (fire & forget)
     const config = getConfig();
     const verifyToken = createSignedToken(result.user.id, "verify-email", TOKEN_EXPIRY.EMAIL_VERIFICATION);
-    const verifyUrl = `${config.FRONTEND_URL}/verifier-courriel?token=${verifyToken}`;
+    const verifyUrl = `${config.FRONTEND_URL}/verify-email?token=${verifyToken}`;
     sendEmail(buildVerificationEmail(result.user.firstName, result.user.email, verifyUrl)).catch((err) => {
       app.log.error(err, "Failed to send verification email");
     });

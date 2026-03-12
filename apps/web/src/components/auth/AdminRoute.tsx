@@ -1,6 +1,7 @@
 import { Navigate } from "react-router";
 import { useAuth } from "@/lib/auth-context";
 import { ServiceUnavailable } from "./ServiceUnavailable";
+import { ROUTES } from "@/routes/routes";
 
 export function AdminRoute({ children }: { children: React.ReactNode }) {
   const { user, loading, backendAvailable } = useAuth();
@@ -18,7 +19,7 @@ export function AdminRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user || !user.isAdmin) {
-    return <Navigate to="/tableau-de-bord" replace />;
+    return <Navigate to={ROUTES.dashboard} replace />;
   }
 
   return <>{children}</>;

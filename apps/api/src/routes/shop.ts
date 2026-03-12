@@ -118,8 +118,8 @@ export async function shopRoutes(app: FastifyInstance) {
           allowed_countries: ["CA"],
         },
         ...(email ? { customer_email: email } : {}),
-        success_url: `${config.FRONTEND_URL}/boutique/succes?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${config.FRONTEND_URL}/boutique`,
+        success_url: `${config.FRONTEND_URL}/shop/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${config.FRONTEND_URL}/shop`,
         metadata: {
           orderId: order.id,
         },
