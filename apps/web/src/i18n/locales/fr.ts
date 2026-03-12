@@ -431,6 +431,16 @@ const fr: SiteContent = {
     alreadyInCartViewCart: "Voir le panier",
     awaitingNumber: "En attente d'attribution",
     clientNumber: "No. client",
+    editItem: "Modifier",
+  },
+  editItem: {
+    heading: "Modifier le bien",
+    saveButton: "Enregistrer les modifications",
+    saving: "Enregistrement…",
+    success: "Bien modifié avec succès.",
+    error: "Erreur lors de la modification.",
+    notFound: "Bien introuvable.",
+    backToDashboard: "Retour au tableau de bord",
   },
   registration: {
     heading: "Enregistrer un bien",

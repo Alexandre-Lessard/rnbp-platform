@@ -168,6 +168,14 @@ export function DashboardPage() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
+                {item.status === "active" && (
+                  <Link
+                    to={`/modifier/${item.id}`}
+                    className={getButtonClasses("outline", "sm", "!px-4 !py-1.5 !text-xs")}
+                  >
+                    {dash?.editItem ?? "Modifier"}
+                  </Link>
+                )}
                 <button
                   type="button"
                   disabled={addedId === item.id}

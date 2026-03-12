@@ -51,6 +51,7 @@ Accessible sur `http://localhost:5173`.
 | Path | Composant | Description |
 |------|-----------|-------------|
 | `/tableau-de-bord` | `DashboardPage` | Tableau de bord utilisateur |
+| `/modifier/:id` | `EditItemPage` | Modification d'un bien |
 | `/declarer-vol` | `ReportTheftPage` | Déclaration de vol |
 
 ### Admin (requièrent `isAdmin`)

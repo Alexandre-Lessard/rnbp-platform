@@ -40,6 +40,7 @@ import { AdminOrdersPage } from "@/routes/AdminOrdersPage";
 import { AdminOrderDetailPage } from "@/routes/AdminOrderDetailPage";
 import { VerifyEmailPage } from "@/routes/VerifyEmailPage";
 import { EmailPendingPage } from "@/routes/EmailPendingPage";
+import { EditItemPage } from "@/routes/EditItemPage";
 import { NotFoundPage } from "@/routes/NotFoundPage";
 
 function App() {
@@ -77,6 +78,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/modifier/:id"
+            element={
+              <ProtectedRoute>
+                <EditItemPage />
               </ProtectedRoute>
             }
           />

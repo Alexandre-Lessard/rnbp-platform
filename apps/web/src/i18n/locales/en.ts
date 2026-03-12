@@ -425,6 +425,16 @@ const en: SiteContent = {
     alreadyInCartViewCart: "View cart",
     awaitingNumber: "Awaiting assignment",
     clientNumber: "Client no.",
+    editItem: "Edit",
+  },
+  editItem: {
+    heading: "Edit item",
+    saveButton: "Save changes",
+    saving: "Saving\u2026",
+    success: "Item updated successfully.",
+    error: "Error updating item.",
+    notFound: "Item not found.",
+    backToDashboard: "Back to dashboard",
   },
   registration: {
     heading: "Register an item",

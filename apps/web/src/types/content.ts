@@ -153,6 +153,16 @@ export type SiteContent = {
     alreadyInCartViewCart: string;
     awaitingNumber: string;
     clientNumber: string;
+    editItem: string;
+  };
+  editItem?: {
+    heading: string;
+    saveButton: string;
+    saving: string;
+    success: string;
+    error: string;
+    notFound: string;
+    backToDashboard: string;
   };
   registration?: {
     heading: string;
