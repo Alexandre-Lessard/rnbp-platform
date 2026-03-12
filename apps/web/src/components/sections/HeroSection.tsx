@@ -8,7 +8,7 @@ export function HeroSection() {
   const { user } = useAuth();
 
   return (
-    <section id="accueil" className="scroll-mt-28 bg-[var(--rcb-bg)]">
+    <section id="home" className="scroll-mt-28 bg-[var(--rcb-bg)]">
       <div className="section-shell grid items-center gap-10 py-16 lg:grid-cols-[1fr_1.1fr] lg:py-20">
         <div className="animate-rise">
           <p className="text-3xl font-medium leading-tight text-[var(--rcb-text)] sm:text-4xl">

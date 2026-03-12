@@ -19,7 +19,7 @@ export function FaqSection() {
   const previewItems = t.faq.items.slice(0, PREVIEW_COUNT);
 
   return (
-    <section id="faq" className="section-frame scroll-mt-24 border-t-0 bg-[var(--rcb-bg)]">
+    <section id="faq" className="section-frame scroll-mt-24 border-t-0 border-b-0 bg-[var(--rcb-bg)]">
       <div className="section-shell py-16 sm:py-20">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-6xl font-bold text-[var(--rcb-text)] sm:text-7xl">{t.faq.heading}</h2>

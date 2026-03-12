@@ -54,9 +54,9 @@ const en: SiteContent = {
   },
   nav: {
     items: [
-      { label: "Home", href: "#accueil" },
-      { label: "About", href: "#cycle" },
-      { label: "Register", href: "#inscription" },
+      { label: "Home", href: "#home" },
+      { label: "About", href: "#about" },
+      { label: "Register", href: "#register" },
       { label: "FAQ", href: "/faq" },
       { label: "Contact", href: "/contact" },
       { label: "Registry", href: "/registry" },

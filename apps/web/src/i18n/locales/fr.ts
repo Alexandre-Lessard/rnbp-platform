@@ -54,9 +54,9 @@ const fr: SiteContent = {
   },
   nav: {
     items: [
-      { label: "Accueil", href: "#accueil" },
-      { label: "\u00c0 propos", href: "#cycle" },
-      { label: "Enregistrer", href: "#inscription" },
+      { label: "Accueil", href: "#home" },
+      { label: "\u00c0 propos", href: "#about" },
+      { label: "Enregistrer", href: "#register" },
       { label: "FAQ", href: "/faq" },
       { label: "Contact", href: "/contact" },
       { label: "Registre", href: "/registry" },

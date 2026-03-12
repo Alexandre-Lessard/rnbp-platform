@@ -6,7 +6,7 @@ export function ProtectionCtaSection() {
   const { t } = useLanguage();
 
   return (
-    <section id="inscription" className="scroll-mt-24 bg-[var(--rcb-bg)]">
+    <section id="register" className="scroll-mt-24 bg-[var(--rcb-bg)]">
       <div className="section-shell pt-16 pb-28 sm:pt-20 sm:pb-32 lg:pt-24">
         <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] border border-[var(--rcb-frame)] bg-[var(--rcb-bg)]">
           <div className="grid lg:grid-cols-[340px_1fr]">

@@ -8,7 +8,7 @@ export function CycleSection() {
   const { user } = useAuth();
 
   return (
-    <section id="cycle" className="scroll-mt-24 bg-[var(--rcb-surface)]">
+    <section id="about" className="scroll-mt-24 bg-[var(--rcb-surface)]">
       <div className="section-shell py-18 sm:py-20">
         <h2 className="text-center text-6xl font-bold text-[var(--rcb-text)] sm:text-7xl">
           {t.cycle.heading}

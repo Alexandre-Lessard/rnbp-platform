@@ -253,11 +253,11 @@ const FAQ_EN = [
 
 // Dérivé de META — une seule source de vérité
 const PUBLIC_PATHS = Object.entries(META.fr.pages)
-  .filter(([_, meta]) => !meta.robots?.includes("noindex"))
+  .filter(([, meta]) => !meta.robots?.includes("noindex"))
   .map(([path]) => path);
 
 const NOINDEX_PATHS = Object.entries(META.fr.pages)
-  .filter(([_, meta]) => meta.robots?.includes("noindex"))
+  .filter(([, meta]) => meta.robots?.includes("noindex"))
   .map(([path]) => path);
 
 const ALL_KNOWN_PATHS = Object.keys(META.fr.pages);
