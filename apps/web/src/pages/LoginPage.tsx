@@ -37,7 +37,7 @@ export function LoginPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Erreur de connexion",
+          : (t.errors?.loginError ?? "Erreur de connexion"),
       );
     } finally {
       setLoading(false);

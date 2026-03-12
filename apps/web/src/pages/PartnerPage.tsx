@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
@@ -8,16 +8,11 @@ import { Button } from "@/components/ui/Button";
 import type { TabItem } from "@/components/ui/Tabs";
 import { Modal } from "@/components/ui/Modal";
 import { getButtonClasses } from "@/lib/button-styles";
+import { renderBold } from "@/lib/render-bold";
 import { ROUTES } from "@/routes/routes";
 
 type FormState = "idle" | "loading" | "success" | "error";
 type Tab = "citizen" | "police" | "insurer";
-
-function renderBold(text: string): ReactNode[] {
-  return text.split(/\*\*(.+?)\*\*/g).map((part, i) =>
-    i % 2 === 1 ? <strong key={i}>{part}</strong> : part,
-  );
-}
 
 export function PartnerPage() {
   const { t } = useLanguage();

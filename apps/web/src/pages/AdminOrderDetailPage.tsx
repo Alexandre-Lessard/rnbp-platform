@@ -43,7 +43,7 @@ export function AdminOrderDetailPage() {
   useEffect(() => {
     apiRequest<{ order: OrderDetail }>(`/admin/orders/${id}`)
       .then((data) => setOrder(data.order))
-      .catch((err) => setError(err instanceof Error ? err.message : "Erreur"))
+      .catch((err) => setError(err instanceof Error ? err.message : "Error"))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -76,7 +76,7 @@ export function AdminOrderDetailPage() {
     } catch (err) {
       setAssignErrors((prev) => ({
         ...prev,
-        [orderItemId]: err instanceof Error ? err.message : "Erreur",
+        [orderItemId]: err instanceof Error ? err.message : "Error",
       }));
     } finally {
       setAssigning((prev) => ({ ...prev, [orderItemId]: false }));
@@ -90,7 +90,7 @@ export function AdminOrderDetailPage() {
       await apiRequest(`/admin/orders/${id}/ship`, { method: "PATCH" });
       setOrder((prev) => (prev ? { ...prev, status: "shipped" } : prev));
     } catch (err) {
-      setShipError(err instanceof Error ? err.message : "Erreur");
+      setShipError(err instanceof Error ? err.message : "Error");
     } finally {
       setShipping(false);
     }

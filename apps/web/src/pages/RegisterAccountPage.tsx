@@ -48,7 +48,7 @@ export function RegisterAccountPage() {
         return;
       }
       setError(
-        err instanceof Error ? err.message : "Erreur lors de l'inscription",
+        err instanceof Error ? err.message : (t.errors?.registerError ?? "Erreur lors de l'inscription"),
       );
     } finally {
       setLoading(false);

@@ -42,7 +42,7 @@ export function LookupPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Erreur lors de la vérification",
+          : (t.errors?.verificationError ?? "Erreur lors de la vérification"),
       );
     } finally {
       setLoading(false);

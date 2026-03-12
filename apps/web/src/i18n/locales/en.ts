@@ -732,6 +732,16 @@ const en: SiteContent = {
     notFound: "Page not found",
     notFoundDescription: "The page you're looking for doesn't exist or has been moved.",
     backHome: "Back to home",
+    generic: "Error",
+    loadError: "Failed to load",
+    loginError: "Login error",
+    registerError: "Registration error",
+    verificationError: "Verification error",
+    invalidVerificationLink: "Invalid verification link.",
+    tryAgain: "Try again",
+    newsletterThanks: "Thank you!",
+    newsletterError: "An error occurred.",
+    newsletterUnavailable: "Service temporarily unavailable. Please try again later.",
   },
 };
 

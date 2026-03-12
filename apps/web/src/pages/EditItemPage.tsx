@@ -95,7 +95,7 @@ export function EditItemPage() {
       await apiRequest(`/items/${id}`, { method: "PATCH", body });
       navigate(ROUTES.dashboard);
     } catch (err) {
-      setError(err instanceof Error ? err.message : (edit?.error ?? "Erreur"));
+      setError(err instanceof Error ? err.message : (t.errors?.generic ?? "Erreur"));
     } finally {
       setSaving(false);
     }

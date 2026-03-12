@@ -115,6 +115,7 @@ export function RegisterItemPage() {
       : undefined,
   }), [itemData]);
 
+  const genericErrorLabel = t.errors?.generic ?? "Erreur";
   const handleSubmitLoggedIn = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -133,11 +134,11 @@ export function RegisterItemPage() {
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
       if (isNetworkError(err)) { setBackendDown(true); return; }
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : genericErrorLabel);
     } finally {
       setLoading(false);
     }
-  }, [buildItemBody, totalSteps, itemData.name, updateItemId]);
+  }, [buildItemBody, totalSteps, itemData.name, updateItemId, genericErrorLabel]);
 
   const handleSubmitWithAccount = useCallback(async () => {
     setLoading(true);
@@ -173,11 +174,11 @@ export function RegisterItemPage() {
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
       if (isNetworkError(err)) { setBackendDown(true); return; }
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : genericErrorLabel);
     } finally {
       setLoading(false);
     }
-  }, [accountData, buildItemBody, totalSteps, refreshAuth, itemData.name, updateItemId]);
+  }, [accountData, buildItemBody, totalSteps, refreshAuth, itemData.name, updateItemId, genericErrorLabel]);
 
   if (backendDown) {
     return (

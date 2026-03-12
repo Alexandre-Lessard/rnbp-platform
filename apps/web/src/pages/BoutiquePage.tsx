@@ -11,6 +11,7 @@ import { ROUTES } from "@/routes/routes";
 type UserItem = {
   id: string;
   name: string;
+  status: string;
 };
 
 // ── Feature icon (checkmark in circle) ──────────────────────────────
@@ -52,7 +53,7 @@ export function BoutiquePage() {
   useEffect(() => {
     if (!user) return;
     apiRequest<{ items: UserItem[] }>("/items")
-      .then((data) => setUserItems(data.items))
+      .then((data) => setUserItems(data.items.filter((i: UserItem) => i.status !== "stolen")))
       .catch(() => { /* ignore */ })
       .finally(() => setLoadingItems(false));
   }, [user]);
@@ -91,7 +92,7 @@ export function BoutiquePage() {
       });
       window.location.href = res.url;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : (t.errors?.generic ?? "Erreur"));
       setCheckingOut(false);
     }
   }

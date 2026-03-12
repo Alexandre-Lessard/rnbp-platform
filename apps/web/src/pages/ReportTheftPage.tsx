@@ -26,6 +26,7 @@ export function ReportTheftPage() {
   const [loadError, setLoadError] = useState("");
   const [backendDown, setBackendDown] = useState(false);
 
+  const loadErrorLabel = t.errors?.loadError ?? "Erreur de chargement";
   useEffect(() => {
     apiRequest<{ items: Item[] }>("/items")
       .then((data) => {
@@ -33,10 +34,10 @@ export function ReportTheftPage() {
       })
       .catch((err) => {
         if (isNetworkError(err)) { setBackendDown(true); return; }
-        setLoadError(err instanceof Error ? err.message : "Erreur de chargement");
+        setLoadError(err instanceof Error ? err.message : loadErrorLabel);
       })
       .finally(() => setLoadingItems(false));
-  }, []);
+  }, [loadErrorLabel]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -58,7 +59,7 @@ export function ReportTheftPage() {
       setSuccess(true);
     } catch (err) {
       if (isNetworkError(err)) { setBackendDown(true); return; }
-      setError(err instanceof Error ? err.message : "Erreur");
+      setError(err instanceof Error ? err.message : (t.errors?.generic ?? "Erreur"));
     } finally {
       setLoading(false);
     }

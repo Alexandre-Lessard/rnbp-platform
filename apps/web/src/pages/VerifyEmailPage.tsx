@@ -3,15 +3,18 @@ import { useSearchParams, Link } from "react-router";
 import { apiRequest } from "@/lib/api-client";
 import { getButtonClasses } from "@/lib/button-styles";
 import { useAuth } from "@/lib/auth-context";
+import { useLanguage } from "@/i18n/context";
 import { ROUTES } from "@/routes/routes";
 
 export function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const { user, refreshUser } = useAuth();
+  const { t } = useLanguage();
   const [status, setStatus] = useState<"loading" | "success" | "error">(token ? "loading" : "error");
-  const [message, setMessage] = useState(token ? "" : "Lien de vérification invalide.");
+  const [message, setMessage] = useState(token ? "" : (t.errors?.invalidVerificationLink ?? "Lien de vérification invalide."));
 
+  const verificationErrorLabel = t.errors?.verificationError ?? "Erreur lors de la vérification.";
   useEffect(() => {
     if (!token) return;
 
@@ -27,9 +30,9 @@ export function VerifyEmailPage() {
       })
       .catch((err) => {
         setStatus("error");
-        setMessage(err instanceof Error ? err.message : "Erreur lors de la vérification.");
+        setMessage(err instanceof Error ? err.message : verificationErrorLabel);
       });
-  }, [token, refreshUser]);
+  }, [token, refreshUser, verificationErrorLabel]);
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">

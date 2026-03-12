@@ -340,5 +340,15 @@ export type SiteContent = {
     notFound: string;
     notFoundDescription: string;
     backHome: string;
+    generic: string;
+    loadError: string;
+    loginError: string;
+    registerError: string;
+    verificationError: string;
+    invalidVerificationLink: string;
+    tryAgain: string;
+    newsletterThanks: string;
+    newsletterError: string;
+    newsletterUnavailable: string;
   };
 };

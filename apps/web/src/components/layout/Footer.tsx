@@ -81,13 +81,13 @@ export function Footer() {
               </Button>
             </form>
             {status === "success" && (
-              <p className="mt-3 text-sm font-medium text-green-600">Merci !</p>
+              <p className="mt-3 text-sm font-medium text-green-600">{t.errors?.newsletterThanks ?? "Merci !"}</p>
             )}
             {status === "error" && (
-              <p className="mt-3 text-sm text-red-600">Une erreur est survenue.</p>
+              <p className="mt-3 text-sm text-red-600">{t.errors?.newsletterError ?? "Une erreur est survenue."}</p>
             )}
             {status === "unavailable" && (
-              <p className="mt-3 text-sm text-red-600">Service temporairement indisponible. Réessayez plus tard.</p>
+              <p className="mt-3 text-sm text-red-600">{t.errors?.newsletterUnavailable ?? "Service temporairement indisponible. Réessayez plus tard."}</p>
             )}
             <p className="mt-4 text-sm text-[var(--rcb-text-muted)]">
               {t.footer.disclaimer}

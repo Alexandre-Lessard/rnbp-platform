@@ -34,6 +34,7 @@ export function DashboardPage() {
   // Modal state for "already in cart" confirmation
   const [confirmItem, setConfirmItem] = useState<Item | null>(null);
 
+  const loadErrorLabel = t.errors?.loadError ?? "Erreur de chargement";
   useEffect(() => {
     apiRequest<{ items: Item[] }>("/items")
       .then((data) => setItems(data.items))
@@ -41,11 +42,11 @@ export function DashboardPage() {
         if (isNetworkError(err)) {
           setBackendDown(true);
         } else {
-          setLoadError(err instanceof Error ? err.message : "Erreur de chargement");
+          setLoadError(err instanceof Error ? err.message : loadErrorLabel);
         }
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [loadErrorLabel]);
 
   function doAddItem(item: Item) {
     addItem({ itemId: item.id, itemName: item.name, productName: t.shop?.productName });
@@ -177,16 +178,18 @@ export function DashboardPage() {
                     {dash?.editItem ?? "Modifier"}
                   </Link>
                 )}
-                <button
-                  type="button"
-                  disabled={addedId === item.id}
-                  onClick={() => handleOrderStickers(item)}
-                  className="cursor-pointer text-xs font-medium text-[var(--rcb-primary)] transition-colors hover:underline disabled:cursor-default disabled:opacity-60"
-                >
-                  {addedId === item.id
-                    ? (t.registration?.addedToCart ?? "✓")
-                    : (t.shop?.orderStickers ?? "Commander des étiquettes")}
-                </button>
+                {item.status !== "stolen" && (
+                  <button
+                    type="button"
+                    disabled={addedId === item.id}
+                    onClick={() => handleOrderStickers(item)}
+                    className="cursor-pointer text-xs font-medium text-[var(--rcb-primary)] transition-colors hover:underline disabled:cursor-default disabled:opacity-60"
+                  >
+                    {addedId === item.id
+                      ? (t.registration?.addedToCart ?? "✓")
+                      : (t.shop?.orderStickers ?? "Commander des étiquettes")}
+                  </button>
+                )}
                 <span
                   className={`rounded-full px-3 py-1 text-xs font-medium ${statusColors[item.status] ?? "bg-gray-100 text-gray-800"}`}
                 >

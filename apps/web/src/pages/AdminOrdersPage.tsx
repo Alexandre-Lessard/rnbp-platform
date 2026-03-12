@@ -38,7 +38,7 @@ export function AdminOrdersPage() {
     const url = tab === "all" ? "/admin/orders" : `/admin/orders?status=${tab}`;
     apiRequest<{ orders: Order[] }>(url)
       .then((data) => { if (!cancelled) setOrders(data.orders); })
-      .catch((err) => { if (!cancelled) setError(err instanceof Error ? err.message : "Erreur"); })
+      .catch((err) => { if (!cancelled) setError(err instanceof Error ? err.message : "Error"); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [tab]);

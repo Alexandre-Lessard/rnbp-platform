@@ -4,19 +4,24 @@ import { Button } from "@/components/ui/Button";
 import { INSURERS, INSURER_EMAILS } from "@rnbp/shared";
 
 export function InsuranceFormSection() {
-  const { t } = useLanguage();
-  const [selectedInsurer, setSelectedInsurer] = useState("");
+  const { t, locale } = useLanguage();
+  const [selectedInsurerId, setSelectedInsurerId] = useState("");
   const [copied, setCopied] = useState(false);
 
   const ins = t.insurance;
   if (!ins) return null;
 
-  const message = selectedInsurer
-    ? ins.messageTemplate.replace("{{insurer}}", selectedInsurer)
+  const selectedInsurer = INSURERS.find((i) => i.id === selectedInsurerId);
+  const insurerDisplayName = selectedInsurer
+    ? selectedInsurer[locale]
     : "";
 
-  const insurerEmail = selectedInsurer
-    ? INSURER_EMAILS[selectedInsurer] ?? null
+  const message = selectedInsurerId
+    ? ins.messageTemplate.replace("{{insurer}}", insurerDisplayName)
+    : "";
+
+  const insurerEmail = selectedInsurerId
+    ? INSURER_EMAILS[selectedInsurerId] ?? null
     : null;
 
   const mailtoHref = insurerEmail
@@ -63,22 +68,22 @@ export function InsuranceFormSection() {
           </label>
           <select
             id="insurer-select"
-            value={selectedInsurer}
+            value={selectedInsurerId}
             onChange={(e) => {
-              setSelectedInsurer(e.target.value);
+              setSelectedInsurerId(e.target.value);
               setCopied(false);
             }}
             className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
           >
             <option value="">{ins.selectPlaceholder}</option>
             {INSURERS.map((insurer) => (
-              <option key={insurer} value={insurer}>
-                {insurer}
+              <option key={insurer.id} value={insurer.id}>
+                {insurer[locale]}
               </option>
             ))}
           </select>
 
-          {selectedInsurer && (
+          {selectedInsurerId && (
             <div className="mt-6">
               <label
                 htmlFor="insurance-message"

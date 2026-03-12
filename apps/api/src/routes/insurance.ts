@@ -14,11 +14,15 @@ export async function insuranceRoutes(app: FastifyInstance) {
       const body = insuranceRequestSchema.parse(request.body);
       const db = getDb();
 
+      // Look up insurer name for DB storage (use FR as canonical name)
+      const insurer = INSURERS.find((i) => i.id === body.insurerId);
+      const insurerName = insurer ? insurer.fr : body.insurerId;
+
       const [req] = await db
         .insert(insuranceRequests)
         .values({
           userId: request.userId!,
-          insurerName: body.insurerName,
+          insurerName,
           messageContent: body.messageContent,
         })
         .returning();

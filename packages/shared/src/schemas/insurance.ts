@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { INSURERS } from "../constants/insurers.js";
 
+const validInsurerIds = INSURERS.map((i) => i.id) as [string, ...string[]];
+
 export const insuranceRequestSchema = z.object({
-  insurerName: z.enum(INSURERS, {
+  insurerId: z.enum(validInsurerIds, {
     errorMap: () => ({ message: "Assureur invalide" }),
   }),
   messageContent: z.string().min(1).max(2000),

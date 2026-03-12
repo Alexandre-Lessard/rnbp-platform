@@ -738,6 +738,16 @@ const fr: SiteContent = {
     notFound: "Page introuvable",
     notFoundDescription: "La page que vous cherchez n'existe pas ou a été déplacée.",
     backHome: "Retour à l'accueil",
+    generic: "Erreur",
+    loadError: "Erreur de chargement",
+    loginError: "Erreur de connexion",
+    registerError: "Erreur lors de l'inscription",
+    verificationError: "Erreur lors de la vérification",
+    invalidVerificationLink: "Lien de vérification invalide.",
+    tryAgain: "Réessayer",
+    newsletterThanks: "Merci !",
+    newsletterError: "Une erreur est survenue.",
+    newsletterUnavailable: "Service temporairement indisponible. Réessayez plus tard.",
   },
 };
 
