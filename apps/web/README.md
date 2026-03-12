@@ -142,6 +142,41 @@ import { Button } from "@/components/ui/Button";
 Variantes : `primary` (rouge), `outline` (bordure).
 Tailles : `sm`, `lg` (défaut).
 
+### Composant Tabs
+
+```tsx
+import { Tabs, type TabItem } from "@/components/ui/Tabs";
+
+const tabs: TabItem<"citizen" | "police" | "insurer">[] = [
+  { key: "citizen", label: "Citoyens" },
+  { key: "police", label: "Services policiers" },
+  { key: "insurer", label: "Compagnies d'assurance" },
+];
+
+<Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} tabMinWidth={215}>
+  {/* contenu du tab actif */}
+</Tabs>
+```
+
+Generique (`<T extends string>`), ARIA complet (`role="tablist"`, `aria-selected`).
+Prop `tabMinWidth` pour largeur fixe bilingue (voir convention ci-dessous).
+
+### Composant Modal
+
+```tsx
+import { Modal } from "@/components/ui/Modal";
+
+<Modal open={isOpen} onClose={() => setIsOpen(false)} title="Titre">
+  {/* contenu */}
+</Modal>
+```
+
+Fermeture par Escape ou clic sur l'overlay. Scroll du body verrouille quand ouvert. AutoFocus sur le premier champ a l'ouverture.
+
+### Convention largeur fixe FR/EN
+
+Les elements interactifs bilingues (boutons, onglets, liens style bouton) doivent avoir une largeur fixe basee sur la langue la plus longue (generalement le francais). Appliquer via `style={{ minWidth: Xpx }}` ou `tabMinWidth` sur `<Tabs>`. Ca empeche l'UI de "sauter" au changement de langue.
+
 ### Pour les `<a>` ou `<Link>` stylés en bouton
 
 ```tsx
