@@ -24,10 +24,10 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description:
           "Trouvez les réponses aux questions courantes sur l'enregistrement de vos biens au Registre national des biens personnels.",
       },
-      "/partenaires": {
-        title: "Devenez partenaire | RNBP",
+      "/registry": {
+        title: "Consulter le registre | RNBP",
         description:
-          "Collaborez avec le RNBP : assureurs, détaillants et organismes de sécurité publique à travers le Canada.",
+          "Consultez le registre pour vérifier un bien. Citoyens, services policiers et compagnies d'assurance.",
       },
       "/confidentialite": {
         title: "Politique de confidentialité | RNBP",
@@ -118,10 +118,10 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description:
           "Find answers to common questions about registering your belongings in the National Registry of Personal Property.",
       },
-      "/partenaires": {
-        title: "Become a Partner | NRPP",
+      "/registry": {
+        title: "Consult the Registry | NRPP",
         description:
-          "Partner with the NRPP: insurers, retailers and public safety organizations across Canada.",
+          "Consult the registry to verify an item. Citizens, law enforcement and insurance companies.",
       },
       "/confidentialite": {
         title: "Privacy Policy | NRPP",

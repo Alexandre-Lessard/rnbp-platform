@@ -64,7 +64,7 @@ function App() {
           <Route path="/inscription" element={<RegisterAccountPage />} />
           <Route path="/enregistrer" element={<RegisterItemPage />} />
           <Route path="/verifier" element={<LookupPage />} />
-          <Route path="/partenaires" element={<PartnerPage />} />
+          <Route path="/registry" element={<PartnerPage />} />
           <Route path="/confidentialite" element={<PrivacyPolicyPage />} />
           <Route path="/conditions" element={<TermsOfServicePage />} />
           <Route path="/faq" element={<FaqPage />} />

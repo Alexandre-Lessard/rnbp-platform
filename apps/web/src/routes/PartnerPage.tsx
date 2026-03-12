@@ -1,10 +1,16 @@
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
+import { Link } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
+import { useAuth } from "@/lib/auth-context";
 import { apiRequest, type ApiError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import type { TabItem } from "@/components/ui/Tabs";
+import { Modal } from "@/components/ui/Modal";
+import { getButtonClasses } from "@/lib/button-styles";
 
 type FormState = "idle" | "loading" | "success" | "error";
+type Tab = "citizen" | "police" | "insurer";
 
 function renderBold(text: string): ReactNode[] {
   return text.split(/\*\*(.+?)\*\*/g).map((part, i) =>
@@ -14,9 +20,11 @@ function renderBold(text: string): ReactNode[] {
 
 export function PartnerPage() {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const p = t.partners!;
 
-  const [openAccordion, setOpenAccordion] = useState<"police" | "insurer" | null>(null);
+  const [activeTab, setActiveTab] = useState<Tab>("citizen");
+  const [contactOpen, setContactOpen] = useState(false);
   const [formState, setFormState] = useState<FormState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [name, setName] = useState("");
@@ -25,11 +33,52 @@ export function PartnerPage() {
   const [type, setType] = useState("");
   const [message, setMessage] = useState("");
 
+  function resetForm() {
+    setFormState("idle");
+    setErrorMsg("");
+    setName("");
+    setEmail("");
+    setCompany("");
+    setType("");
+    setMessage("");
+  }
+
+  function closeContactModal() {
+    setContactOpen(false);
+    // Don't reset — preserve data in case of accidental close
+  }
+
+  function openContactModal() {
+    if (formState === "success") {
+      resetForm();
+    } else if (formState === "error") {
+      setFormState("idle");
+      setErrorMsg("");
+    }
+    // Pre-select type only if empty (preserve user's selection on reopen)
+    if (!type) {
+      setType(activeTab === "insurer" ? "insurer" : activeTab === "police" ? "security" : "");
+    }
+    setContactOpen(true);
+  }
+
+  function switchTab(tab: Tab) {
+    setActiveTab(tab);
+    resetForm();
+    setContactOpen(false);
+  }
+
+  // Auto-close modal 3s after successful submission
+  useEffect(() => {
+    if (formState !== "success" || !contactOpen) return;
+    const timer = setTimeout(closeContactModal, 3000);
+    return () => clearTimeout(timer);
+  }, [formState, contactOpen]);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (formState === "loading") return;
 
-    // Honeypot check
     const form = e.currentTarget;
     const honeypot = (form.elements.namedItem("website") as HTMLInputElement)?.value;
 
@@ -64,6 +113,29 @@ export function PartnerPage() {
   const inputClasses =
     "h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none";
 
+  const tabs: TabItem<Tab>[] = [
+    { key: "citizen", label: p.tabs.citizen },
+    { key: "police", label: p.tabs.police },
+    { key: "insurer", label: p.tabs.insurer },
+  ];
+
+  // Action button (same position for all tabs — right-aligned on tabs row)
+  const actionButton = activeTab === "citizen" ? (
+    user ? (
+      <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
+        {p.citizenDashboardButton}
+      </Link>
+    ) : (
+      <Link to="/inscription" className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
+        {p.citizenSignupButton}
+      </Link>
+    )
+  ) : (
+    <Link to="/connexion" className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
+      {activeTab === "police" ? p.policeLoginButton : p.insurerLoginButton}
+    </Link>
+  );
+
   return (
     <section className="min-h-[70vh] bg-[var(--rcb-white)]">
       <Helmet>
@@ -78,47 +150,75 @@ export function PartnerPage() {
           {p.description}
         </p>
 
-        <h2 className="mt-12 text-2xl font-semibold text-[var(--rcb-text-strong)]">
-          {p.whyPartner}
-        </h2>
-        <ul className="mt-6 max-w-3xl space-y-4">
-          {p.benefits.map((benefit, i) => (
-            <li
-              key={i}
-              className="flex items-start gap-3 text-[var(--rcb-text-body)]"
-            >
-              <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--rcb-primary)] text-xs font-bold text-white">
-                {i + 1}
-              </span>
-              <span>{benefit}</span>
-            </li>
-          ))}
-        </ul>
-
-        {/* ── Accordéons Police / Assureurs ──────────────────────────── */}
-        <div className="mt-16 space-y-4">
-          {/* Police */}
-          <div className="rounded-2xl border border-[var(--rcb-border)] bg-[var(--rcb-bg)]">
-            <button
-              type="button"
-              onClick={() => setOpenAccordion(openAccordion === "police" ? null : "police")}
-              className="flex w-full cursor-pointer items-center justify-between gap-4 p-6 text-left"
-              aria-expanded={openAccordion === "police"}
-            >
-              <span className="text-lg font-semibold text-[var(--rcb-text-strong)]">
-                {p.policeAccordion.title}
-              </span>
-              <svg
-                className={`h-5 w-5 shrink-0 text-[var(--rcb-primary)] transition-transform ${openAccordion === "police" ? "rotate-180" : ""}`}
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
+        {/* ── Tabs bar + action button ─────────────────────────── */}
+        <div className="mt-10 flex items-end justify-between gap-4">
+          <div role="tablist" className="inline-flex gap-0 border-b border-[var(--rcb-border)]">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                role="tab"
+                type="button"
+                id={`tab-${tab.key}`}
+                aria-selected={activeTab === tab.key}
+                aria-controls={`tabpanel-${tab.key}`}
+                onClick={() => switchTab(tab.key)}
+                style={{ minWidth: 180 }}
+                className={`cursor-pointer border-b-2 px-5 py-3 text-sm font-medium transition-colors sm:text-base ${
+                  activeTab === tab.key
+                    ? "border-[var(--rcb-primary)] text-[var(--rcb-primary)]"
+                    : "border-transparent text-[var(--rcb-gray-dark)] hover:border-[var(--rcb-gray-dark)] hover:text-[var(--rcb-text-strong)]"
+                }`}
               >
-                <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-              </svg>
-            </button>
-            {openAccordion === "police" && (
-              <div className="border-t border-[var(--rcb-border)] px-6 pb-6 pt-4">
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <div className="hidden sm:block">{actionButton}</div>
+        </div>
+
+        {/* Mobile action button */}
+        <div className="mt-4 sm:hidden">{actionButton}</div>
+
+        {/* ── Tab panel ────────────────────────────────────────── */}
+        <div
+          role="tabpanel"
+          id={`tabpanel-${activeTab}`}
+          aria-labelledby={`tab-${activeTab}`}
+          className="mt-8"
+        >
+          {/* ── Citoyen ──────────────────────────────────────── */}
+          {activeTab === "citizen" && (
+            <div>
+              <p className="text-lg text-[var(--rcb-text-body)]">
+                {p.citizenDescription}
+              </p>
+
+              <h2 className="mt-10 text-2xl font-semibold text-[var(--rcb-text-strong)]">
+                {p.citizenWhyTitle}
+              </h2>
+              <ul className="mt-6 space-y-4">
+                {p.citizenAdvantages.map((adv, i) => (
+                  <li key={adv.title} className="flex items-start gap-3">
+                    <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--rcb-primary)] text-xs font-bold text-white">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="font-medium text-[var(--rcb-text-strong)]">{adv.title}</p>
+                      <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">{adv.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* ── Services Policiers ────────────────────────────── */}
+          {activeTab === "police" && (
+            <div>
+              <h2 className="text-2xl font-semibold text-[var(--rcb-text-strong)]">
+                {p.policeWhyTitle}
+              </h2>
+              <div className="mt-6">
                 {p.policeAccordion.intro.split("\n").map((line, i) => (
                   <p key={i} className="mt-2 text-[var(--rcb-text-body)] first:mt-0">
                     {renderBold(line)}
@@ -136,31 +236,22 @@ export function PartnerPage() {
                   ))}
                 </ul>
               </div>
-            )}
-          </div>
 
-          {/* Assureurs */}
-          <div className="rounded-2xl border border-[var(--rcb-border)] bg-[var(--rcb-bg)]">
-            <button
-              type="button"
-              onClick={() => setOpenAccordion(openAccordion === "insurer" ? null : "insurer")}
-              className="flex w-full cursor-pointer items-center justify-between gap-4 p-6 text-left"
-              aria-expanded={openAccordion === "insurer"}
-            >
-              <span className="text-lg font-semibold text-[var(--rcb-text-strong)]">
-                {p.insurerAccordion.title}
-              </span>
-              <svg
-                className={`h-5 w-5 shrink-0 text-[var(--rcb-primary)] transition-transform ${openAccordion === "insurer" ? "rotate-180" : ""}`}
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-              </svg>
-            </button>
-            {openAccordion === "insurer" && (
-              <div className="border-t border-[var(--rcb-border)] px-6 pb-6 pt-4">
+              <div className="mt-10 text-center">
+                <Button variant="outline" onClick={openContactModal}>
+                  {p.contactButton}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* ── Compagnie d'assurance ─────────────────────────── */}
+          {activeTab === "insurer" && (
+            <div>
+              <h2 className="text-2xl font-semibold text-[var(--rcb-text-strong)]">
+                {p.insurerWhyTitle}
+              </h2>
+              <div className="mt-6">
                 {p.insurerAccordion.intro.split("\n").map((line, i) => (
                   <p key={i} className="mt-2 text-[var(--rcb-text-body)] first:mt-0">
                     {renderBold(line)}
@@ -179,157 +270,166 @@ export function PartnerPage() {
                 </ul>
                 <blockquote className="mt-8 rounded-xl bg-[var(--rcb-surface)] border-l-4 border-[var(--rcb-primary)] px-6 py-5">
                   <p className="text-lg font-medium italic text-[var(--rcb-text-strong)]">
-                    {`«\u00a0${p.insurerAccordion.quote}\u00a0»`}
+                    {`\u00ab\u00a0${p.insurerAccordion.quote}\u00a0\u00bb`}
                   </p>
                 </blockquote>
               </div>
-            )}
-          </div>
+
+              <div className="mt-10 text-center">
+                <Button variant="outline" onClick={openContactModal}>
+                  {p.contactButton}
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
+      </div>
 
-        <div className="mt-16 rounded-2xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-8 lg:p-12">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-2xl font-semibold text-[var(--rcb-text-strong)]">
-              {p.formHeading}
-            </h2>
-            <p className="mt-3 text-[var(--rcb-text-muted)]">
-              {p.ctaDescription}
-            </p>
-          </div>
-
-          {formState === "success" ? (
-            <div className="mt-6 rounded-lg bg-green-50 p-4 text-green-800">
+      {/* ── Modal formulaire contact ─────────────────────────── */}
+      <Modal
+        open={contactOpen}
+        onClose={closeContactModal}
+        title={p.formHeading}
+      >
+        {formState === "success" ? (
+          <div className="text-center">
+            <div className="rounded-lg bg-green-50 p-4 text-green-800">
               {p.successMessage}
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="mx-auto mt-8 max-w-2xl space-y-5">
-              {/* Honeypot */}
-              <div className="hidden" aria-hidden="true">
-                <label htmlFor="website">Website</label>
+            <Button variant="outline" size="sm" onClick={closeContactModal} className="mt-4">
+              {t.nav.myAccount ? "OK" : "OK"}
+            </Button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Honeypot */}
+            <div className="hidden" aria-hidden="true">
+              <label htmlFor="website">Website</label>
+              <input
+                type="text"
+                id="website"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label
+                  htmlFor="contact-name"
+                  className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
+                >
+                  {p.nameLabel} <span className="text-[var(--rcb-primary)]">*</span>
+                </label>
                 <input
+                  id="contact-name"
                   type="text"
-                  id="website"
-                  name="website"
-                  tabIndex={-1}
-                  autoComplete="off"
+                  required
+                  minLength={2}
+                  maxLength={100}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className={inputClasses}
                 />
-              </div>
-
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="contact-name"
-                    className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
-                  >
-                    {p.nameLabel}
-                  </label>
-                  <input
-                    id="contact-name"
-                    type="text"
-                    required
-                    minLength={2}
-                    maxLength={100}
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className={inputClasses}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="contact-email"
-                    className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
-                  >
-                    {p.emailLabel}
-                  </label>
-                  <input
-                    id="contact-email"
-                    type="email"
-                    required
-                    maxLength={255}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={inputClasses}
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="contact-company"
-                    className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
-                  >
-                    {p.companyLabel}
-                  </label>
-                  <input
-                    id="contact-company"
-                    type="text"
-                    maxLength={255}
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    className={inputClasses}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="contact-type"
-                    className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
-                  >
-                    {p.typeLabel}
-                  </label>
-                  <select
-                    id="contact-type"
-                    required
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                    className={inputClasses}
-                  >
-                    <option value="">{p.typePlaceholder}</option>
-                    {(Object.entries(p.typeOptions) as [string, string][]).map(
-                      ([value, label]) => (
-                        <option key={value} value={value}>
-                          {label}
-                        </option>
-                      ),
-                    )}
-                  </select>
-                </div>
               </div>
 
               <div>
                 <label
-                  htmlFor="contact-message"
+                  htmlFor="contact-email"
                   className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
                 >
-                  {p.messageLabel}
+                  {p.emailLabel} <span className="text-[var(--rcb-primary)]">*</span>
                 </label>
-                <textarea
-                  id="contact-message"
+                <input
+                  id="contact-email"
+                  type="email"
                   required
-                  minLength={10}
-                  maxLength={2000}
-                  rows={5}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 py-3 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
+                  maxLength={255}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={inputClasses}
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label
+                  htmlFor="contact-company"
+                  className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
+                >
+                  {p.companyLabel}
+                </label>
+                <input
+                  id="contact-company"
+                  type="text"
+                  maxLength={255}
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  className={inputClasses}
                 />
               </div>
 
-              {formState === "error" && (
-                <div className="rounded-lg bg-red-50 p-4 text-red-800">
-                  {errorMsg || p.errorMessage}
-                </div>
-              )}
+              <div>
+                <label
+                  htmlFor="contact-type"
+                  className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
+                >
+                  {p.typeLabel}
+                </label>
+                <select
+                  id="contact-type"
+                  required
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className={inputClasses}
+                >
+                  <option value="">{p.typePlaceholder}</option>
+                  {(Object.entries(p.typeOptions) as [string, string][]).map(
+                    ([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ),
+                  )}
+                </select>
+              </div>
+            </div>
 
+            <div>
+              <label
+                htmlFor="contact-message"
+                className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
+              >
+                {p.messageLabel} <span className="text-[var(--rcb-primary)]">*</span>
+              </label>
+              <textarea
+                id="contact-message"
+                required
+                minLength={10}
+                maxLength={2000}
+                rows={5}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 py-3 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
+              />
+            </div>
+
+            {formState === "error" && (
+              <div className="rounded-lg bg-red-50 p-4 text-red-800">
+                {errorMsg || p.errorMessage}
+              </div>
+            )}
+
+            <div className="text-center">
               <Button type="submit" disabled={formState === "loading"}>
                 {formState === "loading" ? p.submitting : p.submitButton}
               </Button>
-            </form>
-          )}
-        </div>
-      </div>
+            </div>
+          </form>
+        )}
+      </Modal>
     </section>
   );
 }

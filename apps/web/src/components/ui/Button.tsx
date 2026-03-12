@@ -1,6 +1,16 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { getButtonClasses } from "@/lib/button-styles";
 
+/**
+ * Reusable Button component.
+ *
+ * CONVENTION — Largeur fixe FR/EN :
+ * Les boutons visibles dans les deux langues doivent avoir une largeur fixe
+ * (via `style={{ minWidth }}` ou className `min-w-[Xpx]`) basée sur la langue
+ * la plus longue (généralement le français) pour que l'UI ne bouge pas
+ * au changement de langue. Appliquer aussi sur les <Link> via getButtonClasses.
+ */
+
 type ButtonProps = {
   variant?: "primary" | "outline";
   size?: "sm" | "lg";

@@ -40,7 +40,7 @@ Accessible sur `http://localhost:5173`.
 | `/contact` | `ContactPage` | Formulaire de contact |
 | `/boutique` | `BoutiquePage` | Boutique (autocollants) |
 | `/boutique/succes` | `BoutiqueSuccessPage` | Confirmation post-achat |
-| `/partenaires` | `PartnerPage` | Page partenaires |
+| `/registry` | `PartnerPage` | Consulter le registre (onglets citoyen, police, assurance) |
 | `/confidentialite` | `PrivacyPolicyPage` | Politique de confidentialité |
 | `/conditions` | `TermsOfServicePage` | Conditions d'utilisation |
 | `/verifier-courriel` | `VerifyEmailPage` | Vérification du courriel |
@@ -70,7 +70,7 @@ src/
 │   ├── layout/         # Navbar, Footer
 │   ├── sections/       # Sections de la landing page
 │   ├── registration/   # Étapes du formulaire d'enregistrement
-│   ├── ui/             # Button, LanguageSwitcher
+│   ├── ui/             # Button, Tabs, Modal, LanguageSwitcher
 │   └── icons/          # Icônes SVG en composants
 ├── i18n/
 │   ├── context.tsx     # Provider de langue + détection

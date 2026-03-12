@@ -250,8 +250,17 @@ export type SiteContent = {
   partners?: {
     heading: string;
     description: string;
-    whyPartner: string;
-    benefits: string[];
+    tabs: { citizen: string; police: string; insurer: string };
+    citizenDescription: string;
+    citizenSignupButton: string;
+    citizenDashboardButton: string;
+    citizenWhyTitle: string;
+    citizenAdvantages: { title: string; text: string }[];
+    policeLoginButton: string;
+    policeWhyTitle: string;
+    insurerLoginButton: string;
+    insurerWhyTitle: string;
+    contactButton: string;
     policeAccordion: {
       title: string;
       intro: string;
