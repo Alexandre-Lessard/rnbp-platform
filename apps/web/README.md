@@ -44,6 +44,7 @@ Accessible sur `http://localhost:5173`.
 | `/confidentialite` | `PrivacyPolicyPage` | Politique de confidentialité |
 | `/conditions` | `TermsOfServicePage` | Conditions d'utilisation |
 | `/verifier-courriel` | `VerifyEmailPage` | Vérification du courriel |
+| `/verification-en-attente` | `EmailPendingPage` | Vérification du courriel en attente |
 
 ### Protégées (requièrent authentification)
 

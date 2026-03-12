@@ -79,6 +79,26 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description: "Votre commande a été confirmée avec succès.",
         robots: "noindex, nofollow",
       },
+      "/contact": {
+        title: "Contactez-nous | RNBP",
+        description:
+          "Contactez l'équipe du Registre national des biens personnels pour toute question ou demande.",
+      },
+      "/verifier-courriel": {
+        title: "Vérification du courriel | RNBP",
+        description: "Vérifiez votre adresse courriel.",
+        robots: "noindex, nofollow",
+      },
+      "/verification-en-attente": {
+        title: "Vérification en attente | RNBP",
+        description: "Vérification de votre courriel en cours.",
+        robots: "noindex, nofollow",
+      },
+      "/admin/commandes": {
+        title: "Admin — Commandes | RNBP",
+        description: "Gestion des commandes.",
+        robots: "noindex, nofollow",
+      },
     },
   },
   en: {
@@ -153,6 +173,26 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description: "Your order has been successfully confirmed.",
         robots: "noindex, nofollow",
       },
+      "/contact": {
+        title: "Contact Us | NRPP",
+        description:
+          "Contact the National Registry of Personal Property team for any questions or inquiries.",
+      },
+      "/verifier-courriel": {
+        title: "Email Verification | NRPP",
+        description: "Verify your email address.",
+        robots: "noindex, nofollow",
+      },
+      "/verification-en-attente": {
+        title: "Verification Pending | NRPP",
+        description: "Email verification in progress.",
+        robots: "noindex, nofollow",
+      },
+      "/admin/commandes": {
+        title: "Admin — Orders | NRPP",
+        description: "Order management.",
+        robots: "noindex, nofollow",
+      },
     },
   },
 };
@@ -211,16 +251,17 @@ const FAQ_EN = [
   },
 ];
 
-const PUBLIC_PATHS = [
-  "/",
-  "/faq",
-  "/partenaires",
-  "/confidentialite",
-  "/conditions",
-  "/verifier",
-  "/connexion",
-  "/inscription",
-];
+// Dérivé de META — une seule source de vérité
+const PUBLIC_PATHS = Object.entries(META.fr.pages)
+  .filter(([_, meta]) => !meta.robots?.includes("noindex"))
+  .map(([path]) => path);
+
+const NOINDEX_PATHS = Object.entries(META.fr.pages)
+  .filter(([_, meta]) => meta.robots?.includes("noindex"))
+  .map(([path]) => path);
+
+const ALL_KNOWN_PATHS = Object.keys(META.fr.pages);
+const PREFIX_PATHS = ["/admin/commandes"];
 
 function detectLocale(hostname: string): "fr" | "en" {
   if (hostname.includes("nrpp")) return "en";
@@ -239,11 +280,10 @@ function generateRobotsTxt(hostname: string): Response {
   const domain = hostname.includes("nrpp")
     ? "https://nrpp.ca"
     : "https://rnbp.ca";
+  const disallows = NOINDEX_PATHS.map((p) => `Disallow: ${p}`).join("\n");
   const body = `User-agent: *
 Allow: /
-Disallow: /tableau-de-bord
-Disallow: /declarer-vol
-Disallow: /enregistrer
+${disallows}
 
 Sitemap: ${domain}/sitemap.xml
 `;
@@ -272,7 +312,7 @@ function generateSitemapXml(hostname: string): Response {
     <xhtml:link rel="alternate" hreflang="fr" href="${frHref}" />
     <xhtml:link rel="alternate" hreflang="en" href="${enHref}" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${locale === "fr" ? loc : frHref}" />
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-11</lastmod>
   </url>`;
   }).join("\n");
 
@@ -347,7 +387,10 @@ function injectMeta(
   path: string,
 ): string {
   const domain = getDomain(locale);
-  const meta = META[locale].pages[path] ?? META[locale].defaults;
+  // Lookup exact path, then parent path (e.g. /admin/commandes for /admin/commandes/123)
+  const meta = META[locale].pages[path]
+    ?? META[locale].pages[path.replace(/\/[^/]+$/, "")]
+    ?? META[locale].defaults;
 
   const ogLocale = locale === "fr" ? "fr_CA" : "en_CA";
   const ogLocaleAlt = locale === "fr" ? "en_CA" : "fr_CA";
@@ -406,8 +449,13 @@ export const onRequest: PagesFunction = async (context) => {
   const html = await response.text();
   const modifiedHtml = injectMeta(html, locale, path);
 
+  // Return 404 for unknown paths (avoid soft 404 for Google)
+  const knownPath = ALL_KNOWN_PATHS.includes(path) ||
+    PREFIX_PATHS.some((p) => path.startsWith(p + "/"));
+  const status = knownPath ? response.status : 404;
+
   return new Response(modifiedHtml, {
-    status: response.status,
+    status,
     headers: response.headers,
   });
 };
