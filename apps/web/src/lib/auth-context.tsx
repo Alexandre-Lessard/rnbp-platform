@@ -41,6 +41,7 @@ type AuthContextType = AuthState & {
   }) => Promise<void>;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<boolean>;
+  refreshUser: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -143,6 +144,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(interval);
   }, [state.backendAvailable]);
 
+  const refreshUser = useCallback(async () => {
+    try {
+      const data = await apiRequest<{ user: User }>("/auth/me");
+      setState((prev) => ({ ...prev, user: data.user }));
+    } catch {
+      // silently fail
+    }
+  }, []);
+
   const login = useCallback(async (email: string, password: string) => {
     const data = await apiRequest<{
       user: User;
@@ -215,7 +225,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ ...state, login, register, logout, refreshAuth }}
+      value={{ ...state, login, register, logout, refreshAuth, refreshUser }}
     >
       {children}
     </AuthContext.Provider>

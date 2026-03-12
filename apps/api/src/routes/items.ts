@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createItemSchema, updateItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { items, itemPhotos, itemDocuments } from "../db/schema.js";
-import { requireAuth } from "../middleware/auth.js";
+import { requireVerifiedEmail } from "../middleware/auth.js";
 import { notFound, forbidden, badRequest } from "../utils/errors.js";
 
 const uuidSchema = z.string().uuid("Identifiant invalide");
@@ -14,7 +14,7 @@ export async function itemRoutes(app: FastifyInstance) {
 
   app.get(
     "/items",
-    { preHandler: requireAuth },
+    { preHandler: requireVerifiedEmail },
     async (request, reply) => {
       const db = getDb();
       const userItems = await db
@@ -31,7 +31,7 @@ export async function itemRoutes(app: FastifyInstance) {
 
   app.post(
     "/items",
-    { preHandler: requireAuth },
+    { preHandler: requireVerifiedEmail },
     async (request, reply) => {
       const body = createItemSchema.parse(request.body);
       const db = getDb();
@@ -62,7 +62,7 @@ export async function itemRoutes(app: FastifyInstance) {
 
   app.get(
     "/items/:id",
-    { preHandler: requireAuth },
+    { preHandler: requireVerifiedEmail },
     async (request, reply) => {
       const { id } = request.params as { id: string };
       uuidSchema.parse(id);
@@ -95,7 +95,7 @@ export async function itemRoutes(app: FastifyInstance) {
 
   app.patch(
     "/items/:id",
-    { preHandler: requireAuth },
+    { preHandler: requireVerifiedEmail },
     async (request, reply) => {
       const { id } = request.params as { id: string };
       uuidSchema.parse(id);
@@ -131,7 +131,7 @@ export async function itemRoutes(app: FastifyInstance) {
 
   app.delete(
     "/items/:id",
-    { preHandler: requireAuth },
+    { preHandler: requireVerifiedEmail },
     async (request, reply) => {
       const { id } = request.params as { id: string };
       uuidSchema.parse(id);

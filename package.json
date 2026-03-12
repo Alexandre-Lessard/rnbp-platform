@@ -13,7 +13,8 @@
     "deploy": "./ops/deploy.sh",
     "deploy:web": "./ops/deploy.sh web",
     "deploy:api": "./ops/deploy.sh api",
-    "rollback": "./ops/rollback.sh"
+    "rollback": "./ops/rollback.sh",
+    "stripe:dev": "stripe listen --forward-to localhost:3000/api/shop/webhook"
   },
   "engines": {
     "node": ">=20.0.0",

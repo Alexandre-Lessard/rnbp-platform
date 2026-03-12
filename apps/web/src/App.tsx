@@ -39,6 +39,7 @@ import { BoutiqueSuccessPage } from "@/routes/BoutiqueSuccessPage";
 import { AdminOrdersPage } from "@/routes/AdminOrdersPage";
 import { AdminOrderDetailPage } from "@/routes/AdminOrderDetailPage";
 import { VerifyEmailPage } from "@/routes/VerifyEmailPage";
+import { EmailPendingPage } from "@/routes/EmailPendingPage";
 import { NotFoundPage } from "@/routes/NotFoundPage";
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
           <Route path="/boutique" element={<BoutiquePage />} />
           <Route path="/boutique/succes" element={<BoutiqueSuccessPage />} />
           <Route path="/verifier-courriel" element={<VerifyEmailPage />} />
+          <Route path="/verification-en-attente" element={<EmailPendingPage />} />
           <Route
             path="/tableau-de-bord"
             element={

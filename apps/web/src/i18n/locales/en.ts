@@ -693,6 +693,15 @@ const en: SiteContent = {
     buttonText: "Verify an item",
     imageAlt: "Verifying an item before purchase",
   },
+  emailPending: {
+    heading: "Email verification required",
+    description: "A verification email has been sent to your address. Click the link in the email to activate your account.",
+    resendButton: "Resend email",
+    resendSuccess: "Email sent!",
+    logoutButton: "Log out",
+    checkAgain: "I've verified my email",
+    notVerifiedYet: "Your email is not verified yet. Please check your inbox.",
+  },
   errors: {
     serviceUnavailable: "Service temporarily unavailable",
     serviceUnavailableDescription: "Our servers are temporarily unreachable. Please try again shortly.",

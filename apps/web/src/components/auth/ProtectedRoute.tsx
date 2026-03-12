@@ -27,5 +27,9 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
+  if (!user.emailVerified) {
+    return <Navigate to="/verification-en-attente" replace />;
+  }
+
   return <>{children}</>;
 }

@@ -108,11 +108,11 @@ Toutes les routes sont préfixées par `/api`.
 
 | Méthode | Path | Auth | Limite | Description |
 |---------|------|------|--------|-------------|
-| GET | `/items` | Oui | — | Lister ses biens |
-| POST | `/items` | Oui | — | Enregistrer un bien |
-| GET | `/items/:id` | Oui | — | Détail d'un bien (photos + documents) |
-| PATCH | `/items/:id` | Oui | — | Modifier un bien |
-| DELETE | `/items/:id` | Oui | — | Supprimer un bien |
+| GET | `/items` | Vérifié | — | Lister ses biens |
+| POST | `/items` | Vérifié | — | Enregistrer un bien |
+| GET | `/items/:id` | Vérifié | — | Détail d'un bien (photos + documents) |
+| PATCH | `/items/:id` | Vérifié | — | Modifier un bien |
+| DELETE | `/items/:id` | Vérifié | — | Supprimer un bien |
 | GET | `/lookup/:rnbpNumber` | Non | 30/min | Recherche publique par numéro RNBP |
 
 ### Déclarations de vol (`/reports`)
@@ -208,8 +208,9 @@ Toutes les routes sont préfixées par `/api`.
 │  POST /auth/verify-email ──→ Token signé (24h)                  │
 │  POST /auth/resend-verification ──→ Renvoie le courriel (auth)  │
 │                                                                 │
-│  Impact : requireVerifiedEmail bloque les déclarations de vol   │
-│           sans email vérifié. requireAuth seul permet le reste. │
+│  Impact : requireVerifiedEmail bloque l'accès aux biens         │
+│           (/items) et aux déclarations de vol (/reports)        │
+│           sans email vérifié.                                   │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -229,7 +230,7 @@ Champ timestamp sur `users`. Quand défini, tout JWT (access ou refresh) émis *
 ### `requireAuth` vs `requireVerifiedEmail`
 
 - **`requireAuth`** — Vérifie le JWT access, vérifie `tokenRevokedBefore`. Utilisé sur la majorité des routes protégées.
-- **`requireVerifiedEmail`** — Appelle `requireAuth` + vérifie `emailVerified = true`. Utilisé pour les déclarations de vol (`POST /reports`).
+- **`requireVerifiedEmail`** — Appelle `requireAuth` + vérifie `emailVerified = true`. Utilisé pour les biens (`/items`) et les déclarations de vol (`POST /reports`).
 
 ## Transactions atomiques
 

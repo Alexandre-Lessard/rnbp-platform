@@ -63,6 +63,7 @@ Le frontend est accessible sur `http://localhost:5173`, l'API sur `http://localh
 | `pnpm run deploy` | Déploie frontend + backend en prod |
 | `pnpm run deploy:web` | Déploie le frontend uniquement |
 | `pnpm run deploy:api` | Déploie le backend uniquement |
+| `pnpm run stripe:dev` | Stripe CLI webhook listener (dev) |
 
 ## Déploiement
 

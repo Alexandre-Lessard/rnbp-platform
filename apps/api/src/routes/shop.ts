@@ -6,7 +6,7 @@ import { inArray } from "drizzle-orm";
 import { getDb } from "../db/client.js";
 import { orders, orderItems, items, users } from "../db/schema.js";
 import { getConfig } from "../config.js";
-import { requireAuth } from "../middleware/auth.js";
+import { requireVerifiedEmail } from "../middleware/auth.js";
 import { sendEmail, buildOrderNotificationEmail } from "../utils/email.js";
 import { forbidden } from "../utils/errors.js";
 
@@ -43,7 +43,7 @@ export async function shopRoutes(app: FastifyInstance) {
 
   app.post(
     "/shop/checkout",
-    { preHandler: requireAuth },
+    { preHandler: requireVerifiedEmail },
     async (request, reply) => {
       const config = getConfig();
       if (!config.STRIPE_SECRET_KEY) {

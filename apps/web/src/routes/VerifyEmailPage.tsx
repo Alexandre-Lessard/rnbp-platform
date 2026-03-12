@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router";
 import { apiRequest } from "@/lib/api-client";
 import { getButtonClasses } from "@/lib/button-styles";
+import { useAuth } from "@/lib/auth-context";
 
 export function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
+  const { user, refreshUser } = useAuth();
   const [status, setStatus] = useState<"loading" | "success" | "error">(token ? "loading" : "error");
   const [message, setMessage] = useState(token ? "" : "Lien de vérification invalide.");
 
@@ -16,15 +18,17 @@ export function VerifyEmailPage() {
       method: "POST",
       body: { token },
     })
-      .then((data) => {
+      .then(async (data) => {
         setStatus("success");
         setMessage(data.message);
+        // Refresh user state so ProtectedRoute knows emailVerified=true
+        await refreshUser();
       })
       .catch((err) => {
         setStatus("error");
         setMessage(err instanceof Error ? err.message : "Erreur lors de la vérification.");
       });
-  }, [token]);
+  }, [token, refreshUser]);
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
@@ -41,9 +45,15 @@ export function VerifyEmailPage() {
               </svg>
             </div>
             <h1 className="text-2xl font-bold text-[var(--rcb-text-strong)]">{message}</h1>
-            <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm") + " mt-6"}>
-              Tableau de bord
-            </Link>
+            {user ? (
+              <Link to="/tableau-de-bord" className={getButtonClasses("primary", "sm") + " mt-6"}>
+                Tableau de bord
+              </Link>
+            ) : (
+              <Link to="/connexion" className={getButtonClasses("primary", "sm") + " mt-6"}>
+                Se connecter
+              </Link>
+            )}
           </div>
         )}
 

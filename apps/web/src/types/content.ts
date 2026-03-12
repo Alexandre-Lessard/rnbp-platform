@@ -306,6 +306,15 @@ export type SiteContent = {
     buttonText: string;
     imageAlt: string;
   };
+  emailPending?: {
+    heading: string;
+    description: string;
+    resendButton: string;
+    resendSuccess: string;
+    logoutButton: string;
+    checkAgain: string;
+    notVerifiedYet: string;
+  };
   errors?: {
     serviceUnavailable: string;
     serviceUnavailableDescription: string;

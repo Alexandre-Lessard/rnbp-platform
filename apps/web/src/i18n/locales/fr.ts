@@ -699,6 +699,15 @@ const fr: SiteContent = {
     buttonText: "Vérifier un bien",
     imageAlt: "Vérification d'un bien avant achat",
   },
+  emailPending: {
+    heading: "Vérification de courriel requise",
+    description: "Un courriel de vérification a été envoyé à votre adresse. Cliquez sur le lien dans le courriel pour activer votre compte.",
+    resendButton: "Renvoyer le courriel",
+    resendSuccess: "Courriel envoyé!",
+    logoutButton: "Se déconnecter",
+    checkAgain: "J'ai vérifié mon courriel",
+    notVerifiedYet: "Votre courriel n'est pas encore vérifié. Vérifiez votre boîte de réception.",
+  },
   errors: {
     serviceUnavailable: "Service temporairement indisponible",
     serviceUnavailableDescription: "Nos serveurs sont temporairement inaccessibles. Veuillez réessayer dans quelques instants.",
