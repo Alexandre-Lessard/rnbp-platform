@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
@@ -11,10 +11,7 @@ export function Navbar() {
   const { t, locale } = useLanguage();
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
-  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const isLanding = location.pathname === "/";
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--rcb-header)]/95 backdrop-blur">
@@ -24,50 +21,24 @@ export function Navbar() {
         </Link>
 
         <nav aria-label={t.a11y.mainNav} className="hidden items-center gap-9 text-base font-medium text-[var(--rcb-text-strong)] lg:flex">
-          {t.nav.items.map((item) => {
-            const isHash = item.href.startsWith("#");
-            const cls = "flex items-center justify-center gap-1 min-w-[4rem] transition-colors hover:text-[var(--rcb-primary)]";
-            if (isHash && isLanding) {
-              return (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={cls}
-                >
-                  {item.label}
-                </a>
-              );
-            }
-            return (
-              <Link
-                key={item.label}
-                to={isHash ? `/${item.href}` : item.href}
-                className={cls}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {t.nav.items.map((item) => (
+            <Link
+              key={item.label}
+              to={item.href}
+              className="relative flex items-center justify-center gap-1 min-w-[4rem] transition-colors hover:text-[var(--rcb-primary)]"
+            >
+              {item.label}
+              {item.href === ROUTES.shop && cartCount > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--rcb-primary)] px-1 text-[10px] font-bold text-white">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          ))}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
           <LanguageSwitcher />
-          <Link
-            to={ROUTES.shop}
-            className="relative flex h-9 w-9 items-center justify-center rounded-lg text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-border)] hover:text-[var(--rcb-primary)]"
-            aria-label={t.shop?.heading ?? "Boutique"}
-          >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 01-8 0" />
-            </svg>
-            {cartCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--rcb-primary)] px-1 text-[10px] font-bold text-white">
-                {cartCount}
-              </span>
-            )}
-          </Link>
           {user ? (
             <>
               {user.isAdmin && (
@@ -131,44 +102,26 @@ export function Navbar() {
           className="border-t border-[var(--rcb-border)] bg-[var(--rcb-header)] lg:hidden"
         >
           <div className="section-shell flex flex-col gap-1 py-4">
-            {t.nav.items.map((item) => {
-              const isHash = item.href.startsWith("#");
-              if (isHash && isLanding) {
-                return (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="rounded-lg px-4 py-3 text-base font-medium text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-border)]"
-                  >
-                    {item.label}
-                  </a>
-                );
-              }
-              return (
-                <Link
-                  key={item.label}
-                  to={isHash ? `/${item.href}` : item.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="rounded-lg px-4 py-3 text-base font-medium text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-border)]"
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+            {t.nav.items.map((item) => (
+              <Link
+                key={item.label}
+                to={item.href}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2 rounded-lg px-4 py-3 text-base font-medium text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-border)]"
+              >
+                {item.label}
+                {item.href === ROUTES.shop && cartCount > 0 && (
+                  <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--rcb-primary)] px-1 text-[10px] font-bold text-white">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            ))}
             <div className="mt-2 border-t border-[var(--rcb-border)] pt-4">
               <div className="flex items-center px-4">
                 <LanguageSwitcher />
               </div>
               <div className="mt-4 flex flex-col gap-2 px-4">
-                <Link
-                  to={ROUTES.shop}
-                  onClick={() => setMenuOpen(false)}
-                  className={getButtonClasses("outline", "sm", "w-full")}
-                >
-                  {t.shop?.heading ?? "Boutique"}
-                  {cartCount > 0 && ` (${cartCount})`}
-                </Link>
                 {user ? (
                   <>
                     {user.isAdmin && (

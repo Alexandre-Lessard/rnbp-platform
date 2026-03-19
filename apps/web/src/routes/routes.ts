@@ -5,6 +5,7 @@ export const ROUTES = {
   registerItem: "/register-item",
   lookup: "/lookup",
   registry: "/registry",
+  about: "/about",
   privacy: "/privacy",
   terms: "/terms",
   faq: "/faq",

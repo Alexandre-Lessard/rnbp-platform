@@ -309,6 +309,16 @@ export type SiteContent = {
     emailError: string;
     errorMessage: string;
   };
+  about?: {
+    heading: string;
+    paragraphs: string[];
+  };
+  promo?: {
+    badge: string;
+    text: string;
+    cta: string;
+    dismiss: string;
+  };
   legal?: {
     privacyHeading: string;
     privacyContent: { title: string; body: string }[];

@@ -37,6 +37,7 @@ function RedirectAdminOrder() {
   return <Navigate to={ROUTES.adminOrderDetail(id!)} replace />;
 }
 
+import { PromoBanner } from "@/components/layout/PromoBanner";
 import { CartProvider } from "@/lib/cart-context";
 import { LandingPage } from "@/pages/LandingPage";
 import { LoginPage } from "@/pages/LoginPage";
@@ -58,6 +59,7 @@ import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
 import { EmailPendingPage } from "@/pages/EmailPendingPage";
 import { EditItemPage } from "@/pages/EditItemPage";
 import { OAuthCallbackPage } from "@/pages/OAuthCallbackPage";
+import { AboutPage } from "@/pages/AboutPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 
 function App() {
@@ -74,6 +76,7 @@ function App() {
       </a>
       <ScrollToTop />
       <Navbar />
+      <PromoBanner />
       <main id="main-content">
         <Routes>
           <Route path={ROUTES.home} element={<LandingPage />} />
@@ -86,6 +89,7 @@ function App() {
           <Route path={ROUTES.terms} element={<TermsOfServicePage />} />
           <Route path={ROUTES.faq} element={<FaqPage />} />
           <Route path={ROUTES.contact} element={<ContactPage />} />
+          <Route path={ROUTES.about} element={<AboutPage />} />
           <Route path={ROUTES.shop} element={<BoutiquePage />} />
           <Route path={ROUTES.shopSuccess} element={<BoutiqueSuccessPage />} />
           <Route path={ROUTES.verifyEmail} element={<VerifyEmailPage />} />

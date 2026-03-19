@@ -27,6 +27,10 @@ const en: SiteContent = {
       title: "Terms of Service | NRPP",
       description: "Review the terms of service for the National Registry of Personal Property.",
     },
+    about: {
+      title: "About | NRPP",
+      description: "Learn about the National Registry of Personal Property, a platform to protect, identify and recover your valuable belongings.",
+    },
     lookup: {
       title: "Verify an Item | NRPP",
       description: "Enter a RNBP number to check the status of a registered item.",
@@ -54,12 +58,11 @@ const en: SiteContent = {
   },
   nav: {
     items: [
-      { label: "Home", href: "#home" },
-      { label: "About", href: "#about" },
-      { label: "Register", href: "#register" },
-      { label: "FAQ", href: "/faq" },
-      { label: "Contact", href: "/contact" },
       { label: "Registry", href: "/registry" },
+      { label: "Shop", href: "/shop" },
+      { label: "FAQ", href: "/faq" },
+      { label: "About", href: "/about" },
+      { label: "Contact", href: "/contact" },
     ],
     partners: "Registry",
     login: "Login",
@@ -538,6 +541,7 @@ const en: SiteContent = {
     description: "Verify an item, identify an owner or access registry tools based on your profile.",
     tabs: { citizen: "Citizen", police: "Law Enforcement", insurer: "Insurance Company" },
     citizenDescription: "Create your free account to consult the registry",
+    consultButton: "Browse",
     citizenSignupButton: "Create an account",
     citizenDashboardButton: "My dashboard",
     citizenWhyTitle: "Benefits for citizens who consult the registry",
@@ -637,6 +641,22 @@ const en: SiteContent = {
     copiedToast: "Message copied! Send it to your insurer.",
     emailSubject: "NRPP Discount Request",
     emailButton: "Send by email",
+  },
+  about: {
+    heading: "About the NRPP",
+    paragraphs: [
+      "The National Registry of Personal Property (NRPP) is a platform designed to help citizens protect, identify and recover their valuable belongings in case of theft, loss or recovery by authorities.",
+      "With the NRPP, owners can register their important items (bicycles, tools, electronics, artwork, instruments, etc.) in a secure database. Each registered item is associated with information that proves ownership and facilitates identification if it is found.",
+      "The registry works in collaboration with law enforcement and insurers, who can access the necessary information to quickly identify the owner of a recovered item. Citizens can also perform public verifications to reduce the risk of purchasing a potentially stolen item.",
+      "In addition to facilitating the return of belongings, the NRPP helps reduce the stolen goods resale market, improve insurance claims processes and strengthen citizen safety.",
+      "The NRPP takes a modern approach to property protection, using advanced technological tools to simplify verifications, speed up owner identification and increase the chances of recovering stolen items.",
+    ],
+  },
+  promo: {
+    badge: "Pre-launch",
+    text: "Get your identification labels for free. Offer valid until May 31, 2026.",
+    cta: "Visit shop",
+    dismiss: "Close",
   },
   legal: {
     privacyHeading: "Privacy Policy",

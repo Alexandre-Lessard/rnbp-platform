@@ -50,13 +50,22 @@ export function InsuranceFormSection() {
   return (
     <section className="bg-[var(--rcb-bg)]">
       <div className="section-shell py-16 sm:py-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-4xl font-bold text-[var(--rcb-text)] sm:text-5xl">
-            {ins.heading}
-          </h2>
-          <p className="mt-6 text-xl leading-relaxed text-[var(--rcb-text-muted)]">
-            {ins.description}
-          </p>
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div className="flex justify-center lg:justify-start">
+            <img
+              src="/assets/insurance-savings.png"
+              alt={ins.heading}
+              className="w-full max-w-md rounded-2xl"
+            />
+          </div>
+          <div>
+            <h2 className="text-4xl font-bold text-[var(--rcb-text)] sm:text-5xl">
+              {ins.heading}
+            </h2>
+            <p className="mt-6 text-xl leading-relaxed text-[var(--rcb-text-muted)]">
+              {ins.description}
+            </p>
+          </div>
         </div>
 
         <div className="mx-auto mt-12 max-w-xl">

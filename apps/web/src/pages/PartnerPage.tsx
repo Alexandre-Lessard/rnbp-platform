@@ -116,19 +116,14 @@ export function PartnerPage() {
   ];
 
   // Action button (same position for all tabs — right-aligned on tabs row)
-  const actionButton = activeTab === "citizen" ? (
-    user ? (
-      <Link to={ROUTES.dashboard} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
-        {p.citizenDashboardButton}
-      </Link>
-    ) : (
-      <Link to={ROUTES.register} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
-        {p.citizenSignupButton}
-      </Link>
-    )
+  const consultLabel = p.consultButton ?? "Consulter";
+  const actionButton = user ? (
+    <Link to={ROUTES.dashboard} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
+      {consultLabel}
+    </Link>
   ) : (
     <Link to={ROUTES.login} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
-      {activeTab === "police" ? p.policeLoginButton : p.insurerLoginButton}
+      {consultLabel}
     </Link>
   );
 

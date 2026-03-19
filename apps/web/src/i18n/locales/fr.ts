@@ -27,6 +27,10 @@ const fr: SiteContent = {
       title: "Conditions d'utilisation | RNBP",
       description: "Consultez les conditions d'utilisation du Registre national des biens personnels.",
     },
+    about: {
+      title: "À propos | RNBP",
+      description: "Découvrez le Registre national des biens personnels, une plateforme pour protéger, identifier et retrouver vos biens de valeur.",
+    },
     lookup: {
       title: "Vérifier un bien | RNBP",
       description: "Entrez un numéro RNBP pour vérifier le statut d'un bien enregistré dans le registre.",
@@ -54,12 +58,11 @@ const fr: SiteContent = {
   },
   nav: {
     items: [
-      { label: "Accueil", href: "#home" },
-      { label: "\u00c0 propos", href: "#about" },
-      { label: "Enregistrer", href: "#register" },
+      { label: "Consulter", href: "/registry" },
+      { label: "Boutique", href: "/shop" },
       { label: "FAQ", href: "/faq" },
+      { label: "\u00c0 propos", href: "/about" },
       { label: "Contact", href: "/contact" },
-      { label: "Registre", href: "/registry" },
     ],
     partners: "Registre",
     login: "Connexion",
@@ -544,6 +547,7 @@ const fr: SiteContent = {
     description: "Vérifiez un bien, identifiez un propriétaire ou accédez aux outils du registre selon votre profil.",
     tabs: { citizen: "Citoyen", police: "Services Policiers", insurer: "Compagnie d'assurance" },
     citizenDescription: "Créez votre compte gratuitement pour consulter le registre",
+    consultButton: "Consulter",
     citizenSignupButton: "Créer un compte",
     citizenDashboardButton: "Mon tableau de bord",
     citizenWhyTitle: "Avantages pour le citoyen qui consulte le registre",
@@ -643,6 +647,22 @@ const fr: SiteContent = {
     copiedToast: "Message copié ! Envoyez-le à votre assureur.",
     emailSubject: "Demande de rabais RNBP",
     emailButton: "Envoyer par courriel",
+  },
+  about: {
+    heading: "À propos du RNBP",
+    paragraphs: [
+      "Le Registre National des Biens Personnels (RNBP) est une plateforme conçue pour aider les citoyens à protéger, identifier et retrouver leurs biens de valeur en cas de vol, de perte ou de récupération par les autorités.",
+      "Grâce au RNBP, les propriétaires peuvent enregistrer leurs objets importants (vélos, outils, équipements électroniques, œuvres d'art, instruments, etc.) dans une base de données sécurisée. Chaque bien enregistré est associé à des informations permettant de prouver la propriété et d'en faciliter l'identification si celui-ci est retrouvé.",
+      "Le registre travaille en collaboration avec les corps policiers et les assureurs, qui peuvent accéder aux informations nécessaires afin d'identifier rapidement le propriétaire d'un bien retrouvé. De leur côté, les citoyens peuvent effectuer certaines vérifications publiques afin de réduire les risques d'acheter un bien potentiellement volé.",
+      "En plus de faciliter la restitution des biens, le RNBP contribue à réduire le marché de la revente de biens volés, à améliorer les démarches auprès des assureurs et à renforcer la sécurité des citoyens.",
+      "Le RNBP s'inscrit dans une approche moderne de protection des biens, utilisant des outils technologiques avancés pour simplifier les vérifications, accélérer l'identification des propriétaires et augmenter les chances de récupération des objets volés.",
+    ],
+  },
+  promo: {
+    badge: "Prélancement",
+    text: "Obtenez vos étiquettes d'identification gratuitement. Offre valide jusqu'au 31 mai 2026.",
+    cta: "Voir la boutique",
+    dismiss: "Fermer",
   },
   legal: {
     privacyHeading: "Politique de confidentialité",
