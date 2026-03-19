@@ -1,53 +1,53 @@
-# Guide de mise en production — RNBP
+# Production Setup Guide — RNBP
 
-Guide complet pour déployer le projet depuis zéro.
+Complete guide to deploy the project from scratch.
 
 ## Architecture
 
 ```
-[Navigateur] → rnbp.ca  → [Cloudflare Pages] → SPA React (FR par défaut)
-[Navigateur] → nrpp.ca  → [Cloudflare Pages] → SPA React (EN par défaut)
+[Browser] → rnbp.ca  → [Cloudflare Pages] → React SPA (FR by default)
+[Browser] → nrpp.ca  → [Cloudflare Pages] → React SPA (EN by default)
                                   ↓ API calls
-[Navigateur] → api.rnbp.ca → [Cloudflare Tunnel] → 192.168.50.241:3000 → [Fastify]
+[Browser] → api.rnbp.ca → [Cloudflare Tunnel] → 192.168.50.241:3000 → [Fastify]
                                                                               ↓
                                                           192.168.50.239 → [PostgreSQL 16]
 ```
 
-- **Pas de nginx** — Cloudflare Tunnel connecte directement à Fastify (nginx existant sur le container n'interfère pas)
-- **Pas de certbot** — Cloudflare gère le TLS à l'edge
-- **Pas d'IP publique** — le tunnel est une connexion sortante
+- **No nginx** — Cloudflare Tunnel connects directly to Fastify (existing nginx on the container does not interfere)
+- **No certbot** — Cloudflare handles TLS at the edge
+- **No public IP** — the tunnel is an outbound connection
 
-### Infrastructure Proxmox
+### Proxmox Infrastructure
 
-| Container | ID | IP | Rôle |
+| Container | ID | IP | Role |
 |-----------|-----|-----|------|
-| prod (existant) | 241 | `192.168.50.241` | API RNBP + Cloudflare Tunnel |
-| postgresql-prod (Turnkey) | 239 | `192.168.50.239` | PostgreSQL 16 dédié |
+| prod (existing) | 241 | `192.168.50.241` | RNBP API + Cloudflare Tunnel |
+| postgresql-prod (Turnkey) | 239 | `192.168.50.239` | Dedicated PostgreSQL 16 |
 
-## Prérequis
+## Prerequisites
 
-- Proxmox avec les 2 containers ci-dessus
-- 2 domaines : `rnbp.ca` et `nrpp.ca` (NS pointés vers Cloudflare)
-- Compte Cloudflare (gratuit suffit)
+- Proxmox with the 2 containers listed above
+- 2 domains: `rnbp.ca` and `nrpp.ca` (NS pointing to Cloudflare)
+- Cloudflare account (free tier is sufficient)
 
 ---
 
-## 1. Container prod (192.168.50.241)
+## 1. Prod Container (192.168.50.241)
 
-Le container prod existant (CT 241) héberge déjà d'autres services. On y ajoute RNBP.
+The existing prod container (CT 241) already hosts other services. We add RNBP to it.
 
 ```bash
-# Se connecter au container
+# Connect to the container
 ssh root@192.168.50.241
 
-# Mise à jour
+# Update
 apt update && apt upgrade -y
 
-# Outils nécessaires (si pas déjà installés)
+# Required tools (if not already installed)
 apt install -y curl git
 ```
 
-### Installer Node.js 20 LTS (si pas déjà installé)
+### Install Node.js 20 LTS (if not already installed)
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -55,105 +55,105 @@ apt install -y nodejs
 node -v  # v20.x.x
 ```
 
-### Installer pnpm (si pas déjà installé)
+### Install pnpm (if not already installed)
 
 ```bash
 npm i -g pnpm
 pnpm -v  # 9.x.x
 ```
 
-### Préparer le dossier application
+### Prepare the application directory
 
-On réutilise l'utilisateur `prod` existant sur le container.
+We reuse the existing `prod` user on the container.
 
 ```bash
 mkdir -p /opt/rnbp
 chown prod:prod /opt/rnbp
 ```
 
-## 2. Container PostgreSQL (192.168.50.239)
+## 2. PostgreSQL Container (192.168.50.239)
 
-Créer un container Turnkey PostgreSQL (CT 239) sur Proxmox.
+Create a Turnkey PostgreSQL container (CT 239) on Proxmox.
 
-Une fois le container démarré :
+Once the container is started:
 
 ```bash
 ssh root@192.168.50.239
 ```
 
-### Configurer l'accès réseau
+### Configure network access
 
-Par défaut, PostgreSQL n'écoute que sur localhost. Il faut l'ouvrir au container prod.
+By default, PostgreSQL only listens on localhost. It needs to be opened to the prod container.
 
 ```bash
-# Trouver le fichier de config (varie selon la version Turnkey)
+# Find the config file (varies depending on the Turnkey version)
 PG_CONF=$(find /etc/postgresql -name postgresql.conf)
 PG_HBA=$(find /etc/postgresql -name pg_hba.conf)
 
-# Écouter sur toutes les interfaces
+# Listen on all interfaces
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" $PG_CONF
 
-# Autoriser le container prod à se connecter
+# Allow the prod container to connect
 echo "host    rnbp_prod    rnbp    192.168.50.241/32    scram-sha-256" >> $PG_HBA
 
-# Redémarrer PostgreSQL
+# Restart PostgreSQL
 systemctl restart postgresql
 ```
 
 ---
 
-### Créer l'utilisateur et la base
+### Create the user and database
 
 ```bash
-# Sur le container PostgreSQL (192.168.50.239)
+# On the PostgreSQL container (192.168.50.239)
 sudo -u postgres createuser rnbp
 sudo -u postgres createdb rnbp_prod -O rnbp
-sudo -u postgres psql -c "ALTER USER rnbp WITH PASSWORD '<MOT_DE_PASSE_SECURISE>';"
+sudo -u postgres psql -c "ALTER USER rnbp WITH PASSWORD '<SECURE_PASSWORD>';"
 ```
 
-### Tester la connexion depuis le container prod
+### Test the connection from the prod container
 
 ```bash
-# Depuis 192.168.50.241
-apt install -y postgresql-client   # si pas installé
+# From 192.168.50.241
+apt install -y postgresql-client   # if not installed
 psql -h 192.168.50.239 -U rnbp -d rnbp_prod -c "SELECT 1;"
 ```
 
-L'URL de connexion sera :
+The connection URL will be:
 ```
-postgresql://rnbp:<MOT_DE_PASSE>@192.168.50.239:5432/rnbp_prod
+postgresql://rnbp:<PASSWORD>@192.168.50.239:5432/rnbp_prod
 ```
 
 ---
 
-## 3. Accès SSH
+## 3. SSH Access
 
-Sur le **poste de développement** :
+On the **development machine**:
 
 ```bash
-# Générer une clé SSH (si pas déjà fait)
+# Generate an SSH key (if not already done)
 ssh-keygen -t ed25519 -C "dev@rnbp"
 
-# Copier la clé publique sur le serveur
+# Copy the public key to the server
 ssh-copy-id prod@192.168.50.241
 
-# Tester la connexion
+# Test the connection
 ssh prod@192.168.50.241
 ```
 
-Cet accès est requis pour que le script `ops/deploy.sh` fonctionne.
+This access is required for the `ops/deploy.sh` script to work.
 
 ---
 
 ## 4. Application
 
-### Cloner le repo
+### Clone the repo
 
 ```bash
-sudo -u prod git clone <URL_REPO> /opt/rnbp/repo
+sudo -u prod git clone <REPO_URL> /opt/rnbp/repo
 ```
 
-### Configurer l'environnement
+### Configure the environment
 
 ```bash
 sudo cp /opt/rnbp/repo/apps/api/.env.example /opt/rnbp/.env
@@ -161,36 +161,36 @@ sudo chown prod:prod /opt/rnbp/.env
 sudo chmod 600 /opt/rnbp/.env
 ```
 
-Éditer `/opt/rnbp/.env` avec les valeurs de production :
+Edit `/opt/rnbp/.env` with production values:
 
-| Variable | Valeur |
-|----------|--------|
+| Variable | Value |
+|----------|-------|
 | `NODE_ENV` | `production` |
 | `PORT` | `3000` |
-| `DATABASE_URL` | `postgresql://rnbp:<MOT_DE_PASSE>@192.168.50.239:5432/rnbp_prod` |
-| `JWT_PRIVATE_KEY` | *(voir ci-dessous)* |
-| `JWT_PUBLIC_KEY` | *(voir ci-dessous)* |
+| `DATABASE_URL` | `postgresql://rnbp:<PASSWORD>@192.168.50.239:5432/rnbp_prod` |
+| `JWT_PRIVATE_KEY` | *(see below)* |
+| `JWT_PUBLIC_KEY` | *(see below)* |
 | `CORS_ORIGINS` | `https://rnbp.ca,https://nrpp.ca` |
 | `UPLOAD_DIR` | `/opt/rnbp/uploads` |
 | `FRONTEND_URL` | `https://rnbp.ca` |
 | `FROM_EMAIL` | `noreply@rnbp.ca` |
-| `BREVO_API_KEY` | *(clé Brevo si emails activés)* |
+| `BREVO_API_KEY` | *(Brevo key if emails are enabled)* |
 
-### Générer les clés JWT Ed25519
+### Generate JWT Ed25519 keys
 
 ```bash
 openssl genpkey -algorithm Ed25519 -out /tmp/ed25519_private.pem
 openssl pkey -in /tmp/ed25519_private.pem -pubout -out /tmp/ed25519_public.pem
 
-# Copier ces valeurs dans .env
+# Copy these values into .env
 echo "JWT_PRIVATE_KEY=$(base64 -w 0 /tmp/ed25519_private.pem)"
 echo "JWT_PUBLIC_KEY=$(base64 -w 0 /tmp/ed25519_public.pem)"
 
-# Supprimer les fichiers temporaires
+# Delete the temporary files
 rm /tmp/ed25519_private.pem /tmp/ed25519_public.pem
 ```
 
-### Build initial
+### Initial build
 
 ```bash
 cd /opt/rnbp/repo
@@ -201,15 +201,15 @@ sudo -u prod pnpm --filter @rnbp/api build
 
 ### Migrations
 
-Les migrations Drizzle s'appliquent automatiquement au démarrage du backend. Aucune étape manuelle requise.
+Drizzle migrations are applied automatically on backend startup. No manual step required.
 
-Pour exécuter manuellement en cas de besoin :
+To run manually if needed:
 ```bash
 cd /opt/rnbp/repo/apps/api
 sudo -u prod node --env-file=/opt/rnbp/.env dist/migrate.js
 ```
 
-### Dossier uploads
+### Uploads directory
 
 ```bash
 sudo mkdir -p /opt/rnbp/uploads
@@ -227,23 +227,23 @@ sudo systemctl enable rnbp-api
 sudo systemctl start rnbp-api
 ```
 
-### Vérifier
+### Verify
 
 ```bash
 sudo systemctl status rnbp-api
 curl -s http://localhost:3000/api/health | jq
 ```
 
-### Commandes utiles
+### Useful commands
 
 ```bash
-# Logs en temps réel
+# Live logs
 sudo journalctl -u rnbp-api -f
 
-# 50 dernières lignes de logs
+# Last 50 log lines
 sudo journalctl -u rnbp-api -n 50
 
-# Redémarrer
+# Restart
 sudo systemctl restart rnbp-api
 ```
 
@@ -251,9 +251,9 @@ sudo systemctl restart rnbp-api
 
 ## 6. Cloudflare Tunnel (backend)
 
-Le tunnel remplace nginx + certbot. Il crée une connexion sortante chiffrée entre le serveur et Cloudflare — aucun port à ouvrir, aucun certificat à gérer.
+The tunnel replaces nginx + certbot. It creates an encrypted outbound connection between the server and Cloudflare — no ports to open, no certificates to manage.
 
-### Installer cloudflared
+### Install cloudflared
 
 ```bash
 curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
@@ -261,25 +261,25 @@ sudo dpkg -i cloudflared.deb
 rm cloudflared.deb
 ```
 
-### Authentifier
+### Authenticate
 
 ```bash
 cloudflared tunnel login
 ```
 
-Ceci ouvre un navigateur pour autoriser le compte Cloudflare.
+This opens a browser to authorize the Cloudflare account.
 
-### Créer le tunnel
+### Create the tunnel
 
 ```bash
 cloudflared tunnel create rnbp-api
 ```
 
-Note l'ID du tunnel (ex: `a1b2c3d4-...`).
+Note the tunnel ID (e.g., `a1b2c3d4-...`).
 
-### Configurer le tunnel
+### Configure the tunnel
 
-Créer `/opt/rnbp/.cloudflared/config.yml` :
+Create `/opt/rnbp/.cloudflared/config.yml`:
 
 ```yaml
 tunnel: <TUNNEL_ID>
@@ -291,17 +291,17 @@ ingress:
   - service: http_status:404
 ```
 
-> **Note** : déplacer le fichier credentials JSON dans `/opt/rnbp/.cloudflared/` si le tunnel est installé en tant que service sous l'utilisateur prod.
+> **Note**: Move the credentials JSON file to `/opt/rnbp/.cloudflared/` if the tunnel is installed as a service under the prod user.
 
-### Configurer le DNS
+### Configure DNS
 
 ```bash
 cloudflared tunnel route dns rnbp-api api.rnbp.ca
 ```
 
-Ceci crée automatiquement un CNAME `api.rnbp.ca` → `<TUNNEL_ID>.cfargotunnel.com`.
+This automatically creates a CNAME `api.rnbp.ca` → `<TUNNEL_ID>.cfargotunnel.com`.
 
-### Installer comme service
+### Install as a service
 
 ```bash
 sudo cloudflared service install
@@ -309,7 +309,7 @@ sudo systemctl enable cloudflared
 sudo systemctl start cloudflared
 ```
 
-### Vérifier
+### Verify
 
 ```bash
 sudo systemctl status cloudflared
@@ -320,14 +320,14 @@ curl -s https://api.rnbp.ca/api/health | jq
 
 ## 7. Cloudflare Pages (frontend)
 
-### Créer le projet
+### Create the project
 
 ```bash
-# Depuis le poste de dev, à la racine du repo
+# From the dev machine, at the repo root
 npx wrangler pages project create rnbp-web
 ```
 
-### Premier déploiement
+### First deployment
 
 ```bash
 pnpm --filter @rnbp/shared build
@@ -337,149 +337,149 @@ npx wrangler pages deploy apps/web/dist --project-name rnbp-web
 
 ### Custom domains
 
-Dans le dashboard Cloudflare Pages → projet `rnbp-web` → Custom Domains :
+In the Cloudflare Pages dashboard → project `rnbp-web` → Custom Domains:
 
 1. `rnbp.ca`
-2. `www.rnbp.ca` (redirect vers `rnbp.ca`)
+2. `www.rnbp.ca` (redirect to `rnbp.ca`)
 3. `nrpp.ca`
-4. `www.nrpp.ca` (redirect vers `nrpp.ca`)
+4. `www.nrpp.ca` (redirect to `nrpp.ca`)
 
 ### SPA Routing
 
-Créer `apps/web/public/_redirects` :
+Create `apps/web/public/_redirects`:
 
 ```
 /*  /index.html  200
 ```
 
-Ceci permet au routeur React de gérer toutes les routes côté client.
+This allows the React router to handle all routes on the client side.
 
 ---
 
-## 8. DNS Cloudflare
+## 8. Cloudflare DNS
 
-Les deux domaines (`rnbp.ca` et `nrpp.ca`) doivent avoir leurs nameservers pointés vers Cloudflare.
+Both domains (`rnbp.ca` and `nrpp.ca`) must have their nameservers pointing to Cloudflare.
 
 ### rnbp.ca
 
-| Type | Nom | Contenu | Proxy |
-|------|-----|---------|-------|
-| CNAME | `@` | `rnbp-web.pages.dev` | Oui |
-| CNAME | `www` | `rnbp-web.pages.dev` | Oui |
-| CNAME | `api` | `<TUNNEL_ID>.cfargotunnel.com` | Oui |
+| Type | Name | Content | Proxy |
+|------|------|---------|-------|
+| CNAME | `@` | `rnbp-web.pages.dev` | Yes |
+| CNAME | `www` | `rnbp-web.pages.dev` | Yes |
+| CNAME | `api` | `<TUNNEL_ID>.cfargotunnel.com` | Yes |
 
 ### nrpp.ca
 
-| Type | Nom | Contenu | Proxy |
-|------|-----|---------|-------|
-| CNAME | `@` | `rnbp-web.pages.dev` | Oui |
-| CNAME | `www` | `rnbp-web.pages.dev` | Oui |
+| Type | Name | Content | Proxy |
+|------|------|---------|-------|
+| CNAME | `@` | `rnbp-web.pages.dev` | Yes |
+| CNAME | `www` | `rnbp-web.pages.dev` | Yes |
 
-> **Note** : les CNAME `@` et `www` pour les Pages sont souvent configurés automatiquement par Cloudflare lors de l'ajout des custom domains.
+> **Note**: The `@` and `www` CNAME records for Pages are often configured automatically by Cloudflare when adding custom domains.
 
 ---
 
 ## 9. Backups
 
-### Configurer le backup automatique
+### Configure automatic backups
 
 ```bash
 sudo mkdir -p /opt/rnbp/backups
 sudo chown prod:prod /opt/rnbp/backups
 ```
 
-Ajouter au crontab de l'utilisateur `prod` :
+Add to the `prod` user's crontab:
 
 ```bash
 sudo -u prod crontab -e
 ```
 
-Ajouter la ligne :
+Add the following line:
 ```
 0 3 * * * /opt/rnbp/repo/ops/backup.sh >> /opt/rnbp/backups/backup.log 2>&1
 ```
 
-### Tester un restore
+### Test a restore
 
 ```bash
-# Lister les backups
+# List backups
 ls -la /opt/rnbp/backups/
 
-# Tester un restore dans une DB temporaire
+# Test a restore into a temporary database
 sudo -u postgres createdb rnbp_restore_test
-pg_restore -d rnbp_restore_test /opt/rnbp/backups/<fichier_backup>
-# Vérifier les données, puis supprimer
+pg_restore -d rnbp_restore_test /opt/rnbp/backups/<backup_file>
+# Verify the data, then delete
 sudo -u postgres dropdb rnbp_restore_test
 ```
 
-### Backup distant (optionnel)
+### Remote backup (optional)
 
-Pour envoyer les backups vers Cloudflare R2 :
+To send backups to Cloudflare R2:
 
 ```bash
 sudo apt install -y rclone
-rclone config  # Configurer un remote R2
-# Ajouter dans backup.sh : rclone copy /opt/rnbp/backups/ r2:rnbp-backups/
+rclone config  # Configure an R2 remote
+# Add to backup.sh: rclone copy /opt/rnbp/backups/ r2:rnbp-backups/
 ```
 
 ---
 
-## 10. Déploiement et mises à jour
+## 10. Deployment and Updates
 
-### Configuration locale
+### Local configuration
 
-Sur le poste de dev, créer `.deploy.env` à la racine du repo :
+On the dev machine, create `.deploy.env` at the repo root:
 
 ```bash
 cp .deploy.env.example .deploy.env
-# Éditer avec les bonnes valeurs
+# Edit with the correct values
 ```
 
-### Déployer
+### Deploy
 
 ```bash
-# Tout (frontend + backend)
+# Everything (frontend + backend)
 pnpm run deploy
 
-# Frontend seulement
+# Frontend only
 pnpm run deploy:web
 
-# Backend seulement
+# Backend only
 pnpm run deploy:api
 ```
 
-### Workflow des migrations
+### Migration workflow
 
-1. Modifier le schéma dans `apps/api/src/db/schema.ts`
-2. Générer le SQL : `cd apps/api && pnpm db:generate`
-3. Vérifier le fichier SQL dans `apps/api/drizzle/`
-4. Commit et push
-5. Déployer : `pnpm run deploy:api` — les migrations s'appliquent automatiquement au redémarrage
+1. Modify the schema in `apps/api/src/db/schema.ts`
+2. Generate the SQL: `cd apps/api && pnpm db:generate`
+3. Review the SQL file in `apps/api/drizzle/`
+4. Commit and push
+5. Deploy: `pnpm run deploy:api` — migrations are applied automatically on restart
 
 ### Rollback
 
-Le script de deploy crée un snapshot de `apps/api/dist/` et `apps/api/node_modules/` avant chaque deploy. En cas de problème :
+The deploy script creates a snapshot of `apps/api/dist/` and `apps/api/node_modules/` before each deploy. In case of issues:
 
-**Automatique** : Si le health check échoue après un deploy, le script propose un rollback automatique (ou le fait sans demander en mode non-interactif).
+**Automatic**: If the health check fails after a deploy, the script offers an automatic rollback (or performs it without prompting in non-interactive mode).
 
-**Manuel** :
+**Manual**:
 ```bash
-# Rollback au dernier snapshot
+# Rollback to the latest snapshot
 pnpm run rollback
 
-# Rollback à un snapshot spécifique (2 = avant-dernier)
+# Rollback to a specific snapshot (2 = second most recent)
 pnpm run rollback 2
 ```
 
-**Snapshots** : Stockés dans `/opt/rnbp/backups/rollback/` sur le serveur prod. Rétention : 3 derniers.
+**Snapshots**: Stored in `/opt/rnbp/backups/rollback/` on the prod server. Retention: 3 most recent.
 
-**Rollback DB** : Si une migration a été appliquée, les dumps sont dans `/opt/rnbp/backups/rollback/db_*.sql.gz`. Pour restaurer :
+**DB Rollback**: If a migration was applied, dumps are in `/opt/rnbp/backups/rollback/db_*.sql.gz`. To restore:
 ```bash
 ssh prod@192.168.50.241
 gunzip -c /opt/rnbp/backups/rollback/db_YYYYMMDD_HHMMSS.sql.gz | psql "$DATABASE_URL"
 ```
 
-**Désactiver l'auto-rollback** : `pnpm run deploy:api -- --no-auto-rollback`
+**Disable auto-rollback**: `pnpm run deploy:api -- --no-auto-rollback`
 
 ---
 
@@ -487,22 +487,22 @@ gunzip -c /opt/rnbp/backups/rollback/db_YYYYMMDD_HHMMSS.sql.gz | psql "$DATABASE
 
 ### UptimeRobot
 
-Configurer un moniteur sur [UptimeRobot](https://uptimerobot.com/) (gratuit) :
+Set up a monitor on [UptimeRobot](https://uptimerobot.com/) (free):
 
-- **URL** : `https://api.rnbp.ca/api/health`
-- **Intervalle** : 5 minutes
-- **Alerte** : email
+- **URL**: `https://api.rnbp.ca/api/health`
+- **Interval**: 5 minutes
+- **Alert**: email
 
 ### Logs
 
 ```bash
-# Logs API en temps réel
+# Live API logs
 ssh prod@192.168.50.241 'sudo journalctl -u rnbp-api -f'
 
-# Logs tunnel
+# Tunnel logs
 ssh prod@192.168.50.241 'sudo journalctl -u cloudflared -f'
 
-# Logs des 24 dernières heures
+# Logs from the last 24 hours
 ssh prod@192.168.50.241 'sudo journalctl -u rnbp-api --since "24 hours ago"'
 ```
 
@@ -510,58 +510,58 @@ ssh prod@192.168.50.241 'sudo journalctl -u rnbp-api --since "24 hours ago"'
 
 ## 12. Troubleshooting
 
-### Le service API ne démarre pas
+### The API service does not start
 
 ```bash
 sudo journalctl -u rnbp-api -n 100
-# Vérifier les erreurs de config (.env manquant, DB inaccessible, etc.)
+# Check for config errors (missing .env, unreachable DB, etc.)
 
-# Tester manuellement
+# Test manually
 cd /opt/rnbp/repo/apps/api
 sudo -u prod node --env-file=/opt/rnbp/.env dist/index.js
 ```
 
-### Le tunnel Cloudflare est déconnecté
+### The Cloudflare tunnel is disconnected
 
 ```bash
 sudo systemctl status cloudflared
 sudo journalctl -u cloudflared -n 50
 
-# Redémarrer
+# Restart
 sudo systemctl restart cloudflared
 ```
 
-### Les migrations échouent
+### Migrations fail
 
-Les migrations s'appliquent automatiquement au démarrage. Si le backend ne démarre pas à cause d'une migration :
+Migrations are applied automatically on startup. If the backend does not start because of a migration:
 
 ```bash
-# Vérifier la connexion DB
+# Check DB connection
 psql -h 192.168.50.239 -U rnbp -d rnbp_prod -c "SELECT 1;"
 
-# Vérifier les fichiers SQL
+# Check SQL files
 ls -la /opt/rnbp/repo/apps/api/drizzle/
 
-# Exécuter manuellement (debug)
+# Run manually (debug)
 cd /opt/rnbp/repo/apps/api
 sudo -u prod node --env-file=/opt/rnbp/.env dist/migrate.js
 ```
 
-### Espace disque
+### Disk space
 
 ```bash
-# Taille des uploads
+# Uploads size
 du -sh /opt/rnbp/uploads/
 
-# Taille des backups
+# Backups size
 du -sh /opt/rnbp/backups/
 
-# Nettoyer les vieux backups (garder 7 jours)
+# Clean old backups (keep 7 days)
 find /opt/rnbp/backups/ -name "*.sql.gz" -mtime +7 -delete
 ```
 
-### L'API répond 502 depuis internet mais fonctionne en local
+### The API returns 502 from the internet but works locally
 
-1. Vérifier que le tunnel est connecté : `sudo systemctl status cloudflared`
-2. Vérifier que l'API écoute : `curl http://localhost:3000/api/health`
-3. Vérifier la config du tunnel : `/opt/rnbp/.cloudflared/config.yml`
+1. Check that the tunnel is connected: `sudo systemctl status cloudflared`
+2. Check that the API is listening: `curl http://localhost:3000/api/health`
+3. Check the tunnel config: `/opt/rnbp/.cloudflared/config.yml`

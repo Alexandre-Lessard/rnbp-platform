@@ -37,7 +37,7 @@ const oauthCompleteSchema = z.object({
   email: z.string().email(),
 });
 
-// ── HMAC token pour le flow "email manquant" ─────────────────────────
+// ── HMAC token for the "missing email" flow ──────────────────────────
 
 const OAUTH_PENDING_EXPIRY = 5 * 60 * 1000; // 5 minutes
 
@@ -91,7 +91,7 @@ function verifyOAuthPendingToken(token: string): {
   }
 }
 
-// ── Logique commune OAuth ────────────────────────────────────────────
+// ── Common OAuth logic ───────────────────────────────────────────────
 
 type OAuthProvider = "google" | "microsoft";
 
@@ -108,7 +108,7 @@ async function handleOAuthLogin(
   const db = getDb();
   const idCol = providerIdColumn[provider];
 
-  // Si pas d'email, retourner un token pending
+  // No email from provider — return a pending token
   if (!profile.email) {
     const pendingToken = createOAuthPendingToken({
       provider,
@@ -124,7 +124,7 @@ async function handleOAuthLogin(
 
   const email = profile.email.toLowerCase();
 
-  // Chercher par providerId
+  // Look up by providerId
   const [byProvider] = await db
     .select()
     .from(users)
@@ -134,7 +134,7 @@ async function handleOAuthLogin(
   let user = byProvider;
 
   if (!user) {
-    // Chercher par email
+    // Look up by email
     const [byEmail] = await db
       .select()
       .from(users)
@@ -142,7 +142,7 @@ async function handleOAuthLogin(
       .limit(1);
 
     if (byEmail) {
-      // Lier le provider au compte existant
+      // Link provider to existing account
       await db
         .update(users)
         .set({
@@ -153,7 +153,7 @@ async function handleOAuthLogin(
         .where(eq(users.id, byEmail.id));
       user = { ...byEmail, [idCol]: profile.providerId, emailVerified: true };
     } else {
-      // Créer un nouveau compte
+      // Create new account
       const clientNumber = await generateClientNumber();
       const [created] = await db
         .insert(users)
@@ -171,7 +171,7 @@ async function handleOAuthLogin(
     }
   }
 
-  // Émettre les tokens
+  // Issue tokens
   const accessToken = await signAccessToken(user!.id);
   const refreshToken = await signRefreshToken(user!.id);
 
@@ -269,7 +269,7 @@ export async function oauthRoutes(app: FastifyInstance) {
     },
   );
 
-  // POST /auth/oauth-complete (email manquant)
+  // POST /auth/oauth-complete (missing email flow)
   app.post(
     "/auth/oauth-complete",
     { config: { rateLimit: { max: 5, timeWindow: "1 minute" } } },
@@ -287,7 +287,7 @@ export async function oauthRoutes(app: FastifyInstance) {
         email: body.email,
         firstName: pending.firstName,
         lastName: pending.lastName,
-        emailVerified: false, // Email saisi manuellement → pas vérifié
+        emailVerified: false, // Manually entered email — not verified
       };
 
       const result = await handleOAuthLogin(
@@ -300,7 +300,7 @@ export async function oauthRoutes(app: FastifyInstance) {
         throw badRequest("Erreur inattendue");
       }
 
-      // Envoyer un courriel de vérification (email saisi manuellement)
+      // Send verification email (manually entered email)
       const config = getConfig();
       const verifyTokenStr = createEmailToken(
         result.user.id,

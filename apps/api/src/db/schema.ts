@@ -12,10 +12,10 @@ import {
 
 // ── Enums ──────────────────────────────────────────────────────────────
 
-// Transitions d'état des items :
-//   active → stolen      (déclaration de vol via POST /reports)
-//   stolen → recovered   (récupération du bien — admin/futur)
-//   active → transferred (transfert de propriété — futur)
+// Item status transitions:
+//   active → stolen      (theft report via POST /reports)
+//   stolen → recovered   (item recovered — admin/future)
+//   active → transferred (ownership transfer — future)
 export const itemStatusEnum = pgEnum("item_status", [
   "active",
   "stolen",
@@ -23,10 +23,10 @@ export const itemStatusEnum = pgEnum("item_status", [
   "transferred",
 ]);
 
-// Transitions d'état des déclarations de vol :
-//   pending → confirmed  (validation par admin — futur)
-//   pending → dismissed  (rejeté / annulé)
-//   confirmed → resolved (bien récupéré)
+// Theft report status transitions:
+//   pending → confirmed  (admin validation — future)
+//   pending → dismissed  (rejected / cancelled)
+//   confirmed → resolved (item recovered)
 export const reportStatusEnum = pgEnum("report_status", [
   "pending",
   "confirmed",
@@ -48,8 +48,8 @@ export const users = pgTable("users", {
   emailVerified: boolean("email_verified").notNull().default(false),
   isAdmin: boolean("is_admin").notNull().default(false),
   clientNumber: varchar("client_number", { length: 9 }).unique(),
-  // Révocation de masse : tous les tokens émis AVANT ce timestamp sont refusés.
-  // Mis à jour lors d'un reset de mot de passe pour invalider toutes les sessions.
+  // Mass revocation: all tokens issued BEFORE this timestamp are rejected.
+  // Updated on password reset to invalidate all sessions.
   tokenRevokedBefore: timestamp("token_revoked_before", {
     withTimezone: true,
   }),
@@ -70,7 +70,7 @@ export const sessions = pgTable(
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    tokenHash: text("token_hash").notNull(), // SHA-256 du refresh token (jamais stocké en clair)
+    tokenHash: text("token_hash").notNull(), // SHA-256 of the refresh token (never stored in plaintext)
     deviceInfo: text("device_info"),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -99,8 +99,8 @@ export const items = pgTable(
     estimatedValue: integer("estimated_value"),
     purchaseDate: timestamp("purchase_date", { withTimezone: true }),
     status: itemStatusEnum("status").notNull().default("active"),
-    // Format: RNBP-XXXXXXXX — assigné manuellement par l'admin lors du traitement des commandes
-    // Null = pas encore assigné (en attente d'achat de stickers)
+    // Format: RNBP-XXXXXXXX — manually assigned by admin when processing orders
+    // Null = not yet assigned (pending sticker purchase)
     rnbpNumber: varchar("rnbp_number", { length: 13 }).unique(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -193,8 +193,8 @@ export const insuranceRequests = pgTable("insurance_requests", {
     .references(() => users.id, { onDelete: "cascade" }),
   insurerName: varchar("insurer_name", { length: 100 }).notNull(),
   messageContent: text("message_content").notNull(),
-  sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(), // Quand l'email a été envoyé à l'assureur
-  createdAt: timestamp("created_at", { withTimezone: true }) // Quand la demande a été créée (peut différer si envoi différé)
+  sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(), // When the email was sent to the insurer
+  createdAt: timestamp("created_at", { withTimezone: true }) // When the request was created (may differ if deferred send)
     .notNull()
     .defaultNow(),
 });

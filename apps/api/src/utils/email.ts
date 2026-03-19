@@ -127,7 +127,7 @@ export function buildOrderNotificationEmail(opts: {
     }
   }
 
-  // Détail des produits
+  // Product line items
   const productRowsHtml = opts.productLines
     .map(
       (p) =>
@@ -135,9 +135,9 @@ export function buildOrderNotificationEmail(opts: {
     )
     .join("");
 
-  // Numéros de taxes (placeholders — à remplacer quand disponibles)
-  const TPS_NUMBER = "XXXXX XXXX RT0001"; // TODO: remplacer par le vrai numéro TPS
-  const TVQ_NUMBER = "XXXX XXXX XXXX TQ0001"; // TODO: remplacer par le vrai numéro TVQ
+  // Tax numbers (placeholders — replace when available)
+  const TPS_NUMBER = "XXXXX XXXX RT0001"; // TODO: replace with actual GST number
+  const TVQ_NUMBER = "XXXX XXXX XXXX TQ0001"; // TODO: replace with actual QST number
 
   return {
     to: adminEmail,

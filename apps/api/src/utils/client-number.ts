@@ -3,9 +3,9 @@ import { getDb } from "../db/client.js";
 import { users } from "../db/schema.js";
 
 /**
- * Génère un numéro de client aléatoire à 9 chiffres (100000000–999999999).
- * Vérifie l'unicité en DB avec retry (max 10 tentatives).
- * Accepte un objet db/tx pour fonctionner dans une transaction.
+ * Generate a random 9-digit client number (100000000–999999999).
+ * Checks uniqueness in DB with retry (max 10 attempts).
+ * Accepts a db/tx object to work within a transaction.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateClientNumber(conn?: any): Promise<string> {
@@ -26,5 +26,5 @@ export async function generateClientNumber(conn?: any): Promise<string> {
     if (!existing) return num;
   }
 
-  throw new Error("Impossible de générer un numéro de client unique");
+  throw new Error("Failed to generate a unique client number");
 }

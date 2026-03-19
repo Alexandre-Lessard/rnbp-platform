@@ -15,10 +15,10 @@ export async function exchangeGoogleCode(
 ): Promise<OAuthProfile> {
   const config = getConfig();
   if (!config.GOOGLE_CLIENT_ID || !config.GOOGLE_CLIENT_SECRET) {
-    throw new Error("Google OAuth non configuré");
+    throw new Error("Google OAuth not configured");
   }
 
-  // Échanger le code contre un access token
+  // Exchange the code for an access token
   const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -42,7 +42,7 @@ export async function exchangeGoogleCode(
     token_type: string;
   };
 
-  // Récupérer le profil utilisateur
+  // Fetch user profile
   const userRes = await fetch(
     "https://www.googleapis.com/oauth2/v3/userinfo",
     {
@@ -79,10 +79,10 @@ export async function exchangeMicrosoftCode(
 ): Promise<OAuthProfile> {
   const config = getConfig();
   if (!config.MICROSOFT_CLIENT_ID || !config.MICROSOFT_CLIENT_SECRET) {
-    throw new Error("Microsoft OAuth non configuré");
+    throw new Error("Microsoft OAuth not configured");
   }
 
-  // Échanger le code contre un access token
+  // Exchange the code for an access token
   const tokenRes = await fetch(
     "https://login.microsoftonline.com/common/oauth2/v2.0/token",
     {
@@ -110,7 +110,7 @@ export async function exchangeMicrosoftCode(
     token_type: string;
   };
 
-  // Récupérer le profil via Microsoft Graph
+  // Fetch profile via Microsoft Graph
   const userRes = await fetch("https://graph.microsoft.com/v1.0/me", {
     headers: { Authorization: `Bearer ${tokenData.access_token}` },
   });
@@ -128,7 +128,7 @@ export async function exchangeMicrosoftCode(
     displayName?: string;
   };
 
-  // Déterminer l'email : mail > userPrincipalName (sauf .onmicrosoft.com)
+  // Determine email: mail > userPrincipalName (except .onmicrosoft.com)
   let email: string | null = profile.mail ?? null;
   if (!email && profile.userPrincipalName) {
     if (!profile.userPrincipalName.endsWith(".onmicrosoft.com")) {
@@ -141,6 +141,6 @@ export async function exchangeMicrosoftCode(
     email,
     firstName: profile.givenName || profile.displayName || "",
     lastName: profile.surname || "",
-    emailVerified: !!email, // Les comptes Microsoft avec email ont un email vérifié
+    emailVerified: !!email, // Microsoft accounts with a verified email
   };
 }
