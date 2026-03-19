@@ -37,3 +37,6 @@ jobs:
 
       - name: Build web
         run: pnpm --filter @rnbp/web build
+
+      - name: Run tests
+        run: pnpm test
