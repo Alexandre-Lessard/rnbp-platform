@@ -251,7 +251,7 @@ const FAQ_EN = [
   },
 ];
 
-// Dérivé de META — une seule source de vérité
+// Derived from META — single source of truth
 const PUBLIC_PATHS = Object.entries(META.fr.pages)
   .filter(([, meta]) => !meta.robots?.includes("noindex"))
   .map(([path]) => path);

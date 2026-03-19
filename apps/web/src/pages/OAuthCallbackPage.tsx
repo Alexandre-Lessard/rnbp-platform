@@ -23,7 +23,7 @@ export function OAuthCallbackPage() {
   const processed = useRef(false);
   const redirectTo = useRef(ROUTES.dashboard);
 
-  // Déterminer le provider depuis le pathname
+  // Determine provider from pathname
   const provider: OAuthProvider = location.pathname.includes("/google/")
     ? "google"
     : "microsoft";

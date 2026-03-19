@@ -87,7 +87,7 @@ export function RegisterItemPage() {
   const [backendDown, setBackendDown] = useState(false);
   const [completed, setCompleted] = useState(false);
 
-  // Connecté = 3 steps, non connecté = 4
+  // Logged in = 3 steps, logged out = 4
   const totalSteps = user ? 3 : 4;
 
   // Scroll to top on step change

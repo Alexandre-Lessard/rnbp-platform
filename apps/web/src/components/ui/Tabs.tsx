@@ -3,10 +3,10 @@ import type { ReactNode } from "react";
 /**
  * Reusable Tabs component.
  *
- * CONVENTION — Largeur fixe FR/EN :
- * Les tabs doivent avoir une largeur fixe (`minWidth`) pour que l'UI ne bouge
- * pas quand on switch entre français et anglais. Passer `minWidth` (en px)
- * basé sur la langue la plus longue (généralement le français).
+ * CONVENTION — Fixed width FR/EN:
+ * Tabs must have a fixed width (`minWidth`) so the UI doesn't shift
+ * when switching between French and English. Pass `minWidth` (in px)
+ * based on the longest language (usually French).
  */
 
 export type TabItem<T extends string = string> = {
