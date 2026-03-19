@@ -18,4 +18,6 @@ export const ROUTES = {
   reportTheft: "/report-theft",
   adminOrders: "/admin/orders",
   adminOrderDetail: (id: string) => `/admin/orders/${id}`,
+  googleCallback: "/auth/google/callback",
+  microsoftCallback: "/auth/microsoft/callback",
 } as const;

@@ -15,7 +15,7 @@ import {
   verifyToken,
   hashToken,
 } from "../utils/tokens.js";
-import { conflict, unauthorized, badRequest } from "../utils/errors.js";
+import { AppError, conflict, unauthorized, badRequest } from "../utils/errors.js";
 import { requireAuth } from "../middleware/auth.js";
 import { generateClientNumber } from "../utils/client-number.js";
 import {
@@ -128,6 +128,10 @@ export async function authRoutes(app: FastifyInstance) {
 
     if (!user) {
       throw unauthorized("Courriel ou mot de passe incorrect");
+    }
+
+    if (!user.passwordHash) {
+      throw new AppError(401, "SOCIAL_ACCOUNT", "This account uses social login");
     }
 
     const valid = await verifyPassword(user.passwordHash, body.password);

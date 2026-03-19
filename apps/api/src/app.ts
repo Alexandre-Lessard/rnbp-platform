@@ -13,6 +13,7 @@ import { insuranceRoutes } from "./routes/insurance.js";
 import { contactRoutes } from "./routes/contact.js";
 import { shopRoutes } from "./routes/shop.js";
 import { adminRoutes } from "./routes/admin.js";
+import { oauthRoutes } from "./routes/oauth.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { securityHeaders } from "./middleware/security-headers.js";
 
@@ -62,6 +63,7 @@ export async function buildApp() {
   await app.register(contactRoutes, { prefix: "/api" });
   await app.register(shopRoutes, { prefix: "/api" });
   await app.register(adminRoutes, { prefix: "/api" });
+  await app.register(oauthRoutes, { prefix: "/api" });
 
   return app;
 }

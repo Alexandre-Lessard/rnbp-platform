@@ -31,6 +31,10 @@ type AuthState = {
   backendAvailable: boolean;
 };
 
+type OAuthResult =
+  | { success: true; user: User }
+  | { needsEmail: true; pendingToken: string };
+
 type AuthContextType = AuthState & {
   login: (email: string, password: string) => Promise<void>;
   register: (data: {
@@ -40,6 +44,13 @@ type AuthContextType = AuthState & {
     lastName: string;
     phone?: string;
   }) => Promise<void>;
+  loginWithOAuth: (
+    provider: "google" | "microsoft",
+    code: string,
+    redirectUri: string,
+    codeVerifier: string,
+  ) => Promise<OAuthResult>;
+  completeOAuth: (token: string, email: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<boolean>;
   refreshUser: () => Promise<void>;
@@ -201,6 +212,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const loginWithOAuth = useCallback(
+    async (
+      provider: "google" | "microsoft",
+      code: string,
+      redirectUri: string,
+      codeVerifier: string,
+    ): Promise<OAuthResult> => {
+      const data = await apiRequest<{
+        user?: User;
+        accessToken?: string;
+        refreshToken?: string;
+        needsEmail?: boolean;
+        pendingToken?: string;
+      }>(`/auth/${provider}`, {
+        method: "POST",
+        body: { code, redirectUri, codeVerifier },
+      });
+
+      if (data.needsEmail && data.pendingToken) {
+        return { needsEmail: true, pendingToken: data.pendingToken };
+      }
+
+      setAccessToken(data.accessToken!);
+      setRefreshToken(data.refreshToken!);
+      setState((prev) => ({
+        ...prev,
+        user: data.user!,
+        backendAvailable: true,
+      }));
+      return { success: true, user: data.user! };
+    },
+    [],
+  );
+
+  const completeOAuth = useCallback(async (token: string, email: string) => {
+    const data = await apiRequest<{
+      user: User;
+      accessToken: string;
+      refreshToken: string;
+    }>("/auth/oauth-complete", {
+      method: "POST",
+      body: { token, email },
+    });
+
+    setAccessToken(data.accessToken);
+    setRefreshToken(data.refreshToken);
+    setState((prev) => ({
+      ...prev,
+      user: data.user,
+      backendAvailable: true,
+    }));
+  }, []);
+
   const logout = useCallback(async () => {
     const rt = getRefreshToken();
     let networkDown = false;
@@ -226,7 +290,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ ...state, login, register, logout, refreshAuth, refreshUser }}
+      value={{ ...state, login, register, loginWithOAuth, completeOAuth, logout, refreshAuth, refreshUser }}
     >
       {children}
     </AuthContext.Provider>

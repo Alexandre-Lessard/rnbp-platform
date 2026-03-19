@@ -39,10 +39,12 @@ export const reportStatusEnum = pgEnum("report_status", [
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
+  passwordHash: text("password_hash"),
   firstName: varchar("first_name", { length: 100 }).notNull(),
   lastName: varchar("last_name", { length: 100 }).notNull(),
   phone: varchar("phone", { length: 20 }),
+  googleId: varchar("google_id", { length: 255 }).unique(),
+  microsoftId: varchar("microsoft_id", { length: 255 }).unique(),
   emailVerified: boolean("email_verified").notNull().default(false),
   isAdmin: boolean("is_admin").notNull().default(false),
   clientNumber: varchar("client_number", { length: 9 }).unique(),

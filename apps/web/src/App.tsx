@@ -57,6 +57,7 @@ import { AdminOrderDetailPage } from "@/pages/AdminOrderDetailPage";
 import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
 import { EmailPendingPage } from "@/pages/EmailPendingPage";
 import { EditItemPage } from "@/pages/EditItemPage";
+import { OAuthCallbackPage } from "@/pages/OAuthCallbackPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 
 function App() {
@@ -89,6 +90,8 @@ function App() {
           <Route path={ROUTES.shopSuccess} element={<BoutiqueSuccessPage />} />
           <Route path={ROUTES.verifyEmail} element={<VerifyEmailPage />} />
           <Route path={ROUTES.emailPending} element={<EmailPendingPage />} />
+          <Route path={ROUTES.googleCallback} element={<OAuthCallbackPage />} />
+          <Route path={ROUTES.microsoftCallback} element={<OAuthCallbackPage />} />
           <Route
             path={ROUTES.dashboard}
             element={

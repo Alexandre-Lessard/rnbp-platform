@@ -138,6 +138,14 @@ export type SiteContent = {
     registerLink: string;
     hasAccount: string;
     loginLink: string;
+    orSeparator: string;
+    googleButton: string;
+    microsoftButton: string;
+    oauthLoading: string;
+    oauthError: string;
+    oauthNoEmail: string;
+    oauthEmailPrompt: string;
+    socialAccountError: string;
   };
   dashboard?: {
     heading: string;

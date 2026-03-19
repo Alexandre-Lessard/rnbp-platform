@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { ROUTES } from "@/routes/routes";
 
@@ -34,11 +35,16 @@ export function LoginPage() {
         setBackendDown(true);
         return;
       }
-      setError(
-        err instanceof Error
-          ? err.message
-          : (t.errors?.loginError ?? "Erreur de connexion"),
-      );
+      const code = (err as { code?: string })?.code;
+      if (code === "SOCIAL_ACCOUNT") {
+        setError(t.auth?.socialAccountError ?? "Ce compte utilise une connexion Google ou Microsoft.");
+      } else {
+        setError(
+          err instanceof Error
+            ? err.message
+            : (t.errors?.loginError ?? "Erreur de connexion"),
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -67,7 +73,11 @@ export function LoginPage() {
             "Connectez-vous à votre compte RNBP"}
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+        <div className="mt-8">
+          <OAuthButtons redirect={redirect} />
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
             <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
               {error}

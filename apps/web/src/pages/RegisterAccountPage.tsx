@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { ROUTES } from "@/routes/routes";
 
@@ -78,7 +79,11 @@ export function RegisterAccountPage() {
             "Inscrivez-vous pour enregistrer vos biens"}
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+        <div className="mt-8">
+          <OAuthButtons />
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
             <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
               {error}
