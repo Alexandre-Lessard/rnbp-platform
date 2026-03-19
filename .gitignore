@@ -5,8 +5,6 @@ dist
 .env.*
 .deploy.env
 !.env.example
-!.env.production
-!.env.development
 !.env.test
 .wrangler
 npm-debug.log*

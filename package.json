@@ -1,6 +1,7 @@
 {
   "name": "rnbp",
   "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "dev": "pnpm --filter @rnbp/web dev",
     "dev:api": "pnpm --filter @rnbp/api dev",
