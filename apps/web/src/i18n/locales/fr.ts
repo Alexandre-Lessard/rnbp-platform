@@ -79,8 +79,8 @@ const fr: SiteContent = {
     trustBadges: [
       { label: "Donn\u00e9es h\u00e9berg\u00e9es au Canada" },
       { label: "Chiffrement avanc\u00e9" },
-      { label: "Services policiers partenaires" },
-      { label: "Compatible avec les assureurs" },
+      { label: "Accès sécurisé pour les services policiers" },
+      { label: "Reconnu par les assureurs" },
     ],
   },
   cycle: {
@@ -181,7 +181,7 @@ const fr: SiteContent = {
     headingLine1: "Commencez \u00e0 prot\u00e9ger",
     headingLine2: "vos biens maintenant",
     description:
-      "Cr\u00e9ez un compte et documentez vos possessions de valeur pour faciliter leur identification et leur restitution.",
+      "Créez un compte gratuitement et documentez vos possessions de valeur pour faciliter leur identification et leur restitution.",
     imageAlt: "Personnes discutant autour d\u2019une table",
   },
   threeSteps: {
@@ -466,7 +466,8 @@ const fr: SiteContent = {
     serialLabel: "Numéro de série (original)",
     serialExplanation: "Si votre bien possède un numéro de série du fabricant, entrez-le ici.",
     valueLabel: "Valeur estimée ($)",
-    descriptionLabel: "Description",
+    descriptionLabel: "Description et signes distinctifs",
+    descriptionHelper: "Décrivez tout signe particulier pouvant identifier votre bien : couleur, accessoires, modifications, marques d'usure, etc.",
     termsCheckbox: "J'accepte les conditions d'utilisation",
     continueButton: "Continuer",
     backButton: "Retour",

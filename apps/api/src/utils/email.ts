@@ -63,6 +63,11 @@ export function buildContactNotificationEmail(
   type: string,
   message: string,
 ): EmailPayload {
+  const config = getConfig();
+  const adminEmail =
+    config.ADMIN_CONTACT_EMAIL ||
+    (config.NODE_ENV === "production" ? "info@rnbp.ca" : "dev@rnbp.ca");
+
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
   const safeCompany = company ? escapeHtml(company) : "—";
@@ -70,7 +75,7 @@ export function buildContactNotificationEmail(
   const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
 
   return {
-    to: "partenaires@rnbp.ca",
+    to: adminEmail,
     subject: `Nouveau message partenaire — ${name}`,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">

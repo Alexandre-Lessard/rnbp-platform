@@ -189,6 +189,7 @@ export type SiteContent = {
     serialExplanation: string;
     valueLabel: string;
     descriptionLabel: string;
+    descriptionHelper: string;
     termsCheckbox: string;
     continueButton: string;
     backButton: string;

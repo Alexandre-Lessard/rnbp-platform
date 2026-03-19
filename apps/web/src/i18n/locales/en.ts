@@ -79,8 +79,8 @@ const en: SiteContent = {
     trustBadges: [
       { label: "Data hosted in Canada" },
       { label: "Advanced encryption" },
-      { label: "Partner police services" },
-      { label: "Compatible with insurers" },
+      { label: "Secure access for law enforcement" },
+      { label: "Recognized by insurers" },
     ],
   },
   cycle: {
@@ -180,7 +180,7 @@ const en: SiteContent = {
     headingLine1: "Start protecting",
     headingLine2: "your belongings now",
     description:
-      "Create an account and document your valuable possessions to facilitate their identification and recovery.",
+      "Create a free account and document your valuable possessions to facilitate their identification and recovery.",
     imageAlt: "People discussing around a table",
   },
   threeSteps: {
@@ -460,7 +460,8 @@ const en: SiteContent = {
     serialLabel: "Serial number (original)",
     serialExplanation: "If your item has a manufacturer serial number, enter it here.",
     valueLabel: "Estimated value ($)",
-    descriptionLabel: "Description",
+    descriptionLabel: "Description and distinguishing features",
+    descriptionHelper: "Describe any distinguishing features that can identify your item: colour, accessories, modifications, signs of wear, etc.",
     termsCheckbox: "I accept the terms of service",
     continueButton: "Continue",
     backButton: "Back",

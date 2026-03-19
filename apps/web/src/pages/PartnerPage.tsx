@@ -372,7 +372,7 @@ export function PartnerPage() {
                   htmlFor="contact-type"
                   className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
                 >
-                  {p.typeLabel}
+                  {p.typeLabel} <span className="text-[var(--rcb-primary)]">*</span>
                 </label>
                 <select
                   id="contact-type"

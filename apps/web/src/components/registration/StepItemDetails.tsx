@@ -167,6 +167,9 @@ export function StepItemDetails({
           onChange={(e) => update("description", e.target.value)}
           className="w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 py-3 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
         />
+        <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
+          {reg.descriptionHelper}
+        </p>
       </div>
 
       <div className="flex items-start gap-3">

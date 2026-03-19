@@ -47,6 +47,7 @@ const envSchema = z.object({
 
   // Admin notifications
   ADMIN_ORDER_EMAIL: z.string().email().optional(),
+  ADMIN_CONTACT_EMAIL: z.string().email().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
