@@ -6,7 +6,8 @@ import { getDb } from "../db/client.js";
 import { users, items, sessions } from "../db/schema.js";
 import { hashPassword } from "../utils/password.js";
 import { signAccessToken, signRefreshToken, hashToken } from "../utils/tokens.js";
-import { conflict } from "../utils/errors.js";
+import { EMAIL_ALREADY_EXISTS } from "@rnbp/shared";
+import { AppError } from "../utils/errors.js";
 import { generateClientNumber } from "../utils/client-number.js";
 import {
   sendEmail,
@@ -37,7 +38,7 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
         .limit(1);
 
       if (existing) {
-        throw conflict("Un compte avec cette adresse courriel existe déjà");
+        throw new AppError(409, EMAIL_ALREADY_EXISTS, "An account with this email already exists");
       }
 
       const clientNumber = await generateClientNumber(tx);

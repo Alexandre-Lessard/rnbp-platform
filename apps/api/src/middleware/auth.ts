@@ -3,7 +3,15 @@ import { verifyToken } from "../utils/tokens.js";
 import { getDb } from "../db/client.js";
 import { users } from "../db/schema.js";
 import { eq } from "drizzle-orm";
-import { unauthorized, forbidden } from "../utils/errors.js";
+import {
+  TOKEN_MISSING,
+  TOKEN_INVALID,
+  USER_NOT_FOUND,
+  TOKEN_REVOKED,
+  ADMIN_REQUIRED,
+  EMAIL_NOT_VERIFIED,
+} from "@rnbp/shared";
+import { AppError } from "../utils/errors.js";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -19,7 +27,7 @@ export async function requireAuth(
 ) {
   const header = request.headers.authorization;
   if (!header?.startsWith("Bearer ")) {
-    throw unauthorized("Token manquant");
+    throw new AppError(401, TOKEN_MISSING, "Missing token");
   }
 
   const token = header.slice(7);
@@ -28,11 +36,11 @@ export async function requireAuth(
   try {
     payload = await verifyToken(token);
   } catch {
-    throw unauthorized("Token invalide ou expiré");
+    throw new AppError(401, TOKEN_INVALID, "Invalid or expired token");
   }
 
   if (payload.type !== "access") {
-    throw unauthorized("Type de token invalide");
+    throw new AppError(401, TOKEN_INVALID, "Invalid token type");
   }
 
   // Check user exists and token wasn't globally revoked
@@ -49,13 +57,13 @@ export async function requireAuth(
     .limit(1);
 
   if (!user) {
-    throw unauthorized("Utilisateur introuvable");
+    throw new AppError(401, USER_NOT_FOUND, "User not found");
   }
 
   if (user.tokenRevokedBefore) {
     const tokenIssuedAt = new Date(payload.iat * 1000);
     if (tokenIssuedAt < user.tokenRevokedBefore) {
-      throw unauthorized("Token révoqué. Veuillez vous reconnecter.");
+      throw new AppError(401, TOKEN_REVOKED, "Token revoked. Please sign in again.");
     }
   }
 
@@ -70,11 +78,11 @@ export async function requireAdmin(
 ) {
   await requireAuth(request, reply);
   if (!request.isAdmin) {
-    throw forbidden("Accès administrateur requis");
+    throw new AppError(403, ADMIN_REQUIRED, "Admin access required");
   }
 }
 
-// Tente d'extraire l'user sans bloquer (auth optionnelle)
+// Try to extract the user without blocking (optional auth)
 export async function tryAuth(
   request: FastifyRequest,
   _reply: FastifyReply,
@@ -109,6 +117,6 @@ export async function requireVerifiedEmail(
 ) {
   await requireAuth(request, reply);
   if (!request.emailVerified) {
-    throw forbidden("Veuillez vérifier votre adresse courriel avant de continuer.");
+    throw new AppError(403, EMAIL_NOT_VERIFIED, "Please verify your email before continuing.");
   }
 }

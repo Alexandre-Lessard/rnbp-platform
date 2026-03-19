@@ -1,5 +1,6 @@
 import { fileTypeFromBuffer } from "file-type";
-import { badRequest } from "./errors.js";
+import { FILE_TYPE_UNKNOWN, FILE_TYPE_NOT_ALLOWED, FILE_TOO_LARGE } from "@rnbp/shared";
+import { AppError } from "./errors.js";
 
 const ALLOWED_IMAGE_MIMES = new Set([
   "image/jpeg",
@@ -23,15 +24,17 @@ export async function validateFileType(
   const result = await fileTypeFromBuffer(buffer);
 
   if (!result) {
-    throw badRequest("Type de fichier non reconnu");
+    throw new AppError(400, FILE_TYPE_UNKNOWN, "Unrecognized file type");
   }
 
   const allowed =
     allowedSet === "image" ? ALLOWED_IMAGE_MIMES : ALLOWED_DOC_MIMES;
 
   if (!allowed.has(result.mime)) {
-    throw badRequest(
-      `Type de fichier non autorisé : ${result.mime}. Types acceptés : ${[...allowed].join(", ")}`,
+    throw new AppError(
+      400,
+      FILE_TYPE_NOT_ALLOWED,
+      `File type not allowed: ${result.mime}. Accepted: ${[...allowed].join(", ")}`,
     );
   }
 
@@ -47,6 +50,6 @@ export function validateFileSize(
 ): void {
   if (buffer.length > maxSizeBytes) {
     const maxMB = Math.round(maxSizeBytes / (1024 * 1024));
-    throw badRequest(`Fichier trop volumineux. Taille maximale : ${maxMB} Mo`);
+    throw new AppError(400, FILE_TOO_LARGE, `File too large. Maximum size: ${maxMB} MB`);
   }
 }

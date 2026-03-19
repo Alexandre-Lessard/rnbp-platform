@@ -757,6 +757,54 @@ const fr: SiteContent = {
     newsletterError: "Une erreur est survenue.",
     newsletterUnavailable: "Service temporairement indisponible. Réessayez plus tard.",
   },
+  apiErrors: {
+    // Auth
+    INVALID_CREDENTIALS: "Courriel ou mot de passe incorrect",
+    SOCIAL_ACCOUNT: "Ce compte utilise une connexion Google ou Microsoft.",
+    EMAIL_ALREADY_EXISTS: "Un compte avec cette adresse courriel existe déjà",
+    TOKEN_MISSING: "Token manquant",
+    TOKEN_INVALID: "Token invalide ou expiré",
+    TOKEN_REVOKED: "Token révoqué. Veuillez vous reconnecter.",
+    USER_NOT_FOUND: "Utilisateur introuvable",
+    ADMIN_REQUIRED: "Accès administrateur requis",
+    EMAIL_NOT_VERIFIED: "Veuillez vérifier votre adresse courriel avant de continuer.",
+    REFRESH_TOKEN_REQUIRED: "Refresh token requis",
+    SESSION_NOT_FOUND: "Session introuvable ou expirée",
+    RESET_LINK_INVALID: "Lien de réinitialisation invalide ou expiré",
+    VERIFY_LINK_INVALID: "Lien de vérification invalide ou expiré",
+    TOKEN_REQUIRED: "Token requis",
+    OAUTH_TOKEN_INVALID: "Token OAuth invalide ou expiré",
+    // Items
+    ITEM_NOT_FOUND: "Bien introuvable",
+    ITEM_ALREADY_STOLEN: "Ce bien est déjà déclaré volé",
+    INVALID_ID: "Identifiant invalide",
+    ITEMS_NOT_OWNED: "Un ou plusieurs biens ne vous appartiennent pas",
+    // Files
+    FILE_TYPE_UNKNOWN: "Type de fichier non reconnu",
+    FILE_TYPE_NOT_ALLOWED: "Type de fichier non autorisé",
+    FILE_TOO_LARGE: "Fichier trop volumineux",
+    // Admin
+    ORDER_NOT_FOUND: "Commande introuvable",
+    ORDER_LINE_NOT_FOUND: "Ligne de commande introuvable",
+    INVALID_RNBP_FORMAT: "Format invalide (RNBP-XXXXXXXX)",
+    RNBP_NUMBER_TAKEN: "Ce numéro RNBP est déjà assigné à un autre bien",
+    ITEM_DELETED: "Impossible d'assigner un numéro RNBP : le bien a été supprimé",
+    ORDER_NOT_PAID: "Seules les commandes payées peuvent être expédiées",
+    UNASSIGNED_ITEMS: "Certains articles n'ont pas de numéro RNBP assigné",
+    // General
+    TOO_MANY_REQUESTS: "Trop de requêtes. Réessayez plus tard.",
+    INTERNAL_ERROR: "Erreur interne du serveur",
+    VALIDATION_ERROR: "Erreur de validation",
+    // Success
+    LOGOUT_SUCCESS: "Déconnexion réussie",
+    PASSWORD_RESET_SENT: "Si un compte existe avec cette adresse, un courriel de réinitialisation a été envoyé.",
+    PASSWORD_RESET_SUCCESS: "Mot de passe réinitialisé avec succès. Veuillez vous reconnecter.",
+    EMAIL_VERIFIED: "Adresse courriel vérifiée avec succès.",
+    EMAIL_ALREADY_VERIFIED: "Courriel déjà vérifié.",
+    VERIFICATION_SENT: "Courriel de vérification envoyé.",
+    MESSAGE_SENT: "Message envoyé.",
+    SUBSCRIPTION_SUCCESS: "Inscription réussie. Merci !",
+  },
 };
 
 export default fr;

@@ -1,6 +1,7 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest, isNetworkError } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/Button";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 
@@ -26,7 +27,6 @@ export function ReportTheftPage() {
   const [loadError, setLoadError] = useState("");
   const [backendDown, setBackendDown] = useState(false);
 
-  const loadErrorLabel = t.errors?.loadError ?? "Erreur de chargement";
   useEffect(() => {
     apiRequest<{ items: Item[] }>("/items")
       .then((data) => {
@@ -34,10 +34,10 @@ export function ReportTheftPage() {
       })
       .catch((err) => {
         if (isNetworkError(err)) { setBackendDown(true); return; }
-        setLoadError(err instanceof Error ? err.message : loadErrorLabel);
+        setLoadError(getErrorMessage(err, t));
       })
       .finally(() => setLoadingItems(false));
-  }, [loadErrorLabel]);
+  }, [t]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -59,7 +59,7 @@ export function ReportTheftPage() {
       setSuccess(true);
     } catch (err) {
       if (isNetworkError(err)) { setBackendDown(true); return; }
-      setError(err instanceof Error ? err.message : (t.errors?.generic ?? "Erreur"));
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

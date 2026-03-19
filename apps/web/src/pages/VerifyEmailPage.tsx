@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router";
 import { apiRequest } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
 import { getButtonClasses } from "@/lib/button-styles";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
@@ -14,7 +15,6 @@ export function VerifyEmailPage() {
   const [status, setStatus] = useState<"loading" | "success" | "error">(token ? "loading" : "error");
   const [message, setMessage] = useState(token ? "" : (t.errors?.invalidVerificationLink ?? "Lien de vérification invalide."));
 
-  const verificationErrorLabel = t.errors?.verificationError ?? "Erreur lors de la vérification.";
   useEffect(() => {
     if (!token) return;
 
@@ -30,9 +30,9 @@ export function VerifyEmailPage() {
       })
       .catch((err) => {
         setStatus("error");
-        setMessage(err instanceof Error ? err.message : verificationErrorLabel);
+        setMessage(getErrorMessage(err, t));
       });
-  }, [token, refreshUser, verificationErrorLabel]);
+  }, [token, refreshUser, t]);
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">

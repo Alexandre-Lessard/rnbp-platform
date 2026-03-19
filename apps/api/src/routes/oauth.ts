@@ -9,7 +9,8 @@ import {
   signRefreshToken,
   hashToken,
 } from "../utils/tokens.js";
-import { badRequest } from "../utils/errors.js";
+import { OAUTH_TOKEN_INVALID, INTERNAL_ERROR } from "@rnbp/shared";
+import { AppError } from "../utils/errors.js";
 import { generateClientNumber } from "../utils/client-number.js";
 import { getConfig } from "../config.js";
 import { TOKEN_EXPIRY } from "../constants/time.js";
@@ -278,7 +279,7 @@ export async function oauthRoutes(app: FastifyInstance) {
 
       const pending = verifyOAuthPendingToken(body.token);
       if (!pending) {
-        throw badRequest("Token OAuth invalide ou expiré");
+        throw new AppError(400, OAUTH_TOKEN_INVALID, "Invalid or expired OAuth token");
       }
 
       const provider = pending.provider as OAuthProvider;
@@ -297,7 +298,7 @@ export async function oauthRoutes(app: FastifyInstance) {
       );
 
       if (result.needsEmail) {
-        throw badRequest("Erreur inattendue");
+        throw new AppError(400, INTERNAL_ERROR, "Unexpected error");
       }
 
       // Send verification email (manually entered email)

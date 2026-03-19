@@ -1,33 +1,33 @@
 import { z } from "zod";
 
 export const registerSchema = z.object({
-  email: z.string().email("Adresse courriel invalide"),
+  email: z.string().email("Invalid email address"),
   password: z
     .string()
-    .min(8, "Le mot de passe doit contenir au moins 8 caractères")
-    .regex(/[A-Z]/, "Doit contenir au moins une majuscule")
-    .regex(/[0-9]/, "Doit contenir au moins un chiffre"),
-  firstName: z.string().min(1, "Prénom requis").max(100),
-  lastName: z.string().min(1, "Nom requis").max(100),
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+    .regex(/[0-9]/, "Must contain at least one digit"),
+  firstName: z.string().min(1, "First name required").max(100),
+  lastName: z.string().min(1, "Last name required").max(100),
   phone: z.string().max(20).optional(),
 });
 
 export const loginSchema = z.object({
-  email: z.string().email("Adresse courriel invalide"),
-  password: z.string().min(1, "Mot de passe requis"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password required"),
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().email("Adresse courriel invalide"),
+  email: z.string().email("Invalid email address"),
 });
 
 export const resetPasswordSchema = z.object({
   token: z.string().min(1),
   password: z
     .string()
-    .min(8, "Le mot de passe doit contenir au moins 8 caractères")
-    .regex(/[A-Z]/, "Doit contenir au moins une majuscule")
-    .regex(/[0-9]/, "Doit contenir au moins un chiffre"),
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+    .regex(/[0-9]/, "Must contain at least one digit"),
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;

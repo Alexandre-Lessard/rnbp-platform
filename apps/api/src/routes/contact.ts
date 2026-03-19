@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { contactSchema } from "@rnbp/shared";
+import { contactSchema, MESSAGE_SENT } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { contactMessages } from "../db/schema.js";
 import {
@@ -16,9 +16,9 @@ export async function contactRoutes(app: FastifyInstance) {
     async (request, reply) => {
       const body = contactSchema.parse(request.body);
 
-      // Honeypot — si rempli, on fait semblant que ça a marché
+      // Honeypot — if filled, pretend it worked
       if (body.website) {
-        return reply.status(201).send({ message: "Message envoyé." });
+        return reply.status(201).send({ code: MESSAGE_SENT, message: "Message sent." });
       }
 
       const db = getDb();
@@ -46,7 +46,7 @@ export async function contactRoutes(app: FastifyInstance) {
         app.log.error(err, "Failed to send contact notification email");
       }
 
-      return reply.status(201).send({ message: "Message envoyé." });
+      return reply.status(201).send({ code: MESSAGE_SENT, message: "Message sent." });
     },
   );
 }

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router";
 import { apiRequest } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
+import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/routes/routes";
 
@@ -28,6 +30,7 @@ const RNBP_PATTERN = /^RNBP-[A-Z0-9]{8}$/;
 
 export function AdminOrderDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { t } = useLanguage();
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -43,9 +46,9 @@ export function AdminOrderDetailPage() {
   useEffect(() => {
     apiRequest<{ order: OrderDetail }>(`/admin/orders/${id}`)
       .then((data) => setOrder(data.order))
-      .catch((err) => setError(err instanceof Error ? err.message : "Error"))
+      .catch((err) => setError(getErrorMessage(err, t)))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, t]);
 
   async function handleAssign(orderItemId: string) {
     const value = (inputs[orderItemId] ?? "").trim().toUpperCase();
@@ -76,7 +79,7 @@ export function AdminOrderDetailPage() {
     } catch (err) {
       setAssignErrors((prev) => ({
         ...prev,
-        [orderItemId]: err instanceof Error ? err.message : "Error",
+        [orderItemId]: getErrorMessage(err, t),
       }));
     } finally {
       setAssigning((prev) => ({ ...prev, [orderItemId]: false }));
@@ -90,7 +93,7 @@ export function AdminOrderDetailPage() {
       await apiRequest(`/admin/orders/${id}/ship`, { method: "PATCH" });
       setOrder((prev) => (prev ? { ...prev, status: "shipped" } : prev));
     } catch (err) {
-      setShipError(err instanceof Error ? err.message : "Error");
+      setShipError(getErrorMessage(err, t));
     } finally {
       setShipping(false);
     }

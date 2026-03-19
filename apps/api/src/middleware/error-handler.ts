@@ -1,5 +1,6 @@
 import type { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import { ZodError } from "zod";
+import { TOO_MANY_REQUESTS, INTERNAL_ERROR } from "@rnbp/shared";
 import { AppError } from "../utils/errors.js";
 
 export function errorHandler(
@@ -39,8 +40,8 @@ export function errorHandler(
   if (error.statusCode === 429) {
     return reply.status(429).send({
       error: {
-        code: "TOO_MANY_REQUESTS",
-        message: "Trop de requêtes. Réessayez plus tard.",
+        code: TOO_MANY_REQUESTS,
+        message: "Too many requests. Please try again later.",
       },
     });
   }
@@ -49,8 +50,8 @@ export function errorHandler(
   _request.log.error(error);
   return reply.status(500).send({
     error: {
-      code: "INTERNAL_ERROR",
-      message: "Erreur interne du serveur",
+      code: INTERNAL_ERROR,
+      message: "Internal server error",
     },
   });
 }

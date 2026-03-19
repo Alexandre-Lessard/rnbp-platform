@@ -4,6 +4,7 @@ import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/Button";
 import { apiRequest, isNetworkError } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 
 type LookupResult = {
@@ -39,11 +40,7 @@ export function LookupPage() {
         setBackendDown(true);
         return;
       }
-      setError(
-        err instanceof Error
-          ? err.message
-          : (t.errors?.verificationError ?? "Erreur lors de la vérification"),
-      );
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

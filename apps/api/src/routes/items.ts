@@ -5,9 +5,10 @@ import { createItemSchema, updateItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { items, itemPhotos, itemDocuments } from "../db/schema.js";
 import { requireVerifiedEmail } from "../middleware/auth.js";
-import { notFound, forbidden, badRequest } from "../utils/errors.js";
+import { INVALID_ID, ITEM_NOT_FOUND } from "@rnbp/shared";
+import { AppError, forbidden } from "../utils/errors.js";
 
-const uuidSchema = z.string().uuid("Identifiant invalide");
+const uuidSchema = z.string().uuid("Invalid identifier");
 
 export async function itemRoutes(app: FastifyInstance) {
   // ── List user's items ────────────────────────────────────────────
@@ -74,7 +75,7 @@ export async function itemRoutes(app: FastifyInstance) {
         .where(eq(items.id, id))
         .limit(1);
 
-      if (!item) throw notFound("Bien introuvable");
+      if (!item) throw new AppError(404, ITEM_NOT_FOUND, "Item not found");
       if (item.ownerId !== request.userId!) throw forbidden();
 
       const photos = await db
@@ -108,7 +109,7 @@ export async function itemRoutes(app: FastifyInstance) {
         .where(eq(items.id, id))
         .limit(1);
 
-      if (!existing) throw notFound("Bien introuvable");
+      if (!existing) throw new AppError(404, ITEM_NOT_FOUND, "Item not found");
       if (existing.ownerId !== request.userId!) throw forbidden();
 
       const [updated] = await db
@@ -143,7 +144,7 @@ export async function itemRoutes(app: FastifyInstance) {
         .where(eq(items.id, id))
         .limit(1);
 
-      if (!existing) throw notFound("Bien introuvable");
+      if (!existing) throw new AppError(404, ITEM_NOT_FOUND, "Item not found");
       if (existing.ownerId !== request.userId!) throw forbidden();
 
       await db.delete(items).where(eq(items.id, id));

@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { verifyState, getCodeVerifier, getOAuthRedirect, type OAuthProvider } from "@/lib/oauth";
+import { getErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/routes/routes";
 
@@ -70,11 +71,7 @@ export function OAuthCallbackPage() {
         }
       })
       .catch((err) => {
-        setError(
-          err instanceof Error
-            ? err.message
-            : (t.auth?.oauthError ?? "Erreur de connexion. Veuillez réessayer."),
-        );
+        setError(getErrorMessage(err, t));
       });
   }, [searchParams, provider, loginWithOAuth, navigate, t]);
 

@@ -13,11 +13,11 @@ export function notFound(message = "Resource not found") {
   return new AppError(404, "NOT_FOUND", message);
 }
 
-export function unauthorized(message = "Non autorisé") {
+export function unauthorized(message = "Unauthorized") {
   return new AppError(401, "UNAUTHORIZED", message);
 }
 
-export function forbidden(message = "Accès interdit") {
+export function forbidden(message = "Forbidden") {
   return new AppError(403, "FORBIDDEN", message);
 }
 
@@ -29,6 +29,6 @@ export function conflict(message: string) {
   return new AppError(409, "CONFLICT", message);
 }
 
-export function tooManyRequests(message = "Trop de requêtes") {
+export function tooManyRequests(message = "Too many requests") {
   return new AppError(429, "TOO_MANY_REQUESTS", message);
 }

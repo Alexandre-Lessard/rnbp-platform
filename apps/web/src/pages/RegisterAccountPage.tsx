@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { isNetworkError } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/Button";
 import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
@@ -48,9 +49,7 @@ export function RegisterAccountPage() {
         setBackendDown(true);
         return;
       }
-      setError(
-        err instanceof Error ? err.message : (t.errors?.registerError ?? "Erreur lors de l'inscription"),
-      );
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

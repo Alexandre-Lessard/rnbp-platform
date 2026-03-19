@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { useCart } from "@/lib/cart-context";
 import { apiRequest, isNetworkError } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
 import { getButtonClasses } from "@/lib/button-styles";
 import { Button } from "@/components/ui/Button";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
@@ -34,7 +35,6 @@ export function DashboardPage() {
   // Modal state for "already in cart" confirmation
   const [confirmItem, setConfirmItem] = useState<Item | null>(null);
 
-  const loadErrorLabel = t.errors?.loadError ?? "Erreur de chargement";
   useEffect(() => {
     apiRequest<{ items: Item[] }>("/items")
       .then((data) => setItems(data.items))
@@ -42,11 +42,11 @@ export function DashboardPage() {
         if (isNetworkError(err)) {
           setBackendDown(true);
         } else {
-          setLoadError(err instanceof Error ? err.message : loadErrorLabel);
+          setLoadError(getErrorMessage(err, t));
         }
       })
       .finally(() => setLoading(false));
-  }, [loadErrorLabel]);
+  }, [t]);
 
   function doAddItem(item: Item) {
     addItem({ itemId: item.id, itemName: item.name, productName: t.shop?.productName });

@@ -3,6 +3,7 @@ export * from "./constants/categories.js";
 export * from "./constants/item-status.js";
 export * from "./constants/report-status.js";
 export * from "./constants/insurers.js";
+export * from "./constants/error-codes.js";
 
 // Schemas
 export * from "./schemas/auth.js";

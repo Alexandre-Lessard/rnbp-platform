@@ -359,4 +359,5 @@ export type SiteContent = {
     newsletterError: string;
     newsletterUnavailable: string;
   };
+  apiErrors?: Record<string, string>;
 };

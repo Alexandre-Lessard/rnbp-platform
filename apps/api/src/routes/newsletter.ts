@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
-import { newsletterSubscribeSchema } from "@rnbp/shared";
+import { newsletterSubscribeSchema, SUBSCRIPTION_SUCCESS } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { newsletterSubscribers } from "../db/schema.js";
 
@@ -25,7 +25,8 @@ export async function newsletterRoutes(app: FastifyInstance) {
     }
 
     return reply.send({
-      message: "Inscription réussie. Merci !",
+      code: SUBSCRIPTION_SUCCESS,
+      message: "Subscription successful. Thank you!",
     });
   });
 }

@@ -4,7 +4,8 @@ import { createReportSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { theftReports, items } from "../db/schema.js";
 import { requireAuth, requireVerifiedEmail } from "../middleware/auth.js";
-import { notFound, forbidden, badRequest } from "../utils/errors.js";
+import { ITEM_NOT_FOUND, ITEM_ALREADY_STOLEN } from "@rnbp/shared";
+import { AppError, forbidden } from "../utils/errors.js";
 
 export async function reportRoutes(app: FastifyInstance) {
   // ── Create theft report ──────────────────────────────────────────
@@ -23,10 +24,10 @@ export async function reportRoutes(app: FastifyInstance) {
         .where(eq(items.id, body.itemId))
         .limit(1);
 
-      if (!item) throw notFound("Bien introuvable");
+      if (!item) throw new AppError(404, ITEM_NOT_FOUND, "Item not found");
       if (item.ownerId !== request.userId!) throw forbidden();
       if (item.status === "stolen") {
-        throw badRequest("Ce bien est déjà déclaré volé");
+        throw new AppError(400, ITEM_ALREADY_STOLEN, "This item is already reported as stolen");
       }
 
       // Create report and update item status atomically

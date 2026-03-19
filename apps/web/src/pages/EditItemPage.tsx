@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest, isNetworkError } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/Button";
 import { getButtonClasses } from "@/lib/button-styles";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
@@ -65,11 +66,11 @@ export function EditItemPage() {
         } else if (err.status === 404 || err.status === 403) {
           setNotFound(true);
         } else {
-          setError(err.message);
+          setError(getErrorMessage(err, t));
         }
       })
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, t]);
 
   function update(field: keyof FormData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -95,7 +96,7 @@ export function EditItemPage() {
       await apiRequest(`/items/${id}`, { method: "PATCH", body });
       navigate(ROUTES.dashboard);
     } catch (err) {
-      setError(err instanceof Error ? err.message : (t.errors?.generic ?? "Erreur"));
+      setError(getErrorMessage(err, t));
     } finally {
       setSaving(false);
     }

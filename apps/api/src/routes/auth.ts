@@ -15,7 +15,25 @@ import {
   verifyToken,
   hashToken,
 } from "../utils/tokens.js";
-import { AppError, conflict, unauthorized, badRequest } from "../utils/errors.js";
+import {
+  EMAIL_ALREADY_EXISTS,
+  INVALID_CREDENTIALS,
+  REFRESH_TOKEN_REQUIRED,
+  TOKEN_INVALID,
+  SESSION_NOT_FOUND,
+  USER_NOT_FOUND,
+  TOKEN_REVOKED,
+  LOGOUT_SUCCESS,
+  PASSWORD_RESET_SENT,
+  RESET_LINK_INVALID,
+  PASSWORD_RESET_SUCCESS,
+  TOKEN_REQUIRED,
+  VERIFY_LINK_INVALID,
+  EMAIL_VERIFIED,
+  EMAIL_ALREADY_VERIFIED,
+  VERIFICATION_SENT,
+} from "@rnbp/shared";
+import { AppError } from "../utils/errors.js";
 import { requireAuth } from "../middleware/auth.js";
 import { generateClientNumber } from "../utils/client-number.js";
 import {
@@ -47,7 +65,7 @@ export async function authRoutes(app: FastifyInstance) {
         .limit(1);
 
       if (existing) {
-        throw conflict("Un compte avec cette adresse courriel existe déjà");
+        throw new AppError(409, EMAIL_ALREADY_EXISTS, "An account with this email already exists");
       }
 
       const clientNumber = await generateClientNumber(tx);
@@ -127,7 +145,7 @@ export async function authRoutes(app: FastifyInstance) {
       .limit(1);
 
     if (!user) {
-      throw unauthorized("Courriel ou mot de passe incorrect");
+      throw new AppError(401, INVALID_CREDENTIALS, "Invalid email or password");
     }
 
     if (!user.passwordHash) {
@@ -136,7 +154,7 @@ export async function authRoutes(app: FastifyInstance) {
 
     const valid = await verifyPassword(user.passwordHash, body.password);
     if (!valid) {
-      throw unauthorized("Courriel ou mot de passe incorrect");
+      throw new AppError(401, INVALID_CREDENTIALS, "Invalid email or password");
     }
 
     const accessToken = await signAccessToken(user.id);
@@ -173,18 +191,18 @@ export async function authRoutes(app: FastifyInstance) {
   }, async (request, reply) => {
     const { refreshToken } = request.body as { refreshToken?: string };
     if (!refreshToken) {
-      throw badRequest("Refresh token requis");
+      throw new AppError(400, REFRESH_TOKEN_REQUIRED, "Refresh token required");
     }
 
     let payload;
     try {
       payload = await verifyToken(refreshToken);
     } catch {
-      throw unauthorized("Refresh token invalide ou expiré");
+      throw new AppError(401, TOKEN_INVALID, "Invalid or expired refresh token");
     }
 
     if (payload.type !== "refresh") {
-      throw unauthorized("Type de token invalide");
+      throw new AppError(401, TOKEN_INVALID, "Invalid token type");
     }
 
     const db = getDb();
@@ -203,7 +221,7 @@ export async function authRoutes(app: FastifyInstance) {
       .limit(1);
 
     if (!session) {
-      throw unauthorized("Session introuvable ou expirée");
+      throw new AppError(401, SESSION_NOT_FOUND, "Session not found or expired");
     }
 
     await db.delete(sessions).where(eq(sessions.id, session.id));
@@ -215,13 +233,13 @@ export async function authRoutes(app: FastifyInstance) {
       .limit(1);
 
     if (!user) {
-      throw unauthorized("Utilisateur introuvable");
+      throw new AppError(401, USER_NOT_FOUND, "User not found");
     }
 
     if (user.tokenRevokedBefore) {
       const tokenIssuedAt = new Date(payload.iat * 1000);
       if (tokenIssuedAt < user.tokenRevokedBefore) {
-        throw unauthorized("Token révoqué. Veuillez vous reconnecter.");
+        throw new AppError(401, TOKEN_REVOKED, "Token revoked. Please sign in again.");
       }
     }
 
@@ -260,7 +278,7 @@ export async function authRoutes(app: FastifyInstance) {
           .where(eq(sessions.userId, request.userId!));
       }
 
-      return reply.send({ message: "Déconnexion réussie" });
+      return reply.send({ code: LOGOUT_SUCCESS, message: "Logged out successfully" });
     },
   );
 
@@ -288,7 +306,7 @@ export async function authRoutes(app: FastifyInstance) {
         .limit(1);
 
       if (!user) {
-        throw unauthorized("Utilisateur introuvable");
+        throw new AppError(401, USER_NOT_FOUND, "User not found");
       }
 
       return reply.send({
@@ -321,8 +339,8 @@ export async function authRoutes(app: FastifyInstance) {
     }
 
     return reply.send({
-      message:
-        "Si un compte existe avec cette adresse, un courriel de réinitialisation a été envoyé.",
+      code: PASSWORD_RESET_SENT,
+      message: "If an account exists with this email, a reset email has been sent.",
     });
   });
 
@@ -335,7 +353,7 @@ export async function authRoutes(app: FastifyInstance) {
 
     const userId = verifySignedToken(body.token, "reset-password");
     if (!userId) {
-      throw badRequest("Lien de réinitialisation invalide ou expiré");
+      throw new AppError(400, RESET_LINK_INVALID, "Invalid or expired reset link");
     }
 
     const db = getDb();
@@ -349,7 +367,8 @@ export async function authRoutes(app: FastifyInstance) {
     await db.delete(sessions).where(eq(sessions.userId, userId));
 
     return reply.send({
-      message: "Mot de passe réinitialisé avec succès. Veuillez vous reconnecter.",
+      code: PASSWORD_RESET_SUCCESS,
+      message: "Password reset successfully. Please sign in again.",
     });
   });
 
@@ -360,12 +379,12 @@ export async function authRoutes(app: FastifyInstance) {
   }, async (request, reply) => {
     const { token } = request.body as { token?: string };
     if (!token) {
-      throw badRequest("Token requis");
+      throw new AppError(400, TOKEN_REQUIRED, "Token required");
     }
 
     const userId = verifySignedToken(token, "verify-email");
     if (!userId) {
-      throw badRequest("Lien de vérification invalide ou expiré");
+      throw new AppError(400, VERIFY_LINK_INVALID, "Invalid or expired verification link");
     }
 
     const db = getDb();
@@ -374,7 +393,7 @@ export async function authRoutes(app: FastifyInstance) {
       .set({ emailVerified: true, updatedAt: new Date() })
       .where(eq(users.id, userId));
 
-    return reply.send({ message: "Adresse courriel vérifiée avec succès." });
+    return reply.send({ code: EMAIL_VERIFIED, message: "Email verified successfully." });
   });
 
   // ── Resend Verification Email ─────────────────────────────────────
@@ -398,18 +417,18 @@ export async function authRoutes(app: FastifyInstance) {
         .limit(1);
 
       if (!user) {
-        throw unauthorized("Utilisateur introuvable");
+        throw new AppError(401, USER_NOT_FOUND, "User not found");
       }
 
       if (user.emailVerified) {
-        return reply.send({ message: "Courriel déjà vérifié." });
+        return reply.send({ code: EMAIL_ALREADY_VERIFIED, message: "Email already verified." });
       }
 
       const token = createSignedToken(user.id, "verify-email", TOKEN_EXPIRY.EMAIL_VERIFICATION);
       const verifyUrl = `${config.FRONTEND_URL}/verify-email?token=${token}`;
       await sendEmail(buildVerificationEmail(user.firstName, user.email, verifyUrl));
 
-      return reply.send({ message: "Courriel de vérification envoyé." });
+      return reply.send({ code: VERIFICATION_SENT, message: "Verification email sent." });
     },
   );
 }

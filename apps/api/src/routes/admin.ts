@@ -4,14 +4,23 @@ import { eq, and, desc } from "drizzle-orm";
 import { getDb } from "../db/client.js";
 import { orders, orderItems, items, users } from "../db/schema.js";
 import { requireAdmin } from "../middleware/auth.js";
-import { notFound, badRequest } from "../utils/errors.js";
+import {
+  INVALID_RNBP_FORMAT,
+  ORDER_NOT_FOUND,
+  ORDER_LINE_NOT_FOUND,
+  ITEM_DELETED,
+  RNBP_NUMBER_TAKEN,
+  ORDER_NOT_PAID,
+  UNASSIGNED_ITEMS,
+} from "@rnbp/shared";
+import { AppError } from "../utils/errors.js";
 
 const rnbpNumberSchema = z
   .string()
-  .regex(/^RNBP-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{8}$/, "Format invalide (RNBP-XXXXXXXX)");
+  .regex(/^RNBP-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{8}$/, "Invalid format (RNBP-XXXXXXXX)");
 
 export async function adminRoutes(app: FastifyInstance) {
-  // ── Liste des commandes ────────────────────────────────────────
+  // ── List orders ────────────────────────────────────────────────
 
   app.get(
     "/admin/orders",
@@ -30,7 +39,7 @@ export async function adminRoutes(app: FastifyInstance) {
         )
         .orderBy(desc(orders.createdAt));
 
-      // Pour chaque commande, récupérer les order items avec infos item
+      // For each order, fetch order items with item info
       const result = await Promise.all(
         allOrders.map(async (order) => {
           const oi = await db
@@ -57,7 +66,7 @@ export async function adminRoutes(app: FastifyInstance) {
     },
   );
 
-  // ── Détail d'une commande ──────────────────────────────────────
+  // ── Order detail ──────────────────────────────────────────────
 
   app.get(
     "/admin/orders/:id",
@@ -72,9 +81,9 @@ export async function adminRoutes(app: FastifyInstance) {
         .where(eq(orders.id, id))
         .limit(1);
 
-      if (!order) throw notFound("Commande introuvable");
+      if (!order) throw new AppError(404, ORDER_NOT_FOUND, "Order not found");
 
-      // Récupérer le user si présent
+      // Fetch the user if present
       let customer = null;
       if (order.userId) {
         const [u] = await db
@@ -112,7 +121,7 @@ export async function adminRoutes(app: FastifyInstance) {
     },
   );
 
-  // ── Assigner un numéro RNBP ────────────────────────────────────
+  // ── Assign an RNBP number ──────────────────────────────────────
 
   app.patch(
     "/admin/orders/:id/items/:orderItemId/assign",
@@ -128,7 +137,7 @@ export async function adminRoutes(app: FastifyInstance) {
 
       const db = getDb();
 
-      // Vérifier que l'orderItem existe et appartient à cette commande
+      // Verify the orderItem exists and belongs to this order
       const [oi] = await db
         .select()
         .from(orderItems)
@@ -137,13 +146,13 @@ export async function adminRoutes(app: FastifyInstance) {
         )
         .limit(1);
 
-      if (!oi) throw notFound("Ligne de commande introuvable");
+      if (!oi) throw new AppError(404, ORDER_LINE_NOT_FOUND, "Order line not found");
 
       if (!oi.itemId) {
-        throw badRequest("Impossible d'assigner un numéro RNBP : le bien associé a été supprimé");
+        throw new AppError(400, ITEM_DELETED, "Cannot assign RNBP number: associated item was deleted");
       }
 
-      // Vérifier unicité du numéro RNBP
+      // Verify RNBP number uniqueness
       const [existingItem] = await db
         .select({ id: items.id })
         .from(items)
@@ -151,10 +160,10 @@ export async function adminRoutes(app: FastifyInstance) {
         .limit(1);
 
       if (existingItem) {
-        throw badRequest("Ce numéro RNBP est déjà assigné à un autre bien");
+        throw new AppError(400, RNBP_NUMBER_TAKEN, "This RNBP number is already assigned to another item");
       }
 
-      // Transaction atomique : mettre à jour orderItem ET item
+      // Atomic transaction: update orderItem AND item
       await db.transaction(async (tx) => {
         await tx
           .update(orderItems)
@@ -171,7 +180,7 @@ export async function adminRoutes(app: FastifyInstance) {
     },
   );
 
-  // ── Marquer comme expédié ──────────────────────────────────────
+  // ── Mark as shipped ───────────────────────────────────────────
 
   app.patch(
     "/admin/orders/:id/ship",
@@ -186,12 +195,12 @@ export async function adminRoutes(app: FastifyInstance) {
         .where(eq(orders.id, id))
         .limit(1);
 
-      if (!order) throw notFound("Commande introuvable");
+      if (!order) throw new AppError(404, ORDER_NOT_FOUND, "Order not found");
       if (order.status !== "paid") {
-        throw badRequest("Seules les commandes payées peuvent être expédiées");
+        throw new AppError(400, ORDER_NOT_PAID, "Only paid orders can be shipped");
       }
 
-      // Vérifier que tous les items ont un numéro RNBP assigné
+      // Verify all items have an RNBP number assigned
       const oi = await db
         .select({ rnbpNumber: orderItems.rnbpNumber })
         .from(orderItems)
@@ -199,8 +208,10 @@ export async function adminRoutes(app: FastifyInstance) {
 
       const unassigned = oi.filter((i) => !i.rnbpNumber);
       if (unassigned.length > 0) {
-        throw badRequest(
-          `${unassigned.length} article(s) n'ont pas de numéro RNBP assigné`,
+        throw new AppError(
+          400,
+          UNASSIGNED_ITEMS,
+          `${unassigned.length} item(s) do not have an RNBP number assigned`,
         );
       }
 

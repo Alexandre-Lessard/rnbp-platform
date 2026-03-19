@@ -751,6 +751,54 @@ const en: SiteContent = {
     newsletterError: "An error occurred.",
     newsletterUnavailable: "Service temporarily unavailable. Please try again later.",
   },
+  apiErrors: {
+    // Auth
+    INVALID_CREDENTIALS: "Invalid email or password",
+    SOCIAL_ACCOUNT: "This account uses Google or Microsoft login.",
+    EMAIL_ALREADY_EXISTS: "An account with this email already exists",
+    TOKEN_MISSING: "Missing token",
+    TOKEN_INVALID: "Invalid or expired token",
+    TOKEN_REVOKED: "Token revoked. Please sign in again.",
+    USER_NOT_FOUND: "User not found",
+    ADMIN_REQUIRED: "Admin access required",
+    EMAIL_NOT_VERIFIED: "Please verify your email before continuing.",
+    REFRESH_TOKEN_REQUIRED: "Refresh token required",
+    SESSION_NOT_FOUND: "Session not found or expired",
+    RESET_LINK_INVALID: "Invalid or expired reset link",
+    VERIFY_LINK_INVALID: "Invalid or expired verification link",
+    TOKEN_REQUIRED: "Token required",
+    OAUTH_TOKEN_INVALID: "Invalid or expired OAuth token",
+    // Items
+    ITEM_NOT_FOUND: "Item not found",
+    ITEM_ALREADY_STOLEN: "This item is already reported as stolen",
+    INVALID_ID: "Invalid identifier",
+    ITEMS_NOT_OWNED: "One or more items do not belong to you",
+    // Files
+    FILE_TYPE_UNKNOWN: "Unrecognized file type",
+    FILE_TYPE_NOT_ALLOWED: "File type not allowed",
+    FILE_TOO_LARGE: "File too large",
+    // Admin
+    ORDER_NOT_FOUND: "Order not found",
+    ORDER_LINE_NOT_FOUND: "Order line not found",
+    INVALID_RNBP_FORMAT: "Invalid format (RNBP-XXXXXXXX)",
+    RNBP_NUMBER_TAKEN: "This RNBP number is already assigned to another item",
+    ITEM_DELETED: "Cannot assign RNBP number: associated item was deleted",
+    ORDER_NOT_PAID: "Only paid orders can be shipped",
+    UNASSIGNED_ITEMS: "Some items do not have an RNBP number assigned",
+    // General
+    TOO_MANY_REQUESTS: "Too many requests. Please try again later.",
+    INTERNAL_ERROR: "Internal server error",
+    VALIDATION_ERROR: "Validation error",
+    // Success
+    LOGOUT_SUCCESS: "Logged out successfully",
+    PASSWORD_RESET_SENT: "If an account exists with this email, a reset email has been sent.",
+    PASSWORD_RESET_SUCCESS: "Password reset successfully. Please sign in again.",
+    EMAIL_VERIFIED: "Email verified successfully.",
+    EMAIL_ALREADY_VERIFIED: "Email already verified.",
+    VERIFICATION_SENT: "Verification email sent.",
+    MESSAGE_SENT: "Message sent.",
+    SUBSCRIPTION_SUCCESS: "Subscription successful. Thank you!",
+  },
 };
 
 export default en;

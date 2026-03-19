@@ -5,6 +5,7 @@ import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
 import { apiRequest } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/routes/routes";
 
@@ -92,7 +93,7 @@ export function BoutiquePage() {
       });
       window.location.href = res.url;
     } catch (err) {
-      setError(err instanceof Error ? err.message : (t.errors?.generic ?? "Erreur"));
+      setError(getErrorMessage(err, t));
       setCheckingOut(false);
     }
   }

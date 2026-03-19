@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { isNetworkError } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/Button";
 import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
@@ -35,16 +36,7 @@ export function LoginPage() {
         setBackendDown(true);
         return;
       }
-      const code = (err as { code?: string })?.code;
-      if (code === "SOCIAL_ACCOUNT") {
-        setError(t.auth?.socialAccountError ?? "Ce compte utilise une connexion Google ou Microsoft.");
-      } else {
-        setError(
-          err instanceof Error
-            ? err.message
-            : (t.errors?.loginError ?? "Erreur de connexion"),
-        );
-      }
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }

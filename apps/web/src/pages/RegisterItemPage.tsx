@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "@/i18n/context";
 import { useAuth, setRefreshToken } from "@/lib/auth-context";
 import { apiRequest, setAccessToken, isNetworkError } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
 import { useCart } from "@/lib/cart-context";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { StepIndicator } from "@/components/registration/StepIndicator";
@@ -115,7 +116,6 @@ export function RegisterItemPage() {
       : undefined,
   }), [itemData]);
 
-  const genericErrorLabel = t.errors?.generic ?? "Erreur";
   const handleSubmitLoggedIn = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -134,11 +134,11 @@ export function RegisterItemPage() {
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
       if (isNetworkError(err)) { setBackendDown(true); return; }
-      setError(err instanceof Error ? err.message : genericErrorLabel);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }
-  }, [buildItemBody, totalSteps, itemData.name, updateItemId, genericErrorLabel]);
+  }, [buildItemBody, totalSteps, itemData.name, updateItemId, t]);
 
   const handleSubmitWithAccount = useCallback(async () => {
     setLoading(true);
@@ -174,11 +174,11 @@ export function RegisterItemPage() {
       setStep(totalSteps + 1); // confirmation
     } catch (err) {
       if (isNetworkError(err)) { setBackendDown(true); return; }
-      setError(err instanceof Error ? err.message : genericErrorLabel);
+      setError(getErrorMessage(err, t));
     } finally {
       setLoading(false);
     }
-  }, [accountData, buildItemBody, totalSteps, refreshAuth, itemData.name, updateItemId, genericErrorLabel]);
+  }, [accountData, buildItemBody, totalSteps, refreshAuth, itemData.name, updateItemId, t]);
 
   if (backendDown) {
     return (

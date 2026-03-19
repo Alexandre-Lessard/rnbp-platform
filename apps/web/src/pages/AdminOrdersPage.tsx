@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { apiRequest } from "@/lib/api-client";
+import { getErrorMessage } from "@/lib/error-utils";
+import { useLanguage } from "@/i18n/context";
 import { ROUTES } from "@/routes/routes";
 
 type Order = {
@@ -28,6 +30,7 @@ const statusColors: Record<string, string> = {
 };
 
 export function AdminOrdersPage() {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -38,10 +41,10 @@ export function AdminOrdersPage() {
     const url = tab === "all" ? "/admin/orders" : `/admin/orders?status=${tab}`;
     apiRequest<{ orders: Order[] }>(url)
       .then((data) => { if (!cancelled) setOrders(data.orders); })
-      .catch((err) => { if (!cancelled) setError(err instanceof Error ? err.message : "Error"); })
+      .catch((err) => { if (!cancelled) setError(getErrorMessage(err, t)); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [tab]);
+  }, [tab, t]);
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
@@ -51,18 +54,18 @@ export function AdminOrdersPage() {
         </h1>
 
         <div className="mt-6 flex gap-2">
-          {statusTabs.map((t) => (
+          {statusTabs.map((s) => (
             <button
-              key={t}
+              key={s}
               type="button"
-              onClick={() => setTab(t)}
+              onClick={() => setTab(s)}
               className={`cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-                tab === t
+                tab === s
                   ? "bg-[var(--rcb-primary)] text-white"
                   : "bg-[var(--rcb-surface)] text-[var(--rcb-text-muted)] hover:bg-[var(--rcb-border)]"
               }`}
             >
-              {statusLabels[t]}
+              {statusLabels[s]}
             </button>
           ))}
         </div>

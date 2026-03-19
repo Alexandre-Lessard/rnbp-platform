@@ -8,7 +8,8 @@ import { orders, orderItems, items, users } from "../db/schema.js";
 import { getConfig } from "../config.js";
 import { requireVerifiedEmail } from "../middleware/auth.js";
 import { sendEmail, buildOrderNotificationEmail } from "../utils/email.js";
-import { forbidden } from "../utils/errors.js";
+import { ITEMS_NOT_OWNED } from "@rnbp/shared";
+import { AppError } from "../utils/errors.js";
 
 const checkoutSchema = z.object({
   items: z
@@ -54,7 +55,7 @@ export async function shopRoutes(app: FastifyInstance) {
       const stripe = getStripe();
       const db = getDb();
 
-      // Valider que tous les items appartiennent au user
+      // Validate that all items belong to the user
       const itemIds = body.items.map((i) => i.itemId);
       const ownedItems = await db
         .select({ id: items.id })
@@ -64,14 +65,14 @@ export async function shopRoutes(app: FastifyInstance) {
       const ownedIds = new Set(ownedItems.map((i) => i.id));
       for (const itemId of itemIds) {
         if (!ownedIds.has(itemId)) {
-          throw forbidden("Un ou plusieurs biens ne vous appartiennent pas");
+          throw new AppError(403, ITEMS_NOT_OWNED, "One or more items do not belong to you");
         }
       }
 
-      // Somme des quantités pour Stripe (un seul Price ID)
+      // Sum of quantities for Stripe (single Price ID)
       const totalQuantity = body.items.reduce((sum, i) => sum + i.quantity, 0);
 
-      // Email : body > JWT user > null
+      // Email: body > JWT user > null
       let email = body.email;
       if (!email && request.userId) {
         const [user] = await db
@@ -82,29 +83,29 @@ export async function shopRoutes(app: FastifyInstance) {
         email = user?.email;
       }
 
-      // Créer l'order en DB d'abord
+      // Create order in DB first
       const [order] = await db
         .insert(orders)
         .values({
           email: email || "pending@checkout.stripe.com",
           userId: request.userId || null,
-          totalAmountCents: 0, // Mis à jour par le webhook
+          totalAmountCents: 0, // Updated by webhook
           status: "pending",
         })
         .returning();
 
-      // Insérer les order_items
+      // Insert order_items
       await db.insert(orderItems).values(
         body.items.map((item) => ({
           orderId: order.id,
           itemId: item.itemId,
           productType: "sticker_sheet",
           quantity: item.quantity,
-          unitPriceCents: 0, // Le prix réel vient de Stripe
+          unitPriceCents: 0, // Actual price comes from Stripe
         })),
       );
 
-      // Créer la session Stripe Checkout
+      // Create Stripe Checkout session
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         line_items: [
@@ -125,7 +126,7 @@ export async function shopRoutes(app: FastifyInstance) {
         },
       });
 
-      // Stocker le session ID
+      // Store the session ID
       await db
         .update(orders)
         .set({ stripeSessionId: session.id })
@@ -172,7 +173,7 @@ export async function shopRoutes(app: FastifyInstance) {
         const orderId = eventSession.metadata?.orderId;
 
         if (orderId) {
-          // Re-fetch la session complète depuis l'API pour avoir shipping_details + line_items
+          // Re-fetch the full session from the API to get shipping_details + line_items
           const session = await stripe.checkout.sessions.retrieve(eventSession.id, {
             expand: ["line_items", "total_details.breakdown"],
           });
@@ -185,7 +186,7 @@ export async function shopRoutes(app: FastifyInstance) {
             ? JSON.stringify(shipping.address)
             : null;
 
-          // Récupérer les détails des line items pour l'email
+          // Get line item details for the email
           const lineItems = session.line_items?.data ?? [];
           const productLines = lineItems.map((li) => ({
             name: li.description || "Produit",
@@ -196,7 +197,7 @@ export async function shopRoutes(app: FastifyInstance) {
           // Taxes
           const taxAmountCents = session.total_details?.amount_tax || 0;
 
-          // Idempotent : ne met à jour que si pending
+          // Idempotent: only update if pending
           const updated = await db
             .update(orders)
             .set({
@@ -214,7 +215,7 @@ export async function shopRoutes(app: FastifyInstance) {
             .where(and(eq(orders.id, orderId), eq(orders.status, "pending")))
             .returning({ id: orders.id });
 
-          // Envoyer notification admin seulement si l'order a été mis à jour (pas un doublon)
+          // Send admin notification only if the order was updated (not a duplicate)
           if (updated.length > 0) {
             const items = await db
               .select({ quantity: orderItems.quantity })
