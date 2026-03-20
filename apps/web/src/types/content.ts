@@ -172,6 +172,34 @@ export type SiteContent = {
     notFound: string;
     backToDashboard: string;
   };
+  settings?: {
+    heading: string;
+    communicationHeading: string;
+    communicationDescription: string;
+    languageLabel: string;
+    saveButton: string;
+    saving: string;
+    successMessage: string;
+  };
+  archive?: {
+    button: string;
+    modalTitle: string;
+    modalDescription: string;
+    reasons: Record<string, string>;
+    customReasonPlaceholder: string;
+    confirmButton: string;
+    archiving: string;
+    cancelButton: string;
+    stolenWarning: string;
+    archivedItems: string;
+    archivedOn: string;
+    reason: string;
+    noArchivedItems: string;
+  };
+  transfer?: {
+    button: string;
+    comingSoon: string;
+  };
   registration?: {
     heading: string;
     description: string;

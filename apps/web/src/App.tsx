@@ -60,6 +60,7 @@ import { EmailPendingPage } from "@/pages/EmailPendingPage";
 import { EditItemPage } from "@/pages/EditItemPage";
 import { OAuthCallbackPage } from "@/pages/OAuthCallbackPage";
 import { AboutPage } from "@/pages/AboutPage";
+import { SettingsPage } from "@/pages/SettingsPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 
 function App() {
@@ -101,6 +102,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.settings}
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
               </ProtectedRoute>
             }
           />

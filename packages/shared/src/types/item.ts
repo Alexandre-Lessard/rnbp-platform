@@ -15,6 +15,9 @@ export type Item = {
   purchaseDate: string | null;
   status: ItemStatus;
   rnbpNumber: string | null;
+  archivedAt: string | null;
+  archiveReason: string | null;
+  archiveReasonCustom: string | null;
   createdAt: string;
   updatedAt: string;
 };

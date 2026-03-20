@@ -165,6 +165,7 @@ async function handleOAuthLogin(
           lastName: profile.lastName,
           emailVerified: profile.emailVerified,
           clientNumber,
+          termsAcceptedAt: new Date(),
           [idCol]: profile.providerId,
         })
         .returning();
@@ -194,6 +195,8 @@ async function handleOAuthLogin(
       emailVerified: user!.emailVerified,
       isAdmin: user!.isAdmin,
       clientNumber: user!.clientNumber,
+      preferredLanguage: user!.preferredLanguage,
+      termsAcceptedAt: user!.termsAcceptedAt?.toISOString() ?? null,
       createdAt: user!.createdAt.toISOString(),
     },
     accessToken,
@@ -303,6 +306,7 @@ export async function oauthRoutes(app: FastifyInstance) {
 
       // Send verification email (manually entered email)
       const config = getConfig();
+      const lang = (result.user.preferredLanguage as "fr" | "en") ?? "fr";
       const verifyTokenStr = createEmailToken(
         result.user.id,
         "verify-email",
@@ -310,7 +314,7 @@ export async function oauthRoutes(app: FastifyInstance) {
       );
       const verifyUrl = `${config.FRONTEND_URL}/verify-email?token=${verifyTokenStr}`;
       sendEmail(
-        buildVerificationEmail(result.user.firstName, result.user.email, verifyUrl),
+        buildVerificationEmail(result.user.firstName, result.user.email, verifyUrl, lang),
       ).catch((err) => {
         app.log.error(err, "Failed to send verification email after OAuth complete");
       });

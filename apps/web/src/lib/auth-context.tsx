@@ -22,6 +22,8 @@ type User = {
   emailVerified: boolean;
   isAdmin: boolean;
   clientNumber: string | null;
+  preferredLanguage: "fr" | "en";
+  termsAcceptedAt: string | null;
   createdAt: string;
 };
 

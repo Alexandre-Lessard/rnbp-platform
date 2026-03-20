@@ -22,6 +22,7 @@ export function RegisterAccountPage() {
     lastName: "",
     phone: "",
   });
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [backendDown, setBackendDown] = useState(false);
@@ -182,9 +183,29 @@ export function RegisterAccountPage() {
             />
           </div>
 
+          <div className="flex items-start gap-3">
+            <input
+              id="reg-terms"
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-[var(--rcb-border)] accent-[var(--rcb-primary)]"
+            />
+            <label htmlFor="reg-terms" className="text-sm text-[var(--rcb-text-body)]">
+              {t.auth?.termsLabel ?? "J'accepte les"}{" "}
+              <Link to={ROUTES.terms} className="text-[var(--rcb-primary)] hover:underline" target="_blank">
+                {t.auth?.termsLink ?? "conditions d'utilisation"}
+              </Link>{" "}
+              {t.auth?.termsAnd ?? "et la"}{" "}
+              <Link to={ROUTES.privacy} className="text-[var(--rcb-primary)] hover:underline" target="_blank">
+                {t.auth?.privacyLink ?? "politique de confidentialité"}
+              </Link>
+            </label>
+          </div>
+
           <Button
             type="submit"
-            disabled={loading}
+            disabled={loading || !termsAccepted}
             className="w-full cursor-pointer disabled:opacity-50"
           >
             {loading

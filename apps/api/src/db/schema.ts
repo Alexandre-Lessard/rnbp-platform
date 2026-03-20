@@ -48,6 +48,8 @@ export const users = pgTable("users", {
   emailVerified: boolean("email_verified").notNull().default(false),
   isAdmin: boolean("is_admin").notNull().default(false),
   clientNumber: varchar("client_number", { length: 9 }).unique(),
+  preferredLanguage: varchar("preferred_language", { length: 2 }).notNull().default("fr"),
+  termsAcceptedAt: timestamp("terms_accepted_at", { withTimezone: true }),
   // Mass revocation: all tokens issued BEFORE this timestamp are rejected.
   // Updated on password reset to invalidate all sessions.
   tokenRevokedBefore: timestamp("token_revoked_before", {
@@ -105,6 +107,9 @@ export const items = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
+    archiveReason: varchar("archive_reason", { length: 50 }),
+    archiveReasonCustom: text("archive_reason_custom"),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

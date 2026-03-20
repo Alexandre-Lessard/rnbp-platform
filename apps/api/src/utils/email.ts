@@ -241,23 +241,45 @@ export function buildVerificationEmail(
   firstName: string,
   to: string,
   verifyUrl: string,
+  lang: "fr" | "en" = "fr",
 ): EmailPayload {
+  const t = {
+    fr: {
+      subject: "Vérifiez votre adresse courriel — RNBP",
+      greeting: `Bonjour ${firstName},`,
+      body: "Merci de vous être inscrit au RNBP. Veuillez vérifier votre adresse courriel en cliquant sur le lien ci-dessous :",
+      button: "Vérifier mon courriel",
+      expiry: "Ce lien expire dans 24 heures.",
+      ignore: "Si vous n'avez pas créé de compte, ignorez ce courriel.",
+      footer: "RNBP — Registre canadien des biens personnels",
+    },
+    en: {
+      subject: "Verify your email — NRPP",
+      greeting: `Hello ${firstName},`,
+      body: "Thank you for signing up for the NRPP. Please verify your email address by clicking the link below:",
+      button: "Verify my email",
+      expiry: "This link expires in 24 hours.",
+      ignore: "If you did not create an account, please ignore this email.",
+      footer: "NRPP — National Registry of Personal Property",
+    },
+  }[lang];
+
   return {
     to,
-    subject: "Vérifiez votre adresse courriel — RNBP",
+    subject: t.subject,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>Bonjour ${firstName},</h2>
-        <p>Merci de vous être inscrit au RNBP. Veuillez vérifier votre adresse courriel en cliquant sur le lien ci-dessous :</p>
+        <h2>${t.greeting}</h2>
+        <p>${t.body}</p>
         <p style="margin: 24px 0;">
           <a href="${verifyUrl}" style="background-color: #1a2e44; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block;">
-            Vérifier mon courriel
+            ${t.button}
           </a>
         </p>
-        <p>Ce lien expire dans 24 heures.</p>
-        <p>Si vous n'avez pas créé de compte, ignorez ce courriel.</p>
+        <p>${t.expiry}</p>
+        <p>${t.ignore}</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
-        <p style="color: #888; font-size: 12px;">RNBP — Registre canadien des biens personnels</p>
+        <p style="color: #888; font-size: 12px;">${t.footer}</p>
       </div>
     `,
   };
@@ -267,23 +289,45 @@ export function buildResetEmail(
   firstName: string,
   to: string,
   resetUrl: string,
+  lang: "fr" | "en" = "fr",
 ): EmailPayload {
+  const t = {
+    fr: {
+      subject: "Réinitialisation de mot de passe — RNBP",
+      greeting: `Bonjour ${firstName},`,
+      body: "Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour le changer :",
+      button: "Réinitialiser mon mot de passe",
+      expiry: "Ce lien expire dans 1 heure.",
+      ignore: "Si vous n'avez pas demandé cette réinitialisation, ignorez ce courriel.",
+      footer: "RNBP — Registre canadien des biens personnels",
+    },
+    en: {
+      subject: "Password reset — NRPP",
+      greeting: `Hello ${firstName},`,
+      body: "You requested a password reset. Click the link below to change your password:",
+      button: "Reset my password",
+      expiry: "This link expires in 1 hour.",
+      ignore: "If you did not request this reset, please ignore this email.",
+      footer: "NRPP — National Registry of Personal Property",
+    },
+  }[lang];
+
   return {
     to,
-    subject: "Réinitialisation de mot de passe — RNBP",
+    subject: t.subject,
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>Bonjour ${firstName},</h2>
-        <p>Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour le changer :</p>
+        <h2>${t.greeting}</h2>
+        <p>${t.body}</p>
         <p style="margin: 24px 0;">
           <a href="${resetUrl}" style="background-color: #1a2e44; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block;">
-            Réinitialiser mon mot de passe
+            ${t.button}
           </a>
         </p>
-        <p>Ce lien expire dans 1 heure.</p>
-        <p>Si vous n'avez pas demandé cette réinitialisation, ignorez ce courriel.</p>
+        <p>${t.expiry}</p>
+        <p>${t.ignore}</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
-        <p style="color: #888; font-size: 12px;">RNBP — Registre canadien des biens personnels</p>
+        <p style="color: #888; font-size: 12px;">${t.footer}</p>
       </div>
     `,
   };

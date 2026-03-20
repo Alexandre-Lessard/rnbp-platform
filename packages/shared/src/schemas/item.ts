@@ -17,5 +17,11 @@ export const createItemSchema = z.object({
 
 export const updateItemSchema = createItemSchema.partial();
 
+export const archiveItemSchema = z.object({
+  reason: z.enum(["destroyed", "lost", "discarded", "registration_error", "other"]),
+  customReason: z.string().max(500).optional(),
+});
+
 export type CreateItemInput = z.infer<typeof createItemSchema>;
 export type UpdateItemInput = z.infer<typeof updateItemSchema>;
+export type ArchiveItemInput = z.infer<typeof archiveItemSchema>;

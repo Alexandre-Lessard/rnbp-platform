@@ -79,6 +79,8 @@ export async function authRoutes(app: FastifyInstance) {
           lastName: body.lastName,
           phone: body.phone ?? null,
           clientNumber,
+          preferredLanguage: body.preferredLanguage ?? "fr",
+          termsAcceptedAt: new Date(),
         })
         .returning({
           id: users.id,
@@ -89,6 +91,8 @@ export async function authRoutes(app: FastifyInstance) {
           emailVerified: users.emailVerified,
           isAdmin: users.isAdmin,
           clientNumber: users.clientNumber,
+          preferredLanguage: users.preferredLanguage,
+          termsAcceptedAt: users.termsAcceptedAt,
           createdAt: users.createdAt,
         });
 
@@ -107,9 +111,10 @@ export async function authRoutes(app: FastifyInstance) {
 
     // Send verification email (fire & forget)
     const config = getConfig();
+    const lang = (user.preferredLanguage as "fr" | "en") ?? "fr";
     const verifyTokenStr = createSignedToken(user.id, "verify-email", TOKEN_EXPIRY.EMAIL_VERIFICATION);
     const verifyUrl = `${config.FRONTEND_URL}/verify-email?token=${verifyTokenStr}`;
-    sendEmail(buildVerificationEmail(user.firstName, user.email, verifyUrl)).catch((err) => {
+    sendEmail(buildVerificationEmail(user.firstName, user.email, verifyUrl, lang)).catch((err) => {
       app.log.error(err, "Failed to send verification email");
     });
 
@@ -123,6 +128,8 @@ export async function authRoutes(app: FastifyInstance) {
         emailVerified: user.emailVerified,
         isAdmin: user.isAdmin,
         clientNumber: user.clientNumber,
+        preferredLanguage: user.preferredLanguage,
+        termsAcceptedAt: user.termsAcceptedAt?.toISOString() ?? null,
         createdAt: user.createdAt.toISOString(),
       },
       accessToken,
@@ -177,6 +184,8 @@ export async function authRoutes(app: FastifyInstance) {
         emailVerified: user.emailVerified,
         isAdmin: user.isAdmin,
         clientNumber: user.clientNumber,
+        preferredLanguage: user.preferredLanguage,
+        termsAcceptedAt: user.termsAcceptedAt?.toISOString() ?? null,
         createdAt: user.createdAt.toISOString(),
       },
       accessToken,
@@ -299,6 +308,8 @@ export async function authRoutes(app: FastifyInstance) {
           emailVerified: users.emailVerified,
           isAdmin: users.isAdmin,
           clientNumber: users.clientNumber,
+          preferredLanguage: users.preferredLanguage,
+          termsAcceptedAt: users.termsAcceptedAt,
           createdAt: users.createdAt,
         })
         .from(users)
@@ -310,8 +321,36 @@ export async function authRoutes(app: FastifyInstance) {
       }
 
       return reply.send({
-        user: { ...user, createdAt: user.createdAt.toISOString() },
+        user: {
+          ...user,
+          termsAcceptedAt: user.termsAcceptedAt?.toISOString() ?? null,
+          createdAt: user.createdAt.toISOString(),
+        },
       });
+    },
+  );
+
+  // ── Update Profile ─────────────────────────────────────────────────
+
+  app.patch(
+    "/auth/profile",
+    { preHandler: requireAuth },
+    async (request, reply) => {
+      const body = request.body as { preferredLanguage?: string };
+      const db = getDb();
+
+      const updates: Record<string, unknown> = { updatedAt: new Date() };
+
+      if (body.preferredLanguage && ["fr", "en"].includes(body.preferredLanguage)) {
+        updates.preferredLanguage = body.preferredLanguage;
+      }
+
+      await db
+        .update(users)
+        .set(updates)
+        .where(eq(users.id, request.userId!));
+
+      return reply.send({ success: true });
     },
   );
 
@@ -325,15 +364,16 @@ export async function authRoutes(app: FastifyInstance) {
     const config = getConfig();
 
     const [user] = await db
-      .select({ id: users.id, firstName: users.firstName })
+      .select({ id: users.id, firstName: users.firstName, preferredLanguage: users.preferredLanguage })
       .from(users)
       .where(eq(users.email, body.email.toLowerCase()))
       .limit(1);
 
     if (user) {
+      const lang = (user.preferredLanguage as "fr" | "en") ?? "fr";
       const token = createSignedToken(user.id, "reset-password", TOKEN_EXPIRY.PASSWORD_RESET);
       const resetUrl = `${config.FRONTEND_URL}/reinitialiser-mot-de-passe?token=${token}`;
-      sendEmail(buildResetEmail(user.firstName, body.email.toLowerCase(), resetUrl)).catch((err) => {
+      sendEmail(buildResetEmail(user.firstName, body.email.toLowerCase(), resetUrl, lang)).catch((err) => {
         app.log.error(err, "Failed to send password reset email");
       });
     }
@@ -411,6 +451,7 @@ export async function authRoutes(app: FastifyInstance) {
           email: users.email,
           firstName: users.firstName,
           emailVerified: users.emailVerified,
+          preferredLanguage: users.preferredLanguage,
         })
         .from(users)
         .where(eq(users.id, request.userId!))
@@ -424,9 +465,10 @@ export async function authRoutes(app: FastifyInstance) {
         return reply.send({ code: EMAIL_ALREADY_VERIFIED, message: "Email already verified." });
       }
 
+      const lang = (user.preferredLanguage as "fr" | "en") ?? "fr";
       const token = createSignedToken(user.id, "verify-email", TOKEN_EXPIRY.EMAIL_VERIFICATION);
       const verifyUrl = `${config.FRONTEND_URL}/verify-email?token=${token}`;
-      await sendEmail(buildVerificationEmail(user.firstName, user.email, verifyUrl));
+      await sendEmail(buildVerificationEmail(user.firstName, user.email, verifyUrl, lang));
 
       return reply.send({ code: VERIFICATION_SENT, message: "Verification email sent." });
     },

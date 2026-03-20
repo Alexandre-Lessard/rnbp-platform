@@ -19,6 +19,9 @@ type Item = {
   serialNumber: string | null;
   status: string;
   rnbpNumber: string | null;
+  archivedAt: string | null;
+  archiveReason: string | null;
+  archiveReasonCustom: string | null;
   createdAt: string;
 };
 
@@ -27,6 +30,8 @@ export function DashboardPage() {
   const { t } = useLanguage();
   const { cart, addItem } = useCart();
   const [items, setItems] = useState<Item[]>([]);
+  const [archivedItems, setArchivedItems] = useState<Item[]>([]);
+  const [showArchived, setShowArchived] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [backendDown, setBackendDown] = useState(false);
@@ -36,8 +41,14 @@ export function DashboardPage() {
   const [confirmItem, setConfirmItem] = useState<Item | null>(null);
 
   useEffect(() => {
-    apiRequest<{ items: Item[] }>("/items")
-      .then((data) => setItems(data.items))
+    Promise.all([
+      apiRequest<{ items: Item[] }>("/items"),
+      apiRequest<{ items: Item[] }>("/items?archived=true"),
+    ])
+      .then(([active, all]) => {
+        setItems(active.items);
+        setArchivedItems(all.items.filter((i) => i.archivedAt !== null));
+      })
       .catch((err) => {
         if (isNetworkError(err)) {
           setBackendDown(true);
@@ -198,6 +209,44 @@ export function DashboardPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* ── Archived items section ──────────────────────────── */}
+      {archivedItems.length > 0 && (
+        <div className="mt-12">
+          <button
+            type="button"
+            onClick={() => setShowArchived((v) => !v)}
+            className="cursor-pointer text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-primary)]"
+          >
+            {t.archive?.archivedItems ?? "Biens archivés"} ({archivedItems.length})
+            {showArchived ? " ▲" : " ▼"}
+          </button>
+          {showArchived && (
+            <div className="mt-4 space-y-3">
+              {archivedItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-4 opacity-60"
+                >
+                  <div>
+                    <h3 className="font-medium text-[var(--rcb-text-strong)]">
+                      {item.name}
+                    </h3>
+                    <p className="mt-0.5 text-xs text-[var(--rcb-text-muted)]">
+                      {t.archive?.archivedOn ?? "Archivé le"}{" "}
+                      {item.archivedAt ? new Date(item.archivedAt).toLocaleDateString() : "—"}
+                      {" — "}
+                      {t.archive?.reason ?? "Raison"}: {item.archiveReason === "other"
+                        ? item.archiveReasonCustom
+                        : t.archive?.reasons?.[item.archiveReason ?? ""] ?? item.archiveReason}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
       </div>

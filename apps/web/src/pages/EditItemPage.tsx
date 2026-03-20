@@ -5,6 +5,7 @@ import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/Button";
 import { getButtonClasses } from "@/lib/button-styles";
+import { Modal } from "@/components/ui/Modal";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { ITEM_CATEGORIES } from "@rnbp/shared";
 import type { ItemWithFiles } from "@rnbp/shared";
@@ -37,10 +38,15 @@ export function EditItemPage() {
     description: "",
   });
   const [loading, setLoading] = useState(true);
+  const [itemStatus, setItemStatus] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [notFound, setNotFound] = useState(false);
   const [backendDown, setBackendDown] = useState(false);
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiveReason, setArchiveReason] = useState("");
+  const [archiveCustom, setArchiveCustom] = useState("");
+  const [archiving, setArchiving] = useState(false);
 
   const edit = t.editItem;
   const reg = t.registration;
@@ -49,6 +55,7 @@ export function EditItemPage() {
     if (!id) return;
     apiRequest<{ item: ItemWithFiles }>(`/items/${id}`)
       .then(({ item }) => {
+        setItemStatus(item.status);
         setForm({
           name: item.name,
           category: item.category,
@@ -108,8 +115,31 @@ export function EditItemPage() {
     label: categoryLabels[i] ?? slug,
   }));
 
+  async function handleArchive() {
+    if (archiving || !archiveReason) return;
+    setArchiving(true);
+    try {
+      await apiRequest(`/items/${id}/archive`, {
+        method: "POST",
+        body: {
+          reason: archiveReason,
+          customReason: archiveReason === "other" ? archiveCustom : undefined,
+        },
+      });
+      navigate(ROUTES.dashboard);
+    } catch (err) {
+      setError(getErrorMessage(err, t));
+      setArchiveOpen(false);
+    } finally {
+      setArchiving(false);
+    }
+  }
+
   const canSave = form.name.trim() !== "" && form.category !== "";
+  const canArchive = archiveReason !== "" && (archiveReason !== "other" || archiveCustom.trim() !== "");
   const maxYear = new Date().getFullYear() + 1;
+  const arc = t.archive;
+  const trf = t.transfer;
 
   if (backendDown) {
     return (
@@ -299,8 +329,84 @@ export function EditItemPage() {
               ? (edit?.saving ?? "Enregistrement\u2026")
               : (edit?.saveButton ?? "Enregistrer les modifications")}
           </Button>
+
+          {/* ── Archive & Transfer actions ──────────────── */}
+          <div className="mt-10 flex flex-wrap gap-3 border-t border-[var(--rcb-border)] pt-6">
+            {itemStatus !== "stolen" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setArchiveOpen(true)}
+              >
+                {arc?.button ?? "Archiver ce bien"}
+              </Button>
+            )}
+            <button
+              type="button"
+              disabled
+              className="cursor-not-allowed rounded-xl border border-[var(--rcb-border)] px-6 py-2 text-sm font-medium text-[var(--rcb-text-muted)] opacity-50"
+              title={trf?.comingSoon ?? "Bientôt disponible"}
+            >
+              {trf?.button ?? "Transférer ce bien"}
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* ── Archive modal ───────────────────────────────── */}
+      <Modal
+        open={archiveOpen}
+        onClose={() => setArchiveOpen(false)}
+        title={arc?.modalTitle ?? "Archiver le bien"}
+      >
+        <p className="text-sm text-[var(--rcb-text-muted)]">
+          {arc?.modalDescription ?? "Pourquoi souhaitez-vous archiver ce bien ?"}
+        </p>
+        <div className="mt-4 space-y-2">
+          {["destroyed", "lost", "discarded", "registration_error", "other"].map((reason) => (
+            <label key={reason} className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-[var(--rcb-surface)]">
+              <input
+                type="radio"
+                name="archive-reason"
+                value={reason}
+                checked={archiveReason === reason}
+                onChange={() => setArchiveReason(reason)}
+                className="accent-[var(--rcb-primary)]"
+              />
+              <span className="text-sm text-[var(--rcb-text-body)]">
+                {arc?.reasons?.[reason] ?? reason}
+              </span>
+            </label>
+          ))}
+        </div>
+        {archiveReason === "other" && (
+          <textarea
+            className="mt-3 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 py-3 text-sm text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
+            rows={2}
+            placeholder={arc?.customReasonPlaceholder ?? "Précisez la raison…"}
+            value={archiveCustom}
+            onChange={(e) => setArchiveCustom(e.target.value)}
+          />
+        )}
+        <div className="mt-6 flex gap-3">
+          <Button
+            onClick={handleArchive}
+            disabled={!canArchive || archiving}
+            size="sm"
+          >
+            {archiving
+              ? (arc?.archiving ?? "Archivage…")
+              : (arc?.confirmButton ?? "Archiver")}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setArchiveOpen(false)}
+          >
+            {arc?.cancelButton ?? "Annuler"}
+          </Button>
+        </div>
+      </Modal>
     </section>
   );
 }

@@ -1,11 +1,11 @@
 import type { FastifyInstance } from "fastify";
-import { eq } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
 import { z } from "zod";
-import { createItemSchema, updateItemSchema } from "@rnbp/shared";
+import { createItemSchema, updateItemSchema, archiveItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { items, itemPhotos, itemDocuments } from "../db/schema.js";
 import { requireVerifiedEmail } from "../middleware/auth.js";
-import { INVALID_ID, ITEM_NOT_FOUND } from "@rnbp/shared";
+import { INVALID_ID, ITEM_NOT_FOUND, ITEM_ALREADY_STOLEN } from "@rnbp/shared";
 import { AppError, forbidden } from "../utils/errors.js";
 
 const uuidSchema = z.string().uuid("Invalid identifier");
@@ -18,10 +18,16 @@ export async function itemRoutes(app: FastifyInstance) {
     { preHandler: requireVerifiedEmail },
     async (request, reply) => {
       const db = getDb();
+      const { archived } = request.query as { archived?: string };
+
+      const conditions = archived === "true"
+        ? eq(items.ownerId, request.userId!)
+        : and(eq(items.ownerId, request.userId!), isNull(items.archivedAt));
+
       const userItems = await db
         .select()
         .from(items)
-        .where(eq(items.ownerId, request.userId!))
+        .where(conditions)
         .orderBy(items.createdAt);
 
       return reply.send({ items: userItems });
@@ -119,6 +125,47 @@ export async function itemRoutes(app: FastifyInstance) {
           purchaseDate: body.purchaseDate
             ? new Date(body.purchaseDate)
             : undefined,
+          updatedAt: new Date(),
+        })
+        .where(eq(items.id, id))
+        .returning();
+
+      return reply.send({ item: updated });
+    },
+  );
+
+  // ── Archive item ─────────────────────────────────────────────────
+
+  app.post(
+    "/items/:id/archive",
+    { preHandler: requireVerifiedEmail },
+    async (request, reply) => {
+      const { id } = request.params as { id: string };
+      uuidSchema.parse(id);
+      const body = archiveItemSchema.parse(request.body);
+      const db = getDb();
+
+      const [existing] = await db
+        .select({ ownerId: items.ownerId, status: items.status, archivedAt: items.archivedAt })
+        .from(items)
+        .where(eq(items.id, id))
+        .limit(1);
+
+      if (!existing) throw new AppError(404, ITEM_NOT_FOUND, "Item not found");
+      if (existing.ownerId !== request.userId!) throw forbidden();
+      if (existing.status === "stolen") {
+        throw new AppError(400, ITEM_ALREADY_STOLEN, "Cannot archive a stolen item");
+      }
+      if (existing.archivedAt) {
+        throw new AppError(400, "ITEM_ALREADY_ARCHIVED", "Item is already archived");
+      }
+
+      const [updated] = await db
+        .update(items)
+        .set({
+          archivedAt: new Date(),
+          archiveReason: body.reason,
+          archiveReasonCustom: body.reason === "other" ? body.customReason ?? null : null,
           updatedAt: new Date(),
         })
         .where(eq(items.id, id))

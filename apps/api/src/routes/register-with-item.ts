@@ -52,6 +52,8 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
           lastName: body.account.lastName,
           phone: body.account.phone ?? null,
           clientNumber,
+          preferredLanguage: body.account.preferredLanguage ?? "fr",
+          termsAcceptedAt: new Date(),
         })
         .returning({
           id: users.id,
@@ -62,6 +64,8 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
           emailVerified: users.emailVerified,
           isAdmin: users.isAdmin,
           clientNumber: users.clientNumber,
+          preferredLanguage: users.preferredLanguage,
+          termsAcceptedAt: users.termsAcceptedAt,
           createdAt: users.createdAt,
         });
 
@@ -98,9 +102,10 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
 
     // Send verification email (fire & forget)
     const config = getConfig();
+    const lang = (result.user.preferredLanguage as "fr" | "en") ?? "fr";
     const verifyToken = createSignedToken(result.user.id, "verify-email", TOKEN_EXPIRY.EMAIL_VERIFICATION);
     const verifyUrl = `${config.FRONTEND_URL}/verify-email?token=${verifyToken}`;
-    sendEmail(buildVerificationEmail(result.user.firstName, result.user.email, verifyUrl)).catch((err) => {
+    sendEmail(buildVerificationEmail(result.user.firstName, result.user.email, verifyUrl, lang)).catch((err) => {
       app.log.error(err, "Failed to send verification email");
     });
 
@@ -114,6 +119,8 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
         emailVerified: result.user.emailVerified,
         isAdmin: result.user.isAdmin,
         clientNumber: result.user.clientNumber,
+        preferredLanguage: result.user.preferredLanguage,
+        termsAcceptedAt: result.user.termsAcceptedAt?.toISOString() ?? null,
         createdAt: result.user.createdAt.toISOString(),
       },
       item: result.item,

@@ -6,6 +6,7 @@ export const ROUTES = {
   lookup: "/lookup",
   registry: "/registry",
   about: "/about",
+  settings: "/settings",
   privacy: "/privacy",
   terms: "/terms",
   faq: "/faq",
