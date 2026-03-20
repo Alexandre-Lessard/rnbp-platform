@@ -52,10 +52,8 @@ export type SiteContent = {
   hero: {
     subtitleLine1: string;
     titleLine1: string;
-    tagline: string;
     description: string;
     freeLabel: string;
-    insurancePromo: string;
     imageAlt: string;
     trustBadges: TrustBadge[];
   };
@@ -356,6 +354,7 @@ export type SiteContent = {
   };
   insurance?: {
     heading: string;
+    promo: string;
     description: string;
     selectLabel: string;
     selectPlaceholder: string;
