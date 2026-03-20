@@ -211,9 +211,9 @@ All tables use UUID primary keys with `defaultRandom()` and `timestamptz` for te
 
 | Table | Description |
 |---|---|
-| **users** | User accounts. Supports both email/password and OAuth (Google, Microsoft). Tracks `emailVerified`, `isAdmin`, `clientNumber` (RNBP-assigned), and `tokenRevokedBefore` for mass session invalidation. `passwordHash` is nullable (OAuth-only users have no password). |
+| **users** | User accounts. Supports both email/password and OAuth (Google, Microsoft). Tracks `emailVerified`, `isAdmin`, `clientNumber` (RNBP-assigned), `preferredLanguage` (`fr`/`en`, default `fr`), `termsAcceptedAt` (timestamp of terms acceptance), and `tokenRevokedBefore` for mass session invalidation. `passwordHash` is nullable (OAuth-only users have no password). |
 | **sessions** | Active refresh token sessions. Stores a SHA-256 hash of the refresh token (never plaintext), device info, and expiry. Cascades on user deletion. Indexed by `userId`. |
-| **items** | Registered personal property. Each item belongs to an owner, has a category, optional brand/model/serial number, estimated value, and a status enum (`active`, `stolen`, `recovered`, `transferred`). The `rnbpNumber` (format `RNBP-XXXXXXXX`) is assigned by admin after sticker purchase. |
+| **items** | Registered personal property. Each item belongs to an owner, has a category, optional brand/model/serial number, estimated value, and a status enum (`active`, `stolen`, `recovered`, `transferred`). The `rnbpNumber` (format `RNBP-XXXXXXXX`) is assigned by admin after sticker purchase. Supports archival via `archivedAt`, `archiveReason` (destroyed/lost/discarded/registration_error/other), and `archiveReasonCustom` (free text for "other"). Archived items are excluded from listings by default. |
 | **item_photos** | Photos attached to items. One photo per item can be marked `isPrimary`. Cascades on item deletion. |
 | **item_documents** | Documents attached to items (receipts, warranties, appraisals). Stores URL, file type, and original filename. Cascades on item deletion. |
 | **theft_reports** | Theft declarations filed by item owners. Links to the item and the reporter. Tracks police report number, theft date/location, and a status enum (`pending`, `confirmed`, `resolved`, `dismissed`). |

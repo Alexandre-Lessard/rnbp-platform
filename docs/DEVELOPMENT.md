@@ -48,7 +48,8 @@ The frontend runs on `http://localhost:5173`, the API on `http://localhost:3000`
 | `GOOGLE_CLIENT_SECRET`     | Google OAuth client secret                         | (optional)                                     |
 | `MICROSOFT_CLIENT_ID`      | Microsoft OAuth client ID                          | (optional)                                     |
 | `MICROSOFT_CLIENT_SECRET`  | Microsoft OAuth client secret                      | (optional)                                     |
-| `ADMIN_ORDER_EMAIL`        | Email for admin order notifications                | (optional)                                     |
+| `ADMIN_ORDER_EMAIL`        | Email for admin order notifications                | (optional, fallback: `info@rnbp.ca` prod / `dev@rnbp.ca` dev) |
+| `ADMIN_CONTACT_EMAIL`      | Email for admin contact/partner form notifications | (optional, fallback: `info@rnbp.ca` prod / `dev@rnbp.ca` dev) |
 | `STRIPE_SECRET_KEY`        | Stripe secret key                                  | (optional in dev)                              |
 | `STRIPE_WEBHOOK_SECRET`    | Stripe webhook signing secret                      | (see Stripe section below)                     |
 | `STRIPE_PRICE_STICKER_SHEET` | Stripe Price ID for sticker sheet product       | (optional in dev)                              |
