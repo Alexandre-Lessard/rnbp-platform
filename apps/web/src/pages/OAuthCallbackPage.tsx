@@ -59,7 +59,7 @@ export function OAuthCallbackPage() {
 
     const redirectUri = `${window.location.origin}/auth/${provider}/callback`;
 
-    redirectTo.current = getOAuthRedirect() || ROUTES.dashboard;
+    redirectTo.current = (getOAuthRedirect() || ROUTES.dashboard) as typeof ROUTES.dashboard;
 
     loginWithOAuth(provider, code, redirectUri, codeVerifier)
       .then((result) => {

@@ -146,6 +146,10 @@ export type SiteContent = {
     oauthNoEmail: string;
     oauthEmailPrompt: string;
     socialAccountError: string;
+    termsLabel: string;
+    termsLink: string;
+    termsAnd: string;
+    privacyLink: string;
   };
   dashboard?: {
     heading: string;
@@ -288,14 +292,11 @@ export type SiteContent = {
     heading: string;
     description: string;
     tabs: { citizen: string; police: string; insurer: string };
+    consultButton: string;
     citizenDescription: string;
-    citizenSignupButton: string;
-    citizenDashboardButton: string;
     citizenWhyTitle: string;
     citizenAdvantages: { title: string; text: string }[];
-    policeLoginButton: string;
     policeWhyTitle: string;
-    insurerLoginButton: string;
     insurerWhyTitle: string;
     contactButton: string;
     policeAccordion: {

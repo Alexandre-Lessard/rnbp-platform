@@ -37,6 +37,8 @@ export function EditItemPage() {
     estimatedValue: "",
     description: "",
   });
+  const [photos, setPhotos] = useState<{ id: string; url: string }[]>([]);
+  const [documents, setDocuments] = useState<{ id: string; url: string; fileName: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [itemStatus, setItemStatus] = useState("");
   const [saving, setSaving] = useState(false);
@@ -56,6 +58,8 @@ export function EditItemPage() {
     apiRequest<{ item: ItemWithFiles }>(`/items/${id}`)
       .then(({ item }) => {
         setItemStatus(item.status);
+        setPhotos(item.photos.map((p) => ({ id: p.id, url: p.url })));
+        setDocuments(item.documents.map((d) => ({ id: d.id, url: d.url, fileName: d.fileName })));
         setForm({
           name: item.name,
           category: item.category,
@@ -320,6 +324,51 @@ export function EditItemPage() {
               {reg?.descriptionHelper}
             </p>
           </div>
+
+          {/* ── Photos ───────────────────────────────────── */}
+          {photos.length > 0 && (
+            <div className="border-t border-[var(--rcb-border)] pt-6">
+              <h2 className="text-lg font-semibold text-[var(--rcb-text-strong)]">
+                {reg?.photosHeading ?? "Photos"}
+              </h2>
+              <div className="mt-3 flex flex-wrap gap-3">
+                {photos.map((photo) => (
+                  <img
+                    key={photo.id}
+                    src={photo.url}
+                    alt=""
+                    className="h-24 w-24 rounded-lg border border-[var(--rcb-border)] object-cover"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Documents ──────────────────────────────── */}
+          {documents.length > 0 && (
+            <div className="border-t border-[var(--rcb-border)] pt-6">
+              <h2 className="text-lg font-semibold text-[var(--rcb-text-strong)]">
+                {reg?.documentsHeading ?? "Documents"}
+              </h2>
+              <ul className="mt-3 space-y-2">
+                {documents.map((doc) => (
+                  <li
+                    key={doc.id}
+                    className="flex items-center justify-between rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-surface)] px-4 py-2 text-sm"
+                  >
+                    <a
+                      href={doc.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="truncate text-[var(--rcb-primary)] hover:underline"
+                    >
+                      {doc.fileName}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <Button
             onClick={handleSave}

@@ -586,8 +586,6 @@ const fr: SiteContent = {
     tabs: { citizen: "Citoyen", police: "Services Policiers", insurer: "Compagnie d'assurance" },
     citizenDescription: "Créez votre compte gratuitement pour consulter le registre",
     consultButton: "Consulter",
-    citizenSignupButton: "Créer un compte",
-    citizenDashboardButton: "Mon tableau de bord",
     citizenWhyTitle: "Avantages pour le citoyen qui consulte le registre",
     citizenAdvantages: [
       { title: "Vérifier si un bien a été déclaré volé", text: "Avant d'acheter un objet usagé (vélo, outil, appareil électronique, etc.), le citoyen peut vérifier si celui-ci figure dans le registre comme bien volé." },
@@ -601,9 +599,7 @@ const fr: SiteContent = {
       { title: "Accéder à une information centralisée", text: "Le registre regroupe les informations sur les biens enregistrés dans un seul système accessible." },
       { title: "Participer à une communauté plus sécuritaire", text: "En utilisant le registre, les citoyens contribuent à protéger les biens de tous et à faciliter le travail des policiers et des assureurs." },
     ],
-    policeLoginButton: "Se connecter",
     policeWhyTitle: "Pourquoi utiliser le registre",
-    insurerLoginButton: "Se connecter",
     insurerWhyTitle: "Avantage pour les assureurs",
     contactButton: "Nous contacter",
     policeAccordion: {

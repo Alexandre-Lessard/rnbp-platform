@@ -580,8 +580,6 @@ const en: SiteContent = {
     tabs: { citizen: "Citizen", police: "Law Enforcement", insurer: "Insurance Company" },
     citizenDescription: "Create your free account to consult the registry",
     consultButton: "Browse",
-    citizenSignupButton: "Create an account",
-    citizenDashboardButton: "My dashboard",
     citizenWhyTitle: "Benefits for citizens who consult the registry",
     citizenAdvantages: [
       { title: "Check if an item has been reported stolen", text: "Before buying a used item (bicycle, tool, electronic device, etc.), you can check if it appears in the registry as stolen property." },
@@ -595,9 +593,7 @@ const en: SiteContent = {
       { title: "Access centralized information", text: "The registry brings together information on registered items in a single accessible system." },
       { title: "Contribute to a safer community", text: "By using the registry, citizens help protect everyone's property and support the work of police and insurers." },
     ],
-    policeLoginButton: "Sign in",
     policeWhyTitle: "Why use the registry",
-    insurerLoginButton: "Sign in",
     insurerWhyTitle: "Benefits for insurers",
     contactButton: "Contact us",
     policeAccordion: {
