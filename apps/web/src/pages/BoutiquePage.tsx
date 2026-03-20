@@ -13,6 +13,7 @@ type UserItem = {
   id: string;
   name: string;
   status: string;
+  archivedAt: string | null;
 };
 
 // ── Feature icon (checkmark in circle) ──────────────────────────────
@@ -54,7 +55,7 @@ export function BoutiquePage() {
   useEffect(() => {
     if (!user) return;
     apiRequest<{ items: UserItem[] }>("/items")
-      .then((data) => setUserItems(data.items.filter((i: UserItem) => i.status !== "stolen")))
+      .then((data) => setUserItems(data.items.filter((i: UserItem) => i.status !== "stolen" && !i.archivedAt)))
       .catch(() => { /* ignore */ })
       .finally(() => setLoadingItems(false));
   }, [user]);

@@ -10,6 +10,7 @@ type Item = {
   name: string;
   rnbpNumber: string | null;
   status: string;
+  archivedAt: string | null;
 };
 
 export function ReportTheftPage() {
@@ -30,7 +31,7 @@ export function ReportTheftPage() {
   useEffect(() => {
     apiRequest<{ items: Item[] }>("/items")
       .then((data) => {
-        setItems(data.items.filter((i) => i.status === "active"));
+        setItems(data.items.filter((i) => i.status === "active" && !i.archivedAt));
       })
       .catch((err) => {
         if (isNetworkError(err)) { setBackendDown(true); return; }

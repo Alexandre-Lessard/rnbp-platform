@@ -79,8 +79,28 @@ export function RegisterAccountPage() {
             "Inscrivez-vous pour enregistrer vos biens"}
         </p>
 
-        <div className="mt-8">
-          <OAuthButtons />
+        <div className="mt-6 flex items-start gap-3">
+          <input
+            id="reg-terms"
+            type="checkbox"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+            className="mt-1 h-4 w-4 rounded border-[var(--rcb-border)] accent-[var(--rcb-primary)]"
+          />
+          <label htmlFor="reg-terms" className="text-sm text-[var(--rcb-text-body)]">
+            {t.auth?.termsLabel ?? "J'accepte les"}{" "}
+            <Link to={ROUTES.terms} className="text-[var(--rcb-primary)] hover:underline" target="_blank">
+              {t.auth?.termsLink ?? "conditions d'utilisation"}
+            </Link>{" "}
+            {t.auth?.termsAnd ?? "et la"}{" "}
+            <Link to={ROUTES.privacy} className="text-[var(--rcb-primary)] hover:underline" target="_blank">
+              {t.auth?.privacyLink ?? "politique de confidentialité"}
+            </Link>
+          </label>
+        </div>
+
+        <div className="mt-4">
+          <OAuthButtons disabled={!termsAccepted} />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -181,26 +201,6 @@ export function RegisterAccountPage() {
               onChange={(e) => update("phone", e.target.value)}
               className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
             />
-          </div>
-
-          <div className="flex items-start gap-3">
-            <input
-              id="reg-terms"
-              type="checkbox"
-              checked={termsAccepted}
-              onChange={(e) => setTermsAccepted(e.target.checked)}
-              className="mt-1 h-4 w-4 rounded border-[var(--rcb-border)] accent-[var(--rcb-primary)]"
-            />
-            <label htmlFor="reg-terms" className="text-sm text-[var(--rcb-text-body)]">
-              {t.auth?.termsLabel ?? "J'accepte les"}{" "}
-              <Link to={ROUTES.terms} className="text-[var(--rcb-primary)] hover:underline" target="_blank">
-                {t.auth?.termsLink ?? "conditions d'utilisation"}
-              </Link>{" "}
-              {t.auth?.termsAnd ?? "et la"}{" "}
-              <Link to={ROUTES.privacy} className="text-[var(--rcb-primary)] hover:underline" target="_blank">
-                {t.auth?.privacyLink ?? "politique de confidentialité"}
-              </Link>
-            </label>
           </div>
 
           <Button

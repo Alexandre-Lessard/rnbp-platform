@@ -10,10 +10,12 @@ export function SettingsPage() {
   const [lang, setLang] = useState(user?.preferredLanguage ?? "fr");
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   async function handleSave() {
     setSaving(true);
     setSuccess(false);
+    setError(false);
     try {
       await apiRequest("/auth/profile", {
         method: "PATCH",
@@ -23,7 +25,8 @@ export function SettingsPage() {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch {
-      // silently fail
+      setError(true);
+      setTimeout(() => setError(false), 5000);
     } finally {
       setSaving(false);
     }
@@ -70,6 +73,11 @@ export function SettingsPage() {
             {success && (
               <span className="text-sm font-medium text-green-600">
                 {s?.successMessage ?? "Saved!"}
+              </span>
+            )}
+            {error && (
+              <span className="text-sm font-medium text-red-600">
+                {t.errors?.generic ?? "Error"}
               </span>
             )}
           </div>

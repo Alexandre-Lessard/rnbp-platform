@@ -65,9 +65,10 @@ function OAuthButton({
 const GOOGLE_ENABLED = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const MICROSOFT_ENABLED = !!import.meta.env.VITE_MICROSOFT_CLIENT_ID;
 
-export function OAuthButtons({ redirect }: { redirect?: string } = {}) {
+export function OAuthButtons({ redirect, disabled: externalDisabled }: { redirect?: string; disabled?: boolean } = {}) {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
+  const isDisabled = loading || !!externalDisabled;
 
   if (!GOOGLE_ENABLED && !MICROSOFT_ENABLED) return null;
 
@@ -90,7 +91,7 @@ export function OAuthButtons({ redirect }: { redirect?: string } = {}) {
           label={t.auth?.googleButton ?? "Continuer avec Google"}
           icon={<GoogleIcon />}
           onClick={handleClick}
-          disabled={loading}
+          disabled={isDisabled}
         />
       )}
       {MICROSOFT_ENABLED && (
@@ -99,7 +100,7 @@ export function OAuthButtons({ redirect }: { redirect?: string } = {}) {
           label={t.auth?.microsoftButton ?? "Continuer avec Microsoft"}
           icon={<MicrosoftIcon />}
           onClick={handleClick}
-          disabled={loading}
+          disabled={isDisabled}
         />
       )}
 
