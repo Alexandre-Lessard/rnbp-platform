@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
-import { useCart } from "@/lib/cart-context";
+import { useCart, cartKey } from "@/lib/cart-context";
 import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
 import { getButtonClasses } from "@/lib/button-styles";
@@ -61,7 +61,13 @@ export function DashboardPage() {
   }, [t]);
 
   function doAddItem(item: Item) {
-    addItem({ itemId: item.id, itemName: item.name, productName: t.shop?.productName });
+    addItem({
+      productId: "",
+      productSlug: "sticker-sheet",
+      productName: t.shop?.productName ?? "",
+      itemId: item.id,
+      itemName: item.name,
+    });
     setAddedId(item.id);
     setTimeout(() => setAddedId(null), 2500);
   }
@@ -69,7 +75,8 @@ export function DashboardPage() {
   function handleOrderStickers(item: Item) {
     if (addedId === item.id) return;
 
-    const alreadyInCart = cart.some((c) => c.itemId === item.id);
+    const key = cartKey({ productSlug: "sticker-sheet", itemId: item.id });
+    const alreadyInCart = cart.some((c) => cartKey(c) === key);
     if (alreadyInCart) {
       setConfirmItem(item);
     } else {

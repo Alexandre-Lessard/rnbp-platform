@@ -564,6 +564,11 @@ const fr: SiteContent = {
     addButton: "Ajouter au panier",
     comingSoonBanner: "Boutique bientôt disponible — explorez nos produits en attendant\u00a0!",
     comingSoonCheckout: "La boutique ouvrira bientôt",
+    loadingProducts: "Chargement des produits...",
+    loadError: "Impossible de charger les produits. Veuillez réessayer plus tard.",
+    freePrice: "Gratuit",
+    forWhichItem: "Pour quel bien\u00a0?",
+    confirmAdd: "Ajouter",
   },
   report: {
     heading: "Déclarer un vol",

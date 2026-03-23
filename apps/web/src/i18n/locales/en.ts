@@ -558,6 +558,11 @@ const en: SiteContent = {
     addButton: "Add to cart",
     comingSoonBanner: "Shop coming soon — browse our products in the meantime!",
     comingSoonCheckout: "Shop opening soon",
+    loadingProducts: "Loading products...",
+    loadError: "Unable to load products. Please try again later.",
+    freePrice: "Free",
+    forWhichItem: "For which item?",
+    confirmAdd: "Add",
   },
   report: {
     heading: "Report a theft",

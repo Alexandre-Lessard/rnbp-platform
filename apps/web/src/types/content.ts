@@ -272,6 +272,11 @@ export type SiteContent = {
     addButton: string;
     comingSoonBanner: string;
     comingSoonCheckout: string;
+    loadingProducts: string;
+    loadError: string;
+    freePrice: string;
+    forWhichItem: string;
+    confirmAdd: string;
   };
   report?: {
     heading: string;

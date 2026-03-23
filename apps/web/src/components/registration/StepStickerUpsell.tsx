@@ -18,12 +18,14 @@ export function StepStickerUpsell({ onNext, onBack, itemName }: StepStickerUpsel
   const [added, setAdded] = useState(false);
 
   function handleAddToCart() {
-    // Ajoute au panier avec un rnbpNumber temporaire "pending:<itemName>"
-    // qui sera remplacé par le vrai numéro RNBP après la création de l'item
+    // Add to cart with a temporary "pending:<itemName>" itemId
+    // which will be replaced by the real UUID after item creation
     addItem({
+      productId: "",
+      productSlug: "sticker-sheet",
+      productName: t.shop?.productName ?? "",
       itemId: `pending:${itemName}`,
       itemName,
-      productName: t.shop?.productName,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
