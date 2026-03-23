@@ -52,7 +52,8 @@ The frontend runs on `http://localhost:5173`, the API on `http://localhost:3000`
 | `ADMIN_CONTACT_EMAIL`      | Email for admin contact/partner form notifications | (optional, fallback: `info@rnbp.ca` prod / `dev@rnbp.ca` dev) |
 | `STRIPE_SECRET_KEY`        | Stripe secret key                                  | (optional in dev)                              |
 | `STRIPE_WEBHOOK_SECRET`    | Stripe webhook signing secret                      | (see Stripe section below)                     |
-| `STRIPE_PRICE_STICKER_SHEET` | Stripe Price ID for sticker sheet product       | (optional in dev)                              |
+
+> **Note**: Stripe Price IDs are stored in the `products` database table, not in environment variables. Configure them via the admin UI (`/admin/products`) or directly in the DB after creating prices in Stripe.
 
 ### Web (`apps/web/.env`)
 
@@ -71,6 +72,7 @@ All scripts are run from the monorepo root with `pnpm`.
 | `pnpm dev`          | Start frontend dev server (port 5173)            |
 | `pnpm dev:api`      | Start backend dev server (port 3000)             |
 | `pnpm dev:all`      | Start both frontend and backend in parallel      |
+| `npm run dev:full`  | Start Docker, frontend, backend, and Stripe CLI  |
 | `pnpm build`        | Build all packages                               |
 | `pnpm build:web`    | Build frontend only                              |
 | `pnpm build:api`    | Build backend only                               |
