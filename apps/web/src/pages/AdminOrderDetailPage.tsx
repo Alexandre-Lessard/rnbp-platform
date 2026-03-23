@@ -9,12 +9,17 @@ import { ROUTES } from "@/routes/routes";
 type OrderItem = {
   id: string;
   quantity: number;
+  unitPriceCents: number;
   rnbpNumber: string | null;
   itemId: string | null;
   itemName: string | null;
   itemCategory: string | null;
   itemBrand: string | null;
   itemModel: string | null;
+  productSlug: string | null;
+  productNameFr: string | null;
+  productNameEn: string | null;
+  customMechanic: string | null;
 };
 
 type OrderDetail = {
@@ -122,7 +127,10 @@ export function AdminOrderDetailPage() {
     );
   }
 
-  const allAssigned = order.items.every((item) => item.rnbpNumber);
+  const needsRnbp = (item: OrderItem) => item.customMechanic === "item-linked-stickers";
+  const allAssigned = order.items
+    .filter(needsRnbp)
+    .every((item) => item.rnbpNumber);
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
@@ -153,39 +161,52 @@ export function AdminOrderDetailPage() {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="font-medium text-[var(--rcb-text-strong)]">
-                    {item.itemName ?? "Item inconnu"}
+                    {needsRnbp(item)
+                      ? (item.itemName ?? "Item inconnu")
+                      : (item.productNameFr ?? item.productSlug ?? "Produit")}
                   </p>
-                  <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
-                    {[item.itemCategory, item.itemBrand, item.itemModel].filter(Boolean).join(" — ")}
-                  </p>
+                  {needsRnbp(item) && (
+                    <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
+                      {[item.itemCategory, item.itemBrand, item.itemModel].filter(Boolean).join(" — ")}
+                    </p>
+                  )}
                   <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
                     Quantité : {item.quantity}
+                    {item.unitPriceCents != null && (
+                      <> — {(item.unitPriceCents / 100).toFixed(2)} $</>
+                    )}
                   </p>
                 </div>
 
-                {item.rnbpNumber ? (
-                  <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                    {item.rnbpNumber}
-                  </span>
+                {needsRnbp(item) ? (
+                  item.rnbpNumber ? (
+                    <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+                      {item.rnbpNumber}
+                    </span>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="RNBP-XXXXXXXX"
+                        value={inputs[item.id] ?? ""}
+                        onChange={(e) =>
+                          setInputs((prev) => ({ ...prev, [item.id]: e.target.value }))
+                        }
+                        className="h-9 w-40 rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-3 text-sm uppercase text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => handleAssign(item.id)}
+                        disabled={assigning[item.id]}
+                      >
+                        {assigning[item.id] ? "..." : "Assigner"}
+                      </Button>
+                    </div>
+                  )
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      placeholder="RNBP-XXXXXXXX"
-                      value={inputs[item.id] ?? ""}
-                      onChange={(e) =>
-                        setInputs((prev) => ({ ...prev, [item.id]: e.target.value }))
-                      }
-                      className="h-9 w-40 rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-3 text-sm uppercase text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
-                    />
-                    <Button
-                      size="sm"
-                      onClick={() => handleAssign(item.id)}
-                      disabled={assigning[item.id]}
-                    >
-                      {assigning[item.id] ? "..." : "Assigner"}
-                    </Button>
-                  </div>
+                  <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+                    Produit standard
+                  </span>
                 )}
               </div>
               {assignErrors[item.id] && (
@@ -208,7 +229,7 @@ export function AdminOrderDetailPage() {
             </Button>
             {!allAssigned && (
               <p className="mt-2 text-sm text-[var(--rcb-text-muted)]">
-                Assignez un numéro RNBP à tous les articles avant d'expédier.
+                Assignez un numéro RNBP aux articles qui le requièrent avant d'expédier.
               </p>
             )}
           </div>

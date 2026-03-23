@@ -119,14 +119,20 @@ export async function adminRoutes(app: FastifyInstance) {
           rnbpNumber: orderItems.rnbpNumber,
           productType: orderItems.productType,
           quantity: orderItems.quantity,
+          unitPriceCents: orderItems.unitPriceCents,
           itemName: items.name,
           itemCategory: items.category,
           itemBrand: items.brand,
           itemModel: items.model,
           itemRnbpNumber: items.rnbpNumber,
+          productSlug: products.slug,
+          productNameFr: products.nameFr,
+          productNameEn: products.nameEn,
+          customMechanic: products.customMechanic,
         })
         .from(orderItems)
         .leftJoin(items, eq(orderItems.itemId, items.id))
+        .leftJoin(products, eq(orderItems.productId, products.id))
         .where(eq(orderItems.orderId, id));
 
       return reply.send({ order: { ...order, customer, items: oi } });
@@ -212,13 +218,20 @@ export async function adminRoutes(app: FastifyInstance) {
         throw new AppError(400, ORDER_NOT_PAID, "Only paid orders can be shipped");
       }
 
-      // Verify all items have an RNBP number assigned
+      // Only items linked to a product with customMechanic = 'item-linked-stickers' need RNBP numbers.
+      // Products without customMechanic (e.g., door stickers) ship without RNBP assignment.
       const oi = await db
-        .select({ rnbpNumber: orderItems.rnbpNumber })
+        .select({
+          rnbpNumber: orderItems.rnbpNumber,
+          customMechanic: products.customMechanic,
+        })
         .from(orderItems)
+        .leftJoin(products, eq(orderItems.productId, products.id))
         .where(eq(orderItems.orderId, id));
 
-      const unassigned = oi.filter((i) => !i.rnbpNumber);
+      const unassigned = oi.filter(
+        (i) => i.customMechanic === "item-linked-stickers" && !i.rnbpNumber,
+      );
       if (unassigned.length > 0) {
         throw new AppError(
           400,
