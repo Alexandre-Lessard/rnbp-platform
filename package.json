@@ -6,6 +6,7 @@
     "dev": "pnpm --filter @rnbp/web dev",
     "dev:api": "pnpm --filter @rnbp/api dev",
     "dev:all": "pnpm -r --parallel dev",
+    "dev:full": "docker start postgres 2>/dev/null; pnpm -r --parallel dev & stripe listen --forward-to localhost:3000/api/shop/webhook & sleep 4 && echo '' && echo '✅ All services started — http://localhost:5173'",
     "build": "pnpm -r build",
     "build:web": "pnpm --filter @rnbp/web build",
     "build:api": "pnpm --filter @rnbp/api build",
