@@ -474,30 +474,29 @@ export async function adminRoutes(app: FastifyInstance) {
       const since = new Date();
       since.setDate(since.getDate() - daysBack);
 
+      const sinceStr = since.toISOString();
+
       const [registrations, itemSeries, revenue] = await Promise.all([
-        db.execute(sql`
-          SELECT date_trunc(${validPeriod}, created_at) AS date, COUNT(*)::int AS count
+        db.execute(sql.raw(`
+          SELECT date_trunc('${validPeriod}', created_at) AS date, COUNT(*)::int AS count
           FROM users
-          WHERE created_at >= ${since}
-          GROUP BY date
-          ORDER BY date
-        `),
-        db.execute(sql`
-          SELECT date_trunc(${validPeriod}, created_at) AS date, COUNT(*)::int AS count
+          WHERE created_at >= '${sinceStr}'
+          GROUP BY 1 ORDER BY 1
+        `)),
+        db.execute(sql.raw(`
+          SELECT date_trunc('${validPeriod}', created_at) AS date, COUNT(*)::int AS count
           FROM items
-          WHERE created_at >= ${since}
-          GROUP BY date
-          ORDER BY date
-        `),
-        db.execute(sql`
-          SELECT date_trunc(${validPeriod}, created_at) AS date,
+          WHERE created_at >= '${sinceStr}'
+          GROUP BY 1 ORDER BY 1
+        `)),
+        db.execute(sql.raw(`
+          SELECT date_trunc('${validPeriod}', created_at) AS date,
                  COALESCE(SUM(total_amount_cents), 0)::int AS amount
           FROM orders
-          WHERE created_at >= ${since}
+          WHERE created_at >= '${sinceStr}'
             AND status IN ('paid', 'shipped')
-          GROUP BY date
-          ORDER BY date
-        `),
+          GROUP BY 1 ORDER BY 1
+        `)),
       ]);
 
       return reply.send({
@@ -603,6 +602,9 @@ export async function adminRoutes(app: FastifyInstance) {
 
     sseConnectionCount++;
     startMetricsCollection();
+
+    // Send initial data immediately
+    reply.raw.write(`data: ${JSON.stringify(metricsCache)}\n\n`);
 
     // Write cached metrics every 2 seconds to this connection
     const writeInterval = setInterval(() => {
