@@ -404,5 +404,38 @@ export type SiteContent = {
     newsletterError: string;
     newsletterUnavailable: string;
   };
+  admin?: {
+    nav: {
+      dashboard: string;
+      orders: string;
+      products: string;
+    };
+    dashboard: {
+      title: string;
+      totalUsers: string;
+      totalItems: string;
+      ordersCompleted: string;
+      revenue: string;
+      chartsTitle: string;
+      registrations: string;
+      itemsRegistered: string;
+      revenueOverTime: string;
+      itemsByCategory: string;
+      periodDay: string;
+      periodWeek: string;
+      periodMonth: string;
+      serverMetrics: string;
+      live: string;
+      cpu: string;
+      ram: string;
+      nodeHeap: string;
+      dbSize: string;
+      connections: string;
+      reqPerMin: string;
+      uptime: string;
+      activityFeed: string;
+      noActivity: string;
+    };
+  };
   apiErrors?: Record<string, string>;
 };

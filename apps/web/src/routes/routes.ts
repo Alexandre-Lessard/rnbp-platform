@@ -19,8 +19,11 @@ export const ROUTES = {
   dashboard: "/dashboard",
   edit: (id: string) => `/edit/${id}`,
   reportTheft: "/report-theft",
+  admin: "/admin",
   adminOrders: "/admin/orders",
   adminOrderDetail: (id: string) => `/admin/orders/${id}`,
+  adminProducts: "/admin/products",
+  adminProductEdit: (id: string) => `/admin/products/${id}`,
   googleCallback: "/auth/google/callback",
   microsoftCallback: "/auth/microsoft/callback",
 } as const;

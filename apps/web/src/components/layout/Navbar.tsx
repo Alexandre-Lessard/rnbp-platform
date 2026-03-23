@@ -43,7 +43,7 @@ export function Navbar() {
             <>
               {user.isAdmin && (
                 <Link
-                  to={ROUTES.adminOrders}
+                  to={ROUTES.admin}
                   className="flex h-9 items-center rounded-lg px-3 text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:bg-[var(--rcb-border)] hover:text-[var(--rcb-primary)]"
                 >
                   Admin
@@ -126,7 +126,7 @@ export function Navbar() {
                   <>
                     {user.isAdmin && (
                       <Link
-                        to={ROUTES.adminOrders}
+                        to={ROUTES.admin}
                         onClick={() => setMenuOpen(false)}
                         className={getButtonClasses("outline", "sm", "w-full")}
                       >

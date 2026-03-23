@@ -55,6 +55,8 @@ import { BoutiquePage } from "@/pages/BoutiquePage";
 import { BoutiqueSuccessPage } from "@/pages/BoutiqueSuccessPage";
 import { AdminOrdersPage } from "@/pages/AdminOrdersPage";
 import { AdminOrderDetailPage } from "@/pages/AdminOrderDetailPage";
+import { AdminDashboardPage } from "@/pages/AdminDashboardPage";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
 import { EmailPendingPage } from "@/pages/EmailPendingPage";
 import { EditItemPage } from "@/pages/EditItemPage";
@@ -132,10 +134,22 @@ function App() {
             }
           />
           <Route
+            path={ROUTES.admin}
+            element={
+              <AdminRoute>
+                <AdminLayout>
+                  <AdminDashboardPage />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+          <Route
             path={ROUTES.adminOrders}
             element={
               <AdminRoute>
-                <AdminOrdersPage />
+                <AdminLayout>
+                  <AdminOrdersPage />
+                </AdminLayout>
               </AdminRoute>
             }
           />
@@ -143,7 +157,9 @@ function App() {
             path="/admin/orders/:id"
             element={
               <AdminRoute>
-                <AdminOrderDetailPage />
+                <AdminLayout>
+                  <AdminOrderDetailPage />
+                </AdminLayout>
               </AdminRoute>
             }
           />
