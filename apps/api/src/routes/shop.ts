@@ -7,7 +7,7 @@ import { getDb } from "../db/client.js";
 import { orders, orderItems, items, users } from "../db/schema.js";
 import { getConfig } from "../config.js";
 import { requireVerifiedEmail } from "../middleware/auth.js";
-import { sendEmail, buildOrderNotificationEmail } from "../utils/email.js";
+import { sendEmail, buildOrderNotificationEmail, buildOrderConfirmationEmail } from "../utils/email.js";
 import { ITEMS_NOT_OWNED } from "@rnbp/shared";
 import { AppError } from "../utils/errors.js";
 
@@ -235,6 +235,42 @@ export async function shopRoutes(app: FastifyInstance) {
                 shippingAddress: shippingAddr,
               }),
             ).catch((err) => console.error("[shop] Admin notification failed:", err));
+
+            // Send order confirmation to client
+            const customerEmail = session.customer_details?.email;
+            if (customerEmail) {
+              // Determine language from user's preferredLanguage, fallback to "fr"
+              const [orderRow] = await db
+                .select({ userId: orders.userId })
+                .from(orders)
+                .where(eq(orders.id, orderId))
+                .limit(1);
+
+              let lang: "fr" | "en" = "fr";
+              if (orderRow?.userId) {
+                const [user] = await db
+                  .select({ preferredLanguage: users.preferredLanguage })
+                  .from(users)
+                  .where(eq(users.id, orderRow.userId))
+                  .limit(1);
+                if (user?.preferredLanguage === "en") lang = "en";
+              }
+
+              sendEmail(
+                buildOrderConfirmationEmail(
+                  {
+                    orderId,
+                    email: customerEmail,
+                    totalAmountCents: session.amount_total || 0,
+                    taxAmountCents,
+                    productLines,
+                    shippingName: shipping?.name || null,
+                    shippingAddress: shippingAddr,
+                  },
+                  lang,
+                ),
+              ).catch((err) => console.error("[shop] Client confirmation failed:", err));
+            }
           }
         }
       }

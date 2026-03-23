@@ -315,3 +315,115 @@ export function buildResetEmail(
     }),
   };
 }
+
+// ── Order confirmation (client) ──────────────────────────────────────
+
+export function buildOrderConfirmationEmail(
+  opts: {
+    orderId: string;
+    email: string;
+    totalAmountCents: number;
+    taxAmountCents: number;
+    productLines: { name: string; quantity: number; amountCents: number }[];
+    shippingName: string | null;
+    shippingAddress: string | null;
+  },
+  lang: "fr" | "en" = "fr",
+): EmailPayload {
+  const config = getConfig();
+  const total = (opts.totalAmountCents / 100).toFixed(2);
+  const tax = (opts.taxAmountCents / 100).toFixed(2);
+  const subtotal = ((opts.totalAmountCents - opts.taxAmountCents) / 100).toFixed(2);
+  const safeName = opts.shippingName ? escapeHtml(opts.shippingName) : "—";
+  const orderShort = opts.orderId.slice(0, 8);
+
+  let addressHtml = "—";
+  if (opts.shippingAddress) {
+    try {
+      const addr = JSON.parse(opts.shippingAddress);
+      addressHtml = escapeHtml(
+        [addr.line1, addr.line2, `${addr.city}, ${addr.state} ${addr.postal_code}`, addr.country]
+          .filter(Boolean)
+          .join(", "),
+      );
+    } catch {
+      addressHtml = escapeHtml(opts.shippingAddress);
+    }
+  }
+
+  const productRowsHtml = opts.productLines
+    .map(
+      (p) =>
+        `<tr><td style="padding: 6px 0; color: #333333;">${escapeHtml(p.name)}</td><td style="padding: 6px 0; text-align: center; color: #333333;">×${p.quantity}</td><td style="padding: 6px 0; text-align: right; color: #333333;">${(p.amountCents / 100).toFixed(2)} $</td></tr>`,
+    )
+    .join("");
+
+  // Tax numbers (placeholders)
+  const TPS_NUMBER = "XXXXX XXXX RT0001";
+  const TVQ_NUMBER = "XXXX XXXX XXXX TQ0001";
+
+  const i18n = {
+    fr: {
+      subject: `Confirmation de commande #${orderShort} — RNBP`,
+      heading: "Merci pour votre commande\u00a0!",
+      orderLabel: "Commande",
+      productsLabel: "Produits",
+      subtotalLabel: "Sous-total",
+      taxLabel: "Taxes (TPS/TVQ)",
+      totalLabel: "Total",
+      shippingLabel: "Livraison",
+      nameLabel: "Nom",
+      addressLabel: "Adresse",
+      cta: "Voir mon tableau de bord",
+      note: "Ce courriel ne remplace pas votre reçu Stripe, qui vous a été envoyé séparément.",
+    },
+    en: {
+      subject: `Order confirmation #${orderShort} — NRPP`,
+      heading: "Thank you for your order!",
+      orderLabel: "Order",
+      productsLabel: "Products",
+      subtotalLabel: "Subtotal",
+      taxLabel: "Taxes (GST/QST)",
+      totalLabel: "Total",
+      shippingLabel: "Shipping",
+      nameLabel: "Name",
+      addressLabel: "Address",
+      cta: "View my dashboard",
+      note: "This email does not replace your Stripe receipt, which was sent separately.",
+    },
+  }[lang];
+
+  const dashboardUrl = `${config.FRONTEND_URL}/dashboard`;
+
+  return {
+    to: opts.email,
+    subject: i18n.subject,
+    html: buildBaseEmail({
+      body: `
+        <h2 style="margin: 0 0 16px; color: #1a2e44; font-size: 20px;">${i18n.heading}</h2>
+
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333; width: 100px;">${i18n.orderLabel}</td><td style="padding: 8px 0; color: #333333;">#${escapeHtml(orderShort)}</td></tr>
+        </table>
+
+        <h3 style="margin: 20px 0 8px; font-size: 14px; color: #1a2e44;">${i18n.productsLabel}</h3>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-top: 1px solid #eeeeee;">
+          ${productRowsHtml}
+          <tr style="border-top: 1px solid #eeeeee;"><td style="padding: 6px 0; font-weight: bold; color: #333333;" colspan="2">${i18n.subtotalLabel}</td><td style="padding: 6px 0; text-align: right; color: #333333;">${subtotal} $</td></tr>
+          <tr><td style="padding: 6px 0; color: #666666;" colspan="2">${i18n.taxLabel}</td><td style="padding: 6px 0; text-align: right; color: #666666;">${tax} $</td></tr>
+          <tr style="border-top: 2px solid #1a2e44;"><td style="padding: 8px 0; font-weight: bold; font-size: 16px; color: #1a2e44;" colspan="2">${i18n.totalLabel}</td><td style="padding: 8px 0; text-align: right; font-weight: bold; font-size: 16px; color: #1a2e44;">${total} $ CAD</td></tr>
+        </table>
+
+        <h3 style="margin: 20px 0 8px; font-size: 14px; color: #1a2e44;">${i18n.shippingLabel}</h3>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+          <tr><td style="padding: 6px 0; font-weight: bold; width: 100px; color: #333333;">${i18n.nameLabel}</td><td style="padding: 6px 0; color: #333333;">${safeName}</td></tr>
+          <tr><td style="padding: 6px 0; font-weight: bold; color: #333333;">${i18n.addressLabel}</td><td style="padding: 6px 0; color: #333333;">${addressHtml}</td></tr>
+        </table>
+
+        ${emailButton(i18n.cta, dashboardUrl)}
+
+        <p style="color: #999999; font-size: 11px; margin-top: 8px;">TPS : ${TPS_NUMBER} | TVQ : ${TVQ_NUMBER}</p>
+        <p style="color: #999999; font-size: 12px; margin-top: 8px;">${i18n.note}</p>`,
+    }),
+  };
+}
