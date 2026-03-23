@@ -70,8 +70,8 @@ const fr: SiteContent = {
     myAccount: "Mon compte",
   },
   hero: {
-    subtitleLine1: "Vos biens ont maintenant",
-    titleLine1: "une identité",
+    subtitleLine1: "Vos biens méritent",
+    titleLine1: "une identité et une protection",
     description:
       "Le registre canadien qui documente vos biens de valeur pour faciliter leur identification et leur restitution en cas de vol ou de perte. Gratuit.",
     freeLabel: "Enregistrement 100% gratuit",

@@ -70,8 +70,8 @@ const en: SiteContent = {
     myAccount: "My Account",
   },
   hero: {
-    subtitleLine1: "Your belongings now have",
-    titleLine1: "an identity",
+    subtitleLine1: "Your belongings deserve",
+    titleLine1: "an identity and protection",
     description:
       "The Canadian registry that documents your valuables to simplify identification and recovery in case of theft or loss. Free.",
     freeLabel: "Registration is 100% free",
