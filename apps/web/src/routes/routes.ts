@@ -4,6 +4,7 @@ export const ROUTES = {
   register: "/register",
   registerItem: "/register-item",
   lookup: "/lookup",
+  lookupPhoto: "/lookup/photo",
   registry: "/registry",
   about: "/about",
   settings: "/settings",

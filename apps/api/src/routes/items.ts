@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import { createItemSchema, updateItemSchema, archiveItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
@@ -200,7 +200,51 @@ export async function itemRoutes(app: FastifyInstance) {
     },
   );
 
-  // ── Public lookup ────────────────────────────────────────────────
+  // ── Public unified lookup (RNBP number or serial number) ─────────
+
+  app.get("/lookup", {
+    config: { rateLimit: { max: 30, timeWindow: "1 minute" } },
+  }, async (request, reply) => {
+    const { q } = request.query as { q?: string };
+    if (!q || !q.trim()) {
+      return reply.send({ found: false });
+    }
+
+    const db = getDb();
+    const query = q.trim().toUpperCase();
+    // Normalize: strip spaces, dashes, underscores for serial number comparison
+    const normalized = query.replace(/[\s\-_]/g, "");
+
+    const [item] = await db
+      .select({
+        status: items.status,
+        category: items.category,
+        brand: items.brand,
+        model: items.model,
+      })
+      .from(items)
+      .where(
+        or(
+          eq(items.rnbpNumber, query),
+          sql`upper(replace(replace(replace(${items.serialNumber}, ' ', ''), '-', ''), '_', '')) = ${normalized}`,
+        ),
+      )
+      .limit(1);
+
+    if (!item) {
+      return reply.send({ found: false });
+    }
+
+    return reply.send({
+      found: true,
+      status: item.status,
+      category: item.category,
+      brand: item.brand,
+      model: item.model,
+    });
+  });
+
+  // ── Public lookup by RNBP number (backward compat) ────────────
 
   app.get("/lookup/:rnbpNumber", {
     config: { rateLimit: { max: 30, timeWindow: "1 minute" } },

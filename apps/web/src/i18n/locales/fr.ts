@@ -571,13 +571,14 @@ const fr: SiteContent = {
   },
   lookup: {
     heading: "Vérifier un bien",
-    description: "Entrez un numéro RNBP pour vérifier le statut d'un bien.",
-    inputPlaceholder: "RNBP-XXXXXXXX",
+    description: "Entrez un numéro RNBP ou un numéro de série pour vérifier le statut d'un bien.",
+    inputPlaceholder: "RNBP-XXXXXXXX ou numéro de série",
     searchButton: "Vérifier",
     searching: "Recherche...",
     foundMessage: "Bien trouvé dans le registre",
     stolenMessage: "Ce bien a été déclaré volé",
     notFoundMessage: "Aucun bien trouvé avec ce numéro.",
+    photoSearchLink: "Recherche par photo",
   },
   partners: {
     heading: "Consulter le registre",

@@ -286,6 +286,7 @@ export type SiteContent = {
     foundMessage: string;
     stolenMessage: string;
     notFoundMessage: string;
+    photoSearchLink?: string;
   };
   partners?: {
     heading: string;

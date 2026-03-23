@@ -565,13 +565,14 @@ const en: SiteContent = {
   },
   lookup: {
     heading: "Verify an item",
-    description: "Enter a RNBP number to check an item's status.",
-    inputPlaceholder: "RNBP-XXXXXXXX",
+    description: "Enter a RNBP number or serial number to check an item's status.",
+    inputPlaceholder: "RNBP-XXXXXXXX or serial number",
     searchButton: "Verify",
     searching: "Searching...",
     foundMessage: "Item found in the registry",
     stolenMessage: "This item has been reported stolen",
     notFoundMessage: "No item found with this number.",
+    photoSearchLink: "Photo search",
   },
   partners: {
     heading: "Consult the Registry",

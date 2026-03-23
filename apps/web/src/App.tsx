@@ -61,6 +61,7 @@ import { EditItemPage } from "@/pages/EditItemPage";
 import { OAuthCallbackPage } from "@/pages/OAuthCallbackPage";
 import { AboutPage } from "@/pages/AboutPage";
 import { SettingsPage } from "@/pages/SettingsPage";
+import { LookupPhotoPage } from "@/pages/LookupPhotoPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 
 function App() {
@@ -85,6 +86,7 @@ function App() {
           <Route path={ROUTES.register} element={<RegisterAccountPage />} />
           <Route path={ROUTES.registerItem} element={<RegisterItemPage />} />
           <Route path={ROUTES.lookup} element={<LookupPage />} />
+          <Route path={ROUTES.lookupPhoto} element={<LookupPhotoPage />} />
           <Route path={ROUTES.registry} element={<PartnerPage />} />
           <Route path={ROUTES.privacy} element={<PrivacyPolicyPage />} />
           <Route path={ROUTES.terms} element={<TermsOfServicePage />} />
