@@ -1,12 +1,10 @@
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
-import { useAuth } from "@/lib/auth-context";
 import { getButtonClasses } from "@/lib/button-styles";
 import { ROUTES } from "@/routes/routes";
 
 export function HeroSection() {
   const { t } = useLanguage();
-  const { user } = useAuth();
 
   return (
     <section id="home" className="scroll-mt-28 bg-[var(--rcb-bg)]">
@@ -19,10 +17,6 @@ export function HeroSection() {
             {t.hero.titleLine1}
           </h1>
 
-          <p className="mt-8 border-l-2 border-[var(--rcb-primary)] pl-4 text-xl text-[var(--rcb-text)]">
-            {t.hero.tagline}
-          </p>
-
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-[var(--rcb-text-muted)] sm:text-xl">
             {t.hero.description}
           </p>
@@ -30,7 +24,7 @@ export function HeroSection() {
           <div className="mt-12 flex flex-wrap items-center gap-4">
             <Link to={ROUTES.registerItem} className={getButtonClasses("primary")}>{t.buttons.registerItem}</Link>
             <Link
-              to={user ? ROUTES.reportTheft : `${ROUTES.login}?redirect=${ROUTES.reportTheft}`}
+              to={ROUTES.lookup}
               className={getButtonClasses("outline")}
             >
               {t.buttons.declareStolen}
@@ -38,9 +32,6 @@ export function HeroSection() {
           </div>
           <p className="mt-4 text-lg font-medium text-[var(--rcb-primary)]">
             {t.hero.freeLabel}
-          </p>
-          <p className="mt-1 text-lg text-[var(--rcb-text-muted)]">
-            {t.hero.insurancePromo}
           </p>
         </div>
 

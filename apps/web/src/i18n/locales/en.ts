@@ -70,13 +70,11 @@ const en: SiteContent = {
     myAccount: "My Account",
   },
   hero: {
-    subtitleLine1: "Protect and recover",
-    titleLine1: "Your belongings",
-    tagline: "Simple and quick",
+    subtitleLine1: "Your belongings now have",
+    titleLine1: "an identity",
     description:
-      "Register your valuable belongings in a secure registry to simplify their identification and increase your chances of recovery in case of loss or theft.",
+      "The Canadian registry that documents your valuables to simplify identification and recovery in case of theft or loss. Free.",
     freeLabel: "Registration is 100% free",
-    insurancePromo: "Register your belongings and get a discount on your home insurance",
     imageAlt:
       "Bike, laptop, phone, watch, golf cart and other belongings",
     trustBadges: [
@@ -377,8 +375,8 @@ const en: SiteContent = {
       "\u00a9 {{year}} National Registry of Personal Property. All rights reserved.",
   },
   buttons: {
-    registerItem: "Register an item",
-    declareStolen: "Report a stolen item",
+    registerItem: "Register for free",
+    declareStolen: "Verify an item",
     signUp: "Sign up",
     verifyItem: "Verify an item",
   },
@@ -666,6 +664,7 @@ const en: SiteContent = {
   },
   insurance: {
     heading: "Get a discount on your insurance",
+    promo: "Register your belongings and get a discount on your home insurance",
     description: "Most insurers offer a discount to NRPP members. Select your insurer and contact them to check if you're eligible.",
     selectLabel: "Your insurer",
     selectPlaceholder: "Select your insurer",

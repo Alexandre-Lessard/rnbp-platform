@@ -70,13 +70,11 @@ const fr: SiteContent = {
     myAccount: "Mon compte",
   },
   hero: {
-    subtitleLine1: "Protéger et retrouver",
-    titleLine1: "Vos biens",
-    tagline: "C\u2019est simple et rapide",
+    subtitleLine1: "Vos biens ont maintenant",
+    titleLine1: "une identité",
     description:
-      "Enregistrez vos biens de valeur dans un registre s\u00e9curis\u00e9 afin de simplifier leur identification et d\u2019augmenter vos chances de restitution en cas de perte ou de vol.",
+      "Le registre canadien qui documente vos biens de valeur pour faciliter leur identification et leur restitution en cas de vol ou de perte. Gratuit.",
     freeLabel: "Enregistrement 100% gratuit",
-    insurancePromo: "Enregistrez vos biens et obtenez un rabais sur votre assurance habitation",
     imageAlt:
       "V\u00e9lo, laptop, cellulaire, montre, voiturette de golf et autres biens",
     trustBadges: [
@@ -383,8 +381,8 @@ const fr: SiteContent = {
       "\u00a9 {{year}} Registre national des biens personnels. Tous droits r\u00e9serv\u00e9s.",
   },
   buttons: {
-    registerItem: "Enregistrer un bien",
-    declareStolen: "D\u00e9clarer un bien vol\u00e9",
+    registerItem: "Enregistrer gratuitement",
+    declareStolen: "Vérifier un bien",
     signUp: "S\u2019inscrire",
     verifyItem: "V\u00e9rifier un bien",
   },
@@ -672,6 +670,7 @@ const fr: SiteContent = {
   },
   insurance: {
     heading: "Obtenez un rabais sur votre assurance",
+    promo: "Enregistrez vos biens et obtenez un rabais sur votre assurance habitation",
     description: "La plupart des assureurs offrent un rabais aux membres du RNBP. Sélectionnez votre assureur et contactez-le pour vérifier si vous êtes éligible.",
     selectLabel: "Votre assureur",
     selectPlaceholder: "Sélectionnez votre assureur",

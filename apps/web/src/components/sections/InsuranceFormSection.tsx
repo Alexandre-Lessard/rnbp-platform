@@ -62,7 +62,12 @@ export function InsuranceFormSection() {
             <h2 className="text-4xl font-bold text-[var(--rcb-text)] sm:text-5xl">
               {ins.heading}
             </h2>
-            <p className="mt-6 text-xl leading-relaxed text-[var(--rcb-text-muted)]">
+            {ins.promo && (
+              <p className="mt-4 text-lg font-semibold text-[var(--rcb-primary)]">
+                {ins.promo}
+              </p>
+            )}
+            <p className="mt-4 text-xl leading-relaxed text-[var(--rcb-text-muted)]">
               {ins.description}
             </p>
           </div>
