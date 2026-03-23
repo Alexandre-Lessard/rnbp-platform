@@ -26,7 +26,7 @@ type OrderDetail = {
   id: string;
   email: string;
   status: string;
-  totalCents: number;
+  totalAmountCents: number;
   createdAt: string;
   items: OrderItem[];
 };
@@ -146,7 +146,7 @@ export function AdminOrderDetailPage() {
           <div className="mt-2 space-y-1 text-sm text-[var(--rcb-text-muted)]">
             <p>Client : {order.email}</p>
             <p>Date : {new Date(order.createdAt).toLocaleDateString("fr-CA")}</p>
-            <p>Total : {(order.totalCents / 100).toFixed(2)} $</p>
+            <p>Total : {(order.totalAmountCents / 100).toFixed(2)} $</p>
             <p>Statut : <span className="font-medium">{order.status}</span></p>
           </div>
         </div>

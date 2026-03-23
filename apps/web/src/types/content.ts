@@ -286,6 +286,7 @@ export type SiteContent = {
     heading: string;
     description: string;
     inputPlaceholder: string;
+    inputHint?: string;
     searchButton: string;
     searching: string;
     foundMessage: string;
@@ -426,9 +427,16 @@ export type SiteContent = {
       itemsRegistered: string;
       revenueOverTime: string;
       itemsByCategory: string;
+      periodPreview?: string;
       periodDay: string;
       periodWeek: string;
       periodMonth: string;
+      axisCount?: string;
+      axisRevenue?: string;
+      axisDayOfMonth?: string;
+      axisWeekNumber?: string;
+      axisMonth?: string;
+      axisItemCount?: string;
       serverMetrics: string;
       live: string;
       cpu: string;

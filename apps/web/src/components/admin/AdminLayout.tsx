@@ -11,7 +11,7 @@ type NavLink = {
 
 function DashboardIcon() {
   return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="7" height="7" rx="1" />
       <rect x="14" y="3" width="7" height="7" rx="1" />
       <rect x="3" y="14" width="7" height="7" rx="1" />
@@ -22,7 +22,7 @@ function DashboardIcon() {
 
 function OrdersIcon() {
   return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
       <rect x="8" y="2" width="8" height="4" rx="1" />
       <path d="M9 14l2 2 4-4" />
@@ -32,7 +32,7 @@ function OrdersIcon() {
 
 function ProductsIcon() {
   return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
       <line x1="7" y1="7" x2="7.01" y2="7" />
     </svg>
@@ -58,10 +58,20 @@ function CloseIcon() {
   );
 }
 
+function CollapseIcon({ collapsed }: { collapsed: boolean }) {
+  return (
+    <svg className={`h-4 w-4 transition-transform ${collapsed ? "rotate-180" : ""}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 17l-5-5 5-5" />
+      <path d="M18 17l-5-5 5-5" />
+    </svg>
+  );
+}
+
 export function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { t, locale } = useLanguage();
+  const { t } = useLanguage();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   const admin = t.admin;
 
@@ -78,45 +88,42 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     return location.pathname.startsWith(href);
   }
 
+  const sidebarWidth = collapsed ? "w-[64px]" : "w-[240px]";
+
   return (
     <div className="flex min-h-[calc(100vh-80px)]">
       {/* Desktop sidebar */}
-      <aside className="hidden w-[240px] shrink-0 flex-col border-r border-white/10 bg-[var(--rcb-text-strong)] lg:flex">
-        <div className="flex h-16 items-center gap-3 border-b border-white/10 px-6">
-          <img
-            src={`/assets/logo-texte-${locale}.png`}
-            alt="RNBP"
-            className="h-7 brightness-0 invert"
-          />
-        </div>
-
-        <nav className="mt-4 flex flex-1 flex-col gap-1 px-3">
+      <aside className={`hidden ${sidebarWidth} shrink-0 flex-col border-r border-white/10 bg-[var(--rcb-text-strong)] transition-all duration-200 lg:flex`}>
+        <nav className="mt-4 flex flex-1 flex-col gap-1 px-2">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               to={link.href}
-              className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
+              title={collapsed ? link.label : undefined}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
+                collapsed ? "justify-center" : ""
+              } ${
                 isActive(link.href)
                   ? "bg-white/15 text-white shadow-sm"
                   : "text-white/60 hover:bg-white/8 hover:text-white/90"
               }`}
             >
               {link.icon}
-              {link.label}
+              {!collapsed && <span>{link.label}</span>}
             </Link>
           ))}
         </nav>
 
-        <div className="border-t border-white/10 px-4 py-4">
-          <Link
-            to={ROUTES.dashboard}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-white/40 transition-colors hover:text-white/70"
+        <div className="border-t border-white/10 px-2 py-3">
+          <button
+            type="button"
+            onClick={() => setCollapsed(!collapsed)}
+            className={`flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-white/40 transition-colors hover:text-white/70 ${collapsed ? "justify-center" : ""}`}
+            title={collapsed ? "Expand" : "Collapse"}
           >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            {locale === "fr" ? "Retour au site" : "Back to site"}
-          </Link>
+            <CollapseIcon collapsed={collapsed} />
+            {!collapsed && <span>{t.a11y?.lang === "en" ? "Collapse" : "Réduire"}</span>}
+          </button>
         </div>
       </aside>
 

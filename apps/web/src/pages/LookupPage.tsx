@@ -66,10 +66,6 @@ export function LookupPage() {
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {t.lookup?.heading ?? "Vérifier un bien"}
         </h1>
-        <p className="mt-2 text-[var(--rcb-text-muted)]">
-          {t.lookup?.description ??
-            "Entrez un numéro RNBP ou un numéro de série pour vérifier le statut d'un bien."}
-        </p>
 
         <form
           onSubmit={handleSubmit}
@@ -77,7 +73,7 @@ export function LookupPage() {
         >
           <input
             type="text"
-            placeholder={t.lookup?.inputPlaceholder ?? "RNBP-XXXXXXXX ou numéro de série"}
+            placeholder={t.lookup?.inputPlaceholder ?? "Numéro de série ou identifiant unique"}
             value={query}
             onChange={(e) => setQuery(e.target.value.toUpperCase())}
             className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-center text-lg tracking-wider text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none sm:max-w-xs"
@@ -88,6 +84,9 @@ export function LookupPage() {
               : (t.lookup?.searchButton ?? "Vérifier")}
           </Button>
         </form>
+        <p className="mt-3 text-sm text-[var(--rcb-text-muted)]">
+          {t.lookup?.inputHint ?? "RNBP, numéro de série, IMEI ou autre identifiant"}
+        </p>
 
         {error && (
           <div className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">

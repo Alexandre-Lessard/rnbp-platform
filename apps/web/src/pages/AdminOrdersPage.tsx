@@ -9,7 +9,7 @@ type Order = {
   id: string;
   email: string;
   status: string;
-  totalCents: number;
+  totalAmountCents: number;
   itemCount: number;
   createdAt: string;
 };
@@ -97,7 +97,7 @@ export function AdminOrdersPage() {
                     {order.email}
                   </p>
                   <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
-                    {new Date(order.createdAt).toLocaleDateString("fr-CA")} — {order.itemCount} article{order.itemCount > 1 ? "s" : ""} — {(order.totalCents / 100).toFixed(2)} $
+                    {new Date(order.createdAt).toLocaleDateString("fr-CA")} — {order.itemCount} article{order.itemCount > 1 ? "s" : ""} — {(order.totalAmountCents / 100).toFixed(2)} $
                   </p>
                 </div>
                 <span

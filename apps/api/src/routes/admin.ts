@@ -553,7 +553,7 @@ export async function adminRoutes(app: FastifyInstance) {
     if (metricsInterval) return;
     // Collect immediately, then every 2s
     collectMetrics();
-    metricsInterval = setInterval(collectMetrics, 2000);
+    metricsInterval = setInterval(collectMetrics, 1000);
   }
 
   function stopMetricsCollection() {
@@ -593,11 +593,14 @@ export async function adminRoutes(app: FastifyInstance) {
       return reply.status(403).send({ error: "Admin access required" });
     }
 
-    // SSE headers
+    // SSE headers (manually include CORS since reply.raw bypasses Fastify CORS plugin)
+    const origin = request.headers.origin || "*";
     reply.raw.writeHead(200, {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
       Connection: "keep-alive",
+      "Access-Control-Allow-Origin": origin,
+      "Access-Control-Allow-Credentials": "true",
     });
 
     sseConnectionCount++;
@@ -613,7 +616,7 @@ export async function adminRoutes(app: FastifyInstance) {
       } catch {
         clearInterval(writeInterval);
       }
-    }, 2000);
+    }, 1000);
 
     // Clean up on disconnect
     request.raw.on("close", () => {

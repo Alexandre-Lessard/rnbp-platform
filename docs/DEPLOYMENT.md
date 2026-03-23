@@ -59,6 +59,33 @@ For the complete infrastructure guide (Proxmox containers, PostgreSQL, Node.js, 
 
 **[ops/SETUP.md](../ops/SETUP.md)**
 
+## Shop Products & Stripe
+
+The `products` table is created by Drizzle migration `0006_low_rattler.sql` with two seeded products (sticker-sheet and door-sticker). However, **the migration does not include Stripe Price IDs** — these must be configured manually after deployment.
+
+### Post-deploy setup for new Stripe environment
+
+1. Create products and prices in the Stripe Dashboard (or via Stripe CLI):
+   ```bash
+   # Example: create the door sticker price
+   stripe products create --name="Collant de protection RNBP"
+   stripe prices create --product=prod_XXX --unit-amount=1999 --currency=cad
+   ```
+
+2. Update the products in the RNBP admin (`/admin/products`) with the `stripePriceId` from Stripe.
+
+3. Alternatively, update directly in the database:
+   ```sql
+   UPDATE products SET stripe_price_id = 'price_xxx' WHERE slug = 'sticker-sheet';
+   UPDATE products SET stripe_price_id = 'price_xxx' WHERE slug = 'door-sticker';
+   ```
+
+Without a valid `stripePriceId`, the checkout will reject the product with a "no Stripe price configured" error.
+
+### Product management
+
+Products created via the admin UI (`/admin/products`) are stored only in the database — they are **not** in the migration seed. The `customMechanic` and `requiresItem` fields are dev-only and cannot be set from the admin interface.
+
 ## Domains
 
 | Domain | Language | Service |

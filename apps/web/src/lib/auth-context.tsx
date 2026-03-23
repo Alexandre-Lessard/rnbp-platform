@@ -269,25 +269,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     const rt = getRefreshToken();
-    let networkDown = false;
     try {
       await apiRequest("/auth/logout", {
         method: "POST",
         body: { refreshToken: rt },
       });
-    } catch (err) {
-      if ((err as { code?: string })?.code === "NETWORK_ERROR") {
-        networkDown = true;
-      }
-    }
+    } catch { /* best-effort */ }
 
     setAccessToken(null);
     setRefreshToken(null);
-    setState((prev) => ({
-      ...prev,
-      user: null,
-      backendAvailable: networkDown ? false : prev.backendAvailable,
-    }));
+    try { localStorage.removeItem("rnbp_cart_v2"); } catch { /* ignore */ }
+    window.location.href = "/";
   }, []);
 
   return (

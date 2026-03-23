@@ -56,7 +56,7 @@ const emptyForm: FormData = {
 
 export function AdminProductEditPage() {
   const { id } = useParams<{ id: string }>();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const navigate = useNavigate();
   const isNew = id === "new";
 
@@ -150,20 +150,17 @@ export function AdminProductEditPage() {
 
     try {
       if (isNew) {
-        const data = await apiRequest<{ product: Product }>(
+        await apiRequest<{ product: Product }>(
           "/admin/products",
           { method: "POST", body: payload },
         );
-        setSuccess(p?.created ?? "Product created successfully.");
-        // Navigate to the edit page of the newly created product
-        navigate(ROUTES.adminProductEdit(data.product.id), { replace: true });
       } else {
         await apiRequest(`/admin/products/${id}`, {
           method: "PATCH",
           body: payload,
         });
-        setSuccess(p?.success ?? "Product saved successfully.");
       }
+      navigate(ROUTES.adminProducts);
     } catch (err) {
       setError(getErrorMessage(err, t));
     } finally {
@@ -263,6 +260,11 @@ export function AdminProductEditPage() {
               className={`${inputClass} ${!isNew ? "cursor-not-allowed opacity-60" : ""}`}
               placeholder="my-product-slug"
             />
+            <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
+              {locale === "en"
+                ? "Unique identifier used in URLs and code. Lowercase, no spaces (use dashes). Cannot be changed after creation."
+                : "Identifiant unique utilisé dans les URLs et le code. Minuscules, sans espaces (utiliser des tirets). Ne peut pas être modifié après la création."}
+            </p>
           </div>
 
           {/* Names */}

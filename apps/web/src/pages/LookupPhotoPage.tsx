@@ -5,7 +5,7 @@ import { getButtonClasses } from "@/lib/button-styles";
 import { ROUTES } from "@/routes/routes";
 
 export function LookupPhotoPage() {
-  const { t } = useLanguage();
+  const { locale } = useLanguage();
 
   const i18n = {
     fr: {
@@ -28,8 +28,7 @@ export function LookupPhotoPage() {
     },
   };
 
-  const locale = t.a11y?.lang === "en" ? "en" : "fr";
-  const c = i18n[locale];
+  const c = i18n[locale === "en" ? "en" : "fr"];
 
   return (
     <section className="flex min-h-[60vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">

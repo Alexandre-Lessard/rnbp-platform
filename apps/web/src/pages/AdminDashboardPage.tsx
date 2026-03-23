@@ -6,8 +6,8 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  BarChart,
-  Bar,
+  PieChart,
+  Pie,
   Cell,
   LineChart,
   Line,
@@ -31,7 +31,7 @@ type Stats = {
   totalRevenue: number;
   activeTheftReports: number;
   newsletterSubscribers: number;
-  itemsByCategory: Record<string, number>;
+  itemsByCategory: { category: string; count: number }[];
   itemsByStatus: Record<string, number>;
 };
 
@@ -44,23 +44,99 @@ type ChartData = {
   revenue: RevenuePoint[];
 };
 
+// Demo data for "Preview" mode — realistic growth curve over 30 days
+function generatePreviewData(): { charts: ChartData; categories: { name: string; count: number }[] } {
+  const points = 30;
+  const registrations: ChartPoint[] = [];
+  const items: ChartPoint[] = [];
+  const revenue: RevenuePoint[] = [];
+
+  for (let i = 0; i < points; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() - (points - 1 - i));
+    const dateStr = date.toISOString().split("T")[0];
+    // Growth curve with natural variation
+    const base = 2 + Math.floor(i / 3);
+    const jitter = () => Math.floor(Math.random() * 3) - 1;
+    registrations.push({ date: dateStr, count: Math.max(0, base + jitter()) });
+    items.push({ date: dateStr, count: Math.max(0, Math.floor(base * 1.8) + jitter() * 2) });
+    revenue.push({ date: dateStr, amount: Math.max(0, (base * 1200 + jitter() * 500)) });
+  }
+
+  const categories = [
+    { name: "velo-electrique", count: 34 },
+    { name: "telephone-intelligent", count: 28 },
+    { name: "ordinateur-portable", count: 22 },
+    { name: "montre-luxe", count: 18 },
+    { name: "drone", count: 15 },
+    { name: "instrument-musique", count: 12 },
+    { name: "console-jeux-video", count: 10 },
+    { name: "appareil-photo", count: 8 },
+    { name: "equipement-ski", count: 7 },
+    { name: "bijoux", count: 5 },
+  ];
+
+  return { charts: { registrations, items, revenue }, categories };
+}
+
+const PREVIEW_DATA = generatePreviewData();
+
 type LiveMetrics = {
   cpu: number;
-  ram: { used: number; total: number };
-  heap: { used: number; total: number };
-  db: { size: string; connections: number };
+  cpuCount: number;
+  memTotal: number;
+  memFree: number;
+  heapUsed: number;
+  heapTotal: number;
+  rss: number;
+  external: number;
   uptime: number;
+  osUptime: number;
+  dbSize: number;
+  dbConnections: number;
   reqPerMin: number;
 };
 
 type ActivityEntry = {
   id: string;
   type: "user" | "item" | "order" | "theft";
-  description: string;
-  createdAt: string;
+  date: string;
+  // User fields
+  firstName?: string;
+  lastName?: string;
+  // Item fields
+  name?: string;
+  // Order fields
+  email?: string;
+  totalAmountCents?: number;
+  // Theft fields
+  itemId?: string;
 };
 
-type Period = "day" | "week" | "month";
+type Period = "preview" | "day" | "week" | "month";
+
+const MONTH_ABBR_FR = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"];
+const MONTH_ABBR_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function formatXAxis(dateStr: string, period: Period, locale: string): string {
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+
+  if (period === "day" || period === "preview") {
+    return String(d.getUTCDate());
+  }
+  if (period === "week") {
+    // ISO week number
+    const tmp = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    tmp.setUTCDate(tmp.getUTCDate() + 4 - (tmp.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil(((tmp.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+    return `S${weekNo}`;
+  }
+  // month
+  const months = locale === "en" ? MONTH_ABBR_EN : MONTH_ABBR_FR;
+  return months[d.getUTCMonth()] ?? "";
+}
 
 // ------- Helpers -------
 
@@ -117,7 +193,7 @@ function KpiCard({
       {/* Glass overlay */}
       <div className="absolute inset-0 bg-white/5 backdrop-blur-[1px]" />
       {/* Decorative circle */}
-      <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
+      <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10" />
 
       <div className="relative flex items-start justify-between">
         <div>
@@ -156,14 +232,14 @@ function Sparkline({ data, color, dataKey }: { data: { value: number }[]; color:
 // ------- Main Page -------
 
 export function AdminDashboardPage() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const admin = t.admin!;
   const d = admin.dashboard;
 
   const [stats, setStats] = useState<Stats | null>(null);
   const [charts, setCharts] = useState<ChartData | null>(null);
   const [activity, setActivity] = useState<ActivityEntry[]>([]);
-  const [period, setPeriod] = useState<Period>("week");
+  const [period, setPeriod] = useState<Period>("preview");
   const [loading, setLoading] = useState(true);
 
   // SSE for live metrics
@@ -191,32 +267,50 @@ export function AdminDashboardPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Fetch charts when period changes
+  // Fetch charts when period changes (skip API for preview mode)
   useEffect(() => {
+    if (period === "preview") return;
     apiRequest<ChartData>(`/admin/stats/charts?period=${period}`)
       .then(setCharts)
       .catch(() => { /* charts fetch failed silently */ });
   }, [period]);
 
+  // Use preview data or real data depending on period
+  const activeCharts = period === "preview" ? PREVIEW_DATA.charts : charts;
+
   // Sparkline data from SSE history
   const cpuHistory = liveHistory.map((m) => ({ value: m.cpu }));
   const ramHistory = liveHistory.map((m) => ({
-    value: m.ram ? Math.round((m.ram.used / m.ram.total) * 100) : 0,
+    value: m.memTotal ? Math.round(((m.memTotal - m.memFree) / m.memTotal) * 100) : 0,
   }));
 
-  // Items by category for bar chart
-  const categoryData = stats
-    ? Object.entries(stats.itemsByCategory)
-        .map(([name, count]) => ({ name, count }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 10)
-    : [];
+  // Items by category for pie chart (top 8 + "Autres/Other")
+  const categoryData = useMemo(() => {
+    const raw = period === "preview"
+      ? PREVIEW_DATA.categories
+      : stats
+        ? stats.itemsByCategory
+            .map((c) => ({ name: c.category, count: c.count }))
+            .sort((a, b) => b.count - a.count)
+        : [];
+    if (raw.length <= 8) return raw;
+    const top8 = raw.slice(0, 8);
+    const othersCount = raw.slice(8).reduce((sum, c) => sum + c.count, 0);
+    return [...top8, { name: locale === "en" ? "Other" : "Autres", count: othersCount }];
+  }, [period, stats, locale]);
 
-  const heapPercent = liveData?.heap
-    ? Math.round((liveData.heap.used / liveData.heap.total) * 100)
+  const heapPercent = liveData?.heapTotal
+    ? Math.round((liveData.heapUsed / liveData.heapTotal) * 100)
     : 0;
 
+  const xAxisLabel = period === "week"
+    ? (d.axisWeekNumber ?? "Semaine")
+    : period === "month"
+      ? (d.axisMonth ?? "Mois")
+      : (d.axisDayOfMonth ?? "Jour du mois");
+
   const periodTabs = [
+    { key: "preview" as Period, label: d.periodPreview ?? "Aperçu" },
     { key: "day" as Period, label: d.periodDay },
     { key: "week" as Period, label: d.periodWeek },
     { key: "month" as Period, label: d.periodMonth },
@@ -311,16 +405,16 @@ export function AdminDashboardPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Registrations chart */}
           <ChartCard title={d.registrations} color="#3b82f6" gradientId="regGrad">
-            <ResponsiveContainer width="100%" height={240}>
-              <AreaChart data={charts?.registrations ?? []}>
+            <ResponsiveContainer width="100%" height={260}>
+              <AreaChart data={activeCharts?.registrations ?? []} margin={{ bottom: 20, left: 10 }}>
                 <defs>
                   <linearGradient id="regGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.3} />
                     <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={35} />
+                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" || period === "preview" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
+                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={45} label={{ value: d.axisCount ?? "Nombre", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <Tooltip
                   contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
                   labelStyle={{ color: "#94a3b8" }}
@@ -332,16 +426,16 @@ export function AdminDashboardPage() {
 
           {/* Items chart */}
           <ChartCard title={d.itemsRegistered} color="#10b981" gradientId="itemGrad">
-            <ResponsiveContainer width="100%" height={240}>
-              <AreaChart data={charts?.items ?? []}>
+            <ResponsiveContainer width="100%" height={260}>
+              <AreaChart data={activeCharts?.items ?? []} margin={{ bottom: 20, left: 10 }}>
                 <defs>
                   <linearGradient id="itemGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
                     <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={35} />
+                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" || period === "preview" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
+                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={45} label={{ value: d.axisCount ?? "Nombre", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <Tooltip
                   contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
                   labelStyle={{ color: "#94a3b8" }}
@@ -353,20 +447,20 @@ export function AdminDashboardPage() {
 
           {/* Revenue chart */}
           <ChartCard title={d.revenueOverTime} color="#D80621" gradientId="revGrad">
-            <ResponsiveContainer width="100%" height={240}>
-              <AreaChart data={charts?.revenue ?? []}>
+            <ResponsiveContainer width="100%" height={260}>
+              <AreaChart data={activeCharts?.revenue ?? []} margin={{ bottom: 20, left: 10 }}>
                 <defs>
                   <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#D80621" stopOpacity={0.3} />
                     <stop offset="100%" stopColor="#D80621" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={45} />
+                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" || period === "preview" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
+                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={55} label={{ value: d.axisRevenue ?? "$ CAD", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <Tooltip
                   contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
                   labelStyle={{ color: "#94a3b8" }}
-                  formatter={(value: number) => [formatCurrency(value), ""]}
+                  formatter={(value) => [formatCurrency(Number(value) || 0), ""]}
                 />
                 <Area type="monotone" dataKey="amount" stroke="#D80621" strokeWidth={2} fill="url(#revGrad)" />
               </AreaChart>
@@ -375,28 +469,40 @@ export function AdminDashboardPage() {
 
           {/* Items by category */}
           <ChartCard title={d.itemsByCategory} color="#8b5cf6" gradientId="catGrad">
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={categoryData} layout="vertical" margin={{ left: 10 }}>
-                <XAxis type="number" tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  tick={{ fontSize: 11, fill: "#999" }}
-                  axisLine={false}
-                  tickLine={false}
-                  width={100}
-                />
-                <Tooltip
-                  contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
-                  labelStyle={{ color: "#94a3b8" }}
-                />
-                <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={20}>
-                  {categoryData.map((_, i) => (
-                    <Cell key={i} fill={CATEGORY_COLORS[i % CATEGORY_COLORS.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col items-center gap-2 lg:flex-row">
+              <ResponsiveContainer width="100%" height={260}>
+                <PieChart>
+                  <Pie
+                    data={categoryData}
+                    dataKey="count"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    innerRadius={50}
+                    paddingAngle={2}
+                    strokeWidth={0}
+                  >
+                    {categoryData.map((_, i) => (
+                      <Cell key={i} fill={CATEGORY_COLORS[i % CATEGORY_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
+                    formatter={(value, name) => [String(value), String(name)]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="flex w-full flex-col gap-1.5 px-2 lg:w-auto lg:min-w-[160px]">
+                {categoryData.map((c, i) => (
+                  <div key={c.name} className="flex items-center gap-2 text-xs">
+                    <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: CATEGORY_COLORS[i % CATEGORY_COLORS.length] }} />
+                    <span className="truncate text-[var(--rcb-text-muted)]">{c.name}</span>
+                    <span className="ml-auto font-semibold text-[var(--rcb-text-strong)]">{c.count}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </ChartCard>
         </div>
       </div>
@@ -414,49 +520,49 @@ export function AdminDashboardPage() {
           </span>
         </div>
 
-        {!liveData ? (
+        {!liveData || !liveData.cpu ? (
           <div className="flex h-32 items-center justify-center">
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-400 border-t-transparent" />
             <span className="ml-3 text-sm text-white/50">Connecting...</span>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {/* CPU */}
-            <MetricPanel label={d.cpu} value={`${liveData.cpu.toFixed(1)}%`} color="#3b82f6">
-              <Sparkline data={cpuHistory} color="#3b82f6" />
-            </MetricPanel>
+          <div className="space-y-6">
+            {/* Row 1: CPU, RAM, Node Heap with sparklines */}
+            <div className="grid gap-4 sm:grid-cols-3">
+              <MetricPanel label={d.cpu} value={`${liveData.cpu.toFixed(1)}%`} color="#3b82f6">
+                <Sparkline data={cpuHistory} color="#3b82f6" />
+              </MetricPanel>
 
-            {/* RAM */}
-            <MetricPanel
-              label={d.ram}
-              value={`${liveData.ram ? Math.round((liveData.ram.used / liveData.ram.total) * 100) : 0}%`}
-              color="#8b5cf6"
-            >
-              <Sparkline data={ramHistory} color="#8b5cf6" />
-            </MetricPanel>
+              <MetricPanel
+                label={d.ram}
+                value={`${liveData.memTotal ? Math.round(((liveData.memTotal - liveData.memFree) / liveData.memTotal) * 100) : 0}%`}
+                color="#8b5cf6"
+              >
+                <Sparkline data={ramHistory} color="#8b5cf6" />
+              </MetricPanel>
 
-            {/* Node Heap */}
-            <MetricPanel label={d.nodeHeap} value={`${heapPercent}%`} color="#f59e0b">
-              <div className="mt-2">
-                <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
-                  <div
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{
-                      width: `${heapPercent}%`,
-                      background: `linear-gradient(90deg, #f59e0b, ${heapPercent > 80 ? "#ef4444" : "#f59e0b"})`,
-                    }}
-                  />
+              <MetricPanel label={d.nodeHeap} value={`${heapPercent}%`} color="#f59e0b">
+                <div className="mt-2">
+                  <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${heapPercent}%`,
+                        background: `linear-gradient(90deg, #f59e0b, ${heapPercent > 80 ? "#ef4444" : "#f59e0b"})`,
+                      }}
+                    />
+                  </div>
+                  <p className="mt-1 text-[10px] text-white/30">
+                    {liveData.heapUsed ? `${(liveData.heapUsed / 1024 / 1024).toFixed(0)}MB / ${(liveData.heapTotal / 1024 / 1024).toFixed(0)}MB` : "—"}
+                  </p>
                 </div>
-                <p className="mt-1 text-[10px] text-white/30">
-                  {liveData.heap ? `${(liveData.heap.used / 1024 / 1024).toFixed(0)}MB / ${(liveData.heap.total / 1024 / 1024).toFixed(0)}MB` : "—"}
-                </p>
-              </div>
-            </MetricPanel>
+              </MetricPanel>
+            </div>
 
-            {/* DB + Uptime + Req/min */}
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-1 lg:col-span-1">
-              <MiniMetric label={d.dbSize} value={liveData.db?.size ?? "—"} />
-              <MiniMetric label={d.connections} value={String(liveData.db?.connections ?? 0)} />
+            {/* Row 2: DB size, Connections, Req/min, Uptime */}
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <MiniMetric label={d.dbSize} value={liveData.dbSize ? `${(liveData.dbSize / 1024 / 1024).toFixed(1)} MB` : "—"} />
+              <MiniMetric label={d.connections} value={String(liveData.dbConnections ?? 0)} />
               <MiniMetric label={d.reqPerMin} value={String(liveData.reqPerMin ?? 0)} />
               <MiniMetric label={d.uptime} value={formatUptime(liveData.uptime)} />
             </div>
@@ -541,9 +647,10 @@ function MiniMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-const activityTypeConfig: Record<string, { color: string; icon: React.ReactNode }> = {
+const activityTypeConfig: Record<string, { color: string; label: string; icon: React.ReactNode }> = {
   user: {
     color: "#3b82f6",
+    label: "Inscription",
     icon: (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4-4v2" />
@@ -553,6 +660,7 @@ const activityTypeConfig: Record<string, { color: string; icon: React.ReactNode 
   },
   item: {
     color: "#10b981",
+    label: "Bien enregistré",
     icon: (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
@@ -561,6 +669,7 @@ const activityTypeConfig: Record<string, { color: string; icon: React.ReactNode 
   },
   order: {
     color: "#f59e0b",
+    label: "Commande",
     icon: (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="9" cy="21" r="1" />
@@ -571,6 +680,7 @@ const activityTypeConfig: Record<string, { color: string; icon: React.ReactNode 
   },
   theft: {
     color: "#ef4444",
+    label: "Signalement vol",
     icon: (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -581,20 +691,42 @@ const activityTypeConfig: Record<string, { color: string; icon: React.ReactNode 
   },
 };
 
+function activityDescription(entry: ActivityEntry): string {
+  switch (entry.type) {
+    case "user":
+      return `${entry.firstName ?? ""} ${entry.lastName ?? ""}`.trim() || "New user";
+    case "item":
+      return entry.name ?? "New item";
+    case "order":
+      return `${entry.email ?? "Order"} — ${((entry.totalAmountCents ?? 0) / 100).toFixed(2)} $`;
+    case "theft":
+      return `Theft report #${(entry.id ?? "").slice(0, 8)}`;
+    default:
+      return "Activity";
+  }
+}
+
 function ActivityRow({ entry }: { entry: ActivityEntry }) {
   const config = activityTypeConfig[entry.type] ?? activityTypeConfig.item;
+  const exactDate = new Date(entry.date).toLocaleString();
 
   return (
-    <div className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-[var(--rcb-surface)]">
+    <div
+      className="flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-[var(--rcb-surface)]"
+      title={exactDate}
+    >
       <div
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white"
         style={{ background: config.color }}
       >
         {config.icon}
       </div>
-      <p className="flex-1 text-sm text-[var(--rcb-text-strong)]">{entry.description}</p>
+      <div className="flex-1 min-w-0">
+        <p className="truncate text-sm text-[var(--rcb-text-strong)]">{activityDescription(entry)}</p>
+        <p className="text-xs text-[var(--rcb-text-muted)]">{config.label}</p>
+      </div>
       <span className="shrink-0 text-xs text-[var(--rcb-text-muted)]">
-        {relativeTime(entry.createdAt)}
+        {relativeTime(entry.date)}
       </span>
     </div>
   );
