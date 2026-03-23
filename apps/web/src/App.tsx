@@ -55,6 +55,8 @@ import { BoutiquePage } from "@/pages/BoutiquePage";
 import { BoutiqueSuccessPage } from "@/pages/BoutiqueSuccessPage";
 import { AdminOrdersPage } from "@/pages/AdminOrdersPage";
 import { AdminOrderDetailPage } from "@/pages/AdminOrderDetailPage";
+import { AdminProductsPage } from "@/pages/AdminProductsPage";
+import { AdminProductEditPage } from "@/pages/AdminProductEditPage";
 import { AdminDashboardPage } from "@/pages/AdminDashboardPage";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { VerifyEmailPage } from "@/pages/VerifyEmailPage";
@@ -159,6 +161,26 @@ function App() {
               <AdminRoute>
                 <AdminLayout>
                   <AdminOrderDetailPage />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+          <Route
+            path={ROUTES.adminProducts}
+            element={
+              <AdminRoute>
+                <AdminLayout>
+                  <AdminProductsPage />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/products/:id"
+            element={
+              <AdminRoute>
+                <AdminLayout>
+                  <AdminProductEditPage />
                 </AdminLayout>
               </AdminRoute>
             }
