@@ -219,61 +219,36 @@ SNAPSHOT
   fi
   ok "Server build complete"
 
-  # Migration prompt
+  # Pre-restart DB backup (if migration files present)
   log "Checking for pending migrations..."
   MIGRATION_FILES=$(ssh "$DEPLOY_SERVER" "ls -1 $DEPLOY_DIR/apps/api/drizzle/*.sql 2>/dev/null" || true)
 
   if [[ -n "$MIGRATION_FILES" ]]; then
-    echo ""
-    warn "Migration files found:"
-    echo "$MIGRATION_FILES"
-    echo ""
-    if [[ -t 0 ]]; then
-      read -rp "Run migrations? [y/N] " REPLY
-      if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-        # pg_dump before migration
-        log "Backing up database before migration..."
-        DB_BACKUP=$(ssh "$DEPLOY_SERVER" bash -s <<'DBDUMP'
-          source /opt/rnbp/.env
-          ROLLBACK_DIR=/opt/rnbp/backups/rollback
-          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-          FILE="$ROLLBACK_DIR/db_${TIMESTAMP}.sql.gz"
-          if pg_dump "$DATABASE_URL" | gzip > "$FILE" 2>/dev/null; then
-            echo "$FILE"
-          else
-            rm -f "$FILE"
-            echo ""
-          fi
-          # Keep only last 3 db dumps
-          ls -1t $ROLLBACK_DIR/db_*.sql.gz 2>/dev/null | tail -n +4 | xargs -r rm
-DBDUMP
-        )
-
-        if [[ -n "$DB_BACKUP" ]]; then
-          ok "Database backed up: $(basename "$DB_BACKUP")"
-        else
-          warn "Database backup failed!"
-          read -rp "Continue migration without backup? [y/N] " REPLY2
-          if [[ ! "$REPLY2" =~ ^[Yy]$ ]]; then
-            warn "Migration skipped"
-            # Continue deploy without migration
-            REPLY="n"
-          fi
-        fi
-
-        if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-          log "Running migrations..."
-          ssh "$DEPLOY_SERVER" "source ~/.nvm/nvm.sh && cd $DEPLOY_DIR/apps/api && node --env-file=/opt/rnbp/.env dist/migrate.js"
-          ok "Migrations applied"
-        fi
+    log "Migration files detected — backing up database..."
+    DB_BACKUP=$(ssh "$DEPLOY_SERVER" bash -s <<'DBDUMP'
+      source /opt/rnbp/.env
+      ROLLBACK_DIR=/opt/rnbp/backups/rollback
+      TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+      FILE="$ROLLBACK_DIR/db_${TIMESTAMP}.sql.gz"
+      if pg_dump "$DATABASE_URL" | gzip > "$FILE" 2>/dev/null; then
+        echo "$FILE"
       else
-        warn "Migrations skipped"
+        rm -f "$FILE"
+        echo ""
       fi
+      # Keep only last 3 db dumps
+      ls -1t $ROLLBACK_DIR/db_*.sql.gz 2>/dev/null | tail -n +4 | xargs -r rm
+DBDUMP
+    )
+
+    if [[ -n "$DB_BACKUP" ]]; then
+      ok "Database backed up: $(basename "$DB_BACKUP")"
     else
-      warn "Non-interactive mode — migrations skipped (run manually if needed)"
+      warn "Database backup failed — migrations will still run at startup"
     fi
+    log "Migrations will be applied automatically on service restart"
   else
-    ok "No migration files found"
+    ok "No pending migrations"
   fi
 
   log "Restarting API service..."
