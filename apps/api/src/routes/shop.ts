@@ -1,22 +1,23 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { eq, and } from "drizzle-orm";
+import { eq, and, asc } from "drizzle-orm";
 import Stripe from "stripe";
 import { inArray } from "drizzle-orm";
 import { getDb } from "../db/client.js";
-import { orders, orderItems, items, users } from "../db/schema.js";
+import { orders, orderItems, items, users, products } from "../db/schema.js";
 import { getConfig } from "../config.js";
 import { requireVerifiedEmail } from "../middleware/auth.js";
 import { sendEmail, buildOrderNotificationEmail, buildOrderConfirmationEmail } from "../utils/email.js";
-import { ITEMS_NOT_OWNED } from "@rnbp/shared";
+import { ITEMS_NOT_OWNED, PRODUCT_NOT_FOUND, PRODUCT_INACTIVE } from "@rnbp/shared";
 import { AppError } from "../utils/errors.js";
 
 const checkoutSchema = z.object({
   items: z
     .array(
       z.object({
-        itemId: z.string().uuid(),
+        productId: z.string().uuid(),
         quantity: z.number().int().min(1).max(50),
+        itemId: z.string().uuid().optional(),
       }),
     )
     .min(1)
@@ -33,6 +34,19 @@ function getStripe(): Stripe {
 }
 
 export async function shopRoutes(app: FastifyInstance) {
+  // ── List active products ──────────────────────────────────────
+
+  app.get("/shop/products", async (_request, reply) => {
+    const db = getDb();
+    const activeProducts = await db
+      .select()
+      .from(products)
+      .where(eq(products.isActive, true))
+      .orderBy(asc(products.sortOrder));
+
+    return reply.send({ products: activeProducts });
+  });
+
   // ── Shop availability ──────────────────────────────────────────
 
   app.get("/shop/status", async (_request, reply) => {
@@ -55,22 +69,57 @@ export async function shopRoutes(app: FastifyInstance) {
       const stripe = getStripe();
       const db = getDb();
 
-      // Validate that all items belong to the user
-      const itemIds = body.items.map((i) => i.itemId);
-      const ownedItems = await db
-        .select({ id: items.id })
-        .from(items)
-        .where(and(inArray(items.id, itemIds), eq(items.ownerId, request.userId!)));
+      // Fetch all requested products from DB
+      const productIds = [...new Set(body.items.map((i) => i.productId))];
+      const dbProducts = await db
+        .select()
+        .from(products)
+        .where(inArray(products.id, productIds));
 
-      const ownedIds = new Set(ownedItems.map((i) => i.id));
-      for (const itemId of itemIds) {
-        if (!ownedIds.has(itemId)) {
-          throw new AppError(403, ITEMS_NOT_OWNED, "One or more items do not belong to you");
+      const productMap = new Map(dbProducts.map((p) => [p.id, p]));
+
+      // Validate all products exist and are active
+      for (const item of body.items) {
+        const product = productMap.get(item.productId);
+        if (!product) {
+          throw new AppError(400, PRODUCT_NOT_FOUND, `Product ${item.productId} not found`);
+        }
+        if (!product.isActive) {
+          throw new AppError(400, PRODUCT_INACTIVE, `Product ${product.slug} is not available`);
+        }
+        if (!product.stripePriceId) {
+          throw new AppError(400, PRODUCT_INACTIVE, `Product ${product.slug} has no Stripe price configured`);
         }
       }
 
-      // Sum of quantities for Stripe (single Price ID)
-      const totalQuantity = body.items.reduce((sum, i) => sum + i.quantity, 0);
+      // Validate item ownership for products that require an item
+      const itemsRequiringItem = body.items.filter((i) => {
+        const product = productMap.get(i.productId)!;
+        return product.requiresItem;
+      });
+
+      if (itemsRequiringItem.length > 0) {
+        // All requiresItem products must have an itemId
+        for (const item of itemsRequiringItem) {
+          if (!item.itemId) {
+            const product = productMap.get(item.productId)!;
+            throw new AppError(400, ITEMS_NOT_OWNED, `Product ${product.slug} requires an item to be specified`);
+          }
+        }
+
+        const itemIds = itemsRequiringItem.map((i) => i.itemId!);
+        const ownedItems = await db
+          .select({ id: items.id })
+          .from(items)
+          .where(and(inArray(items.id, itemIds), eq(items.ownerId, request.userId!)));
+
+        const ownedIds = new Set(ownedItems.map((i) => i.id));
+        for (const itemId of itemIds) {
+          if (!ownedIds.has(itemId)) {
+            throw new AppError(403, ITEMS_NOT_OWNED, "One or more items do not belong to you");
+          }
+        }
+      }
 
       // Email: body > JWT user > null
       let email = body.email;
@@ -96,24 +145,36 @@ export async function shopRoutes(app: FastifyInstance) {
 
       // Insert order_items
       await db.insert(orderItems).values(
-        body.items.map((item) => ({
-          orderId: order.id,
-          itemId: item.itemId,
-          productType: "sticker_sheet",
-          quantity: item.quantity,
-          unitPriceCents: 0, // Actual price comes from Stripe
-        })),
+        body.items.map((item) => {
+          const product = productMap.get(item.productId)!;
+          return {
+            orderId: order.id,
+            itemId: item.itemId || null,
+            productId: item.productId,
+            productType: product.slug,
+            quantity: item.quantity,
+            unitPriceCents: product.priceCents,
+          };
+        }),
       );
+
+      // Group by stripePriceId for Stripe line_items
+      const priceQuantities = new Map<string, number>();
+      for (const item of body.items) {
+        const product = productMap.get(item.productId)!;
+        const priceId = product.stripePriceId!;
+        priceQuantities.set(priceId, (priceQuantities.get(priceId) || 0) + item.quantity);
+      }
+
+      const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+      for (const [priceId, quantity] of priceQuantities) {
+        lineItems.push({ price: priceId, quantity });
+      }
 
       // Create Stripe Checkout session
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
-        line_items: [
-          {
-            price: config.STRIPE_PRICE_STICKER_SHEET!,
-            quantity: totalQuantity,
-          },
-        ],
+        line_items: lineItems,
         automatic_tax: { enabled: true },
         shipping_address_collection: {
           allowed_countries: ["CA"],

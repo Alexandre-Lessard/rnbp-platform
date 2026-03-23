@@ -35,9 +35,9 @@ const envSchema = z.object({
   FRONTEND_URL: z.string().url().default("http://localhost:5173"),
 
   // Stripe (boutique)
+  // Note: STRIPE_PRICE_STICKER_SHEET is now stored in the products table
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
-  STRIPE_PRICE_STICKER_SHEET: z.string().optional(),
 
   // OAuth
   GOOGLE_CLIENT_ID: z.string().optional(),

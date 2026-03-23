@@ -40,6 +40,10 @@ export const ITEM_DELETED = "ITEM_DELETED";
 export const ORDER_NOT_PAID = "ORDER_NOT_PAID";
 export const UNASSIGNED_ITEMS = "UNASSIGNED_ITEMS";
 
+// ── Products ─────────────────────────────────────────────────────────
+export const PRODUCT_NOT_FOUND = "PRODUCT_NOT_FOUND";
+export const PRODUCT_INACTIVE = "PRODUCT_INACTIVE";
+
 // ── General ──────────────────────────────────────────────────────────
 export const TOO_MANY_REQUESTS = "TOO_MANY_REQUESTS";
 export const INTERNAL_ERROR = "INTERNAL_ERROR";

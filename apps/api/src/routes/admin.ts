@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, asc } from "drizzle-orm";
 import { getDb } from "../db/client.js";
-import { orders, orderItems, items, users } from "../db/schema.js";
+import { orders, orderItems, items, users, products } from "../db/schema.js";
 import { requireAdmin } from "../middleware/auth.js";
 import {
   INVALID_RNBP_FORMAT,
@@ -12,6 +12,7 @@ import {
   RNBP_NUMBER_TAKEN,
   ORDER_NOT_PAID,
   UNASSIGNED_ITEMS,
+  PRODUCT_NOT_FOUND,
 } from "@rnbp/shared";
 import { AppError } from "../utils/errors.js";
 
@@ -222,6 +223,133 @@ export async function adminRoutes(app: FastifyInstance) {
         .returning();
 
       return reply.send({ order: updated });
+    },
+  );
+
+  // ── List all products ───────────────────────────────────────────
+
+  app.get(
+    "/admin/products",
+    { preHandler: requireAdmin },
+    async (_request, reply) => {
+      const db = getDb();
+      const allProducts = await db
+        .select()
+        .from(products)
+        .orderBy(asc(products.sortOrder));
+
+      return reply.send({ products: allProducts });
+    },
+  );
+
+  // ── Product detail ──────────────────────────────────────────────
+
+  app.get(
+    "/admin/products/:id",
+    { preHandler: requireAdmin },
+    async (request, reply) => {
+      const { id } = request.params as { id: string };
+      const db = getDb();
+
+      const [product] = await db
+        .select()
+        .from(products)
+        .where(eq(products.id, id))
+        .limit(1);
+
+      if (!product) {
+        throw new AppError(404, PRODUCT_NOT_FOUND, "Product not found");
+      }
+
+      return reply.send({ product });
+    },
+  );
+
+  // ── Create product ──────────────────────────────────────────────
+
+  const createProductSchema = z.object({
+    slug: z.string().min(1).max(100),
+    nameFr: z.string().min(1).max(255),
+    nameEn: z.string().min(1).max(255),
+    descriptionFr: z.string().optional(),
+    descriptionEn: z.string().optional(),
+    featuresFr: z.array(z.string()).optional(),
+    featuresEn: z.array(z.string()).optional(),
+    priceCents: z.number().int().min(0),
+    stripePriceId: z.string().optional(),
+    imageUrl: z.string().max(500).optional(),
+    isActive: z.boolean().optional(),
+    sortOrder: z.number().int().optional(),
+  });
+
+  app.post(
+    "/admin/products",
+    { preHandler: requireAdmin },
+    async (request, reply) => {
+      const body = createProductSchema.parse(request.body);
+      const db = getDb();
+
+      const [product] = await db
+        .insert(products)
+        .values({
+          ...body,
+          // Force these values — not user-configurable on creation
+          customMechanic: null,
+          requiresItem: false,
+        })
+        .returning();
+
+      return reply.status(201).send({ product });
+    },
+  );
+
+  // ── Update product ──────────────────────────────────────────────
+
+  const updateProductSchema = z.object({
+    slug: z.string().min(1).max(100).optional(),
+    nameFr: z.string().min(1).max(255).optional(),
+    nameEn: z.string().min(1).max(255).optional(),
+    descriptionFr: z.string().nullable().optional(),
+    descriptionEn: z.string().nullable().optional(),
+    featuresFr: z.array(z.string()).nullable().optional(),
+    featuresEn: z.array(z.string()).nullable().optional(),
+    priceCents: z.number().int().min(0).optional(),
+    stripePriceId: z.string().nullable().optional(),
+    imageUrl: z.string().max(500).nullable().optional(),
+    isActive: z.boolean().optional(),
+    sortOrder: z.number().int().optional(),
+  });
+
+  app.patch(
+    "/admin/products/:id",
+    { preHandler: requireAdmin },
+    async (request, reply) => {
+      const { id } = request.params as { id: string };
+      const body = updateProductSchema.parse(request.body);
+      const db = getDb();
+
+      // Verify product exists
+      const [existing] = await db
+        .select({ id: products.id })
+        .from(products)
+        .where(eq(products.id, id))
+        .limit(1);
+
+      if (!existing) {
+        throw new AppError(404, PRODUCT_NOT_FOUND, "Product not found");
+      }
+
+      // customMechanic and requiresItem are not modifiable
+      const [updated] = await db
+        .update(products)
+        .set({
+          ...body,
+          updatedAt: new Date(),
+        })
+        .where(eq(products.id, id))
+        .returning();
+
+      return reply.send({ product: updated });
     },
   );
 }
