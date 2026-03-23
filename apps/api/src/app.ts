@@ -16,6 +16,7 @@ import { adminRoutes } from "./routes/admin.js";
 import { oauthRoutes } from "./routes/oauth.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { securityHeaders } from "./middleware/security-headers.js";
+import { incrementRequestCount } from "./utils/request-counter.js";
 
 export async function buildApp() {
   const config = getConfig();
@@ -50,6 +51,11 @@ export async function buildApp() {
   await app.register(rateLimit, {
     max: 100,
     timeWindow: "1 minute",
+  });
+
+  // Request counter for admin metrics
+  app.addHook("onRequest", async () => {
+    incrementRequestCount();
   });
 
   // Routes
