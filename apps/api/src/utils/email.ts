@@ -243,7 +243,7 @@ export function buildVerificationEmail(
   const t = {
     fr: {
       subject: "Vérifiez votre adresse courriel — RNBP",
-      greeting: `Bonjour ${firstName},`,
+      greeting: `Bonjour ${escapeHtml(firstName)},`,
       body: "Merci de vous être inscrit au RNBP. Veuillez vérifier votre adresse courriel en cliquant sur le lien ci-dessous :",
       button: "Vérifier mon courriel",
       expiry: "Ce lien expire dans 24 heures.",
@@ -252,7 +252,7 @@ export function buildVerificationEmail(
     },
     en: {
       subject: "Verify your email — NRPP",
-      greeting: `Hello ${firstName},`,
+      greeting: `Hello ${escapeHtml(firstName)},`,
       body: "Thank you for signing up for the NRPP. Please verify your email address by clicking the link below:",
       button: "Verify my email",
       expiry: "This link expires in 24 hours.",
@@ -284,7 +284,7 @@ export function buildResetEmail(
   const t = {
     fr: {
       subject: "Réinitialisation de mot de passe — RNBP",
-      greeting: `Bonjour ${firstName},`,
+      greeting: `Bonjour ${escapeHtml(firstName)},`,
       body: "Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour le changer :",
       button: "Réinitialiser mon mot de passe",
       expiry: "Ce lien expire dans 1 heure.",
@@ -293,7 +293,7 @@ export function buildResetEmail(
     },
     en: {
       subject: "Password reset — NRPP",
-      greeting: `Hello ${firstName},`,
+      greeting: `Hello ${escapeHtml(firstName)},`,
       body: "You requested a password reset. Click the link below to change your password:",
       button: "Reset my password",
       expiry: "This link expires in 1 hour.",
