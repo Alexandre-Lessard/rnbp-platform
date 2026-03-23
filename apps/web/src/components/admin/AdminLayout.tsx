@@ -68,7 +68,7 @@ function CollapseIcon({ collapsed }: { collapsed: boolean }) {
 }
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -122,7 +122,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
             title={collapsed ? "Expand" : "Collapse"}
           >
             <CollapseIcon collapsed={collapsed} />
-            {!collapsed && <span>{t.a11y?.lang === "en" ? "Collapse" : "Réduire"}</span>}
+            {!collapsed && <span>{locale === "en" ? "Collapse" : "Réduire"}</span>}
           </button>
         </div>
       </aside>
