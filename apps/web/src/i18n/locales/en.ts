@@ -373,6 +373,7 @@ const en: SiteContent = {
     cookieSettings: "Cookie Settings",
     copyright:
       "\u00a9 {{year}} National Registry of Personal Property. All rights reserved.",
+    promoLine: "Protect your valuables — Free RNBP stickers",
   },
   buttons: {
     registerItem: "Register for free",
@@ -690,6 +691,10 @@ const en: SiteContent = {
     text: "Get your identification labels for free. Offer valid until May 31, 2026.",
     cta: "Visit shop",
     dismiss: "Close",
+    dontShowAgain: "Don't show again",
+    calloutDashboard: "Your belongings are not yet physically protected. Take advantage of the free offer!",
+    calloutItem: "This item doesn't have an RNBP number yet. Order your free labels!",
+    calloutRegistration: "Your item is registered! Order your free labels to protect it.",
   },
   legal: {
     privacyHeading: "Privacy Policy",

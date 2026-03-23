@@ -8,6 +8,7 @@ import { getErrorMessage } from "@/lib/error-utils";
 import { getButtonClasses } from "@/lib/button-styles";
 import { Button } from "@/components/ui/Button";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
+import { PromoCallout } from "@/components/ui/PromoCallout";
 import { ROUTES } from "@/routes/routes";
 
 type Item = {
@@ -211,6 +212,11 @@ export function DashboardPage() {
           ))}
         </div>
       )}
+
+      {/* ── Promo callout ─────────────────────────────────── */}
+      <div className="mt-8">
+        <PromoCallout variant="dashboard" items={items} />
+      </div>
 
       {/* ── Archived items section ──────────────────────────── */}
       {archivedItems.length > 0 && (

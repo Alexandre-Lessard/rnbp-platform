@@ -95,6 +95,17 @@ export function Footer() {
           </div>
         </div>
 
+        {t.footer.promoLine && (
+          <div className="mt-10 text-center">
+            <Link
+              to={ROUTES.shop}
+              className="text-sm font-medium text-[var(--rcb-primary)] transition-colors hover:underline"
+            >
+              {t.footer.promoLine}
+            </Link>
+          </div>
+        )}
+
         <div className="mt-14 border-t border-[var(--rcb-border)] pt-8 text-sm text-[var(--rcb-text-body)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex flex-wrap gap-6">

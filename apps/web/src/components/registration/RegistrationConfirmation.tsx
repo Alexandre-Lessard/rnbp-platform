@@ -3,6 +3,7 @@ import { useLanguage } from "@/i18n/context";
 import { getButtonClasses } from "@/lib/button-styles";
 import { ROUTES } from "@/routes/routes";
 import { StepIndicator } from "@/components/registration/StepIndicator";
+import { PromoCallout } from "@/components/ui/PromoCallout";
 
 type RegistrationConfirmationProps = {
   totalSteps: number;
@@ -31,10 +32,8 @@ export function RegistrationConfirmation({
         {reg.successDescription}
       </p>
 
-      <div className="mt-8 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-6">
-        <p className="text-sm text-[var(--rcb-text-muted)]">
-          {reg.successNoNumber ?? "Commandez des autocollants dans la boutique pour recevoir votre numéro RNBP unique."}
-        </p>
+      <div className="mt-8">
+        <PromoCallout variant="registration" />
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-3">

@@ -103,6 +103,7 @@ export type SiteContent = {
     termsOfUse: string;
     cookieSettings: string;
     copyright: string;
+    promoLine?: string;
   };
   buttons: {
     registerItem: string;
@@ -345,6 +346,10 @@ export type SiteContent = {
     text: string;
     cta: string;
     dismiss: string;
+    dontShowAgain?: string;
+    calloutDashboard?: string;
+    calloutItem?: string;
+    calloutRegistration?: string;
   };
   legal?: {
     privacyHeading: string;

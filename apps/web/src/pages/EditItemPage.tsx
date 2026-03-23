@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { getButtonClasses } from "@/lib/button-styles";
 import { Modal } from "@/components/ui/Modal";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
+import { PromoCallout } from "@/components/ui/PromoCallout";
 import { ITEM_CATEGORIES } from "@rnbp/shared";
 import type { ItemWithFiles } from "@rnbp/shared";
 import { ROUTES } from "@/routes/routes";
@@ -41,6 +42,7 @@ export function EditItemPage() {
   const [documents, setDocuments] = useState<{ id: string; url: string; fileName: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [itemStatus, setItemStatus] = useState("");
+  const [itemRnbpNumber, setItemRnbpNumber] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [notFound, setNotFound] = useState(false);
@@ -58,6 +60,7 @@ export function EditItemPage() {
     apiRequest<{ item: ItemWithFiles }>(`/items/${id}`)
       .then(({ item }) => {
         setItemStatus(item.status);
+        setItemRnbpNumber(item.rnbpNumber);
         setPhotos(item.photos.map((p) => ({ id: p.id, url: p.url })));
         setDocuments(item.documents.map((d) => ({ id: d.id, url: d.url, fileName: d.fileName })));
         setForm({
@@ -197,6 +200,12 @@ export function EditItemPage() {
             {edit?.backToDashboard ?? "Retour au tableau de bord"}
           </Link>
         </div>
+
+        {!itemRnbpNumber && (
+          <div className="mt-6">
+            <PromoCallout variant="item" items={[{ rnbpNumber: itemRnbpNumber }]} />
+          </div>
+        )}
 
         {error && (
           <div className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">

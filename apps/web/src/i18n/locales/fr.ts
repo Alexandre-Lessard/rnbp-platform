@@ -379,6 +379,7 @@ const fr: SiteContent = {
     cookieSettings: "Param\u00e8tres de cookies",
     copyright:
       "\u00a9 {{year}} Registre national des biens personnels. Tous droits r\u00e9serv\u00e9s.",
+    promoLine: "Protégez vos biens — Autocollants RNBP gratuits",
   },
   buttons: {
     registerItem: "Enregistrer gratuitement",
@@ -696,6 +697,10 @@ const fr: SiteContent = {
     text: "Obtenez vos étiquettes d'identification gratuitement. Offre valide jusqu'au 31 mai 2026.",
     cta: "Voir la boutique",
     dismiss: "Fermer",
+    dontShowAgain: "Ne plus afficher",
+    calloutDashboard: "Vos biens ne sont pas encore protégés physiquement. Profitez de l'offre gratuite\u00a0!",
+    calloutItem: "Ce bien n'a pas encore de numéro RNBP. Commandez vos étiquettes gratuitement\u00a0!",
+    calloutRegistration: "Votre bien est enregistré\u00a0! Commandez vos étiquettes gratuitement pour le protéger.",
   },
   legal: {
     privacyHeading: "Politique de confidentialité",

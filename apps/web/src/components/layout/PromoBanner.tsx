@@ -4,18 +4,31 @@ import { useLanguage } from "@/i18n/context";
 import { ROUTES } from "@/routes/routes";
 
 const STORAGE_KEY = "rnbp-promo-dismissed";
+const DISMISS_DURATION_MS = 12 * 60 * 60 * 1000; // 12 hours
+
+function isDismissed(): boolean {
+  const value = localStorage.getItem(STORAGE_KEY);
+  if (!value) return false;
+  if (value === "forever") return true;
+  const timestamp = Number(value);
+  if (isNaN(timestamp)) return false;
+  return Date.now() - timestamp < DISMISS_DURATION_MS;
+}
 
 export function PromoBanner() {
   const { t } = useLanguage();
   const promo = t.promo;
-  const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem(STORAGE_KEY) === "true",
-  );
+  const [dismissed, setDismissed] = useState(isDismissed);
 
   if (!promo || dismissed) return null;
 
   function handleDismiss() {
-    localStorage.setItem(STORAGE_KEY, "true");
+    localStorage.setItem(STORAGE_KEY, String(Date.now()));
+    setDismissed(true);
+  }
+
+  function handleDismissForever() {
+    localStorage.setItem(STORAGE_KEY, "forever");
     setDismissed(true);
   }
 
@@ -41,17 +54,26 @@ export function PromoBanner() {
             <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
-        <button
-          type="button"
-          onClick={handleDismiss}
-          className="shrink-0 cursor-pointer rounded-lg p-1.5 text-[var(--rcb-text-muted)] transition-colors hover:bg-[var(--rcb-primary)]/10 hover:text-[var(--rcb-text-strong)]"
-          aria-label={promo.dismiss}
-        >
-          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={handleDismissForever}
+            className="hidden cursor-pointer text-xs text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-text-strong)] hover:underline sm:block"
+          >
+            {promo.dontShowAgain ?? "Ne plus afficher"}
+          </button>
+          <button
+            type="button"
+            onClick={handleDismiss}
+            className="shrink-0 cursor-pointer rounded-lg p-1.5 text-[var(--rcb-text-muted)] transition-colors hover:bg-[var(--rcb-primary)]/10 hover:text-[var(--rcb-text-strong)]"
+            aria-label={promo.dismiss}
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
       </div>
       </div>
     </div>
