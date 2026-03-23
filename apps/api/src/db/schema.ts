@@ -301,6 +301,9 @@ export const orderItems = pgTable(
     itemId: uuid("item_id").references(() => items.id, {
       onDelete: "set null",
     }),
+    productId: uuid("product_id").references(() => products.id, {
+      onDelete: "set null",
+    }),
     rnbpNumber: varchar("rnbp_number", { length: 13 }),
     productType: varchar("product_type", { length: 50 }).notNull(),
     quantity: integer("quantity").notNull(),
@@ -309,5 +312,38 @@ export const orderItems = pgTable(
   (table) => [
     index("order_items_order_id_idx").on(table.orderId),
     index("order_items_item_id_idx").on(table.itemId),
+  ],
+);
+
+// ── Products ──────────────────────────────────────────────────────────
+
+export const products = pgTable(
+  "products",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    slug: varchar("slug", { length: 100 }).notNull().unique(),
+    nameFr: varchar("name_fr", { length: 255 }).notNull(),
+    nameEn: varchar("name_en", { length: 255 }).notNull(),
+    descriptionFr: text("description_fr"),
+    descriptionEn: text("description_en"),
+    featuresFr: text("features_fr").array(),
+    featuresEn: text("features_en").array(),
+    priceCents: integer("price_cents").notNull(),
+    stripePriceId: varchar("stripe_price_id", { length: 255 }),
+    imageUrl: varchar("image_url", { length: 500 }),
+    isActive: boolean("is_active").notNull().default(true),
+    requiresItem: boolean("requires_item").notNull().default(false),
+    customMechanic: varchar("custom_mechanic", { length: 50 }),
+    sortOrder: integer("sort_order").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("products_slug_idx").on(table.slug),
+    index("products_sort_order_idx").on(table.sortOrder),
   ],
 );
