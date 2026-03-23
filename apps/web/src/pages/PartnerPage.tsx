@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
-import { useAuth } from "@/lib/auth-context";
 import { apiRequest, type ApiError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
 import type { TabItem } from "@/components/ui/Tabs";
@@ -16,7 +15,6 @@ type Tab = "citizen" | "police" | "insurer";
 
 export function PartnerPage() {
   const { t } = useLanguage();
-  const { user } = useAuth();
   const p = t.partners!;
 
   const [activeTab, setActiveTab] = useState<Tab>("citizen");
@@ -117,12 +115,8 @@ export function PartnerPage() {
 
   // Action button (same position for all tabs — right-aligned on tabs row)
   const consultLabel = p.consultButton ?? "Consulter";
-  const actionButton = user ? (
-    <Link to={ROUTES.dashboard} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
-      {consultLabel}
-    </Link>
-  ) : (
-    <Link to={ROUTES.login} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
+  const actionButton = (
+    <Link to={ROUTES.lookup} className={getButtonClasses("primary", "sm")} style={{ minWidth: 170 }}>
       {consultLabel}
     </Link>
   );
