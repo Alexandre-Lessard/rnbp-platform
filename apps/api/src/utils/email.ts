@@ -63,6 +63,7 @@ export function buildContactNotificationEmail(
   company: string | undefined,
   type: string,
   message: string,
+  lang: "fr" | "en" = "fr",
 ): EmailPayload {
   const config = getConfig();
   const adminEmail =
@@ -75,20 +76,43 @@ export function buildContactNotificationEmail(
   const safeType = escapeHtml(type);
   const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
 
+  const t = {
+    fr: {
+      subject: `Nouveau message partenaire — ${name}`,
+      heading: "Nouveau message de contact partenaire",
+      nameLabel: "Nom",
+      emailLabel: "Courriel",
+      companyLabel: "Entreprise",
+      typeLabel: "Type",
+      messageLabel: "Message",
+      footer: "RNBP — Formulaire de contact partenaires",
+    },
+    en: {
+      subject: `New partner message — ${name}`,
+      heading: "New partner contact message",
+      nameLabel: "Name",
+      emailLabel: "Email",
+      companyLabel: "Company",
+      typeLabel: "Type",
+      messageLabel: "Message",
+      footer: "RNBP — Partner contact form",
+    },
+  }[lang];
+
   return {
     to: adminEmail,
-    subject: `Nouveau message partenaire — ${name}`,
+    subject: t.subject,
     html: buildBaseEmail({
       variant: "admin",
       body: `
-        <h2 style="margin: 0 0 16px; color: #1a2e44; font-size: 18px;">Nouveau message de contact partenaire</h2>
+        <h2 style="margin: 0 0 16px; color: #1a2e44; font-size: 18px;">${t.heading}</h2>
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333; width: 100px;">Nom</td><td style="padding: 8px 0; color: #333333;">${safeName}</td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">Courriel</td><td style="padding: 8px 0;"><a href="mailto:${safeEmail}" style="color: #1a2e44;">${safeEmail}</a></td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">Entreprise</td><td style="padding: 8px 0; color: #333333;">${safeCompany}</td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">Type</td><td style="padding: 8px 0; color: #333333;">${safeType}</td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333; width: 100px;">${t.nameLabel}</td><td style="padding: 8px 0; color: #333333;">${safeName}</td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">${t.emailLabel}</td><td style="padding: 8px 0;"><a href="mailto:${safeEmail}" style="color: #1a2e44;">${safeEmail}</a></td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">${t.companyLabel}</td><td style="padding: 8px 0; color: #333333;">${safeCompany}</td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">${t.typeLabel}</td><td style="padding: 8px 0; color: #333333;">${safeType}</td></tr>
         </table>
-        <h3 style="margin: 24px 0 12px; color: #1a2e44; font-size: 15px;">Message</h3>
+        <h3 style="margin: 24px 0 12px; color: #1a2e44; font-size: 15px;">${t.messageLabel}</h3>
         <div style="background-color: #f5f5f5; padding: 16px; border-radius: 8px; color: #333333; font-size: 14px; line-height: 1.5;">${safeMessage}</div>`,
     }),
   };
@@ -96,16 +120,19 @@ export function buildContactNotificationEmail(
 
 // ── Order admin notification ──────────────────────────────────────────
 
-export function buildOrderNotificationEmail(opts: {
-  orderId: string;
-  email: string;
-  totalAmountCents: number;
-  taxAmountCents: number;
-  quantity: number;
-  productLines: { name: string; quantity: number; amountCents: number }[];
-  shippingName: string | null;
-  shippingAddress: string | null;
-}): EmailPayload {
+export function buildOrderNotificationEmail(
+  opts: {
+    orderId: string;
+    email: string;
+    totalAmountCents: number;
+    taxAmountCents: number;
+    quantity: number;
+    productLines: { name: string; quantity: number; amountCents: number }[];
+    shippingName: string | null;
+    shippingAddress: string | null;
+  },
+  lang: "fr" | "en" = "fr",
+): EmailPayload {
   const config = getConfig();
   const adminEmail =
     config.ADMIN_ORDER_EMAIL ||
@@ -143,31 +170,62 @@ export function buildOrderNotificationEmail(opts: {
   const TPS_NUMBER = "XXXXX XXXX RT0001"; // TODO: replace with actual GST number
   const TVQ_NUMBER = "XXXX XXXX XXXX TQ0001"; // TODO: replace with actual QST number
 
+  const t = {
+    fr: {
+      subject: `Nouvelle commande #${opts.orderId.slice(0, 8)} — ${total} $ CAD`,
+      heading: "Nouvelle commande reçue",
+      orderLabel: "Commande",
+      customerLabel: "Client",
+      productsLabel: "Produits",
+      subtotalLabel: "Sous-total",
+      taxLabel: "Taxes (TPS/TVQ)",
+      totalLabel: "Total",
+      shippingLabel: "Livraison",
+      nameLabel: "Nom",
+      addressLabel: "Adresse",
+      footer: "RNBP — Notification automatique de commande",
+    },
+    en: {
+      subject: `New order #${opts.orderId.slice(0, 8)} — ${total} $ CAD`,
+      heading: "New order received",
+      orderLabel: "Order",
+      customerLabel: "Customer",
+      productsLabel: "Products",
+      subtotalLabel: "Subtotal",
+      taxLabel: "Taxes (GST/QST)",
+      totalLabel: "Total",
+      shippingLabel: "Shipping",
+      nameLabel: "Name",
+      addressLabel: "Address",
+      footer: "RNBP — Automatic order notification",
+    },
+  }[lang];
+
   return {
     to: adminEmail,
-    subject: `Nouvelle commande #${opts.orderId.slice(0, 8)} — ${total} $ CAD`,
+    subject: t.subject,
     html: buildBaseEmail({
       variant: "admin",
       body: `
-        <h2 style="margin: 0 0 16px; color: #1a2e44; font-size: 18px;">Nouvelle commande reçue</h2>
+        <h2 style="margin: 0 0 16px; color: #1a2e44; font-size: 18px;">${t.heading}</h2>
 
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333; width: 100px;">Commande</td><td style="padding: 8px 0; color: #333333;">${escapeHtml(opts.orderId)}</td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">Client</td><td style="padding: 8px 0;"><a href="mailto:${safeEmail}" style="color: #1a2e44;">${safeEmail}</a></td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333; width: 100px;">${t.orderLabel}</td><td style="padding: 8px 0; color: #333333;">${escapeHtml(opts.orderId)}</td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">${t.customerLabel}</td><td style="padding: 8px 0;"><a href="mailto:${safeEmail}" style="color: #1a2e44;">${safeEmail}</a></td></tr>
         </table>
 
-        <h3 style="margin: 20px 0 8px; font-size: 14px; color: #1a2e44;">Produits</h3>
+        <h3 style="margin: 20px 0 8px; font-size: 14px; color: #1a2e44;">${t.productsLabel}</h3>
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-top: 1px solid #eeeeee;">
           ${productRowsHtml}
-          <tr style="border-top: 1px solid #eeeeee;"><td style="padding: 6px 0; font-weight: bold; color: #333333;" colspan="2">Sous-total</td><td style="padding: 6px 0; text-align: right; color: #333333;">${subtotal} $</td></tr>
-          <tr><td style="padding: 6px 0; color: #666666;" colspan="2">Taxes (TPS/TVQ)</td><td style="padding: 6px 0; text-align: right; color: #666666;">${tax} $</td></tr>
-          <tr style="border-top: 2px solid #1a2e44;"><td style="padding: 8px 0; font-weight: bold; font-size: 16px; color: #1a2e44;" colspan="2">Total</td><td style="padding: 8px 0; text-align: right; font-weight: bold; font-size: 16px; color: #1a2e44;">${total} $ CAD</td></tr>
+          <tr style="border-top: 1px solid #eeeeee;"><td style="padding: 6px 0; font-weight: bold; color: #333333;" colspan="2">${t.subtotalLabel}</td><td style="padding: 6px 0; text-align: right; color: #333333;">${subtotal} $</td></tr>
+          <tr><td style="padding: 6px 0; color: #666666;" colspan="2">${t.taxLabel}</td><td style="padding: 6px 0; text-align: right; color: #666666;">${tax} $</td></tr>
+          <tr style="border-top: 2px solid #1a2e44;"><td style="padding: 8px 0; font-weight: bold; font-size: 16px; color: #1a2e44;" colspan="2">${t.totalLabel}</td><td style="padding: 8px 0; text-align: right; font-weight: bold; font-size: 16px; color: #1a2e44;">${total} $ CAD</td></tr>
         </table>
 
-        <h3 style="margin: 20px 0 8px; font-size: 14px; color: #1a2e44;">Livraison</h3>
+        <h3 style="margin: 20px 0 8px; font-size: 14px; color: #1a2e44;">${t.shippingLabel}</h3>
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
-          <tr><td style="padding: 6px 0; font-weight: bold; width: 100px; color: #333333;">Nom</td><td style="padding: 6px 0; color: #333333;">${safeName}</td></tr>
-          <tr><td style="padding: 6px 0; font-weight: bold; color: #333333;">Adresse</td><td style="padding: 6px 0; color: #333333;">${addressHtml}</td></tr>
+          <tr><td style="padding: 6px 0; font-weight: bold; width: 100px; color: #333333;">${t.nameLabel}</td><td style="padding: 6px 0; color: #333333;">${safeName}</td></tr>
+          <tr><td style="padding: 6px 0; font-weight: bold; color: #333333;">${t.addressLabel}</td><td style="padding: 6px 0; color: #333333;">${addressHtml}</td></tr>
         </table>
 
         <p style="color: #999999; font-size: 11px; margin-top: 20px;">TPS : ${TPS_NUMBER} | TVQ : ${TVQ_NUMBER}</p>`,

@@ -76,10 +76,10 @@ export function ReportTheftPage() {
             </svg>
           </div>
           <h2 className="mt-6 text-2xl font-bold text-[var(--rcb-text-strong)]">
-            Vol déclaré
+            {t.report?.successHeading ?? "Theft reported"}
           </h2>
           <p className="mt-3 text-[var(--rcb-text-muted)]">
-            Votre déclaration a été enregistrée. Le statut du bien a été mis à jour dans le registre.
+            {t.report?.successDescription ?? "Your report has been recorded. The item's status has been updated in the registry."}
           </p>
         </div>
       </section>
@@ -97,10 +97,10 @@ export function ReportTheftPage() {
   return (
     <section className="section-shell py-16">
       <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
-        {t.report?.heading ?? "Déclarer un vol"}
+        {t.report?.heading ?? "Report a theft"}
       </h1>
       <p className="mt-2 text-lg text-[var(--rcb-text-muted)]">
-        {t.report?.description ?? "Signalez un bien volé pour mettre à jour son statut dans le registre."}
+        {t.report?.description ?? "Report a stolen item to update its status in the registry."}
       </p>
 
       {loadError && (
@@ -116,7 +116,7 @@ export function ReportTheftPage() {
       ) : items.length === 0 && !loadError ? (
         <div className="mt-10 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-8 text-center">
           <p className="text-[var(--rcb-text-muted)]">
-            Aucun bien actif à déclarer. Enregistrez d'abord un bien.
+            {t.report?.noActiveItems ?? "No active items to report. Register an item first."}
           </p>
         </div>
       ) : (
@@ -127,7 +127,7 @@ export function ReportTheftPage() {
 
           <div>
             <label htmlFor="report-item" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-              Bien concerné *
+              {t.report?.itemLabel ?? "Item concerned"} *
             </label>
             <select
               id="report-item"
@@ -136,7 +136,7 @@ export function ReportTheftPage() {
               onChange={(e) => setSelectedItemId(e.target.value)}
               className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
             >
-              <option value="">Sélectionnez un bien</option>
+              <option value="">{t.report?.itemPlaceholder ?? "Select an item"}</option>
               {items.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.name}{item.rnbpNumber ? ` (${item.rnbpNumber})` : ""}
@@ -147,7 +147,7 @@ export function ReportTheftPage() {
 
           <div>
             <label htmlFor="report-police" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-              Numéro de rapport de police
+              {t.report?.policeReportLabel ?? "Police report number"}
             </label>
             <input
               id="report-police"
@@ -161,7 +161,7 @@ export function ReportTheftPage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="report-date" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-                Date du vol
+                {t.report?.theftDateLabel ?? "Theft date"}
               </label>
               <input
                 id="report-date"
@@ -173,7 +173,7 @@ export function ReportTheftPage() {
             </div>
             <div>
               <label htmlFor="report-location" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-                Lieu du vol
+                {t.report?.theftLocationLabel ?? "Theft location"}
               </label>
               <input
                 id="report-location"
@@ -187,7 +187,7 @@ export function ReportTheftPage() {
 
           <div>
             <label htmlFor="report-description" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-              Description des circonstances
+              {t.report?.descriptionLabel ?? "Description of circumstances"}
             </label>
             <textarea
               id="report-description"
@@ -203,7 +203,7 @@ export function ReportTheftPage() {
             disabled={!selectedItemId || loading}
             className="cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Envoi..." : "Déclarer le vol"}
+            {loading ? (t.report?.submitting ?? "Submitting...") : (t.report?.submitButton ?? "Report theft")}
           </Button>
         </form>
       )}

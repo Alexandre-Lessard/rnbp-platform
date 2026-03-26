@@ -72,11 +72,11 @@ export function RegisterAccountPage() {
       </Helmet>
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
-          {t.auth?.registerHeading ?? "Créer un compte"}
+          {t.auth?.registerHeading ?? "Create an account"}
         </h1>
         <p className="mt-2 text-[var(--rcb-text-muted)]">
           {t.auth?.registerDescription ??
-            "Inscrivez-vous pour enregistrer vos biens"}
+            "Sign up to register your belongings"}
         </p>
 
         <div className="mt-6 flex items-start gap-3">
@@ -88,13 +88,13 @@ export function RegisterAccountPage() {
             className="mt-1 h-4 w-4 rounded border-[var(--rcb-border)] accent-[var(--rcb-primary)]"
           />
           <label htmlFor="reg-terms" className="text-sm text-[var(--rcb-text-body)]">
-            {t.auth?.termsLabel ?? "J'accepte les"}{" "}
+            {t.auth?.termsLabel ?? "I accept the"}{" "}
             <Link to={ROUTES.terms} className="text-[var(--rcb-primary)] hover:underline" target="_blank">
-              {t.auth?.termsLink ?? "conditions d'utilisation"}
+              {t.auth?.termsLink ?? "terms of use"}
             </Link>{" "}
-            {t.auth?.termsAnd ?? "et la"}{" "}
+            {t.auth?.termsAnd ?? "and the"}{" "}
             <Link to={ROUTES.privacy} className="text-[var(--rcb-primary)] hover:underline" target="_blank">
-              {t.auth?.privacyLink ?? "politique de confidentialité"}
+              {t.auth?.privacyLink ?? "privacy policy"}
             </Link>
           </label>
         </div>
@@ -116,7 +116,7 @@ export function RegisterAccountPage() {
                 htmlFor="firstName"
                 className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]"
               >
-                {t.auth?.firstNameLabel ?? "Prénom"}
+                {t.auth?.firstNameLabel ?? "First name"}
               </label>
               <input
                 id="firstName"
@@ -132,7 +132,7 @@ export function RegisterAccountPage() {
                 htmlFor="lastName"
                 className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]"
               >
-                {t.auth?.lastNameLabel ?? "Nom"}
+                {t.auth?.lastNameLabel ?? "Last name"}
               </label>
               <input
                 id="lastName"
@@ -150,7 +150,7 @@ export function RegisterAccountPage() {
               htmlFor="email"
               className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]"
             >
-              {t.auth?.emailLabel ?? "Courriel"}
+              {t.auth?.emailLabel ?? "Email"}
             </label>
             <input
               id="email"
@@ -167,7 +167,7 @@ export function RegisterAccountPage() {
               htmlFor="password"
               className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]"
             >
-              {t.auth?.passwordLabel ?? "Mot de passe"}
+              {t.auth?.passwordLabel ?? "Password"}
             </label>
             <input
               id="password"
@@ -180,7 +180,7 @@ export function RegisterAccountPage() {
             />
             <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
               {t.auth?.passwordHint ??
-                "8 caractères minimum, 1 majuscule, 1 chiffre"}
+                "8 characters minimum, 1 uppercase, 1 number"}
             </p>
           </div>
 
@@ -189,9 +189,9 @@ export function RegisterAccountPage() {
               htmlFor="phone"
               className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]"
             >
-              {t.auth?.phoneLabel ?? "Téléphone"}{" "}
+              {t.auth?.phoneLabel ?? "Phone"}{" "}
               <span className="text-[var(--rcb-text-muted)]">
-                ({t.auth?.optional ?? "optionnel"})
+                ({t.auth?.optional ?? "optional"})
               </span>
             </label>
             <input
@@ -209,18 +209,18 @@ export function RegisterAccountPage() {
             className="w-full cursor-pointer disabled:opacity-50"
           >
             {loading
-              ? (t.auth?.registering ?? "Inscription...")
-              : (t.auth?.registerButton ?? "Créer mon compte")}
+              ? (t.auth?.registering ?? "Signing up...")
+              : (t.auth?.registerButton ?? "Create my account")}
           </Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-[var(--rcb-text-muted)]">
-          {t.auth?.hasAccount ?? "Déjà un compte?"}{" "}
+          {t.auth?.hasAccount ?? "Already have an account?"}{" "}
           <Link
             to={ROUTES.login}
             className="font-medium text-[var(--rcb-primary)] hover:underline"
           >
-            {t.auth?.loginLink ?? "Se connecter"}
+            {t.auth?.loginLink ?? "Log in"}
           </Link>
         </p>
       </div>

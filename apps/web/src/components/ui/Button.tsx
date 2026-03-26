@@ -4,11 +4,11 @@ import { getButtonClasses } from "@/lib/button-styles";
 /**
  * Reusable Button component.
  *
- * CONVENTION — Largeur fixe FR/EN :
- * Les boutons visibles dans les deux langues doivent avoir une largeur fixe
- * (via `style={{ minWidth }}` ou className `min-w-[Xpx]`) basée sur la langue
- * la plus longue (généralement le français) pour que l'UI ne bouge pas
- * au changement de langue. Appliquer aussi sur les <Link> via getButtonClasses.
+ * CONVENTION — Fixed width FR/EN:
+ * Buttons visible in both languages must have a fixed width
+ * (via `style={{ minWidth }}` or className `min-w-[Xpx]`) based on the
+ * longest language (usually French) so the UI doesn't jump
+ * on language switch. Also apply on <Link> via getButtonClasses.
  */
 
 type ButtonProps = {

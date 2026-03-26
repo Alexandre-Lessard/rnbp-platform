@@ -13,7 +13,7 @@ export function VerifyEmailPage() {
   const { user, refreshUser } = useAuth();
   const { t } = useLanguage();
   const [status, setStatus] = useState<"loading" | "success" | "error">(token ? "loading" : "error");
-  const [message, setMessage] = useState(token ? "" : (t.errors?.invalidVerificationLink ?? "Lien de vérification invalide."));
+  const [message, setMessage] = useState(token ? "" : (t.errors?.invalidVerificationLink ?? "Invalid verification link."));
 
   useEffect(() => {
     if (!token) return;
@@ -51,11 +51,11 @@ export function VerifyEmailPage() {
             <h1 className="text-2xl font-bold text-[var(--rcb-text-strong)]">{message}</h1>
             {user ? (
               <Link to={ROUTES.dashboard} className={getButtonClasses("primary", "sm") + " mt-6"}>
-                Tableau de bord
+                Dashboard
               </Link>
             ) : (
               <Link to={ROUTES.login} className={getButtonClasses("primary", "sm") + " mt-6"}>
-                Se connecter
+                Log in
               </Link>
             )}
           </div>
@@ -70,7 +70,7 @@ export function VerifyEmailPage() {
             </div>
             <h1 className="text-2xl font-bold text-[var(--rcb-text-strong)]">{message}</h1>
             <Link to="/" className={getButtonClasses("primary", "sm") + " mt-6"}>
-              Retour à l'accueil
+              Back to home
             </Link>
           </div>
         )}

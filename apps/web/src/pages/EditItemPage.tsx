@@ -173,13 +173,13 @@ export function EditItemPage() {
       <section className="min-h-[80vh] bg-[var(--rcb-white)]">
         <div className="section-shell py-16 text-center">
           <p className="text-lg text-[var(--rcb-text-muted)]">
-            {edit?.notFound ?? "Bien introuvable."}
+            {edit?.notFound ?? "Item not found."}
           </p>
           <Link
             to={ROUTES.dashboard}
             className={`${getButtonClasses("primary", "sm")} mt-6`}
           >
-            {edit?.backToDashboard ?? "Retour au tableau de bord"}
+            {edit?.backToDashboard ?? "Back to dashboard"}
           </Link>
         </div>
       </section>
@@ -191,13 +191,13 @@ export function EditItemPage() {
       <div className="section-shell py-16">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
-            {edit?.heading ?? "Modifier le bien"}
+            {edit?.heading ?? "Edit item"}
           </h1>
           <Link
             to={ROUTES.dashboard}
             className="text-sm font-medium text-[var(--rcb-primary)] hover:underline"
           >
-            {edit?.backToDashboard ?? "Retour au tableau de bord"}
+            {edit?.backToDashboard ?? "Back to dashboard"}
           </Link>
         </div>
 
@@ -216,7 +216,7 @@ export function EditItemPage() {
         <div className="mx-auto mt-8 max-w-2xl space-y-5">
           <div>
             <label htmlFor="edit-category" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-              {reg?.categoryLabel ?? "Catégorie"} *
+              {reg?.categoryLabel ?? "Category"} *
             </label>
             <select
               id="edit-category"
@@ -224,7 +224,7 @@ export function EditItemPage() {
               onChange={(e) => update("category", e.target.value)}
               className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
             >
-              <option value="">{reg?.categoryPlaceholder ?? "Sélectionnez une catégorie"}</option>
+              <option value="">{reg?.categoryPlaceholder ?? "Select a category"}</option>
               {categoryOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
@@ -235,7 +235,7 @@ export function EditItemPage() {
 
           <div>
             <label htmlFor="edit-name" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-              {reg?.nameLabel ?? "Nom du bien"} *
+              {reg?.nameLabel ?? "Item name"} *
             </label>
             <input
               id="edit-name"
@@ -250,7 +250,7 @@ export function EditItemPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
               <label htmlFor="edit-brand" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-                {reg?.brandLabel ?? "Marque"}
+                {reg?.brandLabel ?? "Brand"}
               </label>
               <input
                 id="edit-brand"
@@ -262,7 +262,7 @@ export function EditItemPage() {
             </div>
             <div>
               <label htmlFor="edit-model" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-                {reg?.modelLabel ?? "Modèle"}
+                {reg?.modelLabel ?? "Model"}
               </label>
               <input
                 id="edit-model"
@@ -274,7 +274,7 @@ export function EditItemPage() {
             </div>
             <div>
               <label htmlFor="edit-year" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-                {reg?.yearLabel ?? "Année"}
+                {reg?.yearLabel ?? "Year"}
               </label>
               <input
                 id="edit-year"
@@ -290,7 +290,7 @@ export function EditItemPage() {
 
           <div>
             <label htmlFor="edit-serial" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-              {reg?.serialLabel ?? "Numéro de série (original)"}
+              {reg?.serialLabel ?? "Serial number (original)"}
             </label>
             <input
               id="edit-serial"
@@ -300,13 +300,13 @@ export function EditItemPage() {
               className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
             />
             <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
-              {reg?.serialExplanation ?? "Si votre bien possède un numéro de série du fabricant, entrez-le ici."}
+              {reg?.serialExplanation ?? "If your item has a manufacturer serial number, enter it here."}
             </p>
           </div>
 
           <div>
             <label htmlFor="edit-value" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
-              {reg?.valueLabel ?? "Valeur estimée ($)"}
+              {reg?.valueLabel ?? "Estimated value ($)"}
             </label>
             <input
               id="edit-value"
@@ -384,8 +384,8 @@ export function EditItemPage() {
             disabled={!canSave || saving}
           >
             {saving
-              ? (edit?.saving ?? "Enregistrement\u2026")
-              : (edit?.saveButton ?? "Enregistrer les modifications")}
+              ? (edit?.saving ?? "Saving\u2026")
+              : (edit?.saveButton ?? "Save changes")}
           </Button>
 
           {/* ── Archive & Transfer actions ──────────────── */}
@@ -396,16 +396,16 @@ export function EditItemPage() {
                 size="sm"
                 onClick={() => setArchiveOpen(true)}
               >
-                {arc?.button ?? "Archiver ce bien"}
+                {arc?.button ?? "Archive this item"}
               </Button>
             )}
             <button
               type="button"
               disabled
               className="cursor-not-allowed rounded-xl border border-[var(--rcb-border)] px-6 py-2 text-sm font-medium text-[var(--rcb-text-muted)] opacity-50"
-              title={trf?.comingSoon ?? "Bientôt disponible"}
+              title={trf?.comingSoon ?? "Coming soon"}
             >
-              {trf?.button ?? "Transférer ce bien"}
+              {trf?.button ?? "Transfer this item"}
             </button>
           </div>
         </div>
@@ -415,10 +415,10 @@ export function EditItemPage() {
       <Modal
         open={archiveOpen}
         onClose={() => setArchiveOpen(false)}
-        title={arc?.modalTitle ?? "Archiver le bien"}
+        title={arc?.modalTitle ?? "Archive item"}
       >
         <p className="text-sm text-[var(--rcb-text-muted)]">
-          {arc?.modalDescription ?? "Pourquoi souhaitez-vous archiver ce bien ?"}
+          {arc?.modalDescription ?? "Why do you want to archive this item?"}
         </p>
         <div className="mt-4 space-y-2">
           {["destroyed", "lost", "discarded", "registration_error", "other"].map((reason) => (
@@ -441,7 +441,7 @@ export function EditItemPage() {
           <textarea
             className="mt-3 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 py-3 text-sm text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
             rows={2}
-            placeholder={arc?.customReasonPlaceholder ?? "Précisez la raison…"}
+            placeholder={arc?.customReasonPlaceholder ?? "Specify the reason…"}
             value={archiveCustom}
             onChange={(e) => setArchiveCustom(e.target.value)}
           />
@@ -453,15 +453,15 @@ export function EditItemPage() {
             size="sm"
           >
             {archiving
-              ? (arc?.archiving ?? "Archivage…")
-              : (arc?.confirmButton ?? "Archiver")}
+              ? (arc?.archiving ?? "Archiving…")
+              : (arc?.confirmButton ?? "Archive")}
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setArchiveOpen(false)}
           >
-            {arc?.cancelButton ?? "Annuler"}
+            {arc?.cancelButton ?? "Cancel"}
           </Button>
         </div>
       </Modal>

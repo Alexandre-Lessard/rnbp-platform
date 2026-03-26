@@ -128,7 +128,7 @@ export function RegisterItemPage() {
       );
 
       clearDraft();
-      // Mettre à jour le panier si un autocollant a été ajouté pendant l'enregistrement
+      // Update cart if a sticker was added during registration
       updateItemId(`pending:${itemData.name}`, res.item.id);
       setCompleted(true);
       setStep(totalSteps + 1); // confirmation
@@ -168,7 +168,7 @@ export function RegisterItemPage() {
       await refreshAuth();
 
       clearDraft();
-      // Mettre à jour le panier si un autocollant a été ajouté pendant l'enregistrement
+      // Update cart if a sticker was added during registration
       updateItemId(`pending:${itemData.name}`, res.item.id);
       setCompleted(true);
       setStep(totalSteps + 1); // confirmation
@@ -200,7 +200,7 @@ export function RegisterItemPage() {
   return (
     <section className="section-shell py-16">
       <h1 className="text-center text-3xl font-bold text-[var(--rcb-text-strong)]">
-        {reg?.heading ?? "Enregistrer un bien"}
+        {reg?.heading ?? "Register an item"}
       </h1>
       <p className="mt-2 text-center text-lg text-[var(--rcb-text-muted)]">
         {reg?.description ?? ""}

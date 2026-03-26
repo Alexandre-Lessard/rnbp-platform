@@ -58,11 +58,11 @@ export function LoginPage() {
       </Helmet>
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
-          {t.auth?.loginHeading ?? "Connexion"}
+          {t.auth?.loginHeading ?? "Log in"}
         </h1>
         <p className="mt-2 text-[var(--rcb-text-muted)]">
           {t.auth?.loginDescription ??
-            "Connectez-vous à votre compte RNBP"}
+            "Log in to your RNBP account"}
         </p>
 
         <div className="mt-8">
@@ -81,7 +81,7 @@ export function LoginPage() {
               htmlFor="email"
               className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]"
             >
-              {t.auth?.emailLabel ?? "Courriel"}
+              {t.auth?.emailLabel ?? "Email"}
             </label>
             <input
               id="email"
@@ -98,7 +98,7 @@ export function LoginPage() {
               htmlFor="password"
               className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]"
             >
-              {t.auth?.passwordLabel ?? "Mot de passe"}
+              {t.auth?.passwordLabel ?? "Password"}
             </label>
             <input
               id="password"
@@ -116,18 +116,18 @@ export function LoginPage() {
             className="w-full cursor-pointer disabled:opacity-50"
           >
             {loading
-              ? (t.auth?.loggingIn ?? "Connexion...")
-              : (t.auth?.loginButton ?? "Se connecter")}
+              ? (t.auth?.loggingIn ?? "Logging in...")
+              : (t.auth?.loginButton ?? "Log in")}
           </Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-[var(--rcb-text-muted)]">
-          {t.auth?.noAccount ?? "Pas encore de compte?"}{" "}
+          {t.auth?.noAccount ?? "No account yet?"}{" "}
           <Link
             to={ROUTES.register}
             className="font-medium text-[var(--rcb-primary)] hover:underline"
           >
-            {t.auth?.registerLink ?? "Créer un compte"}
+            {t.auth?.registerLink ?? "Create an account"}
           </Link>
         </p>
       </div>

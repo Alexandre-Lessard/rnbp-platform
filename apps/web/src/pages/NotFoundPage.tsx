@@ -9,14 +9,14 @@ export function NotFoundPage() {
     <section className="flex min-h-[60vh] flex-col items-center justify-center px-4 py-16 text-center">
       <h1 className="text-6xl font-bold text-[var(--rcb-primary)]">404</h1>
       <p className="mt-4 text-xl text-[var(--rcb-text-strong)]">
-        {t.errors?.notFound ?? "Page introuvable"}
+        {t.errors?.notFound ?? "Page not found"}
       </p>
       <p className="mt-2 text-[var(--rcb-text-muted)]">
         {t.errors?.notFoundDescription ??
-          "La page que vous cherchez n'existe pas ou a été déplacée."}
+          "The page you're looking for doesn't exist or has been moved."}
       </p>
       <Link to="/" className={`${getButtonClasses("primary", "lg")} mt-8`}>
-        {t.errors?.backHome ?? "Retour à l'accueil"}
+        {t.errors?.backHome ?? "Back to home"}
       </Link>
     </section>
   );

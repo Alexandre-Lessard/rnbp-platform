@@ -37,23 +37,23 @@ export function OAuthCallbackPage() {
     const urlError = searchParams.get("error");
 
     if (urlError) {
-      setError(t.auth?.oauthError ?? "Erreur de connexion. Veuillez réessayer.");
+      setError(t.auth?.oauthError ?? "Login error. Please try again.");
       return;
     }
 
     if (!code || !state) {
-      setError(t.auth?.oauthError ?? "Erreur de connexion. Veuillez réessayer.");
+      setError(t.auth?.oauthError ?? "Login error. Please try again.");
       return;
     }
 
     if (!verifyState(provider, state)) {
-      setError(t.auth?.oauthError ?? "Erreur de connexion. Veuillez réessayer.");
+      setError(t.auth?.oauthError ?? "Login error. Please try again.");
       return;
     }
 
     const codeVerifier = getCodeVerifier(provider);
     if (!codeVerifier) {
-      setError(t.auth?.oauthError ?? "Erreur de connexion. Veuillez réessayer.");
+      setError(t.auth?.oauthError ?? "Login error. Please try again.");
       return;
     }
 
@@ -87,20 +87,20 @@ export function OAuthCallbackPage() {
       setError(
         err instanceof Error
           ? err.message
-          : (t.auth?.oauthError ?? "Erreur de connexion. Veuillez réessayer."),
+          : (t.auth?.oauthError ?? "Login error. Please try again."),
       );
     } finally {
       setSubmitting(false);
     }
   }
 
-  // Formulaire de saisie d'email (cas provider sans email)
+  // Email input form (provider without email case)
   if (needsEmail) {
     return (
       <section className="flex min-h-[70vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
         <div className="w-full max-w-md">
           <h1 className="text-2xl font-bold text-[var(--rcb-text-strong)]">
-            {t.auth?.oauthEmailPrompt ?? "Veuillez entrer votre adresse courriel pour compléter la connexion."}
+            {t.auth?.oauthEmailPrompt ?? "Please enter your email address to complete login."}
           </h1>
 
           <form onSubmit={handleEmailSubmit} className="mt-6 space-y-4">
@@ -114,7 +114,7 @@ export function OAuthCallbackPage() {
                 htmlFor="oauth-email"
                 className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]"
               >
-                {t.auth?.emailLabel ?? "Courriel"}
+                {t.auth?.emailLabel ?? "Email"}
               </label>
               <input
                 id="oauth-email"
@@ -131,8 +131,8 @@ export function OAuthCallbackPage() {
               className="w-full cursor-pointer disabled:opacity-50"
             >
               {submitting
-                ? (t.auth?.oauthLoading ?? "Connexion en cours...")
-                : (t.auth?.loginButton ?? "Se connecter")}
+                ? (t.auth?.oauthLoading ?? "Logging in...")
+                : (t.auth?.loginButton ?? "Log in")}
             </Button>
           </form>
         </div>
@@ -140,7 +140,7 @@ export function OAuthCallbackPage() {
     );
   }
 
-  // Erreur
+  // Error
   if (error) {
     return (
       <section className="flex min-h-[70vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
@@ -152,7 +152,7 @@ export function OAuthCallbackPage() {
             to={ROUTES.login}
             className="mt-4 inline-block font-medium text-[var(--rcb-primary)] hover:underline"
           >
-            {t.auth?.loginLink ?? "Se connecter"}
+            {t.auth?.loginLink ?? "Log in"}
           </Link>
         </div>
       </section>
@@ -163,10 +163,10 @@ export function OAuthCallbackPage() {
   return (
     <section className="flex min-h-[70vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
       <Helmet>
-        <title>{t.auth?.oauthLoading ?? "Connexion en cours..."}</title>
+        <title>{t.auth?.oauthLoading ?? "Logging in..."}</title>
       </Helmet>
       <p className="text-[var(--rcb-text-muted)]">
-        {t.auth?.oauthLoading ?? "Connexion en cours..."}
+        {t.auth?.oauthLoading ?? "Logging in..."}
       </p>
     </section>
   );

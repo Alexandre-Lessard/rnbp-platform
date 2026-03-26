@@ -107,15 +107,15 @@ export function DashboardPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
-            {dash?.heading ?? "Tableau de bord"}
+            {dash?.heading ?? "Dashboard"}
           </h1>
           <p className="mt-1 text-lg text-[var(--rcb-text-muted)]">
             {dash?.welcome?.replace("{{name}}", user?.firstName ?? "") ??
-              `Bienvenue, ${user?.firstName}`}
+              `Welcome, ${user?.firstName}`}
           </p>
           {user?.clientNumber && (
             <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
-              {dash?.clientNumber ?? "No. client"} : {user.clientNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")}
+              {dash?.clientNumber ?? "Client no."} : {user.clientNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")}
             </p>
           )}
         </div>
@@ -124,13 +124,13 @@ export function DashboardPage() {
             to={ROUTES.registerItem}
             className={getButtonClasses("primary", "sm", "w-[170px] whitespace-nowrap text-center")}
           >
-            + {dash?.addItem ?? "Enregistrer un bien"}
+            + {dash?.addItem ?? "Register an item"}
           </Link>
           <Link
             to={ROUTES.reportTheft}
             className={getButtonClasses("outline", "sm", "w-[170px] whitespace-nowrap text-center")}
           >
-            {dash?.reportTheft ?? "Déclarer un vol"}
+            {dash?.reportTheft ?? "Report a theft"}
           </Link>
         </div>
       </div>
@@ -148,13 +148,13 @@ export function DashboardPage() {
       ) : items.length === 0 && !loadError ? (
         <div className="mt-10 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-10 text-center">
           <p className="text-lg text-[var(--rcb-text-muted)]">
-            {dash?.noItems ?? "Aucun bien enregistré pour le moment."}
+            {dash?.noItems ?? "No items registered yet."}
           </p>
           <Link
             to={ROUTES.registerItem}
             className={`${getButtonClasses("primary", "lg")} mt-6`}
           >
-            {dash?.addItem ?? "Enregistrer un bien"}
+            {dash?.addItem ?? "Register an item"}
           </Link>
         </div>
       ) : (
@@ -194,7 +194,7 @@ export function DashboardPage() {
                     to={ROUTES.edit(item.id)}
                     className={getButtonClasses("outline", "sm", "!px-4 !py-1.5 !text-xs")}
                   >
-                    {dash?.editItem ?? "Modifier"}
+                    {dash?.editItem ?? "Edit"}
                   </Link>
                 )}
                 {item.status !== "stolen" && (
@@ -206,7 +206,7 @@ export function DashboardPage() {
                   >
                     {addedId === item.id
                       ? (t.registration?.addedToCart ?? "✓")
-                      : (t.shop?.orderStickers ?? "Commander des étiquettes")}
+                      : (t.shop?.orderStickers ?? "Order stickers")}
                   </button>
                 )}
                 <span
@@ -233,7 +233,7 @@ export function DashboardPage() {
             onClick={() => setShowArchived((v) => !v)}
             className="cursor-pointer text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-primary)]"
           >
-            {t.archive?.archivedItems ?? "Biens archivés"} ({archivedItems.length})
+            {t.archive?.archivedItems ?? "Archived items"} ({archivedItems.length})
             {showArchived ? " ▲" : " ▼"}
           </button>
           {showArchived && (
@@ -248,10 +248,10 @@ export function DashboardPage() {
                       {item.name}
                     </h3>
                     <p className="mt-0.5 text-xs text-[var(--rcb-text-muted)]">
-                      {t.archive?.archivedOn ?? "Archivé le"}{" "}
+                      {t.archive?.archivedOn ?? "Archived on"}{" "}
                       {item.archivedAt ? new Date(item.archivedAt).toLocaleDateString() : "—"}
                       {" — "}
-                      {t.archive?.reason ?? "Raison"}: {item.archiveReason === "other"
+                      {t.archive?.reason ?? "Reason"}: {item.archiveReason === "other"
                         ? item.archiveReasonCustom
                         : t.archive?.reasons?.[item.archiveReason ?? ""] ?? item.archiveReason}
                     </p>
@@ -264,15 +264,15 @@ export function DashboardPage() {
       )}
       </div>
 
-      {/* Modal — article déjà dans le panier */}
+      {/* Modal — item already in cart */}
       {confirmItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-sm rounded-xl bg-[var(--rcb-bg)] p-6 shadow-xl">
             <h3 className="text-lg font-bold text-[var(--rcb-text-strong)]">
-              {dash?.alreadyInCartTitle ?? "Déjà dans le panier"}
+              {dash?.alreadyInCartTitle ?? "Already in cart"}
             </h3>
             <p className="mt-2 text-sm text-[var(--rcb-text-muted)]">
-              {dash?.alreadyInCartDescription ?? "Cet article est déjà dans votre panier. Voulez-vous en ajouter un autre ?"}
+              {dash?.alreadyInCartDescription ?? "This item is already in your cart. Add another?"}
             </p>
 
             <div className="mt-6 flex flex-col gap-2">
@@ -283,21 +283,21 @@ export function DashboardPage() {
                   setConfirmItem(null);
                 }}
               >
-                {dash?.alreadyInCartConfirm ?? "Oui, ajouter"}
+                {dash?.alreadyInCartConfirm ?? "Yes, add"}
               </Button>
               <Link
                 to={ROUTES.shop}
                 onClick={() => setConfirmItem(null)}
                 className={getButtonClasses("outline", "sm", "w-full")}
               >
-                {dash?.alreadyInCartViewCart ?? "Voir le panier"}
+                {dash?.alreadyInCartViewCart ?? "View cart"}
               </Link>
               <button
                 type="button"
                 onClick={() => setConfirmItem(null)}
                 className="cursor-pointer pt-1 text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-text-strong)]"
               >
-                {dash?.alreadyInCartCancel ?? "Non merci"}
+                {dash?.alreadyInCartCancel ?? "No thanks"}
               </button>
             </div>
           </div>

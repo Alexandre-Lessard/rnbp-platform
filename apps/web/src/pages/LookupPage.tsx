@@ -64,7 +64,7 @@ export function LookupPage() {
       </Helmet>
       <div className="w-full max-w-lg text-center">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
-          {t.lookup?.heading ?? "Vérifier un bien"}
+          {t.lookup?.heading ?? "Verify an item"}
         </h1>
 
         <form
@@ -73,19 +73,19 @@ export function LookupPage() {
         >
           <input
             type="text"
-            placeholder={t.lookup?.inputPlaceholder ?? "Numéro de série ou identifiant unique"}
+            placeholder={t.lookup?.inputPlaceholder ?? "Serial number or unique identifier"}
             value={query}
             onChange={(e) => setQuery(e.target.value.toUpperCase())}
             className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-center text-lg tracking-wider text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none sm:max-w-xs"
           />
           <Button type="submit" disabled={loading} className="cursor-pointer disabled:opacity-50">
             {loading
-              ? (t.lookup?.searching ?? "Recherche...")
-              : (t.lookup?.searchButton ?? "Vérifier")}
+              ? (t.lookup?.searching ?? "Searching...")
+              : (t.lookup?.searchButton ?? "Verify")}
           </Button>
         </form>
         <p className="mt-3 text-sm text-[var(--rcb-text-muted)]">
-          {t.lookup?.inputHint ?? "RNBP, numéro de série, IMEI ou autre identifiant"}
+          {t.lookup?.inputHint ?? "RNBP, serial number, IMEI or other identifier"}
         </p>
 
         {error && (
@@ -108,8 +108,8 @@ export function LookupPage() {
               <>
                 <p className="text-lg font-semibold text-[var(--rcb-text-strong)]">
                   {result.status === "stolen"
-                    ? (t.lookup?.stolenMessage ?? "Ce bien a été déclaré volé")
-                    : (t.lookup?.foundMessage ?? "Bien trouvé dans le registre")}
+                    ? (t.lookup?.stolenMessage ?? "This item has been reported stolen")
+                    : (t.lookup?.foundMessage ?? "Item found in the registry")}
                 </p>
                 {result.category && (
                   <p className="mt-2 text-sm text-[var(--rcb-text-muted)]">
@@ -122,7 +122,7 @@ export function LookupPage() {
             ) : (
               <p className="text-lg text-[var(--rcb-text-muted)]">
                 {t.lookup?.notFoundMessage ??
-                  "Aucun bien trouvé avec ce numéro."}
+                  "No item found with this number."}
               </p>
             )}
           </div>
@@ -139,7 +139,7 @@ export function LookupPage() {
               <circle cx="8.5" cy="8.5" r="1.5" />
               <path d="m21 15-5-5L5 21" />
             </svg>
-            {t.lookup?.photoSearchLink ?? "Recherche par photo"}
+            {t.lookup?.photoSearchLink ?? "Photo search"}
             <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>

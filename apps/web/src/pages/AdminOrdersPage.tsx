@@ -18,9 +18,9 @@ const statusTabs = ["paid", "shipped", "all"] as const;
 type StatusTab = (typeof statusTabs)[number];
 
 const statusLabels: Record<StatusTab, string> = {
-  paid: "Payées",
-  shipped: "Expédiées",
-  all: "Toutes",
+  paid: "Paid",
+  shipped: "Shipped",
+  all: "All",
 };
 
 const statusColors: Record<string, string> = {
@@ -50,7 +50,7 @@ export function AdminOrdersPage() {
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
-          Commandes
+          Orders
         </h1>
 
         <div className="mt-6 flex gap-2">
@@ -82,7 +82,7 @@ export function AdminOrdersPage() {
           </div>
         ) : orders.length === 0 ? (
           <div className="mt-10 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-10 text-center">
-            <p className="text-[var(--rcb-text-muted)]">Aucune commande.</p>
+            <p className="text-[var(--rcb-text-muted)]">No orders.</p>
           </div>
         ) : (
           <div className="mt-8 space-y-3">
@@ -97,7 +97,7 @@ export function AdminOrdersPage() {
                     {order.email}
                   </p>
                   <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
-                    {new Date(order.createdAt).toLocaleDateString("fr-CA")} — {order.itemCount} article{order.itemCount > 1 ? "s" : ""} — {(order.totalAmountCents / 100).toFixed(2)} $
+                    {new Date(order.createdAt).toLocaleDateString("en-CA")} — {order.itemCount} {order.itemCount > 1 ? "items" : "item"} — {(order.totalAmountCents / 100).toFixed(2)} $
                   </p>
                 </div>
                 <span

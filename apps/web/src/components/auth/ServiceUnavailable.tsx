@@ -15,11 +15,11 @@ export function ServiceUnavailable() {
         <path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
       </svg>
       <h2 className="text-2xl font-bold text-[var(--rcb-text-strong)]">
-        {t.errors?.serviceUnavailable ?? "Service temporairement indisponible"}
+        {t.errors?.serviceUnavailable ?? "Service temporarily unavailable"}
       </h2>
       <p className="mt-3 max-w-md text-lg text-[var(--rcb-text-muted)]">
         {t.errors?.serviceUnavailableDescription ??
-          "Nos serveurs sont temporairement inaccessibles. Veuillez réessayer dans quelques instants."}
+          "Our servers are temporarily unavailable. Please try again shortly."}
       </p>
     </div>
   );

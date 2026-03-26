@@ -250,7 +250,7 @@ export async function shopRoutes(app: FastifyInstance) {
           // Get line item details for the email
           const lineItems = session.line_items?.data ?? [];
           const productLines = lineItems.map((li) => ({
-            name: li.description || "Produit",
+            name: li.description || "Product",
             quantity: li.quantity || 0,
             amountCents: li.amount_subtotal || 0,
           }));
@@ -287,7 +287,7 @@ export async function shopRoutes(app: FastifyInstance) {
             sendEmail(
               buildOrderNotificationEmail({
                 orderId,
-                email: session.customer_details?.email || "inconnu",
+                email: session.customer_details?.email || "unknown",
                 totalAmountCents: session.amount_total || 0,
                 taxAmountCents,
                 quantity: totalQty,

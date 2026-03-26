@@ -155,7 +155,7 @@ try_auto_rollback() {
   fi
 
   if [[ -t 0 ]]; then
-    read -rp "$(echo -e "${YELLOW}Rollback automatique? [Y/n]${NC} ")" REPLY
+    read -rp "$(echo -e "${YELLOW}Automatic rollback? [Y/n]${NC} ")" REPLY
     if [[ "$REPLY" =~ ^[Nn]$ ]]; then
       error "Rollback skipped. To rollback manually: pnpm run rollback"
       exit 1

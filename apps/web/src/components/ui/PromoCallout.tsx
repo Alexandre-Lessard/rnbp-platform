@@ -18,9 +18,9 @@ export function PromoCallout({ variant, items }: PromoCalloutProps) {
   if (items?.some((item) => item.rnbpNumber)) return null;
 
   const texts = {
-    dashboard: promo.calloutDashboard ?? "Vos biens ne sont pas encore protégés physiquement. Profitez de l'offre gratuite!",
-    item: promo.calloutItem ?? "Ce bien n'a pas encore de numéro RNBP. Commandez vos étiquettes gratuitement!",
-    registration: promo.calloutRegistration ?? "Votre bien est enregistré! Commandez vos étiquettes gratuitement pour le protéger.",
+    dashboard: promo.calloutDashboard ?? "Your items are not yet physically protected. Take advantage of the free offer!",
+    item: promo.calloutItem ?? "This item doesn't have an RNBP number yet. Order your stickers for free!",
+    registration: promo.calloutRegistration ?? "Your item is registered! Order your stickers for free to protect it.",
   };
 
   return (

@@ -41,7 +41,7 @@ export function RegistrationConfirmation({
           to={ROUTES.shop}
           className={getButtonClasses("primary")}
         >
-          {t.shop?.heading ?? "Boutique"}
+          {t.shop?.heading ?? "Shop"}
         </Link>
         <Link
           to={ROUTES.dashboard}

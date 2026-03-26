@@ -141,7 +141,7 @@ function formatXAxis(dateStr: string, period: Period, locale: string): string {
 // ------- Helpers -------
 
 function formatCurrency(cents: number): string {
-  return (cents / 100).toLocaleString("fr-CA", { style: "currency", currency: "CAD" });
+  return (cents / 100).toLocaleString("en-CA", { style: "currency", currency: "CAD" });
 }
 
 function formatUptime(seconds: number): string {
@@ -284,7 +284,7 @@ export function AdminDashboardPage() {
     value: m.memTotal ? Math.round(((m.memTotal - m.memFree) / m.memTotal) * 100) : 0,
   }));
 
-  // Items by category for pie chart (top 8 + "Autres/Other")
+  // Items by category for pie chart (top 8 + "Other")
   const categoryData = useMemo(() => {
     const raw = period === "preview"
       ? PREVIEW_DATA.categories
@@ -296,7 +296,7 @@ export function AdminDashboardPage() {
     if (raw.length <= 8) return raw;
     const top8 = raw.slice(0, 8);
     const othersCount = raw.slice(8).reduce((sum, c) => sum + c.count, 0);
-    return [...top8, { name: locale === "en" ? "Other" : "Autres", count: othersCount }];
+    return [...top8, { name: "Other", count: othersCount }];
   }, [period, stats, locale]);
 
   const heapPercent = liveData?.heapTotal
@@ -304,13 +304,13 @@ export function AdminDashboardPage() {
     : 0;
 
   const xAxisLabel = period === "week"
-    ? (d.axisWeekNumber ?? "Semaine")
+    ? (d.axisWeekNumber ?? "Week")
     : period === "month"
-      ? (d.axisMonth ?? "Mois")
-      : (d.axisDayOfMonth ?? "Jour du mois");
+      ? (d.axisMonth ?? "Month")
+      : (d.axisDayOfMonth ?? "Day of month");
 
   const periodTabs = [
-    { key: "preview" as Period, label: d.periodPreview ?? "Aperçu" },
+    { key: "preview" as Period, label: d.periodPreview ?? "Preview" },
     { key: "day" as Period, label: d.periodDay },
     { key: "week" as Period, label: d.periodWeek },
     { key: "month" as Period, label: d.periodMonth },
@@ -414,7 +414,7 @@ export function AdminDashboardPage() {
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" || period === "preview" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
-                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={45} label={{ value: d.axisCount ?? "Nombre", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
+                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={45} label={{ value: d.axisCount ?? "Count", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <Tooltip
                   contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
                   labelStyle={{ color: "#94a3b8" }}
@@ -435,7 +435,7 @@ export function AdminDashboardPage() {
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" || period === "preview" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
-                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={45} label={{ value: d.axisCount ?? "Nombre", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
+                <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={45} label={{ value: d.axisCount ?? "Count", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <Tooltip
                   contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
                   labelStyle={{ color: "#94a3b8" }}
@@ -650,7 +650,7 @@ function MiniMetric({ label, value }: { label: string; value: string }) {
 const activityTypeConfig: Record<string, { color: string; label: string; icon: React.ReactNode }> = {
   user: {
     color: "#3b82f6",
-    label: "Inscription",
+    label: "Registration",
     icon: (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4-4v2" />
@@ -660,7 +660,7 @@ const activityTypeConfig: Record<string, { color: string; label: string; icon: R
   },
   item: {
     color: "#10b981",
-    label: "Bien enregistré",
+    label: "Item registered",
     icon: (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
@@ -669,7 +669,7 @@ const activityTypeConfig: Record<string, { color: string; label: string; icon: R
   },
   order: {
     color: "#f59e0b",
-    label: "Commande",
+    label: "Order",
     icon: (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="9" cy="21" r="1" />
@@ -680,7 +680,7 @@ const activityTypeConfig: Record<string, { color: string; label: string; icon: R
   },
   theft: {
     color: "#ef4444",
-    label: "Signalement vol",
+    label: "Theft report",
     icon: (
       <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />

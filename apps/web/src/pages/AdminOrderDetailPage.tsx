@@ -118,9 +118,9 @@ export function AdminOrderDetailPage() {
     return (
       <section className="min-h-[80vh] bg-[var(--rcb-white)]">
         <div className="section-shell py-16">
-          <p className="text-red-600">{error || "Commande introuvable"}</p>
+          <p className="text-red-600">{error || "Order not found"}</p>
           <Link to={ROUTES.adminOrders} className="mt-4 inline-block text-sm font-medium text-[var(--rcb-primary)] hover:underline">
-            &larr; Retour aux commandes
+            &larr; Back to orders
           </Link>
         </div>
       </section>
@@ -136,23 +136,23 @@ export function AdminOrderDetailPage() {
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
       <div className="section-shell py-16">
         <Link to={ROUTES.adminOrders} className="text-sm font-medium text-[var(--rcb-primary)] hover:underline">
-          &larr; Retour aux commandes
+          &larr; Back to orders
         </Link>
 
         <div className="mt-6">
           <h1 className="text-2xl font-bold text-[var(--rcb-text-strong)]">
-            Commande
+            Order
           </h1>
           <div className="mt-2 space-y-1 text-sm text-[var(--rcb-text-muted)]">
-            <p>Client : {order.email}</p>
-            <p>Date : {new Date(order.createdAt).toLocaleDateString("fr-CA")}</p>
-            <p>Total : {(order.totalAmountCents / 100).toFixed(2)} $</p>
-            <p>Statut : <span className="font-medium">{order.status}</span></p>
+            <p>Customer: {order.email}</p>
+            <p>Date: {new Date(order.createdAt).toLocaleDateString("en-CA")}</p>
+            <p>Total: {(order.totalAmountCents / 100).toFixed(2)} $</p>
+            <p>Status: <span className="font-medium">{order.status}</span></p>
           </div>
         </div>
 
         <div className="mt-8 space-y-4">
-          <h2 className="text-lg font-bold text-[var(--rcb-text-strong)]">Articles</h2>
+          <h2 className="text-lg font-bold text-[var(--rcb-text-strong)]">Items</h2>
           {order.items.map((item) => (
             <div
               key={item.id}
@@ -162,8 +162,8 @@ export function AdminOrderDetailPage() {
                 <div>
                   <p className="font-medium text-[var(--rcb-text-strong)]">
                     {needsRnbp(item)
-                      ? (item.itemName ?? "Item inconnu")
-                      : (item.productNameFr ?? item.productSlug ?? "Produit")}
+                      ? (item.itemName ?? "Unknown item")
+                      : (item.productNameEn ?? item.productSlug ?? "Product")}
                   </p>
                   {needsRnbp(item) && (
                     <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
@@ -171,7 +171,7 @@ export function AdminOrderDetailPage() {
                     </p>
                   )}
                   <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
-                    Quantité : {item.quantity}
+                    Quantity: {item.quantity}
                     {item.unitPriceCents != null && (
                       <> — {(item.unitPriceCents / 100).toFixed(2)} $</>
                     )}
@@ -199,13 +199,13 @@ export function AdminOrderDetailPage() {
                         onClick={() => handleAssign(item.id)}
                         disabled={assigning[item.id]}
                       >
-                        {assigning[item.id] ? "..." : "Assigner"}
+                        {assigning[item.id] ? "..." : "Assign"}
                       </Button>
                     </div>
                   )
                 ) : (
                   <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-                    Produit standard
+                    Standard product
                   </span>
                 )}
               </div>
@@ -225,11 +225,11 @@ export function AdminOrderDetailPage() {
               onClick={handleShip}
               disabled={!allAssigned || shipping}
             >
-              {shipping ? "Envoi..." : "Marquer comme expédiée"}
+              {shipping ? "Shipping..." : "Mark as shipped"}
             </Button>
             {!allAssigned && (
               <p className="mt-2 text-sm text-[var(--rcb-text-muted)]">
-                Assignez un numéro RNBP aux articles qui le requièrent avant d'expédier.
+                Assign an RNBP number to items that require one before shipping.
               </p>
             )}
           </div>
