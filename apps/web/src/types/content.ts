@@ -139,6 +139,7 @@ export type SiteContent = {
     loginLink: string;
     orSeparator: string;
     googleButton: string;
+    facebookButton: string;
     microsoftButton: string;
     oauthLoading: string;
     oauthError: string;
@@ -174,6 +175,11 @@ export type SiteContent = {
     error: string;
     notFound: string;
     backToDashboard: string;
+    recoverButton: string;
+    recoverConfirm: string;
+    recoverConfirmButton: string;
+    recoverCancel: string;
+    recovering: string;
   };
   settings?: {
     heading: string;
@@ -219,6 +225,7 @@ export type SiteContent = {
     serialLabel: string;
     serialExplanation: string;
     valueLabel: string;
+    valueMinError: string;
     descriptionLabel: string;
     descriptionHelper: string;
     termsCheckbox: string;
@@ -229,6 +236,7 @@ export type SiteContent = {
     dropzoneText: string;
     documentsHeading: string;
     documentsDescription: string;
+    addDocumentButton: string;
     confirmButton: string;
     successHeading: string;
     successDescription: string;
@@ -281,6 +289,17 @@ export type SiteContent = {
   report?: {
     heading: string;
     description: string;
+    successHeading: string;
+    successDescription: string;
+    noActiveItems: string;
+    itemLabel: string;
+    itemPlaceholder: string;
+    policeReportLabel: string;
+    theftDateLabel: string;
+    theftLocationLabel: string;
+    descriptionLabel: string;
+    submitting: string;
+    submitButton: string;
   };
   lookup?: {
     heading: string;
@@ -337,6 +356,8 @@ export type SiteContent = {
     description: string;
     nameLabel: string;
     emailLabel: string;
+    phoneLabel: string;
+    phonePlaceholder: string;
     messageLabel: string;
     submitButton: string;
     submitting: string;
@@ -413,6 +434,7 @@ export type SiteContent = {
   admin?: {
     nav: {
       dashboard: string;
+      items: string;
       orders: string;
       products: string;
     };
