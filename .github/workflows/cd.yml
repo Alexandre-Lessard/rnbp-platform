@@ -42,13 +42,6 @@ jobs:
             "  ProxyCommand cloudflared access ssh --hostname %h --id ${CF_CLIENT_ID} --secret ${CF_CLIENT_SECRET}" \
             > ~/.ssh/config
 
-      - name: Debug SSH config
-        run: |
-          echo "=== SSH Config ==="
-          cat ~/.ssh/config
-          echo "=== Testing connection ==="
-          ssh -vvv prod-server echo "SSH OK" 2>&1 | tail -30 || true
-
       - name: Backup database
         run: ssh prod-server 'source /opt/rnbp/.env && pg_dump "$DATABASE_URL" | gzip > /opt/rnbp/backups/rollback/db_cd_$(date +%Y%m%d_%H%M%S).sql.gz'
 
