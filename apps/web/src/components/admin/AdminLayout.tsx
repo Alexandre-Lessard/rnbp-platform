@@ -20,6 +20,14 @@ function DashboardIcon() {
   );
 }
 
+function ItemsIcon() {
+  return (
+    <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+    </svg>
+  );
+}
+
 function OrdersIcon() {
   return (
     <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -77,6 +85,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
   const navLinks: NavLink[] = [
     { label: admin?.nav.dashboard ?? "Dashboard", href: ROUTES.admin, icon: <DashboardIcon /> },
+    { label: admin?.nav.items ?? "Items", href: ROUTES.adminItems, icon: <ItemsIcon /> },
     { label: admin?.nav.orders ?? "Orders", href: ROUTES.adminOrders, icon: <OrdersIcon /> },
     { label: admin?.nav.products ?? "Products", href: ROUTES.adminProducts, icon: <ProductsIcon /> },
   ];

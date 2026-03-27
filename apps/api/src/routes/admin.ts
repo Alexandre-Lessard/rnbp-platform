@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { eq, and, desc, asc, sql, count, sum, inArray } from "drizzle-orm";
+import { eq, and, desc, asc, sql, count, sum, inArray, or, ilike } from "drizzle-orm";
 import os from "node:os";
 import { getDb } from "../db/client.js";
 import {
@@ -32,6 +32,113 @@ const rnbpNumberSchema = z
   .regex(/^RNBP-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{8}$/, "Invalid format (RNBP-XXXXXXXX)");
 
 export async function adminRoutes(app: FastifyInstance) {
+  // ── List items (with search & status filter) ───────────────────
+
+  app.get(
+    "/admin/items",
+    { preHandler: requireAdmin },
+    async (request, reply) => {
+      const db = getDb();
+      const { status, q, page = "1", limit = "25" } = request.query as {
+        status?: string;
+        q?: string;
+        page?: string;
+        limit?: string;
+      };
+
+      const pageNum = Math.max(1, parseInt(page, 10) || 1);
+      const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 25));
+      const offset = (pageNum - 1) * limitNum;
+
+      const conditions: ReturnType<typeof eq>[] = [];
+
+      if (status && status !== "all") {
+        conditions.push(eq(items.status, status as "active" | "stolen" | "transferred"));
+      }
+
+      if (q && q.trim()) {
+        const search = `%${q.trim()}%`;
+        conditions.push(
+          or(
+            ilike(items.name, search),
+            ilike(items.serialNumber, search),
+            ilike(items.rnbpNumber, search),
+          )!,
+        );
+      }
+
+      const where = conditions.length > 0 ? and(...conditions) : undefined;
+
+      const allItems = await db
+        .select({
+          id: items.id,
+          name: items.name,
+          category: items.category,
+          status: items.status,
+          rnbpNumber: items.rnbpNumber,
+          serialNumber: items.serialNumber,
+          createdAt: items.createdAt,
+          ownerName: sql<string>`concat(${users.firstName}, ' ', ${users.lastName})`,
+          ownerEmail: users.email,
+        })
+        .from(items)
+        .leftJoin(users, eq(items.ownerId, users.id))
+        .where(where)
+        .orderBy(desc(items.createdAt))
+        .limit(limitNum)
+        .offset(offset);
+
+      const [{ total }] = await db
+        .select({ total: count() })
+        .from(items)
+        .where(where);
+
+      return reply.send({
+        items: allItems,
+        pagination: { page: pageNum, limit: limitNum, total },
+      });
+    },
+  );
+
+  // ── Recover item (admin) ─────────────────────────────────────────
+
+  app.patch(
+    "/admin/items/:id/recover",
+    { preHandler: requireAdmin },
+    async (request, reply) => {
+      const { id } = request.params as { id: string };
+      const db = getDb();
+
+      const [item] = await db
+        .select({ status: items.status })
+        .from(items)
+        .where(eq(items.id, id))
+        .limit(1);
+
+      if (!item) throw new AppError(404, "ITEM_NOT_FOUND", "Item not found");
+      if (item.status !== "stolen") {
+        throw new AppError(400, "ITEM_NOT_STOLEN", "Item is not marked as stolen");
+      }
+
+      const [updated] = await db.transaction(async (tx) => {
+        const [u] = await tx
+          .update(items)
+          .set({ status: "active", updatedAt: new Date() })
+          .where(eq(items.id, id))
+          .returning();
+
+        await tx
+          .update(theftReports)
+          .set({ status: "resolved", updatedAt: new Date() })
+          .where(and(eq(theftReports.itemId, id), eq(theftReports.status, "pending")));
+
+        return [u];
+      });
+
+      return reply.send({ item: updated });
+    },
+  );
+
   // ── List orders ────────────────────────────────────────────────
 
   app.get(

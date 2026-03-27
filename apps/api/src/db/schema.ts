@@ -45,6 +45,7 @@ export const users = pgTable("users", {
   phone: varchar("phone", { length: 20 }),
   googleId: varchar("google_id", { length: 255 }).unique(),
   microsoftId: varchar("microsoft_id", { length: 255 }).unique(),
+  facebookId: varchar("facebook_id", { length: 255 }).unique(),
   emailVerified: boolean("email_verified").notNull().default(false),
   isAdmin: boolean("is_admin").notNull().default(false),
   clientNumber: varchar("client_number", { length: 9 }).unique(),
@@ -236,6 +237,7 @@ export const contactMessages = pgTable("contact_messages", {
   name: varchar("name", { length: 100 }).notNull(),
   email: varchar("email", { length: 255 }).notNull(),
   company: varchar("company", { length: 255 }),
+  phone: varchar("phone", { length: 20 }),
   type: partnerTypeEnum("type").notNull(),
   message: text("message").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })

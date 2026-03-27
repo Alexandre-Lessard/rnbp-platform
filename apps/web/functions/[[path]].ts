@@ -418,7 +418,7 @@ function injectMeta(
     .replace("{{CANONICAL}}", canonicalUrl)
     .replace(/\{\{HREFLANG_FR\}\}/g, hreflangFr)
     .replace("{{HREFLANG_EN}}", hreflangEn)
-    .replace("{{JSON_LD}}", jsonLd);
+    .replace("<!-- JSON-LD {{JSON_LD}} -->", jsonLd);
 }
 
 export const onRequest: PagesFunction = async (context) => {

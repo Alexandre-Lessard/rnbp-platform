@@ -23,6 +23,7 @@ export const OAUTH_TOKEN_INVALID = "OAUTH_TOKEN_INVALID";
 // ── Items ────────────────────────────────────────────────────────────
 export const ITEM_NOT_FOUND = "ITEM_NOT_FOUND";
 export const ITEM_ALREADY_STOLEN = "ITEM_ALREADY_STOLEN";
+export const ITEM_NOT_STOLEN = "ITEM_NOT_STOLEN";
 export const INVALID_ID = "INVALID_ID";
 export const ITEMS_NOT_OWNED = "ITEMS_NOT_OWNED";
 

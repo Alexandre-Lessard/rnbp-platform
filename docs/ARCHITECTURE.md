@@ -140,23 +140,31 @@ The `users` table has a `tokenRevokedBefore` timestamp column. When set (e.g., o
 
 ## 4. OAuth Flow
 
-The project supports Google and Microsoft OAuth using the **Authorization Code + PKCE** pattern.
+The project supports Google, Facebook, and Microsoft OAuth.
+
+### Providers
+
+| Provider | Flow | PKCE | Profile endpoint |
+|----------|------|------|-----------------|
+| Google | Authorization Code + PKCE | Yes | `/oauth2/v3/userinfo` |
+| Facebook | Authorization Code (no PKCE) | No | `/v21.0/me?fields=id,email,first_name,last_name,name` |
+| Microsoft | Authorization Code + PKCE | Yes | `/v1.0/me` |
 
 ### Flow
 
-1. **Frontend** -- Generates a PKCE `code_verifier` and `code_challenge`, stores the verifier in sessionStorage, and redirects the user to the provider's authorization URL with a `state` parameter (CSRF protection).
+1. **Frontend** -- Generates a `state` parameter (CSRF protection) and redirects the user to the provider's authorization URL. For Google and Microsoft, PKCE `code_verifier` and `code_challenge` are also generated and stored in sessionStorage. Facebook does not support PKCE.
 
-2. **Callback** -- The provider redirects back to the frontend with an authorization `code` and the `state` parameter. The frontend verifies the state matches, then sends the code, code_verifier, and redirect_uri to the backend.
+2. **Callback** -- The provider redirects back to the frontend with an authorization `code` and the `state` parameter. The frontend verifies the state matches, then sends the code, redirect_uri, and code_verifier (if applicable) to the backend.
 
-3. **Backend code exchange** -- The server exchanges the authorization code for an access token with the provider (Google or Microsoft), passing the `code_verifier` for PKCE validation and the `client_secret` for server-side authentication. The provider validates both.
+3. **Backend code exchange** -- The server exchanges the authorization code for an access token with the provider, passing the `client_secret` for server-side authentication and `code_verifier` for PKCE validation (Google/Microsoft only).
 
-4. **Profile fetch** -- The server uses the provider's access token to fetch the user profile (Google: `/oauth2/v3/userinfo`, Microsoft: `/v1.0/me`).
+4. **Profile fetch** -- The server uses the provider's access token to fetch the user profile.
 
-5. **Account linking** -- The server matches the OAuth profile to a local user by email. If a user with that email already exists, the provider ID (`googleId` or `microsoftId`) is linked to the existing account. If no user exists, a new account is created with `emailVerified: true` (the provider already verified the email). A session is created and JWT tokens are returned.
+5. **Account linking** -- The server matches the OAuth profile to a local user by provider ID (`googleId`, `facebookId`, or `microsoftId`) or by email. If a user with that email already exists, the provider ID is linked to the existing account. If no user exists, a new account is created with `emailVerified: true`. A session is created and JWT tokens are returned.
 
 ### Why PKCE
 
-PKCE (Proof Key for Code Exchange) prevents authorization code interception attacks. Even though the backend uses a client secret, PKCE adds defense-in-depth: the code is useless without the verifier that only the original client possesses.
+PKCE (Proof Key for Code Exchange) prevents authorization code interception attacks. Even though the backend uses a client secret, PKCE adds defense-in-depth: the code is useless without the verifier that only the original client possesses. Facebook does not support PKCE, so only state + client_secret are used for that provider.
 
 ---
 
@@ -219,7 +227,7 @@ All tables use UUID primary keys with `defaultRandom()` and `timestamptz` for te
 | **theft_reports** | Theft declarations filed by item owners. Links to the item and the reporter. Tracks police report number, theft date/location, and a status enum (`pending`, `confirmed`, `resolved`, `dismissed`). |
 | **insurance_requests** | Records of emails sent to insurers on behalf of users. Stores the insurer name, the message content, and the send timestamp. |
 | **partners** | Business partners (insurers, retailers, security companies). Tracks company info, type enum, contact details, and active status. |
-| **contact_messages** | Inbound messages from the partner contact form. Stores name, email, company, partner type, and message body. |
+| **contact_messages** | Inbound messages from the contact form. Stores name, email, phone (optional), company, partner type, and message body. |
 | **newsletter_subscribers** | Email addresses subscribed to the newsletter. Unique constraint on email. |
 | **orders** | Stripe checkout orders. Tracks the Stripe session/payment intent IDs, total amount in cents, order status (`pending`, `paid`, `shipped`, `cancelled`), and shipping info. `userId` is nullable (guest checkout allowed, set null on user deletion). |
 | **order_items** | Line items within an order. Links to the order, optionally to an item, and optionally to a product. Tracks the assigned `rnbpNumber`, product type (slug), quantity, and unit price in cents. |

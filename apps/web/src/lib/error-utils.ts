@@ -12,6 +12,12 @@ export function getErrorMessage(
   const apiErr = err as ApiError | undefined;
   const code = apiErr?.code;
 
+  // For validation errors, prefer the specific API message (field-level details)
+  // over the generic i18n label ("Erreur de validation")
+  if (code === "VALIDATION_ERROR" && err instanceof Error) {
+    return err.message;
+  }
+
   if (code && t.apiErrors?.[code]) {
     return t.apiErrors[code];
   }

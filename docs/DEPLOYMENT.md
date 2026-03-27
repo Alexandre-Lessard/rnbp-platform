@@ -51,7 +51,7 @@ SSH access to the production server must be configured (key-based auth).
 
 ### Production server
 
-The API environment file lives at `/opt/rnbp/.env` on the server (not inside the repo). It contains database credentials, JWT keys, CORS origins, Brevo API key, etc. See `ops/SETUP.md` section 4 for the full list of variables.
+The API environment file lives at `/opt/rnbp/.env` on the server (not inside the repo). It contains database credentials, JWT keys, CORS origins, Brevo API key, Cloudflare R2 credentials, OAuth provider secrets, etc. See `ops/SETUP.md` section 4 for the full list of variables.
 
 ## Production Setup
 

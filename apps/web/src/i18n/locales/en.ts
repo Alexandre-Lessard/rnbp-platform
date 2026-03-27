@@ -409,6 +409,7 @@ const en: SiteContent = {
     loginLink: "Sign in",
     orSeparator: "or",
     googleButton: "Continue with Google",
+    facebookButton: "Continue with Facebook",
     microsoftButton: "Continue with Microsoft",
     oauthLoading: "Signing in...",
     oauthError: "Login failed. Please try again.",
@@ -449,6 +450,11 @@ const en: SiteContent = {
     error: "Error updating item.",
     notFound: "Item not found.",
     backToDashboard: "Back to dashboard",
+    recoverButton: "Mark as recovered",
+    recoverConfirm: "Confirm this item has been recovered?",
+    recoverConfirmButton: "Yes, mark as recovered",
+    recoverCancel: "Cancel",
+    recovering: "Processing\u2026",
   },
   settings: {
     heading: "Settings",
@@ -500,6 +506,7 @@ const en: SiteContent = {
     serialLabel: "Serial number (original)",
     serialExplanation: "If your item has a manufacturer serial number, enter it here.",
     valueLabel: "Estimated value ($)",
+    valueMinError: "Minimum value is $1,000",
     descriptionLabel: "Description and distinguishing features",
     descriptionHelper: "Describe any distinguishing features that can identify your item: colour, accessories, modifications, signs of wear, etc.",
     termsCheckbox: "I accept the terms of service",
@@ -510,6 +517,7 @@ const en: SiteContent = {
     dropzoneText: "Drag your photos here or click to select",
     documentsHeading: "Supporting documents",
     documentsDescription: "Proof of purchase, certificate of authenticity (optional).",
+    addDocumentButton: "+ Add a document",
     confirmButton: "Confirm registration",
     successHeading: "Item registered successfully!",
     successDescription: "Your item has been registered in the NRPP.",
@@ -674,6 +682,8 @@ const en: SiteContent = {
     description: "Have a question, comment, or suggestion? Fill out the form below and we\u2019ll get back to you as soon as possible.",
     nameLabel: "Full name",
     emailLabel: "Email address",
+    phoneLabel: "Phone",
+    phonePlaceholder: "e.g. 514-555-1234",
     messageLabel: "Message",
     submitButton: "Send",
     submitting: "Sending\u2026",
@@ -831,6 +841,7 @@ const en: SiteContent = {
   admin: {
     nav: {
       dashboard: "Dashboard",
+      items: "Items",
       orders: "Orders",
       products: "Products",
     },
@@ -923,6 +934,7 @@ const en: SiteContent = {
     // Items
     ITEM_NOT_FOUND: "Item not found",
     ITEM_ALREADY_STOLEN: "This item is already reported as stolen",
+    ITEM_NOT_STOLEN: "This item is not reported as stolen",
     INVALID_ID: "Invalid identifier",
     ITEMS_NOT_OWNED: "One or more items do not belong to you",
     // Files

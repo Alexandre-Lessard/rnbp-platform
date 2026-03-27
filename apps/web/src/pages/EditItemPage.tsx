@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
-import { apiRequest, isNetworkError } from "@/lib/api-client";
+import { useRef } from "react";
+import { apiRequest, apiUpload, isNetworkError } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/Button";
 import { getButtonClasses } from "@/lib/button-styles";
@@ -51,6 +52,11 @@ export function EditItemPage() {
   const [archiveReason, setArchiveReason] = useState("");
   const [archiveCustom, setArchiveCustom] = useState("");
   const [archiving, setArchiving] = useState(false);
+  const [recoverOpen, setRecoverOpen] = useState(false);
+  const [recovering, setRecovering] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const docInputRef = useRef<HTMLInputElement>(null);
 
   const edit = t.editItem;
   const reg = t.registration;
@@ -142,7 +148,75 @@ export function EditItemPage() {
     }
   }
 
-  const canSave = form.name.trim() !== "" && form.category !== "";
+  async function handleRecover() {
+    if (recovering) return;
+    setRecovering(true);
+    try {
+      await apiRequest(`/items/${id}/recover`, { method: "PATCH" });
+      setItemStatus("recovered");
+      setRecoverOpen(false);
+    } catch (err) {
+      setError(getErrorMessage(err, t));
+      setRecoverOpen(false);
+    } finally {
+      setRecovering(false);
+    }
+  }
+
+  async function handleUploadPhotos(fileList: FileList | null) {
+    if (!fileList || uploading) return;
+    setUploading(true);
+    setError("");
+    const fd = new FormData();
+    Array.from(fileList).forEach((f) => fd.append("photos", f));
+    try {
+      const res = await apiUpload<{ photos: typeof photos }>(`/items/${id}/photos`, fd);
+      setPhotos((prev) => [...prev, ...res.photos]);
+    } catch (err) {
+      setError(getErrorMessage(err, t));
+    } finally {
+      setUploading(false);
+      if (photoInputRef.current) photoInputRef.current.value = "";
+    }
+  }
+
+  async function handleUploadDocuments(fileList: FileList | null) {
+    if (!fileList || uploading) return;
+    setUploading(true);
+    setError("");
+    const fd = new FormData();
+    Array.from(fileList).forEach((f) => fd.append("documents", f));
+    try {
+      const res = await apiUpload<{ documents: typeof documents }>(`/items/${id}/documents`, fd);
+      setDocuments((prev) => [...prev, ...res.documents]);
+    } catch (err) {
+      setError(getErrorMessage(err, t));
+    } finally {
+      setUploading(false);
+      if (docInputRef.current) docInputRef.current.value = "";
+    }
+  }
+
+  async function handleDeletePhoto(photoId: string) {
+    try {
+      await apiRequest(`/items/${id}/photos/${photoId}`, { method: "DELETE" });
+      setPhotos((prev) => prev.filter((p) => p.id !== photoId));
+    } catch (err) {
+      setError(getErrorMessage(err, t));
+    }
+  }
+
+  async function handleDeleteDocument(docId: string) {
+    try {
+      await apiRequest(`/items/${id}/documents/${docId}`, { method: "DELETE" });
+      setDocuments((prev) => prev.filter((d) => d.id !== docId));
+    } catch (err) {
+      setError(getErrorMessage(err, t));
+    }
+  }
+
+  const isStolen = itemStatus === "stolen";
+  const canSave = form.name.trim() !== "" && form.category !== "" && !isStolen;
   const canArchive = archiveReason !== "" && (archiveReason !== "other" || archiveCustom.trim() !== "");
   const maxYear = new Date().getFullYear() + 1;
   const arc = t.archive;
@@ -207,13 +281,19 @@ export function EditItemPage() {
           </div>
         )}
 
+        {isStolen && (
+          <div className="mt-6 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            {t.lookup?.stolenMessage ?? "This item has been reported stolen"}
+          </div>
+        )}
+
         {error && (
           <div className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
         )}
 
-        <div className="mx-auto mt-8 max-w-2xl space-y-5">
+        <fieldset disabled={isStolen} className="mx-auto mt-8 max-w-2xl space-y-5">
           <div>
             <label htmlFor="edit-category" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
               {reg?.categoryLabel ?? "Category"} *
@@ -335,30 +415,74 @@ export function EditItemPage() {
           </div>
 
           {/* ── Photos ───────────────────────────────────── */}
-          {photos.length > 0 && (
-            <div className="border-t border-[var(--rcb-border)] pt-6">
+          <div className="border-t border-[var(--rcb-border)] pt-6">
+            <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-[var(--rcb-text-strong)]">
                 {reg?.photosHeading ?? "Photos"}
               </h2>
+              <button
+                type="button"
+                onClick={() => photoInputRef.current?.click()}
+                disabled={uploading}
+                className="cursor-pointer text-sm font-medium text-[var(--rcb-primary)] hover:underline disabled:opacity-50"
+              >
+                {uploading ? "..." : `+ ${reg?.photosHeading ?? "Add photos"}`}
+              </button>
+              <input
+                ref={photoInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                className="hidden"
+                onChange={(e) => handleUploadPhotos(e.target.files)}
+              />
+            </div>
+            {photos.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-3">
                 {photos.map((photo) => (
-                  <img
-                    key={photo.id}
-                    src={photo.url}
-                    alt=""
-                    className="h-24 w-24 rounded-lg border border-[var(--rcb-border)] object-cover"
-                  />
+                  <div key={photo.id} className="group relative">
+                    <img
+                      src={photo.url}
+                      alt=""
+                      className="h-24 w-24 rounded-lg border border-[var(--rcb-border)] object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePhoto(photo.id)}
+                      className="absolute -top-2 -right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      &times;
+                    </button>
+                  </div>
                 ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* ── Documents ──────────────────────────────── */}
-          {documents.length > 0 && (
-            <div className="border-t border-[var(--rcb-border)] pt-6">
+          <div className="border-t border-[var(--rcb-border)] pt-6">
+            <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-[var(--rcb-text-strong)]">
                 {reg?.documentsHeading ?? "Documents"}
               </h2>
+              <button
+                type="button"
+                onClick={() => docInputRef.current?.click()}
+                disabled={uploading}
+                className="cursor-pointer text-sm font-medium text-[var(--rcb-primary)] hover:underline disabled:opacity-50"
+              >
+                {uploading ? "..." : `+ ${reg?.documentsHeading ?? "Add documents"}`}
+              </button>
+              <input
+                ref={docInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,application/pdf"
+                multiple
+                className="hidden"
+                onChange={(e) => handleUploadDocuments(e.target.files)}
+              />
+            </div>
+            {documents.length > 0 && (
               <ul className="mt-3 space-y-2">
                 {documents.map((doc) => (
                   <li
@@ -373,23 +497,41 @@ export function EditItemPage() {
                     >
                       {doc.fileName}
                     </a>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteDocument(doc.id)}
+                      className="ml-3 cursor-pointer text-red-500 hover:text-red-700"
+                    >
+                      &times;
+                    </button>
                   </li>
                 ))}
               </ul>
-            </div>
+            )}
+          </div>
+
+          {!isStolen && (
+            <Button
+              onClick={handleSave}
+              disabled={!canSave || saving}
+            >
+              {saving
+                ? (edit?.saving ?? "Saving\u2026")
+                : (edit?.saveButton ?? "Save changes")}
+            </Button>
           )}
+        </fieldset>
 
-          <Button
-            onClick={handleSave}
-            disabled={!canSave || saving}
-          >
-            {saving
-              ? (edit?.saving ?? "Saving\u2026")
-              : (edit?.saveButton ?? "Save changes")}
-          </Button>
-
-          {/* ── Archive & Transfer actions ──────────────── */}
-          <div className="mt-10 flex flex-wrap gap-3 border-t border-[var(--rcb-border)] pt-6">
+          {/* ── Archive, Recover & Transfer actions ──────── */}
+          <div className="mx-auto mt-10 max-w-2xl flex flex-wrap gap-3 border-t border-[var(--rcb-border)] pt-6">
+            {itemStatus === "stolen" && (
+              <Button
+                size="sm"
+                onClick={() => setRecoverOpen(true)}
+              >
+                {edit?.recoverButton ?? "Mark as recovered"}
+              </Button>
+            )}
             {itemStatus !== "stolen" && (
               <Button
                 variant="outline"
@@ -408,7 +550,6 @@ export function EditItemPage() {
               {trf?.button ?? "Transfer this item"}
             </button>
           </div>
-        </div>
       </div>
 
       {/* ── Archive modal ───────────────────────────────── */}
@@ -462,6 +603,35 @@ export function EditItemPage() {
             onClick={() => setArchiveOpen(false)}
           >
             {arc?.cancelButton ?? "Cancel"}
+          </Button>
+        </div>
+      </Modal>
+
+      {/* ── Recover confirmation modal ────────────────── */}
+      <Modal
+        open={recoverOpen}
+        onClose={() => setRecoverOpen(false)}
+        title={edit?.recoverButton ?? "Mark as recovered"}
+      >
+        <p className="text-sm text-[var(--rcb-text-muted)]">
+          {edit?.recoverConfirm ?? "Confirm this item has been recovered?"}
+        </p>
+        <div className="mt-6 flex gap-3">
+          <Button
+            onClick={handleRecover}
+            disabled={recovering}
+            size="sm"
+          >
+            {recovering
+              ? (edit?.recovering ?? "Processing…")
+              : (edit?.recoverConfirmButton ?? "Yes, mark as recovered")}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setRecoverOpen(false)}
+          >
+            {edit?.recoverCancel ?? "Cancel"}
           </Button>
         </div>
       </Modal>

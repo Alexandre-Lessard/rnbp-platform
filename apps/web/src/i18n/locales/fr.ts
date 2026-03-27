@@ -415,6 +415,7 @@ const fr: SiteContent = {
     loginLink: "Se connecter",
     orSeparator: "ou",
     googleButton: "Continuer avec Google",
+    facebookButton: "Continuer avec Facebook",
     microsoftButton: "Continuer avec Microsoft",
     oauthLoading: "Connexion en cours...",
     oauthError: "Erreur de connexion. Veuillez réessayer.",
@@ -455,6 +456,11 @@ const fr: SiteContent = {
     error: "Erreur lors de la modification.",
     notFound: "Bien introuvable.",
     backToDashboard: "Retour au tableau de bord",
+    recoverButton: "Marquer comme retrouvé",
+    recoverConfirm: "Confirmer que ce bien a été retrouvé ?",
+    recoverConfirmButton: "Oui, marquer comme retrouvé",
+    recoverCancel: "Annuler",
+    recovering: "En cours…",
   },
   settings: {
     heading: "Paramètres",
@@ -506,6 +512,7 @@ const fr: SiteContent = {
     serialLabel: "Numéro de série (original)",
     serialExplanation: "Si votre bien possède un numéro de série du fabricant, entrez-le ici.",
     valueLabel: "Valeur estimée ($)",
+    valueMinError: "La valeur minimale est de 1 000 $",
     descriptionLabel: "Description et signes distinctifs",
     descriptionHelper: "Décrivez tout signe particulier pouvant identifier votre bien : couleur, accessoires, modifications, marques d'usure, etc.",
     termsCheckbox: "J'accepte les conditions d'utilisation",
@@ -516,6 +523,7 @@ const fr: SiteContent = {
     dropzoneText: "Glissez vos photos ici ou cliquez pour sélectionner",
     documentsHeading: "Documents justificatifs",
     documentsDescription: "Preuve d'achat, certificat d'authenticité (optionnel).",
+    addDocumentButton: "+ Ajouter un document",
     confirmButton: "Confirmer l'enregistrement",
     successHeading: "Bien enregistré avec succès !",
     successDescription: "Votre bien a été enregistré dans le RNBP.",
@@ -680,6 +688,8 @@ const fr: SiteContent = {
     description: "Une question, un commentaire ou une suggestion\u00a0? Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.",
     nameLabel: "Nom complet",
     emailLabel: "Adresse courriel",
+    phoneLabel: "Téléphone",
+    phonePlaceholder: "ex. 514-555-1234",
     messageLabel: "Message",
     submitButton: "Envoyer",
     submitting: "Envoi en cours\u2026",
@@ -837,6 +847,7 @@ const fr: SiteContent = {
   admin: {
     nav: {
       dashboard: "Tableau de bord",
+      items: "Biens",
       orders: "Commandes",
       products: "Produits",
     },
@@ -929,6 +940,7 @@ const fr: SiteContent = {
     // Items
     ITEM_NOT_FOUND: "Bien introuvable",
     ITEM_ALREADY_STOLEN: "Ce bien est déjà déclaré volé",
+    ITEM_NOT_STOLEN: "Ce bien n'est pas déclaré volé",
     INVALID_ID: "Identifiant invalide",
     ITEMS_NOT_OWNED: "Un ou plusieurs biens ne vous appartiennent pas",
     // Files

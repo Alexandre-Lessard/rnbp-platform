@@ -175,6 +175,17 @@ Edit `/opt/rnbp/.env` with production values:
 | `FRONTEND_URL` | `https://rnbp.ca` |
 | `FROM_EMAIL` | `noreply@rnbp.ca` |
 | `BREVO_API_KEY` | *(Brevo key if emails are enabled)* |
+| `GOOGLE_CLIENT_ID` | *(Google OAuth client ID)* |
+| `GOOGLE_CLIENT_SECRET` | *(Google OAuth client secret)* |
+| `FACEBOOK_CLIENT_ID` | *(Facebook OAuth app ID)* |
+| `FACEBOOK_CLIENT_SECRET` | *(Facebook OAuth app secret)* |
+| `R2_ACCOUNT_ID` | *(Cloudflare account ID)* |
+| `R2_ACCESS_KEY_ID` | *(R2 API token access key)* |
+| `R2_SECRET_ACCESS_KEY` | *(R2 API token secret key)* |
+| `R2_BUCKET_NAME` | `rnbp-uploads` |
+| `R2_PUBLIC_URL` | *(R2 public bucket URL, e.g. `https://pub-xxx.r2.dev`)* |
+| `STRIPE_SECRET_KEY` | *(Stripe secret key)* |
+| `STRIPE_WEBHOOK_SECRET` | *(Stripe webhook signing secret)* |
 
 ### Generate JWT Ed25519 keys
 

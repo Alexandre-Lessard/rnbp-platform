@@ -48,6 +48,13 @@ The frontend runs on `http://localhost:5173`, the API on `http://localhost:3000`
 | `GOOGLE_CLIENT_SECRET`     | Google OAuth client secret                         | (optional)                                     |
 | `MICROSOFT_CLIENT_ID`      | Microsoft OAuth client ID                          | (optional)                                     |
 | `MICROSOFT_CLIENT_SECRET`  | Microsoft OAuth client secret                      | (optional)                                     |
+| `FACEBOOK_CLIENT_ID`       | Facebook OAuth app ID                              | (optional)                                     |
+| `FACEBOOK_CLIENT_SECRET`   | Facebook OAuth app secret                          | (optional)                                     |
+| `R2_ACCOUNT_ID`            | Cloudflare account ID for R2 storage               | (optional — uploads disabled if not set)       |
+| `R2_ACCESS_KEY_ID`         | R2 S3-compatible access key ID                     | (optional)                                     |
+| `R2_SECRET_ACCESS_KEY`     | R2 S3-compatible secret access key                 | (optional)                                     |
+| `R2_BUCKET_NAME`           | R2 bucket name                                     | `rnbp-uploads`                                 |
+| `R2_PUBLIC_URL`            | R2 public bucket URL (for serving files)           | `https://pub-xxx.r2.dev`                       |
 | `ADMIN_ORDER_EMAIL`        | Email for admin order notifications                | (optional, fallback: `info@rnbp.ca` prod / `dev@rnbp.ca` dev) |
 | `ADMIN_CONTACT_EMAIL`      | Email for admin contact/partner form notifications | (optional, fallback: `info@rnbp.ca` prod / `dev@rnbp.ca` dev) |
 | `STRIPE_SECRET_KEY`        | Stripe secret key                                  | (optional in dev)                              |
@@ -61,6 +68,7 @@ The frontend runs on `http://localhost:5173`, the API on `http://localhost:3000`
 |-------------------------|--------------------------------|--------------------------------|
 | `VITE_API_URL`          | Backend API base URL           | `http://localhost:3000/api`    |
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID (public)| (optional)                     |
+| `VITE_FACEBOOK_CLIENT_ID` | Facebook OAuth app ID (public) | (optional)                    |
 | `VITE_MICROSOFT_CLIENT_ID` | Microsoft OAuth client ID (public) | (optional)              |
 
 ## Scripts Reference

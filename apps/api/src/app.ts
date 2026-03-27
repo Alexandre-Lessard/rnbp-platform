@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import multipart from "@fastify/multipart";
 import rateLimit from "@fastify/rate-limit";
 import rawBody from "fastify-raw-body";
 import { getConfig } from "./config.js";
@@ -14,6 +15,7 @@ import { contactRoutes } from "./routes/contact.js";
 import { shopRoutes } from "./routes/shop.js";
 import { adminRoutes } from "./routes/admin.js";
 import { oauthRoutes } from "./routes/oauth.js";
+import { uploadRoutes } from "./routes/uploads.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { securityHeaders } from "./middleware/security-headers.js";
 import { incrementRequestCount } from "./utils/request-counter.js";
@@ -44,6 +46,11 @@ export async function buildApp() {
   // Security headers
   await app.register(securityHeaders);
 
+  // Multipart (for file uploads — NOT global to avoid Stripe rawBody conflict)
+  await app.register(multipart, {
+    limits: { fileSize: config.MAX_FILE_SIZE, files: 5 },
+  });
+
   // Raw body (pour webhook Stripe)
   await app.register(rawBody, { global: false, runFirst: true });
 
@@ -68,6 +75,7 @@ export async function buildApp() {
   await app.register(insuranceRoutes, { prefix: "/api" });
   await app.register(contactRoutes, { prefix: "/api" });
   await app.register(shopRoutes, { prefix: "/api" });
+  await app.register(uploadRoutes, { prefix: "/api" });
   await app.register(adminRoutes, { prefix: "/api" });
   await app.register(oauthRoutes, { prefix: "/api" });
 

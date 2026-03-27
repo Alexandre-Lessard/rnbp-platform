@@ -16,6 +16,7 @@ export function ContactPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
+  const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
 
   const emailValid = email === "" || EMAIL_RE.test(email);
@@ -37,6 +38,7 @@ export function ContactPage() {
         body: {
           name,
           email,
+          phone: phone || undefined,
           type: "other",
           message,
           website: honeypot || undefined,
@@ -46,6 +48,7 @@ export function ContactPage() {
       setName("");
       setEmail("");
       setEmailTouched(false);
+      setPhone("");
       setMessage("");
     } catch (err) {
       const apiErr = err as ApiError;
@@ -100,7 +103,7 @@ export function ContactPage() {
 
               <div>
                 <label htmlFor="contact-name" className="mb-2 block text-sm font-semibold text-[var(--rcb-text-strong)]">
-                  {c.nameLabel}
+                  {c.nameLabel} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="contact-name"
@@ -116,7 +119,7 @@ export function ContactPage() {
 
               <div>
                 <label htmlFor="contact-email" className="mb-2 block text-sm font-semibold text-[var(--rcb-text-strong)]">
-                  {c.emailLabel}
+                  {c.emailLabel} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="contact-email"
@@ -131,6 +134,21 @@ export function ContactPage() {
                 {showEmailError && (
                   <p className="mt-1.5 text-sm text-[var(--rcb-red-medium)]">{c.emailError}</p>
                 )}
+              </div>
+
+              <div>
+                <label htmlFor="contact-phone" className="mb-2 block text-sm font-semibold text-[var(--rcb-text-strong)]">
+                  {c.phoneLabel}
+                </label>
+                <input
+                  id="contact-phone"
+                  type="tel"
+                  maxLength={20}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder={c.phonePlaceholder}
+                  className={inputOk}
+                />
               </div>
 
               <div>

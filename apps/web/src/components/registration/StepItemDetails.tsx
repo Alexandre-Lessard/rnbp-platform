@@ -43,9 +43,13 @@ export function StepItemDetails({
     onChange({ ...data, [field]: value });
   }
 
+  const estimatedValueNum = data.estimatedValue ? Number(data.estimatedValue) : null;
+  const estimatedValueValid = estimatedValueNum === null || estimatedValueNum >= 1000;
+
   const canContinue =
     data.name.trim() !== "" &&
     data.category !== "" &&
+    estimatedValueValid &&
     termsAccepted;
 
   const maxYear = new Date().getFullYear() + 1;
@@ -154,6 +158,9 @@ export function StepItemDetails({
           onChange={(e) => update("estimatedValue", e.target.value)}
           className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
         />
+        {!estimatedValueValid && (
+          <p className="mt-1 text-xs text-red-500">{reg.valueMinError}</p>
+        )}
       </div>
 
       <div>

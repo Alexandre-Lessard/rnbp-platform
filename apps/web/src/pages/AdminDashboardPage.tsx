@@ -297,7 +297,7 @@ export function AdminDashboardPage() {
     const top8 = raw.slice(0, 8);
     const othersCount = raw.slice(8).reduce((sum, c) => sum + c.count, 0);
     return [...top8, { name: "Other", count: othersCount }];
-  }, [period, stats, locale]);
+  }, [period, stats]);
 
   const heapPercent = liveData?.heapTotal
     ? Math.round((liveData.heapUsed / liveData.heapTotal) * 100)

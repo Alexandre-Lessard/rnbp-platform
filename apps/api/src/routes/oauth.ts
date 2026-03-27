@@ -22,6 +22,7 @@ import {
 import {
   exchangeGoogleCode,
   exchangeMicrosoftCode,
+  exchangeFacebookCode,
   type OAuthProfile,
 } from "../utils/oauth.js";
 
@@ -31,6 +32,11 @@ const oauthCodeSchema = z.object({
   code: z.string().min(1),
   redirectUri: z.string().url(),
   codeVerifier: z.string().min(43),
+});
+
+const oauthCodeNoPkceSchema = z.object({
+  code: z.string().min(1),
+  redirectUri: z.string().url(),
 });
 
 const oauthCompleteSchema = z.object({
@@ -94,11 +100,12 @@ function verifyOAuthPendingToken(token: string): {
 
 // ── Common OAuth logic ───────────────────────────────────────────────
 
-type OAuthProvider = "google" | "microsoft";
+type OAuthProvider = "google" | "microsoft" | "facebook";
 
 const providerIdColumn = {
   google: "googleId",
   microsoft: "microsoftId",
+  facebook: "facebookId",
 } as const;
 
 async function handleOAuthLogin(
@@ -254,6 +261,38 @@ export async function oauthRoutes(app: FastifyInstance) {
 
       const result = await handleOAuthLogin(
         "microsoft",
+        profile,
+        request.headers["user-agent"] || null,
+      );
+
+      if (result.needsEmail) {
+        return reply.send({
+          needsEmail: true,
+          pendingToken: result.pendingToken,
+        });
+      }
+
+      return reply.send({
+        user: result.user,
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      });
+    },
+  );
+
+  // POST /auth/facebook (no PKCE)
+  app.post(
+    "/auth/facebook",
+    { config: { rateLimit: { max: 5, timeWindow: "1 minute" } } },
+    async (request, reply) => {
+      const body = oauthCodeNoPkceSchema.parse(request.body);
+      const profile = await exchangeFacebookCode(
+        body.code,
+        body.redirectUri,
+      );
+
+      const result = await handleOAuthLogin(
+        "facebook",
         profile,
         request.headers["user-agent"] || null,
       );

@@ -53,6 +53,7 @@ import { FaqPage } from "@/pages/FaqPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { BoutiquePage } from "@/pages/BoutiquePage";
 import { BoutiqueSuccessPage } from "@/pages/BoutiqueSuccessPage";
+import { AdminItemsPage } from "@/pages/AdminItemsPage";
 import { AdminOrdersPage } from "@/pages/AdminOrdersPage";
 import { AdminOrderDetailPage } from "@/pages/AdminOrderDetailPage";
 import { AdminProductsPage } from "@/pages/AdminProductsPage";
@@ -102,6 +103,7 @@ function App() {
           <Route path={ROUTES.verifyEmail} element={<VerifyEmailPage />} />
           <Route path={ROUTES.emailPending} element={<EmailPendingPage />} />
           <Route path={ROUTES.googleCallback} element={<OAuthCallbackPage />} />
+          <Route path={ROUTES.facebookCallback} element={<OAuthCallbackPage />} />
           <Route path={ROUTES.microsoftCallback} element={<OAuthCallbackPage />} />
           <Route
             path={ROUTES.dashboard}
@@ -141,6 +143,16 @@ function App() {
               <AdminRoute>
                 <AdminLayout>
                   <AdminDashboardPage />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+          <Route
+            path={ROUTES.adminItems}
+            element={
+              <AdminRoute>
+                <AdminLayout>
+                  <AdminItemsPage />
                 </AdminLayout>
               </AdminRoute>
             }

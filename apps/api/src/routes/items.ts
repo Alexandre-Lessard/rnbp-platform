@@ -3,10 +3,11 @@ import { eq, and, isNull, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import { createItemSchema, updateItemSchema, archiveItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
-import { items, itemPhotos, itemDocuments } from "../db/schema.js";
+import { items, itemPhotos, itemDocuments, theftReports } from "../db/schema.js";
 import { requireVerifiedEmail } from "../middleware/auth.js";
-import { INVALID_ID, ITEM_NOT_FOUND, ITEM_ALREADY_STOLEN } from "@rnbp/shared";
+import { INVALID_ID, ITEM_NOT_FOUND, ITEM_ALREADY_STOLEN, ITEM_NOT_STOLEN } from "@rnbp/shared";
 import { AppError, forbidden } from "../utils/errors.js";
+import { isR2Configured, deleteFromR2, extractR2Key } from "../utils/r2.js";
 
 const uuidSchema = z.string().uuid("Invalid identifier");
 
@@ -175,6 +176,48 @@ export async function itemRoutes(app: FastifyInstance) {
     },
   );
 
+  // ── Recover item (stolen → recovered) ────────────────────────────
+
+  app.patch(
+    "/items/:id/recover",
+    { preHandler: requireVerifiedEmail },
+    async (request, reply) => {
+      const { id } = request.params as { id: string };
+      uuidSchema.parse(id);
+      const db = getDb();
+
+      const [existing] = await db
+        .select({ ownerId: items.ownerId, status: items.status })
+        .from(items)
+        .where(eq(items.id, id))
+        .limit(1);
+
+      if (!existing) throw new AppError(404, ITEM_NOT_FOUND, "Item not found");
+      if (existing.ownerId !== request.userId!) throw forbidden();
+      if (existing.status !== "stolen") {
+        throw new AppError(400, ITEM_NOT_STOLEN, "Item is not marked as stolen");
+      }
+
+      // Update item status + resolve theft report in one transaction
+      const [updated] = await db.transaction(async (tx) => {
+        const [item] = await tx
+          .update(items)
+          .set({ status: "active", updatedAt: new Date() })
+          .where(eq(items.id, id))
+          .returning();
+
+        await tx
+          .update(theftReports)
+          .set({ status: "resolved", updatedAt: new Date() })
+          .where(and(eq(theftReports.itemId, id), eq(theftReports.status, "pending")));
+
+        return [item];
+      });
+
+      return reply.send({ item: updated });
+    },
+  );
+
   // ── Delete item ──────────────────────────────────────────────────
 
   app.delete(
@@ -193,6 +236,17 @@ export async function itemRoutes(app: FastifyInstance) {
 
       if (!existing) throw new AppError(404, ITEM_NOT_FOUND, "Item not found");
       if (existing.ownerId !== request.userId!) throw forbidden();
+
+      // Clean up R2 files before DB cascade delete
+      if (isR2Configured()) {
+        const photos = await db.select({ url: itemPhotos.url }).from(itemPhotos).where(eq(itemPhotos.itemId, id));
+        const docs = await db.select({ url: itemDocuments.url }).from(itemDocuments).where(eq(itemDocuments.itemId, id));
+        const allUrls = [...photos, ...docs].map((f) => extractR2Key(f.url)).filter(Boolean) as string[];
+        const results = await Promise.allSettled(allUrls.map((key) => deleteFromR2(key)));
+        results.forEach((r, i) => {
+          if (r.status === "rejected") request.log.warn(`Failed to delete R2 file ${allUrls[i]}: ${r.reason}`);
+        });
+      }
 
       await db.delete(items).where(eq(items.id, id));
 

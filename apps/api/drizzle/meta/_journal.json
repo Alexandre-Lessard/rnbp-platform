@@ -50,6 +50,20 @@
       "when": 1774282317914,
       "tag": "0006_low_rattler",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1774565990097,
+      "tag": "0007_jazzy_korvac",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1774568866184,
+      "tag": "0008_wide_shaman",
+      "breakpoints": true
     }
   ]
 }

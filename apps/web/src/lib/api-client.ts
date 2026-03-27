@@ -60,6 +60,47 @@ export async function apiRequest<T>(
     throw error;
   }
 
+  if (response.status === 204) return undefined as T;
+  return response.json();
+}
+
+/**
+ * Upload files via multipart/form-data.
+ * Does NOT set Content-Type (browser adds boundary automatically).
+ */
+export async function apiUpload<T>(
+  path: string,
+  formData: FormData,
+): Promise<T> {
+  const headers: Record<string, string> = {};
+  if (accessToken) {
+    headers["Authorization"] = `Bearer ${accessToken}`;
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+  } catch {
+    const error = new Error("Service temporairement indisponible") as ApiError;
+    error.status = 0;
+    error.code = "NETWORK_ERROR";
+    throw error;
+  }
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => null);
+    const message = data?.error?.message || `Erreur ${response.status}`;
+    const error = new Error(message) as ApiError;
+    error.status = response.status;
+    error.code = data?.error?.code;
+    throw error;
+  }
+
+  if (response.status === 204) return undefined as T;
   return response.json();
 }
 

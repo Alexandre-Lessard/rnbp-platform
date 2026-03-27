@@ -26,7 +26,9 @@ export function OAuthCallbackPage() {
   // Determine provider from pathname
   const provider: OAuthProvider = location.pathname.includes("/google/")
     ? "google"
-    : "microsoft";
+    : location.pathname.includes("/facebook/")
+      ? "facebook"
+      : "microsoft";
 
   useEffect(() => {
     if (processed.current) return;
@@ -51,8 +53,9 @@ export function OAuthCallbackPage() {
       return;
     }
 
+    // Facebook doesn't use PKCE, so codeVerifier is optional
     const codeVerifier = getCodeVerifier(provider);
-    if (!codeVerifier) {
+    if (!codeVerifier && provider !== "facebook") {
       setError(t.auth?.oauthError ?? "Login error. Please try again.");
       return;
     }

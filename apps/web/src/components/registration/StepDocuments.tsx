@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect } from "react";
+import { useRef } from "react";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
 
@@ -16,43 +16,36 @@ const ACCEPTED_DOC_TYPES = [...ACCEPTED_IMAGE_TYPES, "application/pdf"];
 const MAX_PHOTOS = 5;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-function PhotoPreviews({
-  photos,
-  onRemove,
-}: {
-  photos: File[];
-  onRemove: (index: number) => void;
-}) {
-  const urls = useMemo(
-    () => photos.map((f) => URL.createObjectURL(f)),
-    [photos],
-  );
+// Module-level cache for blob URLs — avoids React strict mode issues with refs in render
+const blobUrlCache = new WeakMap<File, string>();
 
-  useEffect(() => {
-    return () => {
-      urls.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [urls]);
+function getOrCreateBlobUrl(file: File): string {
+  let url = blobUrlCache.get(file);
+  if (!url) {
+    url = URL.createObjectURL(file);
+    blobUrlCache.set(file, url);
+  }
+  return url;
+}
+
+function PhotoPreview({ file, onRemove }: { file: File; onRemove: () => void }) {
+  const url = getOrCreateBlobUrl(file);
 
   return (
-    <div className="mt-4 flex flex-wrap gap-3">
-      {photos.map((file, i) => (
-        <div key={`${file.name}-${i}`} className="group relative">
-          <img
-            src={urls[i]}
-            alt={file.name}
-            className="h-20 w-20 rounded-lg object-cover"
-          />
-          <button
-            type="button"
-            onClick={() => onRemove(i)}
-            aria-label={`Supprimer ${file.name}`}
-            className="absolute -top-2 -right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 text-xs text-white"
-          >
-            &times;
-          </button>
-        </div>
-      ))}
+    <div className="group relative">
+      <img
+        src={url}
+        alt={file.name}
+        className="h-20 w-20 rounded-lg object-cover"
+      />
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Supprimer ${file.name}`}
+        className="absolute -top-2 -right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-500 text-xs text-white"
+      >
+        &times;
+      </button>
     </div>
   );
 }
@@ -146,7 +139,11 @@ export function StepDocuments({
         </div>
 
         {photos.length > 0 && (
-          <PhotoPreviews photos={photos} onRemove={removePhoto} />
+          <div className="mt-4 flex flex-wrap gap-3">
+            {photos.map((file, i) => (
+              <PhotoPreview key={`${file.name}-${file.size}-${i}`} file={file} onRemove={() => removePhoto(i)} />
+            ))}
+          </div>
         )}
       </div>
 
@@ -164,7 +161,7 @@ export function StepDocuments({
           onClick={() => docInputRef.current?.click()}
           className="mt-4 cursor-pointer rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 py-2 text-sm font-medium text-[var(--rcb-text-strong)] transition-colors hover:bg-[var(--rcb-surface)]"
         >
-          + Ajouter un document
+          {reg.addDocumentButton}
         </button>
         <input
           ref={docInputRef}

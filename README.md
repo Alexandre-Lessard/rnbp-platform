@@ -17,7 +17,7 @@ The platform serves both French and English speakers through a bi-domain archite
 - **Theft Reporting** — Declare stolen items with police report details; items are flagged across the registry
 - **Public Lookup** — Anyone can look up an RNBP number to check if an item is registered or reported stolen
 - **Insurance Integration** — Send proof of registration to your insurer to request a home insurance discount
-- **Google OAuth** — Sign in with Google (Microsoft OAuth ready, pending Azure configuration)
+- **OAuth Login** — Sign in with Google or Facebook (Microsoft OAuth ready, pending Azure configuration)
 - **Stripe Checkout** — Purchase RNBP sticker sheets with tax calculation and shipping
 - **Bilingual UI** — Full French/English support with instant language toggle, hostname-based detection
 - **Bilingual Error Handling** — Centralized error codes mapped to both languages via i18n
@@ -30,10 +30,11 @@ The platform serves both French and English speakers through a bi-domain archite
 | JWT Algorithm | **EdDSA (Ed25519)** | Smaller tokens than RS256, faster signing/verification, modern standard (RFC 8037) |
 | Password Hashing | **Argon2** | Memory-hard (resistant to GPU attacks), OWASP recommended over bcrypt |
 | ORM | **Drizzle** | Type-safe SQL, no code generation step, lighter than Prisma, supports raw SQL escape hatches |
+| File Storage | **Cloudflare R2** | S3-compatible, generous free tier, no egress fees, CDN-served, same ecosystem as Pages/Tunnel |
 | Infrastructure | **Cloudflare Tunnel** | No public IP needed, zero-config TLS, no nginx/certbot, DDoS protection included |
 | Monorepo | **pnpm workspaces** | Shared types/constants between frontend and backend, single lockfile, fast installs |
 | Validation | **Zod** | Same schemas used on both frontend and backend, TypeScript inference |
-| OAuth | **Authorization Code + PKCE** | Industry standard (OAuth 2.1), code exchange server-side, state parameter for CSRF protection |
+| OAuth | **Authorization Code + PKCE** | Industry standard (OAuth 2.1), code exchange server-side, state parameter for CSRF protection. Facebook uses code + secret only (no PKCE support) |
 | Email Verification | **HMAC signed tokens** | Stateless (no DB lookup), timing-safe comparison, expiry built into the token |
 | Error Handling | **Centralized error codes** | Shared constants between backend and frontend, bilingual mapping via i18n |
 
@@ -51,7 +52,7 @@ rnbp.ca / nrpp.ca          api.rnbp.ca
 
 - **Frontend**: React 19 SPA served via Cloudflare Pages. Bilingual via hostname detection (`rnbp.ca` = FR, `nrpp.ca` = EN).
 - **Backend**: Fastify 5 behind Cloudflare Tunnel. No public IP, no nginx. Auto-migrating Drizzle ORM.
-- **Auth**: JWT EdDSA access/refresh tokens with server-side sessions. OAuth via Google (PKCE). Argon2 password hashing.
+- **Auth**: JWT EdDSA access/refresh tokens with server-side sessions. OAuth via Google and Facebook. Argon2 password hashing.
 
 ## Stack
 
@@ -59,10 +60,11 @@ rnbp.ca / nrpp.ca          api.rnbp.ca
 |-------|-------------|
 | Frontend | React 19, Vite 6, Tailwind CSS 4, React Router 7 |
 | Backend | Fastify 5, Drizzle ORM, PostgreSQL 16 |
-| Auth | JWT EdDSA (Ed25519 via jose), Argon2, Google OAuth |
+| Auth | JWT EdDSA (Ed25519 via jose), Argon2, OAuth (Google, Facebook) |
 | Validation | Zod (shared frontend/backend) |
 | Payments | Stripe Checkout |
 | Emails | Brevo (transactional) |
+| File Storage | Cloudflare R2 |
 | Infrastructure | Cloudflare Pages + Cloudflare Tunnel |
 | Monorepo | pnpm workspaces, tsup (API), Vite (web) |
 | CI | GitHub Actions (lint + typecheck + tests) |

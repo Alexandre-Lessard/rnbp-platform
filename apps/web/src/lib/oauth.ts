@@ -1,4 +1,4 @@
-export type OAuthProvider = "google" | "microsoft";
+export type OAuthProvider = "google" | "microsoft" | "facebook";
 
 // ── Base64url encoding ───────────────────────────────────────────────
 
@@ -50,6 +50,7 @@ export function getCodeVerifier(provider: OAuthProvider): string | null {
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 const MICROSOFT_CLIENT_ID = import.meta.env.VITE_MICROSOFT_CLIENT_ID || "";
+const FACEBOOK_CLIENT_ID = import.meta.env.VITE_FACEBOOK_CLIENT_ID || "";
 
 function getRedirectUri(provider: OAuthProvider): string {
   return `${window.location.origin}/auth/${provider}/callback`;
@@ -71,8 +72,22 @@ export async function buildOAuthUrl(
   provider: OAuthProvider,
 ): Promise<string> {
   const state = generateState(provider);
-  const { codeChallenge } = await generatePKCE(provider);
   const redirectUri = getRedirectUri(provider);
+
+  // Facebook — no PKCE
+  if (provider === "facebook") {
+    const params = new URLSearchParams({
+      client_id: FACEBOOK_CLIENT_ID,
+      redirect_uri: redirectUri,
+      response_type: "code",
+      scope: "email,public_profile",
+      state,
+    });
+    return `https://www.facebook.com/v21.0/dialog/oauth?${params}`;
+  }
+
+  // Google & Microsoft — with PKCE
+  const { codeChallenge } = await generatePKCE(provider);
 
   if (provider === "google") {
     const params = new URLSearchParams({

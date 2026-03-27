@@ -61,6 +61,7 @@ export function buildContactNotificationEmail(
   name: string,
   email: string,
   company: string | undefined,
+  phone: string | undefined,
   type: string,
   message: string,
   lang: "fr" | "en" = "fr",
@@ -73,6 +74,7 @@ export function buildContactNotificationEmail(
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
   const safeCompany = company ? escapeHtml(company) : "—";
+  const safePhone = phone ? escapeHtml(phone) : "—";
   const safeType = escapeHtml(type);
   const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
 
@@ -83,6 +85,7 @@ export function buildContactNotificationEmail(
       nameLabel: "Nom",
       emailLabel: "Courriel",
       companyLabel: "Entreprise",
+      phoneLabel: "Téléphone",
       typeLabel: "Type",
       messageLabel: "Message",
       footer: "RNBP — Formulaire de contact partenaires",
@@ -93,6 +96,7 @@ export function buildContactNotificationEmail(
       nameLabel: "Name",
       emailLabel: "Email",
       companyLabel: "Company",
+      phoneLabel: "Phone",
       typeLabel: "Type",
       messageLabel: "Message",
       footer: "RNBP — Partner contact form",
@@ -110,6 +114,7 @@ export function buildContactNotificationEmail(
           <tr><td style="padding: 8px 0; font-weight: bold; color: #333333; width: 100px;">${t.nameLabel}</td><td style="padding: 8px 0; color: #333333;">${safeName}</td></tr>
           <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">${t.emailLabel}</td><td style="padding: 8px 0;"><a href="mailto:${safeEmail}" style="color: #1a2e44;">${safeEmail}</a></td></tr>
           <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">${t.companyLabel}</td><td style="padding: 8px 0; color: #333333;">${safeCompany}</td></tr>
+          <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">${t.phoneLabel}</td><td style="padding: 8px 0; color: #333333;">${safePhone}</td></tr>
           <tr><td style="padding: 8px 0; font-weight: bold; color: #333333;">${t.typeLabel}</td><td style="padding: 8px 0; color: #333333;">${safeType}</td></tr>
         </table>
         <h3 style="margin: 24px 0 12px; color: #1a2e44; font-size: 15px;">${t.messageLabel}</h3>

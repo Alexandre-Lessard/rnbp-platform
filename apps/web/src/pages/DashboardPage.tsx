@@ -189,14 +189,12 @@ export function DashboardPage() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                {item.status === "active" && (
-                  <Link
-                    to={ROUTES.edit(item.id)}
-                    className={getButtonClasses("outline", "sm", "!px-4 !py-1.5 !text-xs")}
-                  >
-                    {dash?.editItem ?? "Edit"}
-                  </Link>
-                )}
+                <Link
+                  to={ROUTES.edit(item.id)}
+                  className={getButtonClasses("outline", "sm", "!px-4 !py-1.5 !text-xs")}
+                >
+                  {dash?.editItem ?? "Edit"}
+                </Link>
                 {item.status !== "stolen" && (
                   <button
                     type="button"

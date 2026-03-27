@@ -27,6 +27,7 @@ export async function contactRoutes(app: FastifyInstance) {
         name: body.name,
         email: body.email,
         company: body.company,
+        phone: body.phone,
         type: body.type,
         message: body.message,
       });
@@ -37,6 +38,7 @@ export async function contactRoutes(app: FastifyInstance) {
             body.name,
             body.email,
             body.company,
+            body.phone,
             body.type,
             body.message,
           ),

@@ -5,6 +5,7 @@ export const contactSchema = z.object({
   email: z.string().trim().email().max(255),
   company: z.string().trim().max(255).optional(),
   type: z.enum(["insurer", "retailer", "security", "other"]),
+  phone: z.string().trim().max(20).optional(),
   message: z.string().trim().min(10).max(2000),
   website: z.string().optional(),
 });

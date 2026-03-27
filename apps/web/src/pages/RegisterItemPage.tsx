@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "@/i18n/context";
 import { useAuth, setRefreshToken } from "@/lib/auth-context";
-import { apiRequest, setAccessToken, isNetworkError } from "@/lib/api-client";
+import { apiRequest, apiUpload, setAccessToken, isNetworkError } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
 import { useCart } from "@/lib/cart-context";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
@@ -116,6 +116,23 @@ export function RegisterItemPage() {
       : undefined,
   }), [itemData]);
 
+  const uploadFiles = useCallback(async (itemId: string) => {
+    let uploadFailed = false;
+    if (photos.length > 0) {
+      const fd = new FormData();
+      photos.forEach((f) => fd.append("photos", f));
+      try { await apiUpload(`/items/${itemId}/photos`, fd); } catch { uploadFailed = true; }
+    }
+    if (documents.length > 0) {
+      const fd = new FormData();
+      documents.forEach((f) => fd.append("documents", f));
+      try { await apiUpload(`/items/${itemId}/documents`, fd); } catch { uploadFailed = true; }
+    }
+    if (uploadFailed) {
+      setError(t.errors?.generic ?? "Some files could not be uploaded. You can add them later from the item page.");
+    }
+  }, [photos, documents, t]);
+
   const handleSubmitLoggedIn = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -126,6 +143,8 @@ export function RegisterItemPage() {
         "/items",
         { method: "POST", body },
       );
+
+      await uploadFiles(res.item.id);
 
       clearDraft();
       // Update cart if a sticker was added during registration
@@ -138,7 +157,7 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [buildItemBody, totalSteps, itemData.name, updateItemId, t]);
+  }, [buildItemBody, uploadFiles, totalSteps, itemData.name, updateItemId, t]);
 
   const handleSubmitWithAccount = useCallback(async () => {
     setLoading(true);
@@ -167,6 +186,8 @@ export function RegisterItemPage() {
       setRefreshToken(res.refreshToken);
       await refreshAuth();
 
+      await uploadFiles(res.item.id);
+
       clearDraft();
       // Update cart if a sticker was added during registration
       updateItemId(`pending:${itemData.name}`, res.item.id);
@@ -178,7 +199,7 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [accountData, buildItemBody, totalSteps, refreshAuth, itemData.name, updateItemId, t]);
+  }, [accountData, buildItemBody, uploadFiles, totalSteps, refreshAuth, itemData.name, updateItemId, t]);
 
   if (backendDown) {
     return (

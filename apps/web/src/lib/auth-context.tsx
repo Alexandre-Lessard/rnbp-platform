@@ -47,10 +47,10 @@ type AuthContextType = AuthState & {
     phone?: string;
   }) => Promise<void>;
   loginWithOAuth: (
-    provider: "google" | "microsoft",
+    provider: "google" | "microsoft" | "facebook",
     code: string,
     redirectUri: string,
-    codeVerifier: string,
+    codeVerifier: string | null,
   ) => Promise<OAuthResult>;
   completeOAuth: (token: string, email: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -216,11 +216,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginWithOAuth = useCallback(
     async (
-      provider: "google" | "microsoft",
+      provider: "google" | "microsoft" | "facebook",
       code: string,
       redirectUri: string,
-      codeVerifier: string,
+      codeVerifier: string | null,
     ): Promise<OAuthResult> => {
+      const body: Record<string, string> = { code, redirectUri };
+      if (codeVerifier) body.codeVerifier = codeVerifier;
+
       const data = await apiRequest<{
         user?: User;
         accessToken?: string;
@@ -229,7 +232,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         pendingToken?: string;
       }>(`/auth/${provider}`, {
         method: "POST",
-        body: { code, redirectUri, codeVerifier },
+        body,
       });
 
       if (data.needsEmail && data.pendingToken) {

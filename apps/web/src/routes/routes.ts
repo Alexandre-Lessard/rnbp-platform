@@ -20,10 +20,12 @@ export const ROUTES = {
   edit: (id: string) => `/edit/${id}`,
   reportTheft: "/report-theft",
   admin: "/admin",
+  adminItems: "/admin/items",
   adminOrders: "/admin/orders",
   adminOrderDetail: (id: string) => `/admin/orders/${id}`,
   adminProducts: "/admin/products",
   adminProductEdit: (id: string) => `/admin/products/${id}`,
   googleCallback: "/auth/google/callback",
+  facebookCallback: "/auth/facebook/callback",
   microsoftCallback: "/auth/microsoft/callback",
 } as const;
