@@ -44,7 +44,7 @@ export async function apiRequest<T>(
       body: body ? JSON.stringify(body) : undefined,
     });
   } catch {
-    const error = new Error("Service temporairement indisponible") as ApiError;
+    const error = new Error("Service temporarily unavailable") as ApiError;
     error.status = 0;
     error.code = "NETWORK_ERROR";
     throw error;
@@ -53,7 +53,7 @@ export async function apiRequest<T>(
   if (!response.ok) {
     const data = await response.json().catch(() => null);
     const message =
-      data?.error?.message || `Erreur ${response.status}`;
+      data?.error?.message || `Error ${response.status}`;
     const error = new Error(message) as ApiError;
     error.status = response.status;
     error.code = data?.error?.code;
@@ -85,7 +85,7 @@ export async function apiUpload<T>(
       body: formData,
     });
   } catch {
-    const error = new Error("Service temporairement indisponible") as ApiError;
+    const error = new Error("Service temporarily unavailable") as ApiError;
     error.status = 0;
     error.code = "NETWORK_ERROR";
     throw error;
@@ -93,7 +93,7 @@ export async function apiUpload<T>(
 
   if (!response.ok) {
     const data = await response.json().catch(() => null);
-    const message = data?.error?.message || `Erreur ${response.status}`;
+    const message = data?.error?.message || `Error ${response.status}`;
     const error = new Error(message) as ApiError;
     error.status = response.status;
     error.code = data?.error?.code;
