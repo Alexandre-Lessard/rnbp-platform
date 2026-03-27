@@ -157,7 +157,7 @@ export function EditItemPage() {
     setRecovering(true);
     try {
       await apiRequest(`/items/${id}/recover`, { method: "PATCH" });
-      setItemStatus("recovered");
+      setItemStatus("active");
       setRecoverOpen(false);
     } catch (err) {
       setError(getErrorMessage(err, t));
