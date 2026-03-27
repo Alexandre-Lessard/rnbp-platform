@@ -19,8 +19,7 @@ jobs:
       - name: Trigger deploy webhook
         run: |
           RESPONSE=$(curl -sf -X POST https://api.rnbp.ca/api/deploy-webhook \
-            -H "Authorization: Bearer ${{ secrets.DEPLOY_WEBHOOK_SECRET }}" \
-            -H "Content-Type: application/json")
+            -H "Authorization: Bearer ${{ secrets.DEPLOY_WEBHOOK_SECRET }}")
           echo "Response: $RESPONSE"
 
       - name: Wait for deploy
