@@ -16,32 +16,15 @@ jobs:
     name: Deploy Backend
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install cloudflared
+      - name: Trigger deploy webhook
         run: |
-          curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared.deb
-          sudo dpkg -i cloudflared.deb
+          RESPONSE=$(curl -sf -X POST https://api.rnbp.ca/api/deploy-webhook \
+            -H "Authorization: Bearer ${{ secrets.DEPLOY_WEBHOOK_SECRET }}" \
+            -H "Content-Type: application/json")
+          echo "Response: $RESPONSE"
 
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          echo "Host ssh-rnbp.rnbp.ca" > ~/.ssh/config
-          echo "  User prod" >> ~/.ssh/config
-          echo "  IdentityFile ~/.ssh/id_ed25519" >> ~/.ssh/config
-          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
-          echo "  ProxyCommand cloudflared access ssh --hostname ssh-rnbp.rnbp.ca --id ${{ secrets.CF_ACCESS_CLIENT_ID }} --secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}" >> ~/.ssh/config
-
-      - name: Test SSH connection
-        run: ssh ssh-rnbp.rnbp.ca "echo 'SSH connection successful'" || echo "SSH FAILED"
-
-      - name: Backup database
-        run: ssh ssh-rnbp.rnbp.ca 'source /opt/rnbp/.env && pg_dump "$DATABASE_URL" | gzip > /opt/rnbp/backups/rollback/db_cd_$(date +%Y%m%d_%H%M%S).sql.gz'
-
-      - name: Deploy
-        run: ssh ssh-rnbp.rnbp.ca 'cd /opt/rnbp/repo && git fetch origin main && git reset --hard origin/main && source ~/.nvm/nvm.sh && pnpm install --frozen-lockfile && pnpm --filter @rnbp/shared build && pnpm --filter @rnbp/api build && sudo systemctl restart rnbp-api'
+      - name: Wait for deploy
+        run: sleep 30
 
       - name: Health check
         run: |
