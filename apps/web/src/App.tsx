@@ -53,6 +53,7 @@ import { FaqPage } from "@/pages/FaqPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { BoutiquePage } from "@/pages/BoutiquePage";
 import { BoutiqueSuccessPage } from "@/pages/BoutiqueSuccessPage";
+import { ItemDetailPage } from "@/pages/ItemDetailPage";
 import { AdminItemsPage } from "@/pages/AdminItemsPage";
 import { AdminOrdersPage } from "@/pages/AdminOrdersPage";
 import { AdminOrderDetailPage } from "@/pages/AdminOrderDetailPage";
@@ -118,6 +119,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/items/:id"
+            element={
+              <ProtectedRoute>
+                <ItemDetailPage />
               </ProtectedRoute>
             }
           />

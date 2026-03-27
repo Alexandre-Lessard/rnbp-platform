@@ -17,6 +17,7 @@ export const ROUTES = {
   verifyEmail: "/verify-email",
   emailPending: "/email-pending",
   dashboard: "/dashboard",
+  itemDetail: (id: string) => `/items/${id}`,
   edit: (id: string) => `/edit/${id}`,
   reportTheft: "/report-theft",
   admin: "/admin",

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { eq, and, isNull, or, sql } from "drizzle-orm";
+import { eq, and, isNull, or, sql, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { createItemSchema, updateItemSchema, archiveItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
@@ -31,7 +31,27 @@ export async function itemRoutes(app: FastifyInstance) {
         .where(conditions)
         .orderBy(items.createdAt);
 
-      return reply.send({ items: userItems });
+      // Fetch primary photo for each item (for thumbnail display)
+      const itemIds = userItems.map((i) => i.id);
+      const photos = itemIds.length > 0
+        ? await db
+            .select({ itemId: itemPhotos.itemId, url: itemPhotos.url })
+            .from(itemPhotos)
+            .where(inArray(itemPhotos.itemId, itemIds))
+            .orderBy(itemPhotos.createdAt)
+        : [];
+
+      const photoByItem = new Map<string, string>();
+      for (const p of photos) {
+        if (!photoByItem.has(p.itemId)) photoByItem.set(p.itemId, p.url);
+      }
+
+      const result = userItems.map((item) => ({
+        ...item,
+        primaryPhotoUrl: photoByItem.get(item.id) ?? null,
+      }));
+
+      return reply.send({ items: result });
     },
   );
 

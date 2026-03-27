@@ -1,0 +1,443 @@
+# API Reference
+
+Base URL: `https://api.rnbp.ca/api` (production) / `http://localhost:3000/api` (development)
+
+## Authentication
+
+Most endpoints require authentication via a Bearer token in the `Authorization` header:
+```
+Authorization: Bearer <accessToken>
+```
+
+Auth levels:
+- **None** — Public endpoint
+- **requireAuth** — Valid access token required
+- **requireVerifiedEmail** — Valid access token + verified email required
+- **requireAdmin** — Valid access token + admin role required
+
+---
+
+## Auth
+
+### POST /auth/register
+Auth: None | Rate limit: 5/min
+```
+Body: { email, password, firstName, lastName, phone?, preferredLanguage?: "fr"|"en" }
+Response: { user, accessToken, refreshToken }
+```
+
+### POST /auth/login
+Auth: None | Rate limit: 5/min
+```
+Body: { email, password }
+Response: { user, accessToken, refreshToken }
+```
+
+### POST /auth/refresh
+Auth: None | Rate limit: 30/min
+```
+Body: { refreshToken }
+Response: { accessToken, refreshToken }
+```
+
+### POST /auth/logout
+Auth: requireAuth
+```
+Body: { refreshToken? }
+Response: { code: "LOGOUT_SUCCESS" }
+```
+If refreshToken provided, only that session is deleted. Otherwise all sessions are revoked.
+
+### GET /auth/me
+Auth: requireAuth
+```
+Response: { user }
+```
+
+### PATCH /auth/profile
+Auth: requireAuth
+```
+Body: { preferredLanguage?: "fr"|"en" }
+Response: { success: true }
+```
+
+### POST /auth/forgot-password
+Auth: None | Rate limit: 3/min
+```
+Body: { email }
+Response: { code: "PASSWORD_RESET_SENT" }
+```
+Silent failure on non-existent email.
+
+### POST /auth/reset-password
+Auth: None | Rate limit: 5/min
+```
+Body: { token, password }
+Response: { code: "PASSWORD_RESET_SUCCESS" }
+```
+
+### POST /auth/verify-email
+Auth: None | Rate limit: 10/min
+```
+Body: { token }
+Response: { code: "EMAIL_VERIFIED" }
+```
+
+### POST /auth/resend-verification
+Auth: requireAuth | Rate limit: 3/min
+```
+Response: { code: "VERIFICATION_SENT" | "EMAIL_ALREADY_VERIFIED" }
+```
+
+### POST /auth/register-with-item
+Auth: None
+```
+Body: {
+  account: { email, password, firstName, lastName, phone?, preferredLanguage? },
+  item: { name, category, brand?, model?, year?, serialNumber?, estimatedValue?, description?, purchaseDate? }
+}
+Response: { user, item, accessToken, refreshToken }
+```
+Atomic user + item creation in a single transaction.
+
+---
+
+## OAuth
+
+### POST /auth/google
+Auth: None | Rate limit: 5/min
+```
+Body: { code, redirectUri, codeVerifier }
+Response: { user, accessToken, refreshToken } | { needsEmail: true, pendingToken }
+```
+Authorization Code + PKCE flow.
+
+### POST /auth/facebook
+Auth: None | Rate limit: 5/min
+```
+Body: { code, redirectUri }
+Response: { user, accessToken, refreshToken } | { needsEmail: true, pendingToken }
+```
+Authorization Code flow (no PKCE).
+
+### POST /auth/microsoft
+Auth: None | Rate limit: 5/min
+```
+Body: { code, redirectUri, codeVerifier }
+Response: { user, accessToken, refreshToken } | { needsEmail: true, pendingToken }
+```
+Authorization Code + PKCE flow.
+
+### POST /auth/oauth-complete
+Auth: None | Rate limit: 5/min
+```
+Body: { token, email }
+Response: { user, accessToken, refreshToken }
+```
+Completes the missing-email OAuth flow.
+
+---
+
+## Items
+
+### GET /items
+Auth: requireVerifiedEmail
+```
+Query: ?archived=true (optional)
+Response: { items: [...] }
+```
+
+### POST /items
+Auth: requireVerifiedEmail
+```
+Body: { name, category, brand?, model?, year?, serialNumber?, estimatedValue?, description?, purchaseDate? }
+Response: { item } (201)
+```
+
+### GET /items/:id
+Auth: requireVerifiedEmail
+```
+Response: { item: { ...item, photos: [...], documents: [...] } }
+```
+
+### PATCH /items/:id
+Auth: requireVerifiedEmail
+```
+Body: { name?, category?, brand?, model?, year?, serialNumber?, estimatedValue?, description?, purchaseDate? }
+Response: { item }
+```
+
+### POST /items/:id/archive
+Auth: requireVerifiedEmail
+```
+Body: { reason: "destroyed"|"lost"|"discarded"|"registration_error"|"other", customReason? }
+Response: { item }
+```
+Cannot archive stolen items.
+
+### PATCH /items/:id/recover
+Auth: requireVerifiedEmail
+```
+Response: { item }
+```
+Marks stolen item as active. Resolves pending theft reports (transactional).
+
+### DELETE /items/:id
+Auth: requireVerifiedEmail
+```
+Response: 204 No Content
+```
+Deletes R2 files before database cascade delete.
+
+---
+
+## Uploads
+
+All upload endpoints accept multipart/form-data. Photos are resized to max 1920px and converted to WebP.
+
+### POST /items/:id/photos
+Auth: requireVerifiedEmail
+```
+Body: multipart form data (field: "photos")
+Response: { photos: [{ id, url, caption, isPrimary }], maxReached: boolean } (201)
+```
+Max 5 photos per item.
+
+### POST /items/:id/documents
+Auth: requireVerifiedEmail
+```
+Body: multipart form data (field: "documents")
+Response: { documents: [{ id, url, type, fileName }], maxReached: boolean } (201)
+```
+Max 10 documents per item. PDFs uploaded as-is, images resized to WebP.
+
+### DELETE /items/:id/photos/:photoId
+Auth: requireVerifiedEmail
+```
+Response: 204 No Content
+```
+
+### DELETE /items/:id/documents/:docId
+Auth: requireVerifiedEmail
+```
+Response: 204 No Content
+```
+
+---
+
+## Public Lookup
+
+### GET /lookup
+Auth: None | Rate limit: 30/min
+```
+Query: ?q=RNBP-XXXXXXXX (or serial number)
+Response: { found: false } | { found: true, status, category, brand, model }
+```
+Normalizes serial numbers (strips spaces, dashes, underscores).
+
+### GET /lookup/:rnbpNumber
+Auth: None | Rate limit: 30/min
+```
+Response: { found: false } | { found: true, status, category, brand, model }
+```
+Backward compatibility endpoint.
+
+---
+
+## Reports
+
+### POST /reports
+Auth: requireVerifiedEmail
+```
+Body: { itemId, policeReportNumber?, theftDate?, theftLocation?, description? }
+Response: { report } (201)
+```
+Updates item status to "stolen" (transactional). Prevents duplicate reports.
+
+### GET /reports
+Auth: requireAuth
+```
+Response: { reports: [...] }
+```
+
+---
+
+## Shop
+
+### GET /shop/products
+Auth: None
+```
+Response: { products: [...] }
+```
+Active products only, ordered by sortOrder.
+
+### GET /shop/status
+Auth: None
+```
+Response: { available: boolean }
+```
+
+### POST /shop/checkout
+Auth: requireVerifiedEmail
+```
+Body: { items: [{ productId, quantity: 1-50, itemId? }], email? }
+Response: { url: string }
+```
+Returns a Stripe Checkout session URL. Items with `requiresItem=true` need a valid `itemId`.
+
+### POST /shop/webhook
+Auth: Stripe signature | Rate limit: 200/min
+```
+Body: Raw Stripe event
+Response: { received: true }
+```
+Handles `checkout.session.completed` and `checkout.session.expired`.
+
+---
+
+## Admin
+
+### GET /admin/items
+Auth: requireAdmin
+```
+Query: ?status=stolen&q=searchterm&page=1&limit=25
+Response: { items: [{ id, name, category, status, rnbpNumber, serialNumber, createdAt, ownerName, ownerEmail }], pagination: { page, limit, total } }
+```
+
+### PATCH /admin/items/:id/recover
+Auth: requireAdmin
+```
+Response: { item }
+```
+
+### GET /admin/orders
+Auth: requireAdmin
+```
+Query: ?status=paid|shipped|cancelled
+Response: { orders: [{ ...order, items: [...] }] }
+```
+
+### GET /admin/orders/:id
+Auth: requireAdmin
+```
+Response: { order: { ...order, customer, items: [...] } }
+```
+
+### PATCH /admin/orders/:id/items/:orderItemId/assign
+Auth: requireAdmin
+```
+Body: { rnbpNumber: "RNBP-XXXXXXXX" }
+Response: { success: true, rnbpNumber }
+```
+
+### PATCH /admin/orders/:id/ship
+Auth: requireAdmin
+```
+Response: { order }
+```
+Validates all item-linked-stickers have RNBP numbers assigned.
+
+### GET /admin/products
+Auth: requireAdmin
+```
+Response: { products: [...] }
+```
+
+### GET /admin/products/:id
+Auth: requireAdmin
+```
+Response: { product }
+```
+
+### POST /admin/products
+Auth: requireAdmin
+```
+Body: { slug, nameFr, nameEn, descriptionFr?, descriptionEn?, featuresFr?, featuresEn?, priceCents, stripePriceId?, imageUrl?, isActive?, sortOrder? }
+Response: { product } (201)
+```
+
+### PATCH /admin/products/:id
+Auth: requireAdmin
+```
+Body: { slug?, nameFr?, nameEn?, priceCents?, stripePriceId?, imageUrl?, isActive?, sortOrder?, ... }
+Response: { product }
+```
+
+### GET /admin/stats
+Auth: requireAdmin
+```
+Response: { totalUsers, verifiedUsers, totalItems, totalEstimatedValue, totalOrders, totalRevenue, activeTheftReports, newsletterSubscribers, itemsByCategory, itemsByStatus }
+```
+
+### GET /admin/stats/charts
+Auth: requireAdmin
+```
+Query: ?period=day|week|month
+Response: { registrations: [...], items: [...], revenue: [...] }
+```
+
+### GET /admin/metrics/live
+Auth: JWT token via query param
+```
+Query: ?token=<accessToken>
+Response: Server-Sent Events (SSE) stream
+```
+Real-time server metrics: CPU, memory, database, request rate.
+
+### GET /admin/activity
+Auth: requireAdmin
+```
+Query: ?limit=20 (max 100)
+Response: { activity: [{ type, date, id, ... }] }
+```
+
+---
+
+## Contact
+
+### POST /contact
+Auth: None | Rate limit: 5/15min
+```
+Body: { name, email, phone?, company?, type, message, website? }
+Response: { code: "MESSAGE_SENT" } (201)
+```
+Honeypot: if `website` is filled, returns success without saving.
+
+---
+
+## Newsletter
+
+### POST /newsletter/subscribe
+Auth: None | Rate limit: 5/min
+```
+Body: { email }
+Response: { code: "SUBSCRIPTION_SUCCESS" }
+```
+
+---
+
+## Insurance
+
+### POST /insurance/request
+Auth: requireVerifiedEmail
+```
+Body: { insurerId, messageContent }
+Response: { request } (201)
+```
+
+### GET /insurance/insurers
+Auth: None
+```
+Response: { insurers: [{ id, fr, en }] }
+```
+
+---
+
+## Health
+
+### GET /health
+Auth: None
+```
+Response: { status: "healthy"|"degraded", timestamp, checks: { database: "ok"|"error" } }
+```
+Returns 503 if database check fails.

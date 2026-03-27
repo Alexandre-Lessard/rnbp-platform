@@ -18,8 +18,10 @@ type Item = {
   brand: string | null;
   model: string | null;
   serialNumber: string | null;
+  estimatedValue: number | null;
   status: string;
   rnbpNumber: string | null;
+  primaryPhotoUrl: string | null;
   archivedAt: string | null;
   archiveReason: string | null;
   archiveReasonCustom: string | null;
@@ -158,62 +160,80 @@ export function DashboardPage() {
           </Link>
         </div>
       ) : (
-        <div className="mt-8 space-y-4">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
-            <div
+            <Link
               key={item.id}
-              className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-bg)] p-5"
+              to={ROUTES.itemDetail(item.id)}
+              className="group flex flex-col overflow-hidden rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-bg)] transition-shadow hover:shadow-md"
             >
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-[var(--rcb-text-strong)]">
-                  {item.name}
-                </h3>
-                <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
-                  {item.brand}
-                  {item.model ? ` ${item.model}` : ""}
-                  {item.rnbpNumber ? (
-                    <>
-                      {" — "}
-                      <span className="font-mono text-xs tracking-wider">
-                        {item.rnbpNumber}
-                      </span>
-                    </>
-                  ) : item.serialNumber ? (
-                    <>
-                      {" — "}
-                      <span className="text-xs text-[var(--rcb-text-muted)]">
-                        S/N {item.serialNumber}
-                      </span>
-                    </>
-                  ) : null}
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Link
-                  to={ROUTES.edit(item.id)}
-                  className={getButtonClasses("outline", "sm", "!px-4 !py-1.5 !text-xs")}
-                >
-                  {dash?.editItem ?? "Edit"}
-                </Link>
-                {item.status !== "stolen" && (
-                  <button
-                    type="button"
-                    disabled={addedId === item.id}
-                    onClick={() => handleOrderStickers(item)}
-                    className="cursor-pointer text-xs font-medium text-[var(--rcb-primary)] transition-colors hover:underline disabled:cursor-default disabled:opacity-60"
-                  >
-                    {addedId === item.id
-                      ? (t.registration?.addedToCart ?? "✓")
-                      : (t.shop?.orderStickers ?? "Order stickers")}
-                  </button>
+              {/* Photo */}
+              <div className="relative h-40 w-full bg-[var(--rcb-surface)]">
+                {item.primaryPhotoUrl ? (
+                  <img
+                    src={item.primaryPhotoUrl}
+                    alt={item.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <svg className="h-12 w-12 text-[var(--rcb-border)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <path d="M21 15l-5-5L5 21" />
+                    </svg>
+                  </div>
                 )}
+                {/* Status badge */}
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${statusColors[item.status] ?? "bg-gray-100 text-gray-800"}`}
+                  className={`absolute top-2 right-2 rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[item.status] ?? "bg-gray-100 text-gray-800"}`}
                 >
                   {dash?.statuses?.[item.status] ?? item.status}
                 </span>
               </div>
-            </div>
+
+              {/* Info */}
+              <div className="flex flex-1 flex-col p-4">
+                <h3 className="font-semibold text-[var(--rcb-text-strong)] group-hover:text-[var(--rcb-primary)]">
+                  {item.name}
+                </h3>
+                <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
+                  {item.brand}{item.model ? ` ${item.model}` : ""}
+                </p>
+
+                {item.rnbpNumber ? (
+                  <p className="mt-2 font-mono text-xs tracking-wider text-[var(--rcb-primary)]">
+                    {item.rnbpNumber}
+                  </p>
+                ) : (
+                  <p className="mt-2 text-xs italic text-[var(--rcb-text-muted)]">
+                    {dash?.awaitingNumber ?? "Awaiting RNBP number"}
+                  </p>
+                )}
+
+                {item.estimatedValue && (
+                  <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
+                    {item.estimatedValue.toLocaleString()} $
+                  </p>
+                )}
+
+                {/* Actions */}
+                <div className="mt-auto flex items-center gap-2 pt-3">
+                  {item.status !== "stolen" && (
+                    <button
+                      type="button"
+                      disabled={addedId === item.id}
+                      onClick={(e) => { e.preventDefault(); handleOrderStickers(item); }}
+                      className="cursor-pointer rounded-lg bg-[var(--rcb-surface)] px-3 py-1.5 text-xs font-medium text-[var(--rcb-primary)] transition-colors hover:bg-[var(--rcb-border)] disabled:cursor-default disabled:opacity-60"
+                    >
+                      {addedId === item.id
+                        ? (t.registration?.addedToCart ?? "✓")
+                        : (t.shop?.orderStickers ?? "Order stickers")}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </Link>
           ))}
         </div>
       )}

@@ -1,6 +1,9 @@
 # RNBP / NRPP
 
-<!-- ![CI](https://github.com/USER/REPO/actions/workflows/ci.yml/badge.svg) -->
+![CI](https://github.com/Alexandre-Lessard/rnbp-platform/actions/workflows/ci.yml/badge.svg)
+![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-blue)
+![Node](https://img.shields.io/badge/node-20-green)
+![pnpm](https://img.shields.io/badge/pnpm-9-orange)
 
 **National Registry of Personal Property** — A platform for Canadians to register, protect, and recover their valuable belongings.
 
@@ -69,6 +72,12 @@ rnbp.ca / nrpp.ca          api.rnbp.ca
 | Monorepo | pnpm workspaces, tsup (API), Vite (web) |
 | CI | GitHub Actions (lint + typecheck + tests) |
 | Testing | Vitest |
+
+## Testing
+
+The project is under active development. Current tests cover critical utilities (authentication tokens, password hashing, error handling, client number generation). Full integration and component test coverage is planned before production launch.
+
+Testing framework: **Vitest** across all workspaces. Run with `pnpm test`.
 
 ## Project Structure
 

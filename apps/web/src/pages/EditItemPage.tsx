@@ -65,6 +65,10 @@ export function EditItemPage() {
     if (!id) return;
     apiRequest<{ item: ItemWithFiles }>(`/items/${id}`)
       .then(({ item }) => {
+        if (item.status === "stolen") {
+          navigate(ROUTES.itemDetail(id!), { replace: true });
+          return;
+        }
         setItemStatus(item.status);
         setItemRnbpNumber(item.rnbpNumber);
         setPhotos(item.photos.map((p) => ({ id: p.id, url: p.url })));
@@ -90,7 +94,7 @@ export function EditItemPage() {
         }
       })
       .finally(() => setLoading(false));
-  }, [id, t]);
+  }, [id, t, navigate]);
 
   function update(field: keyof FormData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
