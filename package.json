@@ -18,9 +18,10 @@
     "rollback": "./ops/rollback.sh",
     "stripe:dev": "stripe listen --forward-to localhost:3000/api/shop/webhook"
   },
+  "packageManager": "pnpm@10.30.3",
   "engines": {
     "node": ">=20.0.0",
-    "pnpm": ">=9.0.0"
+    "pnpm": ">=10.0.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
