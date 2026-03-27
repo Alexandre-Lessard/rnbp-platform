@@ -1,9 +1,10 @@
 # RNBP / NRPP
 
 ![CI](https://github.com/Alexandre-Lessard/rnbp-platform/actions/workflows/ci.yml/badge.svg)
+![CD](https://github.com/Alexandre-Lessard/rnbp-platform/actions/workflows/cd.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-blue)
 ![Node](https://img.shields.io/badge/node-20-green)
-![pnpm](https://img.shields.io/badge/pnpm-9-orange)
+![pnpm](https://img.shields.io/badge/pnpm-10-orange)
 
 **National Registry of Personal Property** — A platform for Canadians to register, protect, and recover their valuable belongings.
 

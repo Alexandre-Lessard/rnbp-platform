@@ -1,0 +1,60 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy-api:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cloudflared
+        run: |
+          curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+          chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          cat >> ~/.ssh/config << EOF
+          Host prod-server
+            HostName ssh-rnbp.rnbp.ca
+            User prod
+            IdentityFile ~/.ssh/id_ed25519
+            ProxyCommand cloudflared access ssh --hostname %h --id ${{ secrets.CF_ACCESS_CLIENT_ID }} --secret ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+            StrictHostKeyChecking no
+          EOF
+
+      - name: Backup database
+        run: |
+          ssh prod-server 'source /opt/rnbp/.env && pg_dump "$DATABASE_URL" | gzip > /opt/rnbp/backups/rollback/db_cd_$(date +%Y%m%d_%H%M%S).sql.gz'
+
+      - name: Deploy
+        run: |
+          ssh prod-server 'cd /opt/rnbp/repo && git fetch origin main && git reset --hard origin/main && source ~/.nvm/nvm.sh && pnpm install --frozen-lockfile && pnpm --filter @rnbp/shared build && pnpm --filter @rnbp/api build && sudo systemctl restart rnbp-api'
+
+      - name: Health check
+        run: |
+          for i in 1 2 3; do
+            sleep 5
+            if curl -sf https://api.rnbp.ca/api/health; then
+              echo "Health check passed"
+              exit 0
+            fi
+            echo "Attempt $i/3 failed, retrying..."
+          done
+          echo "Health check failed after 3 attempts!"
+          exit 1
