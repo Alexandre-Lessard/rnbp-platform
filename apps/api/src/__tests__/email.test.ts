@@ -29,8 +29,9 @@ describe("createSignedToken / verifySignedToken", () => {
   it("rejects tampered token", () => {
     const token = createSignedToken(userId, "verify-email", 60_000);
     const parts = token.split(".");
-    // Tamper with the signature
-    parts[3] = parts[3]!.replace(/^./, "f");
+    // Tamper with the signature: flip the first char to a guaranteed-different one
+    const sig = parts[3]!;
+    parts[3] = (sig[0] === "0" ? "1" : "0") + sig.slice(1);
     const tampered = parts.join(".");
     const result = verifySignedToken(tampered, "verify-email");
     expect(result).toBeNull();
