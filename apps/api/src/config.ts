@@ -54,9 +54,6 @@ const envSchema = z.object({
   R2_BUCKET_NAME: z.string().optional(),
   R2_PUBLIC_URL: z.string().optional(),
 
-  // Deploy webhook
-  DEPLOY_WEBHOOK_SECRET: z.string().optional(),
-
   // Admin notifications
   ADMIN_ORDER_EMAIL: z.string().email().optional(),
   ADMIN_CONTACT_EMAIL: z.string().email().optional(),
