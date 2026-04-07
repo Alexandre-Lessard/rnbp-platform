@@ -2,7 +2,7 @@
 
 ## Overview
 
-Deployment is done via local scripts using rsync. There is no CI/CD pipeline for deployment (CI only runs lint and typecheck).
+Backend deployment is automated by GitHub Actions: when CI passes on `main`, a CD workflow runs on a self-hosted runner installed on the prod CT, which syncs the working tree to `/opt/rnbp/repo`, builds, and restarts the `rnbp-api` systemd service. Manual deploys via `pnpm run deploy` (local rsync) still work as a fallback. Frontend deploys are still triggered manually via `pnpm run deploy:web`.
 
 - **Frontend** (React SPA) is deployed to **Cloudflare Pages**.
 - **Backend** (Fastify API) is deployed via rsync to a Proxmox container, exposed through a **Cloudflare Tunnel**. No nginx, no certbot, no public IP.
