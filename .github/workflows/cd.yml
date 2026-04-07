@@ -19,8 +19,10 @@ jobs:
       - name: Trigger deploy webhook
         run: |
           for i in 1 2 3; do
-            RESPONSE=$(curl -s --max-time 10 -X POST https://api.rnbp.ca/api/deploy-webhook \
-              -H "Authorization: Bearer ${{ secrets.DEPLOY_WEBHOOK_SECRET }}")
+            RESPONSE=$(curl -s --max-time 15 -X POST https://api.rnbp.ca/api/deploy-webhook \
+              -H "Authorization: Bearer ${{ secrets.DEPLOY_WEBHOOK_SECRET }}" \
+              -H "CF-Access-Client-Id: ${{ secrets.CF_ACCESS_CLIENT_ID }}" \
+              -H "CF-Access-Client-Secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}")
             echo "Attempt $i: $RESPONSE"
             if echo "$RESPONSE" | grep -q "deploying"; then
               echo "Deploy triggered successfully"
@@ -31,18 +33,37 @@ jobs:
           echo "Failed to trigger deploy after 3 attempts"
           exit 1
 
-      - name: Wait for deploy
-        run: sleep 45
+      - name: Wait for deploy to finish
+        run: |
+          # Poll status endpoint up to 5 minutes
+          for i in $(seq 1 60); do
+            sleep 5
+            STATUS=$(curl -s --max-time 10 https://api.rnbp.ca/api/deploy-status \
+              -H "Authorization: Bearer ${{ secrets.DEPLOY_WEBHOOK_SECRET }}" \
+              -H "CF-Access-Client-Id: ${{ secrets.CF_ACCESS_CLIENT_ID }}" \
+              -H "CF-Access-Client-Secret: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}")
+            echo "Poll $i: $STATUS"
+            if echo "$STATUS" | grep -q '"status":"success"'; then
+              echo "Deploy succeeded"
+              exit 0
+            fi
+            if echo "$STATUS" | grep -q '"status":"failed"'; then
+              echo "Deploy failed on server"
+              exit 1
+            fi
+          done
+          echo "Deploy timed out after 5 minutes"
+          exit 1
 
       - name: Health check
         run: |
           for i in 1 2 3; do
-            sleep 5
+            sleep 3
             if curl -sf https://api.rnbp.ca/api/health; then
               echo "Health check passed"
               exit 0
             fi
             echo "Attempt $i/3 failed, retrying..."
           done
-          echo "Health check failed after 3 attempts!"
+          echo "Health check failed!"
           exit 1
