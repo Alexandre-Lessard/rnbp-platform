@@ -61,10 +61,12 @@ type AuthContextType = AuthState & {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 function getRefreshToken() {
+  if (typeof window === "undefined") return null;
   return sessionStorage.getItem("rnbp_refresh_token");
 }
 
 export function setRefreshToken(token: string | null) {
+  if (typeof window === "undefined") return;
   if (token) {
     sessionStorage.setItem("rnbp_refresh_token", token);
   } else {

@@ -25,7 +25,10 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      const isFr = document.documentElement.lang?.startsWith("fr");
+      const isFr =
+        typeof document === "undefined"
+          ? true
+          : document.documentElement.lang?.startsWith("fr") ?? true;
       return (
         <div className="flex min-h-screen items-center justify-center bg-[var(--rcb-bg)] px-6">
           <div className="text-center">

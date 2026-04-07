@@ -3,11 +3,19 @@ import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { ClientOnly } from "@/components/ClientOnly";
 import { ROUTES } from "@/routes/routes";
+
+// Build-time year used as SSR fallback. Replaced after mount with the live
+// browser year (handles edge case of year change between build and visit).
+const BUILD_YEAR = new Date().getFullYear();
+
+function CurrentYear() {
+  return <ClientOnly fallback={BUILD_YEAR}>{new Date().getFullYear()}</ClientOnly>;
+}
 
 export function Footer() {
   const { t, locale } = useLanguage();
-  const year = new Date().getFullYear();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error" | "unavailable">("idle");
 
@@ -113,7 +121,18 @@ export function Footer() {
               <Link to={ROUTES.terms} className="transition-colors hover:text-[var(--rcb-primary)]">{t.footer.termsOfUse}</Link>
               <span className="cursor-not-allowed opacity-50">{t.footer.cookieSettings}</span>
             </div>
-            <p>{t.footer.copyright.replace("{{year}}", String(year))}</p>
+            <p>
+              {(() => {
+                const [before, after] = t.footer.copyright.split("{{year}}");
+                return (
+                  <>
+                    {before}
+                    <CurrentYear />
+                    {after}
+                  </>
+                );
+              })()}
+            </p>
           </div>
         </div>
       </div>

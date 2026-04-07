@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { ROUTES } from "@/routes/routes";
+import { ClientOnly } from "@/components/ClientOnly";
 
 const STORAGE_KEY = "rnbp-promo-dismissed";
 const DISMISS_DURATION_MS = 12 * 60 * 60 * 1000; // 12 hours
 
 function isDismissed(): boolean {
+  if (typeof window === "undefined") return false;
   const value = localStorage.getItem(STORAGE_KEY);
   if (!value) return false;
   if (value === "forever") return true;
@@ -16,6 +18,16 @@ function isDismissed(): boolean {
 }
 
 export function PromoBanner() {
+  // Reserve vertical space matching the rendered banner to avoid layout shift
+  // when the client-side mount swaps in the real content (or null if dismissed).
+  return (
+    <ClientOnly fallback={<div aria-hidden="true" style={{ height: 76 }} />}>
+      <PromoBannerInner />
+    </ClientOnly>
+  );
+}
+
+function PromoBannerInner() {
   const { t } = useLanguage();
   const promo = t.promo;
   const [dismissed, setDismissed] = useState(isDismissed);

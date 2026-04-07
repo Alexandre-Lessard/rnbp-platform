@@ -12,6 +12,9 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 function detectLocale(): SupportedLocale {
+  // SSR / build-time: no browser APIs available, default to FR (rnbp.ca primary domain)
+  if (typeof window === "undefined") return defaultLocale;
+
   // 1. User's explicit choice (localStorage)
   const stored = localStorage.getItem("locale");
   if (stored && stored in locales) return stored as SupportedLocale;
