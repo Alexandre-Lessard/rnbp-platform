@@ -266,6 +266,7 @@ export function EditItemPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <title>{`${edit?.heading ?? "Edit item"} | RNBP`}</title>
       <div className="section-shell py-16">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
@@ -642,3 +643,4 @@ export function EditItemPage() {
     </section>
   );
 }
+export default EditItemPage;

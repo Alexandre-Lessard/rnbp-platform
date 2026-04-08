@@ -130,6 +130,7 @@ export function ItemDetailPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <title>{`${item.name} | RNBP`}</title>
       <div className="section-shell py-16">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -338,3 +339,4 @@ export function ItemDetailPage() {
     </section>
   );
 }
+export default ItemDetailPage;

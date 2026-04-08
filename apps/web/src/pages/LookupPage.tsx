@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router";
-import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/Button";
@@ -58,10 +57,10 @@ export function LookupPage() {
 
   return (
     <section className="flex min-h-[60vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
-      <Helmet>
+      
         <title>{t.pages.lookup.title}</title>
         <meta name="description" content={t.pages.lookup.description} />
-      </Helmet>
+      
       <div className="w-full max-w-lg text-center">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {t.lookup?.heading ?? "Verify an item"}
@@ -147,3 +146,4 @@ export function LookupPage() {
     </section>
   );
 }
+export default LookupPage;

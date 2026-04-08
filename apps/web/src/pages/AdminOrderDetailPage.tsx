@@ -134,6 +134,7 @@ export function AdminOrderDetailPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <title>{`Admin — ${t.admin?.nav.orders ?? "Orders"} | RNBP`}</title>
       <div className="section-shell py-16">
         <Link to={ROUTES.adminOrders} className="text-sm font-medium text-[var(--rcb-primary)] hover:underline">
           &larr; Back to orders
@@ -238,3 +239,4 @@ export function AdminOrderDetailPage() {
     </section>
   );
 }
+export default AdminOrderDetailPage;

@@ -99,6 +99,7 @@ export function AdminItemsPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <title>{`Admin — ${t.admin?.nav.items ?? "Items"} | RNBP`}</title>
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {t.admin?.nav.items ?? "Items"}
@@ -281,3 +282,4 @@ export function AdminItemsPage() {
     </section>
   );
 }
+export default AdminItemsPage;

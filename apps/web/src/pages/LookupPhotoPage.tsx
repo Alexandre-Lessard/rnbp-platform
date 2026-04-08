@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
 import { getButtonClasses } from "@/lib/button-styles";
 import { ROUTES } from "@/routes/routes";
@@ -32,10 +31,10 @@ export function LookupPhotoPage() {
 
   return (
     <section className="flex min-h-[60vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
-      <Helmet>
+      
         <title>{c.title}</title>
         <meta name="description" content={c.description} />
-      </Helmet>
+      
       <div className="w-full max-w-lg text-center">
         {/* Camera icon */}
         <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[var(--rcb-primary)]/10">
@@ -70,3 +69,4 @@ export function LookupPhotoPage() {
     </section>
   );
 }
+export default LookupPhotoPage;

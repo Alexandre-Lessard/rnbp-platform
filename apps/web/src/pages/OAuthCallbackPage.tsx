@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, type FormEvent } from "react";
 import { useNavigate, useLocation, useSearchParams, Link } from "react-router";
-import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { verifyState, getCodeVerifier, getOAuthRedirect, type OAuthProvider } from "@/lib/oauth";
@@ -165,12 +164,13 @@ export function OAuthCallbackPage() {
   // Loading
   return (
     <section className="flex min-h-[70vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
-      <Helmet>
+      
         <title>{t.auth?.oauthLoading ?? "Logging in..."}</title>
-      </Helmet>
+      
       <p className="text-[var(--rcb-text-muted)]">
         {t.auth?.oauthLoading ?? "Logging in..."}
       </p>
     </section>
   );
 }
+export default OAuthCallbackPage;

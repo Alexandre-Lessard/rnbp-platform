@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
 
 export function TermsOfServicePage() {
@@ -7,10 +6,10 @@ export function TermsOfServicePage() {
 
   return (
     <section className="section-shell py-16">
-      <Helmet>
+      
         <title>{t.pages.terms.title}</title>
         <meta name="description" content={t.pages.terms.description} />
-      </Helmet>
+      
       <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
         {legal.termsHeading}
       </h1>
@@ -29,3 +28,4 @@ export function TermsOfServicePage() {
     </section>
   );
 }
+export default TermsOfServicePage;

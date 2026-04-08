@@ -11,7 +11,7 @@ export function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const { user, refreshUser } = useAuth();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [status, setStatus] = useState<"loading" | "success" | "error">(token ? "loading" : "error");
   const [message, setMessage] = useState(token ? "" : (t.errors?.invalidVerificationLink ?? "Invalid verification link."));
 
@@ -36,6 +36,7 @@ export function VerifyEmailPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <title>{`${locale === "fr" ? "Vérification du courriel" : "Email verification"} | RNBP`}</title>
       <div className="section-shell flex flex-col items-center justify-center py-16">
         {status === "loading" && (
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--rcb-primary)] border-t-transparent" />
@@ -78,3 +79,4 @@ export function VerifyEmailPage() {
     </section>
   );
 }
+export default VerifyEmailPage;

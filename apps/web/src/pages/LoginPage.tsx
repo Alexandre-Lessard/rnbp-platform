@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
-import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { isNetworkError } from "@/lib/api-client";
@@ -52,10 +51,10 @@ export function LoginPage() {
 
   return (
     <section className="flex min-h-[70vh] items-center justify-center bg-[var(--rcb-white)] px-4 py-16">
-      <Helmet>
+      
         <title>{t.pages.login.title}</title>
         <meta name="description" content={t.pages.login.description} />
-      </Helmet>
+      
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {t.auth?.loginHeading ?? "Log in"}
@@ -134,3 +133,4 @@ export function LoginPage() {
     </section>
   );
 }
+export default LoginPage;

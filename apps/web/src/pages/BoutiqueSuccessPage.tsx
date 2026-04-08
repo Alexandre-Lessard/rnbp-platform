@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { useCart } from "@/lib/cart-context";
@@ -17,10 +16,10 @@ export function BoutiqueSuccessPage() {
 
   return (
     <>
-      <Helmet>
+      
         <title>{t.pages.shopSuccess.title}</title>
         <meta name="description" content={t.pages.shopSuccess.description} />
-      </Helmet>
+      
       <section className="min-h-[70vh] bg-[var(--rcb-white)]">
       <div className="section-shell flex flex-col items-center py-24 text-center">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
@@ -49,3 +48,4 @@ export function BoutiqueSuccessPage() {
     </>
   );
 }
+export default BoutiqueSuccessPage;

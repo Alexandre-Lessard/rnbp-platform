@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest, type ApiError } from "@/lib/api-client";
 
@@ -68,10 +67,10 @@ export function ContactPage() {
 
   return (
     <section className="min-h-[70vh] bg-[var(--rcb-bg)]">
-      <Helmet>
+      
         <title>{t.pages.contact.title}</title>
         <meta name="description" content={t.pages.contact.description} />
-      </Helmet>
+      
 
       <div className="section-shell py-16 sm:py-20">
         <div className="mx-auto max-w-2xl">
@@ -187,3 +186,4 @@ export function ContactPage() {
     </section>
   );
 }
+export default ContactPage;

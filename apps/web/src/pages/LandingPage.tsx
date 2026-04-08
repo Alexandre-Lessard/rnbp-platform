@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
 import { AllCategoriesSection } from "@/components/sections/AllCategoriesSection";
 import { CycleSection } from "@/components/sections/CycleSection";
@@ -14,10 +13,10 @@ export function LandingPage() {
   const { t } = useLanguage();
   return (
     <>
-      <Helmet>
+      
         <title>{t.pages.home.title}</title>
         <meta name="description" content={t.pages.home.description} />
-      </Helmet>
+      
       <HeroSection />
       <CycleSection />
       <RollingRegistrySection />
@@ -30,3 +29,4 @@ export function LandingPage() {
     </>
   );
 }
+export default LandingPage;

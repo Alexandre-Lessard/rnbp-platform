@@ -1,1 +1,19 @@
-/* /index.html 200
+# FR legacy routes (remove after July 2026)
+/connexion                /login              301
+/inscription              /register           301
+/enregistrer              /register-item      301
+/verifier                 /lookup             301
+/confidentialite          /privacy            301
+/conditions               /terms              301
+/boutique/succes          /shop/success       301
+/boutique                 /shop               301
+/verifier-courriel        /verify-email       301
+/verification-en-attente  /email-pending      301
+/tableau-de-bord          /dashboard          301
+/declarer-vol             /report-theft       301
+/admin/commandes          /admin/orders       301
+/modifier/:id             /edit/:id           301
+/admin/commandes/:id      /admin/orders/:id   301
+
+# SPA fallback
+/*                        /index.html         200

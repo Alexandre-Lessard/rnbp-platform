@@ -8,7 +8,7 @@ import { ROUTES } from "@/routes/routes";
 
 export function EmailPendingPage() {
   const { user, logout, refreshUser } = useAuth();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const ep = t.emailPending!;
 
   const [resendStatus, setResendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -42,6 +42,7 @@ export function EmailPendingPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <title>{`${locale === "fr" ? "Vérification du courriel" : "Email verification"} | RNBP`}</title>
       <div className="section-shell flex flex-col items-center justify-center py-16">
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
           <svg className="h-8 w-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -95,3 +96,4 @@ export function EmailPendingPage() {
     </section>
   );
 }
+export default EmailPendingPage;

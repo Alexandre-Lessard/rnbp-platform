@@ -172,7 +172,7 @@ try_auto_rollback() {
 
 deploy_web() {
   log "Deploying frontend to Cloudflare Pages..."
-  CLOUDFLARE_ACCOUNT_ID=3aa12f83f9d4006cfd805489b6d65eb8 npx wrangler pages deploy dist --project-name "$CF_PROJECT" --cwd apps/web
+  CLOUDFLARE_ACCOUNT_ID=3aa12f83f9d4006cfd805489b6d65eb8 npx wrangler pages deploy build/client --project-name "$CF_PROJECT" --cwd apps/web
   ok "Frontend deployed"
 }
 

@@ -4,7 +4,9 @@ React web application for the National Registry of Personal Property.
 
 ## Stack
 
-React 19, Vite 6, Tailwind CSS 4, React Router 7.
+React 19, Vite 6, Tailwind CSS 4, React Router 7 (framework mode).
+
+The home page (`/`) is prerendered at build time so crawlers and OAuth verifiers see a fully rendered HTML document. All other routes are served via the prerendered SPA shell and hydrated on the client.
 
 ## Local setup
 
@@ -19,6 +21,17 @@ pnpm dev
 
 Available at `http://localhost:5173`.
 
+## Scripts
+
+| Script | Description |
+|--------|-------------|
+| `pnpm dev` | Start the React Router dev server (HMR). |
+| `pnpm build` | Type-check (`tsc -b --noEmit`) then run `react-router build`. Output goes to `build/client/`. |
+| `pnpm preview` | Serve the production build locally with `vite preview --outDir build/client`. |
+| `pnpm lint` | ESLint. |
+| `pnpm test` | Vitest (uses a separate `vitest.config.ts` to bypass the `@react-router/dev` Vite plugin). |
+| `pnpm deploy` | Build then `wrangler pages deploy build/client`. |
+
 ## Environment variables
 
 | Variable | Default | Description |
@@ -27,65 +40,123 @@ Available at `http://localhost:5173`.
 
 ## Routes
 
+Routes are declared in [`src/routes.ts`](src/routes.ts) using the React Router framework-mode DSL (`index`, `route`, `layout`).
+
 ### Public
 
-| Path | Component | Description |
-|------|-----------|-------------|
-| `/` | `LandingPage` | Home page (hero, FAQ, CTA) |
-| `/connexion` | `LoginPage` | Login |
-| `/inscription` | `RegisterAccountPage` | Account creation |
-| `/enregistrer` | `RegisterItemPage` | Item registration (multi-step form) |
-| `/verifier` | `LookupPage` | Public lookup by RNBP number |
-| `/faq` | `FaqPage` | Frequently asked questions |
-| `/contact` | `ContactPage` | Contact form |
-| `/boutique` | `BoutiquePage` | Store (stickers) |
-| `/boutique/succes` | `BoutiqueSuccessPage` | Post-purchase confirmation |
-| `/registry` | `PartnerPage` | Browse the registry (citizen, police, insurance tabs) |
-| `/confidentialite` | `PrivacyPolicyPage` | Privacy policy |
-| `/conditions` | `TermsOfServicePage` | Terms of service |
-| `/verifier-courriel` | `VerifyEmailPage` | Email verification |
-| `/verification-en-attente` | `EmailPendingPage` | Pending email verification |
+| Path | Module | Description |
+|------|--------|-------------|
+| `/` | `pages/LandingPage.tsx` | Home page (prerendered) |
+| `/login` | `pages/LoginPage.tsx` | Login |
+| `/register` | `pages/RegisterAccountPage.tsx` | Account creation |
+| `/register-item` | `pages/RegisterItemPage.tsx` | Item registration (multi-step form) |
+| `/lookup` | `pages/LookupPage.tsx` | Public lookup by RNBP number |
+| `/lookup/photo` | `pages/LookupPhotoPage.tsx` | Photo-based lookup placeholder |
+| `/registry` | `pages/PartnerPage.tsx` | Browse the registry (citizen / police / insurance) |
+| `/privacy` | `pages/PrivacyPolicyPage.tsx` | Privacy policy |
+| `/terms` | `pages/TermsOfServicePage.tsx` | Terms of service |
+| `/faq` | `pages/FaqPage.tsx` | Frequently asked questions |
+| `/contact` | `pages/ContactPage.tsx` | Contact form |
+| `/about` | `pages/AboutPage.tsx` | About |
+| `/shop` | `pages/BoutiquePage.tsx` | Store |
+| `/shop/success` | `pages/BoutiqueSuccessPage.tsx` | Post-purchase confirmation |
+| `/verify-email` | `pages/VerifyEmailPage.tsx` | Email verification |
+| `/email-pending` | `pages/EmailPendingPage.tsx` | Pending email verification |
+| `/auth/{google,facebook,microsoft}/callback` | `pages/OAuthCallbackPage.tsx` | OAuth callbacks (3 routes share one module via distinct route IDs) |
 
-### Protected (require authentication)
+### Protected (`layouts/protected.tsx`)
 
-| Path | Component | Description |
-|------|-----------|-------------|
-| `/tableau-de-bord` | `DashboardPage` | User dashboard |
-| `/modifier/:id` | `EditItemPage` | Edit an item |
-| `/declarer-vol` | `ReportTheftPage` | Theft report |
+| Path | Module |
+|------|--------|
+| `/dashboard` | `pages/DashboardPage.tsx` |
+| `/settings` | `pages/SettingsPage.tsx` |
+| `/items/:id` | `pages/ItemDetailPage.tsx` |
+| `/edit/:id` | `pages/EditItemPage.tsx` |
+| `/report-theft` | `pages/ReportTheftPage.tsx` |
 
-### Admin (require `isAdmin`)
+### Admin (`layouts/admin.tsx`)
 
-| Path | Component | Description |
-|------|-----------|-------------|
-| `/admin/commandes` | `AdminOrdersPage` | Order list |
-| `/admin/commandes/:id` | `AdminOrderDetailPage` | Order detail + RNBP assignment |
+| Path | Module |
+|------|--------|
+| `/admin` | `pages/AdminDashboardPage.tsx` |
+| `/admin/items` | `pages/AdminItemsPage.tsx` |
+| `/admin/orders` | `pages/AdminOrdersPage.tsx` |
+| `/admin/orders/:id` | `pages/AdminOrderDetailPage.tsx` |
+| `/admin/products` | `pages/AdminProductsPage.tsx` |
+| `/admin/products/:id` | `pages/AdminProductEditPage.tsx` |
+
+### Legacy FR redirects
+
+The previous FR-only paths (`/connexion`, `/inscription`, `/enregistrer`, …) are served as `301` redirects via [`public/_redirects`](public/_redirects). They will be removed after July 2026.
 
 ## Structure
 
 ```
-src/
-├── components/
-│   ├── auth/           # ProtectedRoute, AdminRoute, ServiceUnavailable
-│   ├── layout/         # Navbar, Footer
-│   ├── sections/       # Landing page sections
-│   ├── registration/   # Registration form steps
-│   ├── ui/             # Button, Tabs, Modal, LanguageSwitcher
-│   └── icons/          # SVG icons as components
-├── i18n/
-│   ├── context.tsx     # Language provider + detection
-│   └── locales/        # FR and EN translations
-├── lib/
-│   ├── api-client.ts   # HTTP client for the API
-│   ├── auth-context.tsx # Authentication context
-│   ├── cart-context.tsx # Cart (localStorage, Stripe checkout)
-│   └── button-styles.ts # Shared button styles
-├── routes/             # Pages (one per route)
-├── types/              # TypeScript types (SiteContent)
-├── App.tsx             # Router configuration
-├── main.tsx            # Entry point
-└── index.css           # CSS variables + global styles
+apps/web/
+├── react-router.config.ts   # ssr: false, appDirectory: "src", prerender: ["/"]
+├── vite.config.ts           # @react-router/dev/vite + Tailwind
+├── vitest.config.ts         # separate config for tests (uses @vitejs/plugin-react)
+├── public/
+│   ├── _redirects           # FR legacy redirects + SPA fallback
+│   └── _routes.json
+├── functions/
+│   └── [[path]].ts          # Cloudflare Pages Function: per-route meta + locale + sitemap
+└── src/
+    ├── root.tsx             # HTML shell, providers, <Outlet />
+    ├── routes.ts            # Route table (layouts + index + routes)
+    ├── layouts/
+    │   ├── protected.tsx    # <ProtectedRoute><Outlet /></ProtectedRoute>
+    │   └── admin.tsx        # <AdminRoute><AdminLayout><Outlet /></AdminLayout></AdminRoute>
+    ├── pages/               # One default-exported component per route
+    ├── components/
+    │   ├── ClientOnly.tsx   # Hydration-safe wrapper for browser-state UI
+    │   ├── ScrollToTop.tsx  # Smooth-scroll to anchors / top on route change
+    │   ├── ErrorBoundary.tsx
+    │   ├── auth/            # ProtectedRoute, AdminRoute, ServiceUnavailable
+    │   ├── layout/          # Navbar, Footer, PromoBanner
+    │   ├── sections/        # Landing-page sections
+    │   ├── registration/    # Registration form steps
+    │   ├── ui/              # Button, Tabs, Modal, LanguageSwitcher
+    │   └── icons/           # SVG icons
+    ├── i18n/
+    │   ├── context.tsx      # Language provider + detection
+    │   └── locales/         # FR and EN translations
+    ├── lib/
+    │   ├── api-client.ts
+    │   ├── auth-context.tsx
+    │   ├── cart-context.tsx
+    │   ├── oauth.ts
+    │   └── button-styles.ts
+    ├── routes/              # ROUTES constant (path map shared across the app)
+    ├── types/               # TypeScript types (SiteContent)
+    └── index.css            # CSS variables + global styles
 ```
+
+## Prerendering and SSR safety
+
+`/` is rendered to static HTML at build time. The full provider tree (`LanguageProvider`, `AuthProvider`, `CartProvider`) plus `Navbar`, `PromoBanner`, `Footer` and `LandingPage` execute on Node during the build, so any code reached during render must be SSR-safe:
+
+- Browser-only APIs (`window`, `document`, `localStorage`, `sessionStorage`, `navigator`) are guarded with `typeof window === "undefined"` checks (see `i18n/context.tsx`, `lib/auth-context.tsx`, `components/layout/PromoBanner.tsx`, `components/ErrorBoundary.tsx`).
+- UI that depends on browser state (auth status, cart count, dismissed banner, current year) is wrapped in `<ClientOnly fallback={…}>`. Provide a fallback with the same dimensions as the rendered content to avoid layout shift after hydration.
+
+## Page meta tags
+
+Page titles and descriptions use React 19's native `<title>` and `<meta>` hoisting — no third-party head manager. Each page renders a `<title>` (and optionally a `<meta name="description">`) in its JSX:
+
+```tsx
+export function MyPage() {
+  const { t } = useLanguage();
+  return (
+    <section>
+      <title>{`${t.pages.my.title} | RNBP`}</title>
+      <meta name="description" content={t.pages.my.description} />
+      ...
+    </section>
+  );
+}
+```
+
+For the SPA-fallback HTML served on non-prerendered routes, the Cloudflare Pages Function ([`functions/[[path]].ts`](functions/[[path]].ts)) injects the per-route Open Graph, Twitter, canonical, hreflang and JSON-LD tags at request time, based on the requested path and the active domain (`rnbp.ca` / `nrpp.ca`).
 
 ## i18n system
 
@@ -104,7 +175,7 @@ Priority order:
 1. **localStorage** — Explicit user choice
 2. **Hostname** — `rnbp.ca` → FR, `nrpp.ca` → EN
 3. **Browser** — `navigator.language`
-4. **Default** — FR
+4. **Default** — FR (used during build-time prerendering)
 
 The language toggle is instant (no reload, no domain change).
 
@@ -115,7 +186,7 @@ The language toggle is instant (no reload, no domain change).
 | `rnbp.ca` | French | Quebec market |
 | `nrpp.ca` | English | English-speaking Canadian market |
 
-Both domains serve the same application. The logo follows the active language (not the domain). The `hreflang` tags in `index.html` allow Google to index each domain in the correct language.
+Both domains serve the same application. The logo follows the active language (not the domain). The Cloudflare Pages Function emits per-domain `hreflang` and canonical tags so each domain is indexed in the correct language.
 
 ## Design system
 
@@ -182,7 +253,7 @@ Bilingual interactive elements (buttons, tabs, button-styled links) must have a 
 ```tsx
 import { getButtonClasses } from "@/lib/button-styles";
 
-<Link to="/inscription" className={getButtonClasses("primary", "lg")}>
+<Link to="/register" className={getButtonClasses("primary", "lg")}>
   Sign up
 </Link>
 ```

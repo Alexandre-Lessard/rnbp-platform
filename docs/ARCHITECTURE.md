@@ -9,7 +9,9 @@
                              v
                     +------------------+
                     | Cloudflare Pages |
-                    |   (SPA - React)  |
+                    | React Router 7   |
+                    | (prerendered /,  |
+                    |  SPA elsewhere)  |
                     +------------------+
                              |
                         API calls
@@ -37,14 +39,16 @@
 
 ### Bi-domain setup
 
-Two separate domains serve the same SPA:
+Two separate domains serve the same React Router 7 application:
 
 - **rnbp.ca** -- French by default (Registre National des Biens Personnels)
 - **nrpp.ca** -- English by default (National Registry of Personal Property)
 
 Both domains point to the same Cloudflare Pages deployment. The frontend detects the hostname at runtime to pick the default language. A single API backend (`api.rnbp.ca`) serves both domains.
 
-Cloudflare Pages hosts the SPA with global CDN distribution. Cloudflare Tunnel connects the backend server to the Cloudflare network without exposing a public IP address -- the backend machine has no inbound ports open.
+The home page (`/`) is prerendered to static HTML at build time so crawlers and OAuth verifiers see fully rendered content. All other routes are served via the prerendered SPA shell and hydrated on the client. A Cloudflare Pages Function (`apps/web/functions/[[path]].ts`) injects per-route Open Graph, canonical, hreflang and JSON-LD tags at request time, based on the requested path and the active domain.
+
+Cloudflare Pages hosts the assets with global CDN distribution. Cloudflare Tunnel connects the backend server to the Cloudflare network without exposing a public IP address -- the backend machine has no inbound ports open.
 
 ---
 

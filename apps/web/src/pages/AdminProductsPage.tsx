@@ -73,6 +73,7 @@ export function AdminProductsPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <title>{`Admin — ${p?.title ?? "Products"} | RNBP`}</title>
       <div className="section-shell py-16">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
@@ -310,3 +311,4 @@ export function AdminProductsPage() {
     </section>
   );
 }
+export default AdminProductsPage;

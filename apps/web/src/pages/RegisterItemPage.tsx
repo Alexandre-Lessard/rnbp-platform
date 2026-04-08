@@ -220,6 +220,7 @@ export function RegisterItemPage() {
 
   return (
     <section className="section-shell py-16">
+      <title>{`${reg?.heading ?? "Register an item"} | RNBP`}</title>
       <h1 className="text-center text-3xl font-bold text-[var(--rcb-text-strong)]">
         {reg?.heading ?? "Register an item"}
       </h1>
@@ -281,3 +282,4 @@ export function RegisterItemPage() {
     </section>
   );
 }
+export default RegisterItemPage;

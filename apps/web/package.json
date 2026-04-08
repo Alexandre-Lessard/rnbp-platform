@@ -4,26 +4,26 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "react-router dev",
+    "build": "tsc -b --noEmit && react-router build",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "preview": "vite preview",
-    "deploy": "pnpm build && wrangler pages deploy dist --project-name ${CF_PAGES_PROJECT:-rcdb-landing} --branch ${CF_PAGES_BRANCH:-main}"
+    "preview": "vite preview --outDir build/client",
+    "deploy": "pnpm build && wrangler pages deploy build/client --project-name ${CF_PAGES_PROJECT:-rcdb-landing} --branch ${CF_PAGES_BRANCH:-main}"
   },
   "dependencies": {
+    "@react-router/node": "^7.14.0",
     "@rnbp/shared": "workspace:*",
+    "isbot": "^5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-helmet-async": "^3.0.0",
     "react-router": "^7.14.0",
     "recharts": "^3.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.3",
     "@react-router/dev": "^7.14.0",
-    "@react-router/node": "^7.14.0",
     "@tailwindcss/vite": "^4.2.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

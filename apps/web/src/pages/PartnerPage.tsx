@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest, type ApiError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
@@ -123,10 +122,10 @@ export function PartnerPage() {
 
   return (
     <section className="min-h-[70vh] bg-[var(--rcb-white)]">
-      <Helmet>
+      
         <title>{t.pages.partners.title}</title>
         <meta name="description" content={t.pages.partners.description} />
-      </Helmet>
+      
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {p.heading}
@@ -418,3 +417,4 @@ export function PartnerPage() {
     </section>
   );
 }
+export default PartnerPage;

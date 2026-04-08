@@ -96,6 +96,7 @@ export function ReportTheftPage() {
 
   return (
     <section className="section-shell py-16">
+      <title>{`${t.report?.heading ?? "Report a theft"} | RNBP`}</title>
       <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
         {t.report?.heading ?? "Report a theft"}
       </h1>
@@ -210,3 +211,4 @@ export function ReportTheftPage() {
     </section>
   );
 }
+export default ReportTheftPage;

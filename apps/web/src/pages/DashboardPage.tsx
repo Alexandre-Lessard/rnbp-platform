@@ -105,6 +105,7 @@ export function DashboardPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <title>{`${dash?.heading ?? "Dashboard"} | RNBP`}</title>
       <div className="section-shell py-16">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -324,3 +325,4 @@ export function DashboardPage() {
     </section>
   );
 }
+export default DashboardPage;

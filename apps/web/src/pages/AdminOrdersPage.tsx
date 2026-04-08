@@ -48,6 +48,7 @@ export function AdminOrdersPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
+      <title>{`Admin — ${t.admin?.nav.orders ?? "Orders"} | RNBP`}</title>
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           Orders
@@ -113,3 +114,4 @@ export function AdminOrdersPage() {
     </section>
   );
 }
+export default AdminOrdersPage;

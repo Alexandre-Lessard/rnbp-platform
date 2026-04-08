@@ -343,7 +343,7 @@ npx wrangler pages project create rnbp-web
 ```bash
 pnpm --filter @rnbp/shared build
 pnpm --filter @rnbp/web build
-npx wrangler pages deploy apps/web/dist --project-name rnbp-web
+npx wrangler pages deploy apps/web/build/client --project-name rnbp-web
 ```
 
 ### Custom domains
@@ -355,15 +355,17 @@ In the Cloudflare Pages dashboard → project `rnbp-web` → Custom Domains:
 3. `nrpp.ca`
 4. `www.nrpp.ca` (redirect to `nrpp.ca`)
 
-### SPA Routing
+### SPA routing and legacy redirects
 
-Create `apps/web/public/_redirects`:
+`apps/web/public/_redirects` declares the FR legacy → EN redirects (301) and the SPA fallback:
 
 ```
-/*  /index.html  200
+/connexion        /login        301
+# … other FR legacy routes …
+/*                /index.html   200
 ```
 
-This allows the React router to handle all routes on the client side.
+The `/*` line lets React Router handle every other path on the client. The home page (`/`) is prerendered at build time by React Router framework mode (`ssr: false` + `prerender: ["/"]`); all other routes are served via the prerendered SPA shell.
 
 ---
 

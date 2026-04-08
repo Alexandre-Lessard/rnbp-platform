@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
@@ -237,10 +236,10 @@ export function BoutiquePage() {
 
   return (
     <>
-      <Helmet>
+      
         <title>{t.pages.shop.title}</title>
         <meta name="description" content={t.pages.shop.description} />
-      </Helmet>
+      
       <section className="min-h-[70vh] bg-[var(--rcb-white)]">
         {/* ── Page heading ──────────────────────────────────────────── */}
         <div className="section-shell py-16">
@@ -449,3 +448,4 @@ export function BoutiquePage() {
     </>
   );
 }
+export default BoutiquePage;
