@@ -39,6 +39,11 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description:
           "Consultez les conditions d'utilisation du Registre national des biens personnels.",
       },
+      "/data-deletion": {
+        title: "Suppression de votre compte | RNBP",
+        description:
+          "Comment demander la suppression complète de votre compte et de vos données du Registre national des biens personnels.",
+      },
       "/lookup": {
         title: "Vérifier un bien | RNBP",
         description:
@@ -132,6 +137,11 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         title: "Terms of Service | NRPP",
         description:
           "Review the terms of service for the National Registry of Personal Property.",
+      },
+      "/data-deletion": {
+        title: "Account Deletion | NRPP",
+        description:
+          "How to request the complete deletion of your account and data from the National Registry of Personal Property.",
       },
       "/lookup": {
         title: "Verify an Item | NRPP",
@@ -381,6 +391,14 @@ function buildJsonLd(locale: "fr" | "en", path: string, domain: string): string 
   return jsonLd;
 }
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function injectMeta(
   html: string,
   locale: "fr" | "en",
@@ -404,6 +422,19 @@ function injectMeta(
   const robots = meta.robots ?? "index, follow";
   const lang = locale === "fr" ? "fr-CA" : "en-CA";
   const jsonLd = buildJsonLd(locale, path, domain);
+
+  // Rewrite the literal <title> and <meta name="description"> hoisted by
+  // React 19 from the home LandingPage. The prerendered HTML shipped to
+  // every SPA-fallback route contains the home page title literally, not
+  // a {{TITLE}} placeholder, so we have to substitute the actual tag.
+  html = html.replace(
+    /<title>[^<]*<\/title>/,
+    `<title>${escapeHtml(meta.title)}</title>`,
+  );
+  html = html.replace(
+    /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/,
+    `<meta name="description" content="${escapeHtml(meta.description)}"/>`,
+  );
 
   return html
     .replace("{{LANG}}", lang)

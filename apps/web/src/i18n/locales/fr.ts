@@ -27,6 +27,10 @@ const fr: SiteContent = {
       title: "Conditions d'utilisation | RNBP",
       description: "Consultez les conditions d'utilisation du Registre national des biens personnels.",
     },
+    dataDeletion: {
+      title: "Suppression de votre compte | RNBP",
+      description: "Comment demander la suppression complète de votre compte et de vos données du Registre national des biens personnels.",
+    },
     about: {
       title: "À propos | RNBP",
       description: "Découvrez le Registre national des biens personnels, une plateforme pour protéger, identifier et retrouver vos biens de valeur.",
@@ -376,6 +380,7 @@ const fr: SiteContent = {
       "En vous abonnant, vous acceptez notre politique de confidentialit\u00e9.",
     privacyPolicy: "Politique de confidentialit\u00e9",
     termsOfUse: "Conditions d\u2019utilisation",
+    dataDeletion: "Suppression de compte",
     cookieSettings: "Param\u00e8tres de cookies",
     copyright:
       "\u00a9 {{year}} Registre national des biens personnels. Tous droits r\u00e9serv\u00e9s.",
@@ -746,24 +751,28 @@ const fr: SiteContent = {
         body: "Vos données sont protégées par des mesures de sécurité conformes aux normes de l'industrie : chiffrement des mots de passe (Argon2id), communications chiffrées (TLS/HTTPS), jetons d'authentification signés (EdDSA), sauvegardes chiffrées quotidiennes. L'accès aux données est limité au personnel autorisé selon le principe du moindre privilège.",
       },
       {
-        title: "4. Conservation et suppression",
-        body: "Vos données sont conservées aussi longtemps que votre compte est actif. Vous pouvez demander la suppression de votre compte et de vos données à tout moment en nous contactant. Les déclarations de vol sont conservées à des fins de traçabilité même après la suppression du compte, conformément aux obligations légales applicables.",
+        title: "4. Connexion via fournisseurs tiers (OAuth)",
+        body: "Le RNBP permet de créer un compte ou de se connecter via Google ou Facebook. Lorsque vous choisissez cette option, nous recevons uniquement votre nom, votre adresse courriel, un identifiant unique du fournisseur et l'indication si votre courriel a été vérifié par celui-ci. Aucune autre donnée n'est demandée ni collectée : pas d'accès à votre photo de profil, vos contacts, votre calendrier, votre date de naissance, votre genre, votre liste d'amis, vos photos ou vos publications. Vous pouvez révoquer cet accès à tout moment via les paramètres de votre compte chez le fournisseur (Google, Facebook).",
       },
       {
-        title: "5. Vérification publique",
+        title: "5. Conservation et suppression de votre compte",
+        body: "Vos données sont conservées aussi longtemps que votre compte est actif. Vous pouvez demander la suppression complète de votre compte et de vos données à tout moment en nous contactant à tech@rnbp.ca. Nous traitons les demandes dans un délai maximum de 30 jours. La suppression couvre votre compte, vos biens enregistrés, vos photos et vos documents. Certaines données peuvent persister jusqu'à 14 jours dans nos sauvegardes automatiques avant d'être définitivement effacées. Les données financières liées à vos commandes sont conservées de manière anonymisée pour respecter nos obligations comptables et fiscales. Les déclarations de vol sont conservées à des fins de traçabilité même après la suppression du compte, conformément aux obligations légales applicables.",
+      },
+      {
+        title: "6. Vérification publique",
         body: "La fonction de vérification publique (recherche par numéro RNBP) ne divulgue aucune information personnelle sur le propriétaire. Seul le statut du bien (enregistré, déclaré volé) est affiché.",
       },
       {
-        title: "6. Cookies et technologies similaires",
+        title: "7. Cookies et technologies similaires",
         body: "Le RNBP utilise des cookies strictement nécessaires au fonctionnement du site (authentification, préférences linguistiques). Aucun cookie de suivi publicitaire ou d'analyse tiers n'est utilisé.",
       },
       {
-        title: "7. Modifications",
+        title: "8. Modifications",
         body: "Nous nous réservons le droit de modifier cette politique. Toute modification importante vous sera communiquée par courriel ou par un avis sur le site. La date de dernière mise à jour est indiquée en bas de cette page.",
       },
       {
-        title: "8. Contact",
-        body: "Pour toute question relative à la protection de vos renseignements personnels, contactez-nous à confidentialite@rnbp.ca.",
+        title: "9. Contact",
+        body: "Pour toute question relative à la protection de vos renseignements personnels, contactez-nous à tech@rnbp.ca.",
       },
     ],
     termsHeading: "Conditions d'utilisation",
@@ -809,6 +818,21 @@ const fr: SiteContent = {
         body: "Le RNBP se réserve le droit de modifier les présentes conditions à tout moment. Les modifications entreront en vigueur dès leur publication sur le site. L'utilisation continue du service après une modification constitue votre acceptation des nouvelles conditions.",
       },
     ],
+    dataDeletion: {
+      heading: "Suppression de votre compte et de vos données",
+      intro: "Vous pouvez demander la suppression complète de votre compte et de toutes vos données du Registre national des biens personnels (RNBP) à tout moment, et ce, sans frais. Cette page décrit la procédure et les délais.",
+      stepsHeading: "Comment demander la suppression",
+      steps: [
+        "Envoyez un courriel à tech@rnbp.ca avec comme objet « Demande de suppression de compte ».",
+        "Indiquez l'adresse courriel associée à votre compte RNBP afin que nous puissions vous identifier.",
+        "Nous vous enverrons un courriel de confirmation à cette adresse pour valider la demande.",
+        "Une fois confirmée, votre compte et vos données sont supprimés dans un délai maximum de 30 jours.",
+      ],
+      timelineHeading: "Délais et portée de la suppression",
+      timeline: "La suppression couvre votre compte, vos biens enregistrés, vos photos et vos documents. Certaines données peuvent persister jusqu'à 14 jours dans nos sauvegardes automatiques avant d'être définitivement effacées. Les données financières liées à vos commandes (achats d'étiquettes) sont conservées de manière anonymisée pour respecter nos obligations comptables et fiscales canadiennes. Les déclarations de vol antérieures sont conservées à des fins de traçabilité, conformément aux obligations légales applicables.",
+      contactHeading: "Une question ?",
+      contactBody: "Si vous avez une question sur la procédure ou si vous n'avez pas reçu de confirmation dans les 48 heures, contactez-nous à tech@rnbp.ca.",
+    },
   },
   verifyBeforeBuy: {
     headingAccent: "Vérifiez",

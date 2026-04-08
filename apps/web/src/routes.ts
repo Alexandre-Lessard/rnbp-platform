@@ -12,6 +12,7 @@ export default [
   route("registry", "pages/PartnerPage.tsx"),
   route("privacy", "pages/PrivacyPolicyPage.tsx"),
   route("terms", "pages/TermsOfServicePage.tsx"),
+  route("data-deletion", "pages/DataDeletionPage.tsx"),
   route("faq", "pages/FaqPage.tsx"),
   route("contact", "pages/ContactPage.tsx"),
   route("about", "pages/AboutPage.tsx"),

@@ -101,6 +101,7 @@ export type SiteContent = {
     disclaimer: string;
     privacyPolicy: string;
     termsOfUse: string;
+    dataDeletion: string;
     cookieSettings: string;
     copyright: string;
     promoLine?: string;
@@ -384,6 +385,16 @@ export type SiteContent = {
     privacyContent: { title: string; body: string }[];
     termsHeading: string;
     termsContent: { title: string; body: string }[];
+    dataDeletion: {
+      heading: string;
+      intro: string;
+      stepsHeading: string;
+      steps: string[];
+      timelineHeading: string;
+      timeline: string;
+      contactHeading: string;
+      contactBody: string;
+    };
   };
   insurance?: {
     heading: string;

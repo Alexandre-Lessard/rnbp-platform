@@ -10,6 +10,7 @@ export const ROUTES = {
   settings: "/settings",
   privacy: "/privacy",
   terms: "/terms",
+  dataDeletion: "/data-deletion",
   faq: "/faq",
   contact: "/contact",
   shop: "/shop",

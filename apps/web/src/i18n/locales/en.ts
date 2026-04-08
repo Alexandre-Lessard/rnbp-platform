@@ -27,6 +27,10 @@ const en: SiteContent = {
       title: "Terms of Service | NRPP",
       description: "Review the terms of service for the National Registry of Personal Property.",
     },
+    dataDeletion: {
+      title: "Account Deletion | NRPP",
+      description: "How to request the complete deletion of your account and data from the National Registry of Personal Property.",
+    },
     about: {
       title: "About | NRPP",
       description: "Learn about the National Registry of Personal Property, a platform to protect, identify and recover your valuable belongings.",
@@ -370,6 +374,7 @@ const en: SiteContent = {
       "By subscribing, you agree to our privacy policy.",
     privacyPolicy: "Privacy Policy",
     termsOfUse: "Terms of Use",
+    dataDeletion: "Account deletion",
     cookieSettings: "Cookie Settings",
     copyright:
       "\u00a9 {{year}} National Registry of Personal Property. All rights reserved.",
@@ -740,24 +745,28 @@ const en: SiteContent = {
         body: "Your data is protected by industry-standard security measures: password encryption (Argon2id), encrypted communications (TLS/HTTPS), signed authentication tokens (EdDSA), daily encrypted backups. Data access is limited to authorized personnel following the principle of least privilege.",
       },
       {
-        title: "4. Retention and Deletion",
-        body: "Your data is retained as long as your account is active. You may request deletion of your account and data at any time by contacting us. Theft reports are retained for traceability purposes even after account deletion, in accordance with applicable legal obligations.",
+        title: "4. Third-Party Sign-In (OAuth)",
+        body: "The NRPP allows you to create an account or sign in via Google or Facebook. When you choose this option, we receive only your name, email address, a unique provider identifier, and whether your email has been verified by the provider. No other data is requested or collected: we do not access your profile photo, contacts, calendar, date of birth, gender, friends list, photos, or posts. You can revoke this access at any time through your account settings at the provider (Google, Facebook).",
       },
       {
-        title: "5. Public Verification",
+        title: "5. Account Retention and Deletion",
+        body: "Your data is retained as long as your account is active. You may request the complete deletion of your account and data at any time by contacting us at tech@rnbp.ca. We process requests within a maximum of 30 days. Deletion covers your account, your registered items, your photos, and your documents. Some data may persist for up to 14 days in our automated backups before being permanently erased. Financial data related to your orders is retained in anonymized form to comply with our accounting and tax obligations. Theft reports are retained for traceability purposes even after account deletion, in accordance with applicable legal obligations.",
+      },
+      {
+        title: "6. Public Verification",
         body: "The public verification feature (search by RNBP number) does not disclose any personal information about the owner. Only the property status (registered, reported stolen) is displayed.",
       },
       {
-        title: "6. Cookies and Similar Technologies",
+        title: "7. Cookies and Similar Technologies",
         body: "The NRPP uses only strictly necessary cookies for site functionality (authentication, language preferences). No advertising tracking or third-party analytics cookies are used.",
       },
       {
-        title: "7. Changes",
+        title: "8. Changes",
         body: "We reserve the right to modify this policy. Any significant changes will be communicated to you by email or by a notice on the site. The last update date is indicated at the bottom of this page.",
       },
       {
-        title: "8. Contact",
-        body: "For any questions regarding the protection of your personal information, contact us at privacy@rnbp.ca.",
+        title: "9. Contact",
+        body: "For any questions regarding the protection of your personal information, contact us at tech@rnbp.ca.",
       },
     ],
     termsHeading: "Terms of Service",
@@ -803,6 +812,21 @@ const en: SiteContent = {
         body: "The NRPP reserves the right to modify these terms at any time. Changes will take effect upon publication on the site. Continued use of the service after a change constitutes your acceptance of the new terms.",
       },
     ],
+    dataDeletion: {
+      heading: "Account and Data Deletion",
+      intro: "You can request the complete deletion of your account and all your data from the National Registry of Personal Property (NRPP) at any time, free of charge. This page describes the procedure and timelines.",
+      stepsHeading: "How to request deletion",
+      steps: [
+        "Send an email to tech@rnbp.ca with the subject \"Account deletion request\".",
+        "Include the email address associated with your NRPP account so we can identify you.",
+        "We will send a confirmation email to that address to validate the request.",
+        "Once confirmed, your account and data are deleted within a maximum of 30 days.",
+      ],
+      timelineHeading: "Timelines and scope of deletion",
+      timeline: "Deletion covers your account, your registered items, your photos, and your documents. Some data may persist for up to 14 days in our automated backups before being permanently erased. Financial data related to your orders (sticker purchases) is retained in anonymized form to comply with our Canadian accounting and tax obligations. Past theft reports are retained for traceability purposes, in accordance with applicable legal obligations.",
+      contactHeading: "Have a question?",
+      contactBody: "If you have a question about the procedure or have not received a confirmation within 48 hours, contact us at tech@rnbp.ca.",
+    },
   },
   verifyBeforeBuy: {
     headingAccent: "Verify",
