@@ -437,11 +437,6 @@ export type SiteContent = {
     copiedToast: string;
     emailSubject: string;
     emailButton: string;
-    faq: {
-      heading: string;
-      description: string;
-      items: FaqItem[];
-    };
   };
   verifyBeforeBuy?: {
     headingAccent: string;

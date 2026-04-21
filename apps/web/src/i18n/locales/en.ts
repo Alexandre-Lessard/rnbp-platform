@@ -230,6 +230,11 @@ const en: SiteContent = {
           "Registering your belongings is completely free. No hidden fees, no subscription. You can register as many items as you want at no cost.",
       },
       {
+        question: "Who funds the NRPP?",
+        answer:
+          "The NRPP is financially supported in part by partners from the insurance industry. These stakeholders have a direct interest in improving the traceability and recovery of stolen or lost property.",
+      },
+      {
         question: "What is the minimum threshold?",
         answer:
           "Items must have a value of at least $1,000. This limit ensures the registry focuses on articles of real importance.",
@@ -741,16 +746,6 @@ const en: SiteContent = {
     copiedToast: "Message copied! Send it to your insurer.",
     emailSubject: "NRPP Discount Request",
     emailButton: "Send by email",
-    faq: {
-      heading: "Insurer FAQ",
-      description: "A quick answer to one of the most common questions about this program.",
-      items: [
-        {
-          question: "Who funds the NRPP?",
-          answer: "The NRPP is funded through its commercial activities, partnerships, and complementary services built around the protection, identification, and recovery of personal property. Registering an item in the registry remains free for citizens.",
-        },
-      ],
-    },
   },
   about: {
     heading: "About the NRPP",

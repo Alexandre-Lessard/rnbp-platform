@@ -232,6 +232,11 @@ const fr: SiteContent = {
           "L\u2019enregistrement de vos biens est enti\u00e8rement gratuit. Aucun frais cach\u00e9, aucun abonnement. Vous pouvez enregistrer autant de biens que vous le souhaitez sans rien payer.",
       },
       {
+        question: "Qui finance le RNBP?",
+        answer:
+          "Le RNBP est soutenu financi\u00e8rement en partie par des partenaires issus de l\u2019industrie de l\u2019assurance. Ces acteurs ont un int\u00e9r\u00eat direct \u00e0 am\u00e9liorer la tra\u00e7abilit\u00e9 et la r\u00e9cup\u00e9ration des biens vol\u00e9s ou perdus.",
+      },
+      {
         question: "Quel est le seuil minimum\u00a0?",
         answer:
           "Les biens doivent avoir une valeur d\u2019au moins 1\u00a0000\u00a0$. Cette limite garantit que le registre se concentre sur les articles de r\u00e9elle importance.",
@@ -747,16 +752,6 @@ const fr: SiteContent = {
     copiedToast: "Message copié ! Envoyez-le à votre assureur.",
     emailSubject: "Demande de rabais RNBP",
     emailButton: "Envoyer par courriel",
-    faq: {
-      heading: "FAQ assureurs",
-      description: "Une réponse rapide aux questions les plus fréquentes sur ce programme.",
-      items: [
-        {
-          question: "Qui finance le RNBP?",
-          answer: "Le RNBP est financé par ses activités commerciales, ses partenariats et les services complémentaires qu'il développe autour de la protection, de l'identification et de la récupération des biens personnels. L'inscription d'un bien au registre demeure gratuite pour les citoyens.",
-        },
-      ],
-    },
   },
   about: {
     heading: "À propos du RNBP",

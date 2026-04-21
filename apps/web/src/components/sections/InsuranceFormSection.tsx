@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
-import { FaqAccordion } from "@/components/ui/FaqAccordion";
 import {
   INSURERS,
   INSURER_EMAILS,
@@ -207,15 +206,6 @@ export function InsuranceFormSection() {
                 +
               </span>
             </button>
-          </div>
-
-          <div className="mb-8">
-            <FaqAccordion
-              items={ins.faq.items}
-              headingLevel="h2"
-              heading={ins.faq.heading}
-              description={ins.faq.description}
-            />
           </div>
 
           <div
