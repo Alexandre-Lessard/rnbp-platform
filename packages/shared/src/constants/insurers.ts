@@ -10,6 +10,11 @@ export const INSURERS = [
     en: "Aviva Canada",
   },
   {
+    id: "beneva",
+    fr: "Beneva",
+    en: "Beneva",
+  },
+  {
     id: "desjardins",
     fr: "Desjardins Assurances",
     en: "Desjardins Insurance",
@@ -116,6 +121,7 @@ export type InsurerId = (typeof INSURERS)[number]["id"];
 export const INSURER_EMAILS: Record<string, string | null> = {
   intact: "customer.experience@intact.net",
   aviva: "info@avivacanada.com",
+  beneva: null,
   desjardins: null,
   wawanesa: "TalkToUs@wawanesa.com",
   cooperators: null,

@@ -48,6 +48,7 @@ export type SiteContent = {
     login: string;
     logout: string;
     myAccount: string;
+    myProfile: string;
   };
   hero: {
     subtitleLine1: string;
@@ -165,6 +166,7 @@ export type SiteContent = {
     alreadyInCartCancel: string;
     alreadyInCartViewCart: string;
     awaitingNumber: string;
+    noNumberHint: string;
     clientNumber: string;
     editItem: string;
   };
@@ -190,6 +192,22 @@ export type SiteContent = {
     saveButton: string;
     saving: string;
     successMessage: string;
+  };
+  profile?: {
+    heading: string;
+    description: string;
+    personalInfoHeading: string;
+    addressHeading: string;
+    addressDescription: string;
+    address1Label: string;
+    address2Label: string;
+    cityLabel: string;
+    provinceLabel: string;
+    postalCodeLabel: string;
+    saveButton: string;
+    saving: string;
+    successMessage: string;
+    backToDashboard: string;
   };
   archive?: {
     button: string;
@@ -226,6 +244,8 @@ export type SiteContent = {
     serialLabel: string;
     serialExplanation: string;
     valueLabel: string;
+    yearInvalidError: string;
+    valueIntegerError: string;
     valueMinError: string;
     descriptionLabel: string;
     descriptionHelper: string;
@@ -239,6 +259,7 @@ export type SiteContent = {
     documentsDescription: string;
     addDocumentButton: string;
     confirmButton: string;
+    submitting: string;
     successHeading: string;
     successDescription: string;
     successNoNumber: string;
@@ -305,6 +326,7 @@ export type SiteContent = {
   lookup?: {
     heading: string;
     description: string;
+    inputLabel: string;
     inputPlaceholder: string;
     inputHint?: string;
     searchButton: string;
@@ -400,6 +422,7 @@ export type SiteContent = {
     heading: string;
     promo: string;
     description: string;
+    moreButton: string;
     selectLabel: string;
     selectPlaceholder: string;
     messageLabel: string;
@@ -408,6 +431,11 @@ export type SiteContent = {
     copiedToast: string;
     emailSubject: string;
     emailButton: string;
+    faq: {
+      heading: string;
+      description: string;
+      items: FaqItem[];
+    };
   };
   verifyBeforeBuy?: {
     headingAccent: string;

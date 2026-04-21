@@ -13,6 +13,19 @@ export const registerSchema = z.object({
   preferredLanguage: z.enum(["fr", "en"]).optional(),
 });
 
+export const updateProfileSchema = z.object({
+  firstName: z.string().trim().min(1, "First name required").max(100).optional(),
+  lastName: z.string().trim().min(1, "Last name required").max(100).optional(),
+  phone: z.string().trim().max(20).optional(),
+  address1: z.string().trim().max(255).optional(),
+  address2: z.string().trim().max(255).optional(),
+  city: z.string().trim().max(100).optional(),
+  province: z.string().trim().max(100).optional(),
+  postalCode: z.string().trim().max(20).optional(),
+  country: z.string().trim().max(2).optional(),
+  preferredLanguage: z.enum(["fr", "en"]).optional(),
+});
+
 export const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(1, "Password required"),
@@ -32,6 +45,7 @@ export const resetPasswordSchema = z.object({
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

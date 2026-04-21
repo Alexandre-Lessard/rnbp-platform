@@ -25,6 +25,7 @@ import {
   exchangeFacebookCode,
   type OAuthProfile,
 } from "../utils/oauth.js";
+import { toUserDto } from "../utils/user-dto.js";
 
 // ── Schemas Zod ──────────────────────────────────────────────────────
 
@@ -193,19 +194,7 @@ async function handleOAuthLogin(
 
   return {
     needsEmail: false as const,
-    user: {
-      id: user!.id,
-      email: user!.email,
-      firstName: user!.firstName,
-      lastName: user!.lastName,
-      phone: user!.phone,
-      emailVerified: user!.emailVerified,
-      isAdmin: user!.isAdmin,
-      clientNumber: user!.clientNumber,
-      preferredLanguage: user!.preferredLanguage,
-      termsAcceptedAt: user!.termsAcceptedAt?.toISOString() ?? null,
-      createdAt: user!.createdAt.toISOString(),
-    },
+    user: toUserDto(user!),
     accessToken,
     refreshToken,
   };

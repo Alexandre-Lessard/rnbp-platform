@@ -7,6 +7,12 @@ import { getConfig } from "../config.js";
 
 let client: S3Client | null = null;
 
+function getPublicBaseUrl(): string {
+  const c = getConfig();
+  return (c.R2_PUBLIC_URL || `https://${c.R2_BUCKET_NAME}.${c.R2_ACCOUNT_ID}.r2.dev`)
+    .replace(/\/+$/, "");
+}
+
 export function isR2Configured(): boolean {
   const c = getConfig();
   return !!(
@@ -48,8 +54,7 @@ export async function uploadToR2(
       ContentType: contentType,
     }),
   );
-  const baseUrl = c.R2_PUBLIC_URL || `https://${c.R2_BUCKET_NAME}.${c.R2_ACCOUNT_ID}.r2.dev`;
-  return `${baseUrl}/${key}`;
+  return `${getPublicBaseUrl()}/${key}`;
 }
 
 /**
@@ -69,10 +74,13 @@ export async function deleteFromR2(key: string): Promise<void> {
  * Extract the R2 object key from a full public URL.
  */
 export function extractR2Key(url: string): string | null {
-  const c = getConfig();
-  const baseUrl = c.R2_PUBLIC_URL || `https://${c.R2_BUCKET_NAME}.${c.R2_ACCOUNT_ID}.r2.dev`;
-  if (url.startsWith(baseUrl)) {
-    return url.slice(baseUrl.length + 1); // +1 for the /
+  const baseUrl = getPublicBaseUrl();
+  const normalizedUrl = url.trim();
+  const expectedPrefix = `${baseUrl}/`;
+
+  if (normalizedUrl.startsWith(expectedPrefix)) {
+    return normalizedUrl.slice(expectedPrefix.length);
   }
+
   return null;
 }

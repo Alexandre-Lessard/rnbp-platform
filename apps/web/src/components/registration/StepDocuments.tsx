@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 
 type StepDocumentsProps = {
   photos: File[];
+  photoUrls: string[];
   documents: File[];
   onPhotosChange: (files: File[]) => void;
   onDocumentsChange: (files: File[]) => void;
@@ -16,28 +17,26 @@ const ACCEPTED_DOC_TYPES = [...ACCEPTED_IMAGE_TYPES, "application/pdf"];
 const MAX_PHOTOS = 5;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-// Module-level cache for blob URLs — avoids React strict mode issues with refs in render
-const blobUrlCache = new WeakMap<File, string>();
-
-function getOrCreateBlobUrl(file: File): string {
-  let url = blobUrlCache.get(file);
-  if (!url) {
-    url = URL.createObjectURL(file);
-    blobUrlCache.set(file, url);
-  }
-  return url;
-}
-
-function PhotoPreview({ file, onRemove }: { file: File; onRemove: () => void }) {
-  const url = getOrCreateBlobUrl(file);
-
+function PhotoPreview({
+  file,
+  url,
+  onRemove,
+}: {
+  file: File;
+  url: string;
+  onRemove: () => void;
+}) {
   return (
     <div className="group relative">
-      <img
-        src={url}
-        alt={file.name}
-        className="h-20 w-20 rounded-lg object-cover"
-      />
+      {url ? (
+        <img
+          src={url}
+          alt={file.name}
+          className="h-20 w-20 rounded-lg object-cover"
+        />
+      ) : (
+        <div className="h-20 w-20 rounded-lg bg-[var(--rcb-surface)]" />
+      )}
       <button
         type="button"
         onClick={onRemove}
@@ -52,6 +51,7 @@ function PhotoPreview({ file, onRemove }: { file: File; onRemove: () => void }) 
 
 export function StepDocuments({
   photos,
+  photoUrls,
   documents,
   onPhotosChange,
   onDocumentsChange,
@@ -141,7 +141,12 @@ export function StepDocuments({
         {photos.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-3">
             {photos.map((file, i) => (
-              <PhotoPreview key={`${file.name}-${file.size}-${i}`} file={file} onRemove={() => removePhoto(i)} />
+              <PhotoPreview
+                key={`${file.name}-${file.size}-${i}`}
+                file={file}
+                url={photoUrls[i] ?? ""}
+                onRemove={() => removePhoto(i)}
+              />
             ))}
           </div>
         )}

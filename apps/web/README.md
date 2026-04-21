@@ -50,11 +50,12 @@ Routes are declared in [`src/routes.ts`](src/routes.ts) using the React Router f
 | `/login` | `pages/LoginPage.tsx` | Login |
 | `/register` | `pages/RegisterAccountPage.tsx` | Account creation |
 | `/register-item` | `pages/RegisterItemPage.tsx` | Item registration (multi-step form) |
-| `/lookup` | `pages/LookupPage.tsx` | Public lookup by RNBP number |
+| `/lookup` | `pages/LookupPage.tsx` | Public lookup by RNBP number or serial number |
 | `/lookup/photo` | `pages/LookupPhotoPage.tsx` | Photo-based lookup placeholder |
 | `/registry` | `pages/PartnerPage.tsx` | Browse the registry (citizen / police / insurance) |
 | `/privacy` | `pages/PrivacyPolicyPage.tsx` | Privacy policy |
 | `/terms` | `pages/TermsOfServicePage.tsx` | Terms of service |
+| `/data-deletion` | `pages/DataDeletionPage.tsx` | Data deletion policy and process |
 | `/faq` | `pages/FaqPage.tsx` | Frequently asked questions |
 | `/contact` | `pages/ContactPage.tsx` | Contact form |
 | `/about` | `pages/AboutPage.tsx` | About |
@@ -69,6 +70,7 @@ Routes are declared in [`src/routes.ts`](src/routes.ts) using the React Router f
 | Path | Module |
 |------|--------|
 | `/dashboard` | `pages/DashboardPage.tsx` |
+| `/profile` | `pages/ProfilePage.tsx` |
 | `/settings` | `pages/SettingsPage.tsx` |
 | `/items/:id` | `pages/ItemDetailPage.tsx` |
 | `/edit/:id` | `pages/EditItemPage.tsx` |
@@ -101,6 +103,7 @@ apps/web/
 │   └── _routes.json
 ├── functions/
 │   └── [[path]].ts          # Cloudflare Pages Function: per-route meta + locale + sitemap
+├── src/assets/              # Bundled static assets (e.g. insurer logos)
 └── src/
     ├── root.tsx             # HTML shell, providers, <Outlet />
     ├── routes.ts            # Route table (layouts + index + routes)
@@ -113,10 +116,10 @@ apps/web/
     │   ├── ScrollToTop.tsx  # Smooth-scroll to anchors / top on route change
     │   ├── ErrorBoundary.tsx
     │   ├── auth/            # ProtectedRoute, AdminRoute, ServiceUnavailable
-    │   ├── layout/          # Navbar, Footer, PromoBanner
+    │   ├── layout/          # Navbar, Footer, PromoBanner, AccountNav
     │   ├── sections/        # Landing-page sections
     │   ├── registration/    # Registration form steps
-    │   ├── ui/              # Button, Tabs, Modal, LanguageSwitcher
+    │   ├── ui/              # Button, Tabs, Modal, LanguageSwitcher, ItemImage
     │   └── icons/           # SVG icons
     ├── i18n/
     │   ├── context.tsx      # Language provider + detection
@@ -125,7 +128,9 @@ apps/web/
     │   ├── api-client.ts
     │   ├── auth-context.tsx
     │   ├── cart-context.tsx
+    │   ├── register-item.ts
     │   ├── oauth.ts
+    │   ├── useObjectUrls.ts
     │   └── button-styles.ts
     ├── routes/              # ROUTES constant (path map shared across the app)
     ├── types/               # TypeScript types (SiteContent)

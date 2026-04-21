@@ -19,6 +19,16 @@ Auth levels:
 
 ## Auth
 
+All auth endpoints that return a `user` use the same DTO shape:
+```
+user: {
+  id, email, firstName, lastName, phone,
+  address1, address2, city, province, postalCode, country,
+  emailVerified, isAdmin, clientNumber,
+  preferredLanguage, termsAcceptedAt, createdAt
+}
+```
+
 ### POST /auth/register
 Auth: None | Rate limit: 5/min
 ```
@@ -57,9 +67,14 @@ Response: { user }
 ### PATCH /auth/profile
 Auth: requireAuth
 ```
-Body: { preferredLanguage?: "fr"|"en" }
+Body: {
+  firstName?, lastName?, phone?,
+  address1?, address2?, city?, province?, postalCode?, country?,
+  preferredLanguage?: "fr"|"en"
+}
 Response: { success: true }
 ```
+Empty strings are normalized to `null`. If address fields are provided without `country`, the backend defaults it to `CA`.
 
 ### POST /auth/forgot-password
 Auth: None | Rate limit: 3/min
@@ -144,8 +159,9 @@ Completes the missing-email OAuth flow.
 Auth: requireVerifiedEmail
 ```
 Query: ?archived=true (optional)
-Response: { items: [...] }
+Response: { items: [{ ..., primaryPhotoUrl }] }
 ```
+`primaryPhotoUrl` is selected from the oldest `isPrimary=true` photo; if none is marked primary, the API falls back to the oldest photo for that item.
 
 ### POST /items
 Auth: requireVerifiedEmail
@@ -159,6 +175,7 @@ Auth: requireVerifiedEmail
 ```
 Response: { item: { ...item, photos: [...], documents: [...] } }
 ```
+Photos are returned with the primary photo first, then the remaining photos in ascending creation order.
 
 ### PATCH /items/:id
 Auth: requireVerifiedEmail
@@ -216,6 +233,7 @@ Auth: requireVerifiedEmail
 ```
 Response: 204 No Content
 ```
+If the deleted photo was primary and photos remain, the oldest remaining photo is promoted to `isPrimary=true`.
 
 ### DELETE /items/:id/documents/:docId
 Auth: requireVerifiedEmail
@@ -234,6 +252,7 @@ Query: ?q=RNBP-XXXXXXXX (or serial number)
 Response: { found: false } | { found: true, status, category, brand, model }
 ```
 Normalizes serial numbers (strips spaces, dashes, underscores).
+The unified lookup currently supports RNBP numbers and serial numbers only.
 
 ### GET /lookup/:rnbpNumber
 Auth: None | Rate limit: 30/min

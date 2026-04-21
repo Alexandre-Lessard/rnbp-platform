@@ -61,6 +61,8 @@ The frontend runs on `http://localhost:5173`, the API on `http://localhost:3000`
 | `STRIPE_WEBHOOK_SECRET`    | Stripe webhook signing secret                      | (see Stripe section below)                     |
 
 > **Note**: Stripe Price IDs are stored in the `products` database table, not in environment variables. Configure them via the admin UI (`/admin/products`) or directly in the DB after creating prices in Stripe.
+>
+> **R2 note**: `R2_PUBLIC_URL` must point to an enabled public domain for the bucket (managed `r2.dev` or custom domain). If the bucket is private or the public domain is disabled, uploads will still persist in R2 but image requests will return `401` and the web app will show image fallbacks instead of the real files.
 
 ### Web (`apps/web/.env`)
 
@@ -80,11 +82,11 @@ All scripts are run from the monorepo root with `pnpm`.
 | `pnpm dev`          | Start frontend dev server (port 5173)            |
 | `pnpm dev:api`      | Start backend dev server (port 3000)             |
 | `pnpm dev:all`      | Start both frontend and backend in parallel      |
-| `npm run dev:full`  | Start Docker, frontend, backend, and Stripe CLI  |
+| `pnpm run dev:full` | Start Docker, frontend, backend, and Stripe CLI  |
 | `pnpm build`        | Build all packages                               |
 | `pnpm build:web`    | Build frontend only                              |
 | `pnpm build:api`    | Build backend only                               |
-| `pnpm lint`         | Run typecheck/lint across all packages            |
+| `pnpm lint`         | Run lint across all packages                      |
 | `pnpm test`         | Run tests across all packages                    |
 | `pnpm run deploy`   | Deploy everything (frontend + backend)           |
 | `pnpm run deploy:web` | Deploy frontend only                           |

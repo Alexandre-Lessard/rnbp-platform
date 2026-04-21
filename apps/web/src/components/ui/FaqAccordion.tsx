@@ -7,9 +7,16 @@ import type { FaqItem } from "@/types/content";
 type FaqAccordionProps = {
   items: FaqItem[];
   headingLevel: "h1" | "h2";
+  heading?: string;
+  description?: string;
 };
 
-export function FaqAccordion({ items, headingLevel }: FaqAccordionProps) {
+export function FaqAccordion({
+  items,
+  headingLevel,
+  heading,
+  description,
+}: FaqAccordionProps) {
   const { t } = useLanguage();
   const [openItems, setOpenItems] = useState<number[]>([]);
 
@@ -35,8 +42,8 @@ export function FaqAccordion({ items, headingLevel }: FaqAccordionProps) {
   return (
     <>
       <div className="mx-auto max-w-4xl text-center">
-        <Heading className={headingClass}>{t.faq.heading}</Heading>
-        <p className={descriptionClass}>{t.faq.description}</p>
+        <Heading className={headingClass}>{heading ?? t.faq.heading}</Heading>
+        <p className={descriptionClass}>{description ?? t.faq.description}</p>
       </div>
 
       <div className="mx-auto mt-14 max-w-6xl space-y-6">

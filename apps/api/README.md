@@ -47,6 +47,17 @@ pnpm dev:api
 | `FROM_EMAIL` | No | `noreply@rnbp.ca` | Sender email address |
 | `FROM_NAME` | No | `RNBP` | Sender name |
 | `FRONTEND_URL` | No | `http://localhost:5173` | Frontend URL (used for links in emails) |
+| `GOOGLE_CLIENT_ID` | No | — | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | No | — | Google OAuth client secret |
+| `MICROSOFT_CLIENT_ID` | No | — | Microsoft OAuth client ID |
+| `MICROSOFT_CLIENT_SECRET` | No | — | Microsoft OAuth client secret |
+| `FACEBOOK_CLIENT_ID` | No | — | Facebook OAuth app ID |
+| `FACEBOOK_CLIENT_SECRET` | No | — | Facebook OAuth app secret |
+| `R2_ACCOUNT_ID` | No | — | Cloudflare account ID for R2 storage |
+| `R2_ACCESS_KEY_ID` | No | — | R2 S3-compatible access key ID |
+| `R2_SECRET_ACCESS_KEY` | No | — | R2 S3-compatible secret access key |
+| `R2_BUCKET_NAME` | No | `rnbp-uploads` | R2 bucket used for item photos and documents |
+| `R2_PUBLIC_URL` | No | `https://pub-xxx.r2.dev` | Enabled public R2 domain used to serve uploaded files |
 
 ## Database
 
@@ -54,10 +65,10 @@ pnpm dev:api
 
 | Table | Description |
 |-------|-------------|
-| `users` | User accounts (email, hashed password, email verification) |
+| `users` | User accounts (email, hashed password, preferred language, optional civic address, email verification, OAuth links) |
 | `sessions` | Active sessions (refresh token hash, expiration) |
 | `items` | Registered items (nullable RNBP number, assigned by admin, status, owner) |
-| `item_photos` | Photos associated with items |
+| `item_photos` | Photos associated with items (`isPrimary` supported, oldest remaining photo is promoted on primary deletion) |
 | `item_documents` | Documents (receipts, warranties, invoices) |
 | `theft_reports` | Theft reports |
 | `insurance_requests` | Insurance requests |
@@ -95,9 +106,14 @@ All routes are prefixed with `/api`.
 |--------|------|------|------------|-------------|
 | POST | `/auth/register` | No | 5/min | Create an account |
 | POST | `/auth/login` | No | 5/min | Log in |
+| POST | `/auth/google` | No | 5/min | OAuth login with Google |
+| POST | `/auth/facebook` | No | 5/min | OAuth login with Facebook |
+| POST | `/auth/microsoft` | No | 5/min | OAuth login with Microsoft |
+| POST | `/auth/oauth-complete` | No | 5/min | Complete OAuth sign-in when the provider does not return an email |
 | POST | `/auth/refresh` | No | — | Refresh the access token |
 | POST | `/auth/logout` | Yes | — | Log out |
 | GET | `/auth/me` | Yes | — | User profile |
+| PATCH | `/auth/profile` | Yes | — | Update personal info, civic address, or preferred language |
 | POST | `/auth/forgot-password` | No | 3/min | Request a password reset |
 | POST | `/auth/reset-password` | No | — | Reset password |
 | POST | `/auth/verify-email` | No | — | Verify email |
@@ -112,7 +128,14 @@ All routes are prefixed with `/api`.
 | POST | `/items` | Verified | — | Register an item |
 | GET | `/items/:id` | Verified | — | Item detail (photos + documents) |
 | PATCH | `/items/:id` | Verified | — | Update an item |
+| POST | `/items/:id/archive` | Verified | — | Archive an item with a reason |
+| PATCH | `/items/:id/recover` | Verified | — | Mark a stolen item as recovered |
 | DELETE | `/items/:id` | Verified | — | Delete an item |
+| POST | `/items/:id/photos` | Verified | — | Upload item photos (max 5, first upload becomes primary) |
+| DELETE | `/items/:id/photos/:photoId` | Verified | — | Delete a photo and promote the oldest remaining photo to primary when needed |
+| POST | `/items/:id/documents` | Verified | — | Upload supporting documents (max 10) |
+| DELETE | `/items/:id/documents/:docId` | Verified | — | Delete a document |
+| GET | `/lookup` | No | 30/min | Public lookup by RNBP number or serial number |
 | GET | `/lookup/:rnbpNumber` | No | 30/min | Public lookup by RNBP number |
 
 ### Theft reports (`/reports`)
@@ -133,6 +156,8 @@ All routes are prefixed with `/api`.
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
+| GET | `/shop/products` | No | List active products |
+| GET | `/shop/status` | No | Check if the shop is available |
 | POST | `/shop/checkout` | Opt. | Create a Stripe Checkout session |
 | POST | `/shop/webhook` | No | Stripe webhook (payment confirmation) |
 

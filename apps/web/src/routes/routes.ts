@@ -8,6 +8,7 @@ export const ROUTES = {
   registry: "/registry",
   about: "/about",
   settings: "/settings",
+  profile: "/profile",
   privacy: "/privacy",
   terms: "/terms",
   dataDeletion: "/data-deletion",

@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { eq } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { z } from "zod";
 import sharp from "sharp";
 import { getDb } from "../db/client.js";
@@ -216,7 +216,31 @@ export async function uploadRoutes(app: FastifyInstance) {
         }
       }
 
-      await db.delete(itemPhotos).where(eq(itemPhotos.id, photoId));
+      await db.transaction(async (tx) => {
+        await tx.delete(itemPhotos).where(eq(itemPhotos.id, photoId));
+
+        if (photo.isPrimary) {
+          await tx
+            .update(itemPhotos)
+            .set({ isPrimary: false })
+            .where(eq(itemPhotos.itemId, id));
+
+          const [nextPrimary] = await tx
+            .select({ id: itemPhotos.id })
+            .from(itemPhotos)
+            .where(eq(itemPhotos.itemId, id))
+            .orderBy(asc(itemPhotos.createdAt))
+            .limit(1);
+
+          if (nextPrimary) {
+            await tx
+              .update(itemPhotos)
+              .set({ isPrimary: true })
+              .where(eq(itemPhotos.id, nextPrimary.id));
+          }
+        }
+      });
+
       return reply.status(204).send();
     },
   );

@@ -3,21 +3,17 @@ import { useLanguage } from "@/i18n/context";
 import { ROUTES } from "@/routes/routes";
 import { Button } from "@/components/ui/Button";
 import { ITEM_CATEGORIES } from "@rnbp/shared";
-
-type ItemData = {
-  name: string;
-  category: string;
-  brand: string;
-  model: string;
-  year: string;
-  serialNumber: string;
-  estimatedValue: string;
-  description: string;
-};
+import {
+  isKnownItemCategory,
+  isValidEstimatedValue,
+  isValidRegistrationYear,
+  isWholeNumberString,
+  type ItemFormData,
+} from "@/lib/register-item";
 
 type StepItemDetailsProps = {
-  data: ItemData;
-  onChange: (data: ItemData) => void;
+  data: ItemFormData;
+  onChange: (data: ItemFormData) => void;
   onNext: () => void;
   termsAccepted: boolean;
   onTermsChange: (v: boolean) => void;
@@ -39,16 +35,19 @@ export function StepItemDetails({
     label: categoryLabels[i] ?? slug,
   }));
 
-  function update(field: keyof ItemData, value: string) {
+  function update(field: keyof ItemFormData, value: string) {
     onChange({ ...data, [field]: value });
   }
 
-  const estimatedValueNum = data.estimatedValue ? Number(data.estimatedValue) : null;
-  const estimatedValueValid = estimatedValueNum === null || estimatedValueNum >= 1000;
+  const categoryValid = isKnownItemCategory(data.category);
+  const yearValid = isValidRegistrationYear(data.year);
+  const estimatedValueWholeNumber = isWholeNumberString(data.estimatedValue);
+  const estimatedValueValid = isValidEstimatedValue(data.estimatedValue);
 
   const canContinue =
     data.name.trim() !== "" &&
-    data.category !== "" &&
+    categoryValid &&
+    yearValid &&
     estimatedValueValid &&
     termsAccepted;
 
@@ -123,10 +122,15 @@ export function StepItemDetails({
             type="number"
             min="1900"
             max={maxYear}
+            step="1"
+            inputMode="numeric"
             value={data.year}
             onChange={(e) => update("year", e.target.value)}
             className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
           />
+          {!yearValid && (
+            <p className="mt-1 text-xs text-red-500">{reg.yearInvalidError}</p>
+          )}
         </div>
       </div>
 
@@ -154,11 +158,16 @@ export function StepItemDetails({
           id="reg-value"
           type="number"
           min="1000"
+          step="1"
+          inputMode="numeric"
           value={data.estimatedValue}
           onChange={(e) => update("estimatedValue", e.target.value)}
           className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
         />
-        {!estimatedValueValid && (
+        {!estimatedValueWholeNumber && (
+          <p className="mt-1 text-xs text-red-500">{reg.valueIntegerError}</p>
+        )}
+        {estimatedValueWholeNumber && !estimatedValueValid && (
           <p className="mt-1 text-xs text-red-500">{reg.valueMinError}</p>
         )}
       </div>

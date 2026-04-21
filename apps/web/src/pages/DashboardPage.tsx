@@ -8,7 +8,9 @@ import { getErrorMessage } from "@/lib/error-utils";
 import { getButtonClasses } from "@/lib/button-styles";
 import { Button } from "@/components/ui/Button";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
+import { AccountNav } from "@/components/layout/AccountNav";
 import { PromoCallout } from "@/components/ui/PromoCallout";
+import { ItemImage } from "@/components/ui/ItemImage";
 import { ROUTES } from "@/routes/routes";
 
 type Item = {
@@ -107,61 +109,63 @@ export function DashboardPage() {
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
       <title>{`${dash?.heading ?? "Dashboard"} | RNBP`}</title>
       <div className="section-shell py-16">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
-            {dash?.heading ?? "Dashboard"}
-          </h1>
-          <p className="mt-1 text-lg text-[var(--rcb-text-muted)]">
-            {dash?.welcome?.replace("{{name}}", user?.firstName ?? "") ??
-              `Welcome, ${user?.firstName}`}
-          </p>
-          {user?.clientNumber && (
-            <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
-              {dash?.clientNumber ?? "Client no."} : {user.clientNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
+              {dash?.heading ?? "Dashboard"}
+            </h1>
+            <p className="mt-1 text-lg text-[var(--rcb-text-muted)]">
+              {dash?.welcome?.replace("{{name}}", user?.firstName ?? "") ??
+                `Welcome, ${user?.firstName}`}
             </p>
-          )}
+            {user?.clientNumber && (
+              <p className="mt-1 text-sm text-[var(--rcb-text-muted)]">
+                {dash?.clientNumber ?? "Client no."} : {user.clientNumber.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3")}
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              to={ROUTES.registerItem}
+              className={getButtonClasses("primary", "sm", "w-[170px] whitespace-nowrap text-center")}
+            >
+              + {dash?.addItem ?? "Register an item"}
+            </Link>
+            <Link
+              to={ROUTES.reportTheft}
+              className={getButtonClasses("outline", "sm", "w-[170px] whitespace-nowrap text-center")}
+            >
+              {dash?.reportTheft ?? "Report a theft"}
+            </Link>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Link
-            to={ROUTES.registerItem}
-            className={getButtonClasses("primary", "sm", "w-[170px] whitespace-nowrap text-center")}
-          >
-            + {dash?.addItem ?? "Register an item"}
-          </Link>
-          <Link
-            to={ROUTES.reportTheft}
-            className={getButtonClasses("outline", "sm", "w-[170px] whitespace-nowrap text-center")}
-          >
-            {dash?.reportTheft ?? "Report a theft"}
-          </Link>
-        </div>
-      </div>
 
-      {loadError && (
-        <div className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-          {loadError}
-        </div>
-      )}
+        <AccountNav current="dashboard" className="mt-6" />
 
-      {loading ? (
-        <div className="mt-16 flex justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--rcb-primary)] border-t-transparent" />
-        </div>
-      ) : items.length === 0 && !loadError ? (
-        <div className="mt-10 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-10 text-center">
-          <p className="text-lg text-[var(--rcb-text-muted)]">
-            {dash?.noItems ?? "No items registered yet."}
-          </p>
-          <Link
-            to={ROUTES.registerItem}
-            className={`${getButtonClasses("primary", "lg")} mt-6`}
-          >
-            {dash?.addItem ?? "Register an item"}
-          </Link>
-        </div>
-      ) : (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {loadError && (
+          <div className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+            {loadError}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="mt-16 flex justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--rcb-primary)] border-t-transparent" />
+          </div>
+        ) : items.length === 0 && !loadError ? (
+          <div className="mt-10 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-10 text-center">
+            <p className="text-lg text-[var(--rcb-text-muted)]">
+              {dash?.noItems ?? "No items registered yet."}
+            </p>
+            <Link
+              to={ROUTES.registerItem}
+              className={`${getButtonClasses("primary", "lg")} mt-6`}
+            >
+              {dash?.addItem ?? "Register an item"}
+            </Link>
+          </div>
+        ) : (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <Link
               key={item.id}
@@ -170,21 +174,12 @@ export function DashboardPage() {
             >
               {/* Photo */}
               <div className="relative h-40 w-full bg-[var(--rcb-surface)]">
-                {item.primaryPhotoUrl ? (
-                  <img
-                    src={item.primaryPhotoUrl}
-                    alt={item.name}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center">
-                    <svg className="h-12 w-12 text-[var(--rcb-border)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-                      <rect x="3" y="3" width="18" height="18" rx="2" />
-                      <circle cx="8.5" cy="8.5" r="1.5" />
-                      <path d="M21 15l-5-5L5 21" />
-                    </svg>
-                  </div>
-                )}
+                <ItemImage
+                  src={item.primaryPhotoUrl}
+                  alt={item.name}
+                  className="h-full w-full object-cover"
+                  fallbackClassName="flex h-full w-full items-center justify-center bg-[var(--rcb-surface)]"
+                />
                 {/* Status badge */}
                 <span
                   className={`absolute top-2 right-2 rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[item.status] ?? "bg-gray-100 text-gray-800"}`}
@@ -207,8 +202,8 @@ export function DashboardPage() {
                     {item.rnbpNumber}
                   </p>
                 ) : (
-                  <p className="mt-2 text-xs italic text-[var(--rcb-text-muted)]">
-                    {dash?.awaitingNumber ?? "Awaiting RNBP number"}
+                  <p className="mt-2 text-xs text-[var(--rcb-text-muted)]">
+                    {dash?.noNumberHint ?? "Order stickers to receive this item's RNBP number."}
                   </p>
                 )}
 
@@ -236,51 +231,51 @@ export function DashboardPage() {
               </div>
             </Link>
           ))}
+          </div>
+        )}
+
+        {/* ── Promo callout ─────────────────────────────────── */}
+        <div className="mt-8">
+          <PromoCallout variant="dashboard" items={items} />
         </div>
-      )}
 
-      {/* ── Promo callout ─────────────────────────────────── */}
-      <div className="mt-8">
-        <PromoCallout variant="dashboard" items={items} />
-      </div>
-
-      {/* ── Archived items section ──────────────────────────── */}
-      {archivedItems.length > 0 && (
-        <div className="mt-12">
-          <button
-            type="button"
-            onClick={() => setShowArchived((v) => !v)}
-            className="cursor-pointer text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-primary)]"
-          >
-            {t.archive?.archivedItems ?? "Archived items"} ({archivedItems.length})
-            {showArchived ? " ▲" : " ▼"}
-          </button>
-          {showArchived && (
-            <div className="mt-4 space-y-3">
-              {archivedItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-4 opacity-60"
-                >
-                  <div>
-                    <h3 className="font-medium text-[var(--rcb-text-strong)]">
-                      {item.name}
-                    </h3>
-                    <p className="mt-0.5 text-xs text-[var(--rcb-text-muted)]">
-                      {t.archive?.archivedOn ?? "Archived on"}{" "}
-                      {item.archivedAt ? new Date(item.archivedAt).toLocaleDateString() : "—"}
-                      {" — "}
-                      {t.archive?.reason ?? "Reason"}: {item.archiveReason === "other"
-                        ? item.archiveReasonCustom
-                        : t.archive?.reasons?.[item.archiveReason ?? ""] ?? item.archiveReason}
-                    </p>
+        {/* ── Archived items section ──────────────────────────── */}
+        {archivedItems.length > 0 && (
+          <div className="mt-12">
+            <button
+              type="button"
+              onClick={() => setShowArchived((v) => !v)}
+              className="cursor-pointer text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-primary)]"
+            >
+              {t.archive?.archivedItems ?? "Archived items"} ({archivedItems.length})
+              {showArchived ? " ▲" : " ▼"}
+            </button>
+            {showArchived && (
+              <div className="mt-4 space-y-3">
+                {archivedItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--rcb-border)] bg-[var(--rcb-surface)] p-4 opacity-60"
+                  >
+                    <div>
+                      <h3 className="font-medium text-[var(--rcb-text-strong)]">
+                        {item.name}
+                      </h3>
+                      <p className="mt-0.5 text-xs text-[var(--rcb-text-muted)]">
+                        {t.archive?.archivedOn ?? "Archived on"}{" "}
+                        {item.archivedAt ? new Date(item.archivedAt).toLocaleDateString() : "—"}
+                        {" — "}
+                        {t.archive?.reason ?? "Reason"}: {item.archiveReason === "other"
+                          ? item.archiveReasonCustom
+                          : t.archive?.reasons?.[item.archiveReason ?? ""] ?? item.archiveReason}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Modal — item already in cart */}

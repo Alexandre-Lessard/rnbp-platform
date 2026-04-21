@@ -70,13 +70,34 @@ export function LookupPage() {
           onSubmit={handleSubmit}
           className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
         >
-          <input
-            type="text"
-            placeholder={t.lookup?.inputPlaceholder ?? "Serial number or unique identifier"}
-            value={query}
-            onChange={(e) => setQuery(e.target.value.toUpperCase())}
-            className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-center text-lg tracking-wider text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none sm:max-w-xs"
-          />
+          <div className="w-full sm:max-w-xs">
+            <label htmlFor="lookup-query" className="sr-only">
+              {t.lookup?.inputLabel ?? "Identifier to verify"}
+            </label>
+            <div className="relative">
+              <svg
+                className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--rcb-text-muted)]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+              <input
+                id="lookup-query"
+                type="text"
+                placeholder=""
+                value={query}
+                onChange={(e) => setQuery(e.target.value.toUpperCase())}
+                className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] pl-10 pr-4 text-left text-lg tracking-wider text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
+              />
+            </div>
+          </div>
           <Button type="submit" disabled={loading} className="cursor-pointer disabled:opacity-50">
             {loading
               ? (t.lookup?.searching ?? "Searching...")
@@ -84,7 +105,7 @@ export function LookupPage() {
           </Button>
         </form>
         <p className="mt-3 text-sm text-[var(--rcb-text-muted)]">
-          {t.lookup?.inputHint ?? "RNBP, serial number, IMEI or other identifier"}
+          {t.lookup?.inputHint ?? "RNBP number, serial number or other compatible identifier"}
         </p>
 
         {error && (

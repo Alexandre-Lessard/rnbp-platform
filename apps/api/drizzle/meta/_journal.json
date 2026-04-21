@@ -64,6 +64,13 @@
       "when": 1774568866184,
       "tag": "0008_wide_shaman",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1776794598588,
+      "tag": "0009_bored_mojo",
+      "breakpoints": true
     }
   ]
 }

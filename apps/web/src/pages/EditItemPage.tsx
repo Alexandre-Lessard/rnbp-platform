@@ -9,6 +9,7 @@ import { getButtonClasses } from "@/lib/button-styles";
 import { Modal } from "@/components/ui/Modal";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { PromoCallout } from "@/components/ui/PromoCallout";
+import { ItemImage } from "@/components/ui/ItemImage";
 import { ITEM_CATEGORIES } from "@rnbp/shared";
 import type { ItemWithFiles } from "@rnbp/shared";
 import { ROUTES } from "@/routes/routes";
@@ -446,10 +447,12 @@ export function EditItemPage() {
               <div className="mt-3 flex flex-wrap gap-3">
                 {photos.map((photo) => (
                   <div key={photo.id} className="group relative">
-                    <img
+                    <ItemImage
                       src={photo.url}
-                      alt=""
+                      alt={form.name || reg?.photosHeading || "Item photo"}
                       className="h-24 w-24 rounded-lg border border-[var(--rcb-border)] object-cover"
+                      fallbackClassName="flex h-24 w-24 items-center justify-center rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-surface)]"
+                      iconClassName="h-8 w-8 text-[var(--rcb-border)]"
                     />
                     <button
                       type="button"

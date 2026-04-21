@@ -12,20 +12,7 @@ import {
   setAccessToken,
   healthCheck,
 } from "./api-client";
-
-type User = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone: string | null;
-  emailVerified: boolean;
-  isAdmin: boolean;
-  clientNumber: string | null;
-  preferredLanguage: "fr" | "en";
-  termsAcceptedAt: string | null;
-  createdAt: string;
-};
+import type { User } from "@rnbp/shared";
 
 type AuthState = {
   user: User | null;

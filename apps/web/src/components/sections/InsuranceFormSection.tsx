@@ -1,12 +1,46 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
-import { INSURERS, INSURER_EMAILS } from "@rnbp/shared";
+import { FaqAccordion } from "@/components/ui/FaqAccordion";
+import {
+  INSURERS,
+  INSURER_EMAILS,
+  type InsurerId,
+} from "@rnbp/shared";
+import avivaLogo from "@/assets/insurers/aviva.png";
+import belairdirectLogo from "@/assets/insurers/belairdirect.png";
+import benevaLogo from "@/assets/insurers/beneva.png";
+import intactLogo from "@/assets/insurers/intact.png";
+import promutuelLogo from "@/assets/insurers/promutuel.png";
+import tdLogo from "@/assets/insurers/td.jpg";
+
+const FEATURED_INSURERS = [
+  "intact",
+  "aviva",
+  "beneva",
+  "belairdirect",
+  "desjardins",
+  "td",
+  "wawanesa",
+  "promutuel",
+  "economical",
+  "cooperators",
+] as const satisfies readonly InsurerId[];
+
+const FEATURED_INSURER_LOGOS: Partial<Record<InsurerId, string>> = {
+  intact: intactLogo,
+  aviva: avivaLogo,
+  beneva: benevaLogo,
+  belairdirect: belairdirectLogo,
+  td: tdLogo,
+  promutuel: promutuelLogo,
+};
 
 export function InsuranceFormSection() {
   const { t, locale } = useLanguage();
   const [selectedInsurerId, setSelectedInsurerId] = useState("");
   const [copied, setCopied] = useState(false);
+  const selectRef = useRef<HTMLSelectElement>(null);
 
   const ins = t.insurance;
   if (!ins) return null;
@@ -47,6 +81,16 @@ export function InsuranceFormSection() {
     }
   }
 
+  function handleSelectInsurer(insurerId: string) {
+    setSelectedInsurerId(insurerId);
+    setCopied(false);
+  }
+
+  function handleOpenMore() {
+    selectRef.current?.focus();
+    selectRef.current?.showPicker?.();
+  }
+
   return (
     <section className="bg-[var(--rcb-bg)]">
       <div className="section-shell py-16 sm:py-20">
@@ -74,6 +118,62 @@ export function InsuranceFormSection() {
         </div>
 
         <div className="mx-auto mt-12 max-w-xl">
+          <div className="mb-8">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {FEATURED_INSURERS.map((insurerId) => {
+                const insurer = INSURERS.find((entry) => entry.id === insurerId);
+                if (!insurer) return null;
+
+                const logo = FEATURED_INSURER_LOGOS[insurerId];
+                const isSelected = selectedInsurerId === insurerId;
+
+                return (
+                  <button
+                    key={insurerId}
+                    type="button"
+                    onClick={() => handleSelectInsurer(insurerId)}
+                    className={`flex min-h-24 items-center justify-center rounded-2xl border px-4 py-3 text-center transition-colors ${
+                      isSelected
+                        ? "border-[var(--rcb-primary)] bg-white shadow-sm"
+                        : "border-[var(--rcb-border)] bg-white hover:border-[var(--rcb-primary)]"
+                    }`}
+                  >
+                    {logo ? (
+                      <img
+                        src={logo}
+                        alt={insurer[locale]}
+                        className="h-10 w-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-sm font-semibold text-[var(--rcb-text-strong)]">
+                        {insurer[locale]}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+
+              <button
+                type="button"
+                onClick={handleOpenMore}
+                className="flex min-h-24 items-center justify-center rounded-2xl border border-dashed border-[var(--rcb-border)] bg-white px-4 py-3 text-center transition-colors hover:border-[var(--rcb-primary)]"
+              >
+                <span className="text-sm font-semibold text-[var(--rcb-text-strong)]">
+                  {ins.moreButton}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <FaqAccordion
+              items={ins.faq.items}
+              headingLevel="h2"
+              heading={ins.faq.heading}
+              description={ins.faq.description}
+            />
+          </div>
+
           <label
             htmlFor="insurer-select"
             className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
@@ -82,10 +182,10 @@ export function InsuranceFormSection() {
           </label>
           <select
             id="insurer-select"
+            ref={selectRef}
             value={selectedInsurerId}
             onChange={(e) => {
-              setSelectedInsurerId(e.target.value);
-              setCopied(false);
+              handleSelectInsurer(e.target.value);
             }}
             className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
           >

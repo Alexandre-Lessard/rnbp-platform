@@ -27,6 +27,7 @@ export default [
   // Protected routes (require auth)
   layout("layouts/protected.tsx", [
     route("dashboard", "pages/DashboardPage.tsx"),
+    route("profile", "pages/ProfilePage.tsx"),
     route("settings", "pages/SettingsPage.tsx"),
     route("items/:id", "pages/ItemDetailPage.tsx"),
     route("edit/:id", "pages/EditItemPage.tsx"),

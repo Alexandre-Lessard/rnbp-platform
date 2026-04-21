@@ -37,7 +37,7 @@ const en: SiteContent = {
     },
     lookup: {
       title: "Verify an Item | NRPP",
-      description: "Enter a RNBP number to check the status of a registered item.",
+      description: "Enter an RNBP number, serial number, or another compatible identifier to check the status of a registered item.",
     },
     login: {
       title: "Login | NRPP",
@@ -59,6 +59,10 @@ const en: SiteContent = {
       title: "Order Confirmed | NRPP",
       description: "Your order has been successfully confirmed.",
     },
+    profile: {
+      title: "My Profile | NRPP",
+      description: "Manage your personal information and civic address.",
+    },
   },
   nav: {
     items: [
@@ -72,6 +76,7 @@ const en: SiteContent = {
     login: "Login",
     logout: "Logout",
     myAccount: "My Account",
+    myProfile: "My Profile",
   },
   hero: {
     subtitleLine1: "Your belongings deserve",
@@ -444,6 +449,7 @@ const en: SiteContent = {
     alreadyInCartCancel: "No thanks",
     alreadyInCartViewCart: "View cart",
     awaitingNumber: "Awaiting assignment",
+    noNumberHint: "Order stickers to receive this item's RNBP number.",
     clientNumber: "Client no.",
     editItem: "Edit",
   },
@@ -469,6 +475,22 @@ const en: SiteContent = {
     saveButton: "Save",
     saving: "Saving…",
     successMessage: "Saved!",
+  },
+  profile: {
+    heading: "My Profile",
+    description: "Manage your personal information and civic address.",
+    personalInfoHeading: "Personal information",
+    addressHeading: "Civic address",
+    addressDescription: "Address fields are optional and can be used to complete your profile.",
+    address1Label: "Address line 1",
+    address2Label: "Address line 2",
+    cityLabel: "City",
+    provinceLabel: "Province",
+    postalCodeLabel: "Postal code",
+    saveButton: "Save",
+    saving: "Saving…",
+    successMessage: "Profile saved!",
+    backToDashboard: "Back to dashboard",
   },
   archive: {
     button: "Archive this item",
@@ -511,6 +533,8 @@ const en: SiteContent = {
     serialLabel: "Serial number (original)",
     serialExplanation: "If your item has a manufacturer serial number, enter it here.",
     valueLabel: "Estimated value ($)",
+    yearInvalidError: "Enter a valid year with no decimals.",
+    valueIntegerError: "Enter a whole-dollar amount with no decimals.",
     valueMinError: "Minimum value is $1,000",
     descriptionLabel: "Description and distinguishing features",
     descriptionHelper: "Describe any distinguishing features that can identify your item: colour, accessories, modifications, signs of wear, etc.",
@@ -524,6 +548,7 @@ const en: SiteContent = {
     documentsDescription: "Proof of purchase, certificate of authenticity (optional).",
     addDocumentButton: "+ Add a document",
     confirmButton: "Confirm registration",
+    submitting: "Saving...",
     successHeading: "Item registered successfully!",
     successDescription: "Your item has been registered in the NRPP.",
     successNoNumber: "Order stickers from the shop to receive your unique RNBP number.",
@@ -595,8 +620,9 @@ const en: SiteContent = {
   lookup: {
     heading: "Verify an item",
     description: "Check the status of a registered item.",
+    inputLabel: "Item identifier to verify",
     inputPlaceholder: "Unique identifier",
-    inputHint: "RNBP number, serial number, IMEI or other identifier",
+    inputHint: "RNBP number, serial number or another compatible identifier",
     searchButton: "Verify",
     searching: "Searching...",
     foundMessage: "Item found in the registry",
@@ -700,6 +726,7 @@ const en: SiteContent = {
     heading: "Get a discount on your insurance",
     promo: "Register your belongings and get a discount on your home insurance",
     description: "Most insurers offer a discount to NRPP members. Select your insurer and contact them to check if you're eligible.",
+    moreButton: "And more",
     selectLabel: "Your insurer",
     selectPlaceholder: "Select your insurer",
     messageLabel: "Pre-filled message",
@@ -708,6 +735,16 @@ const en: SiteContent = {
     copiedToast: "Message copied! Send it to your insurer.",
     emailSubject: "NRPP Discount Request",
     emailButton: "Send by email",
+    faq: {
+      heading: "Insurer FAQ",
+      description: "A quick answer to one of the most common questions about this program.",
+      items: [
+        {
+          question: "Who funds the NRPP?",
+          answer: "The NRPP is funded through its commercial activities, partnerships, and complementary services built around the protection, identification, and recovery of personal property. Registering an item in the registry remains free for citizens.",
+        },
+      ],
+    },
   },
   about: {
     heading: "About the NRPP",
@@ -734,11 +771,11 @@ const en: SiteContent = {
     privacyContent: [
       {
         title: "1. Collection of Personal Information",
-        body: "The NRPP collects only the information necessary to create your account and register your belongings: name, email address, phone number (optional), and descriptive information about your property (category, brand, model, serial number, photos). This information is provided voluntarily during registration.",
+        body: "The NRPP collects only the information necessary to create your account and register your belongings: name, email address, phone number (optional), civic address (optional), and descriptive information about your property (category, brand, model, serial number, photos). This information is provided voluntarily during registration or when updating your profile.",
       },
       {
         title: "2. Use of Information",
-        body: "Your information is used to: manage your account and verify your identity; register and identify your belongings in the registry; facilitate recovery of lost or stolen property; send you account-related communications (email verification, password reset); improve our services. We do not sell or rent your personal information to third parties.",
+        body: "Your information is used to: manage your account and verify your identity; register and identify your belongings in the registry; facilitate recovery of lost or stolen property; send you account-related communications (email verification, password reset); keep your user profile up to date; improve our services. We do not sell or rent your personal information to third parties.",
       },
       {
         title: "3. Data Protection",

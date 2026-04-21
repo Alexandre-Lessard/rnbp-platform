@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { eq, and, isNull, or, sql, inArray } from "drizzle-orm";
+import { eq, and, isNull, or, sql, inArray, asc } from "drizzle-orm";
 import { z } from "zod";
 import { createItemSchema, updateItemSchema, archiveItemSchema } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
@@ -8,6 +8,7 @@ import { requireVerifiedEmail } from "../middleware/auth.js";
 import { INVALID_ID, ITEM_NOT_FOUND, ITEM_ALREADY_STOLEN, ITEM_NOT_STOLEN } from "@rnbp/shared";
 import { AppError, forbidden } from "../utils/errors.js";
 import { isR2Configured, deleteFromR2, extractR2Key } from "../utils/r2.js";
+import { pickPrimaryPhotoUrl, sortPhotosForDisplay } from "../utils/item-photos.js";
 
 const uuidSchema = z.string().uuid("Invalid identifier");
 
@@ -35,20 +36,26 @@ export async function itemRoutes(app: FastifyInstance) {
       const itemIds = userItems.map((i) => i.id);
       const photos = itemIds.length > 0
         ? await db
-            .select({ itemId: itemPhotos.itemId, url: itemPhotos.url })
+            .select({
+              itemId: itemPhotos.itemId,
+              url: itemPhotos.url,
+              isPrimary: itemPhotos.isPrimary,
+            })
             .from(itemPhotos)
             .where(inArray(itemPhotos.itemId, itemIds))
-            .orderBy(itemPhotos.createdAt)
+            .orderBy(asc(itemPhotos.createdAt))
         : [];
 
-      const photoByItem = new Map<string, string>();
+      const photosByItem = new Map<string, Array<{ url: string; isPrimary: boolean }>>();
       for (const p of photos) {
-        if (!photoByItem.has(p.itemId)) photoByItem.set(p.itemId, p.url);
+        const current = photosByItem.get(p.itemId) ?? [];
+        current.push({ url: p.url, isPrimary: p.isPrimary });
+        photosByItem.set(p.itemId, current);
       }
 
       const result = userItems.map((item) => ({
         ...item,
-        primaryPhotoUrl: photoByItem.get(item.id) ?? null,
+        primaryPhotoUrl: pickPrimaryPhotoUrl(photosByItem.get(item.id) ?? []),
       }));
 
       return reply.send({ items: result });
@@ -105,15 +112,19 @@ export async function itemRoutes(app: FastifyInstance) {
       if (!item) throw new AppError(404, ITEM_NOT_FOUND, "Item not found");
       if (item.ownerId !== request.userId!) throw forbidden();
 
-      const photos = await db
+      const rawPhotos = await db
         .select()
         .from(itemPhotos)
-        .where(eq(itemPhotos.itemId, id));
+        .where(eq(itemPhotos.itemId, id))
+        .orderBy(asc(itemPhotos.createdAt));
+
+      const photos = sortPhotosForDisplay(rawPhotos);
 
       const documents = await db
         .select()
         .from(itemDocuments)
-        .where(eq(itemDocuments.itemId, id));
+        .where(eq(itemDocuments.itemId, id))
+        .orderBy(asc(itemDocuments.createdAt));
 
       return reply.send({ item: { ...item, photos, documents } });
     },

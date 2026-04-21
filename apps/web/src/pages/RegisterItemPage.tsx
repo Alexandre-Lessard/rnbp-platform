@@ -11,17 +11,12 @@ import { StepDocuments } from "@/components/registration/StepDocuments";
 import { StepStickerUpsell } from "@/components/registration/StepStickerUpsell";
 import { StepAccount } from "@/components/registration/StepAccount";
 import { RegistrationConfirmation } from "@/components/registration/RegistrationConfirmation";
-
-type ItemData = {
-  name: string;
-  category: string;
-  brand: string;
-  model: string;
-  year: string;
-  serialNumber: string;
-  estimatedValue: string;
-  description: string;
-};
+import { useObjectUrls } from "@/lib/useObjectUrls";
+import {
+  buildCreateItemInput,
+  sanitizeItemDraft,
+  type ItemFormData,
+} from "@/lib/register-item";
 
 type AccountData = {
   email: string;
@@ -33,16 +28,36 @@ type AccountData = {
 
 const STORAGE_KEY = "rnbp_registration_draft";
 
-function loadDraft(): { item: ItemData; account: AccountData; termsAccepted: boolean } | null {
+function loadDraft(): { item: ItemFormData; account: AccountData; termsAccepted: boolean } | null {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) {
+      return null;
+    }
+
+    const parsed = JSON.parse(raw) as {
+      item?: unknown;
+      account?: Partial<AccountData>;
+      termsAccepted?: boolean;
+    };
+
+    return {
+      item: sanitizeItemDraft(parsed.item, emptyItem),
+      account: {
+        email: typeof parsed.account?.email === "string" ? parsed.account.email : emptyAccount.email,
+        password: typeof parsed.account?.password === "string" ? parsed.account.password : emptyAccount.password,
+        firstName: typeof parsed.account?.firstName === "string" ? parsed.account.firstName : emptyAccount.firstName,
+        lastName: typeof parsed.account?.lastName === "string" ? parsed.account.lastName : emptyAccount.lastName,
+        phone: typeof parsed.account?.phone === "string" ? parsed.account.phone : emptyAccount.phone,
+      },
+      termsAccepted: parsed.termsAccepted === true,
+    };
   } catch {
     return null;
   }
 }
 
-function saveDraft(item: ItemData, account: AccountData, termsAccepted: boolean) {
+function saveDraft(item: ItemFormData, account: AccountData, termsAccepted: boolean) {
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ item, account, termsAccepted }));
 }
 
@@ -50,7 +65,7 @@ function clearDraft() {
   sessionStorage.removeItem(STORAGE_KEY);
 }
 
-const emptyItem: ItemData = {
+const emptyItem: ItemFormData = {
   name: "",
   category: "",
   brand: "",
@@ -77,7 +92,7 @@ export function RegisterItemPage() {
 
   const draft = loadDraft();
   const [step, setStep] = useState(1);
-  const [itemData, setItemData] = useState<ItemData>(draft?.item ?? emptyItem);
+  const [itemData, setItemData] = useState<ItemFormData>(draft?.item ?? emptyItem);
   const [accountData, setAccountData] = useState<AccountData>(draft?.account ?? emptyAccount);
   const [termsAccepted, setTermsAccepted] = useState(draft?.termsAccepted ?? false);
   const [photos, setPhotos] = useState<File[]>([]);
@@ -86,6 +101,7 @@ export function RegisterItemPage() {
   const [error, setError] = useState("");
   const [backendDown, setBackendDown] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const photoUrls = useObjectUrls(photos);
 
   // Logged in = 3 steps, logged out = 4
   const totalSteps = user ? 3 : 4;
@@ -102,19 +118,6 @@ export function RegisterItemPage() {
     }, 500);
     return () => clearTimeout(timeout);
   }, [itemData, accountData, termsAccepted]);
-
-  const buildItemBody = useCallback((): Record<string, unknown> => ({
-    name: itemData.name,
-    category: itemData.category,
-    description: itemData.description || undefined,
-    brand: itemData.brand || undefined,
-    model: itemData.model || undefined,
-    year: itemData.year ? Number(itemData.year) : undefined,
-    serialNumber: itemData.serialNumber || undefined,
-    estimatedValue: itemData.estimatedValue
-      ? Number(itemData.estimatedValue)
-      : undefined,
-  }), [itemData]);
 
   const uploadFiles = useCallback(async (itemId: string) => {
     let uploadFailed = false;
@@ -138,10 +141,15 @@ export function RegisterItemPage() {
     setError("");
 
     try {
-      const body = buildItemBody();
+      const body = buildCreateItemInput(itemData);
+      if (body.error) {
+        setError(body.error);
+        return;
+      }
+
       const res = await apiRequest<{ item: { id: string } }>(
         "/items",
-        { method: "POST", body },
+        { method: "POST", body: body.data },
       );
 
       await uploadFiles(res.item.id);
@@ -157,13 +165,19 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [buildItemBody, uploadFiles, totalSteps, itemData.name, updateItemId, t]);
+  }, [itemData, uploadFiles, totalSteps, updateItemId, t]);
 
   const handleSubmitWithAccount = useCallback(async () => {
     setLoading(true);
     setError("");
 
     try {
+      const item = buildCreateItemInput(itemData);
+      if (item.error) {
+        setError(item.error);
+        return;
+      }
+
       const res = await apiRequest<{
         item: { id: string };
         accessToken: string;
@@ -178,7 +192,7 @@ export function RegisterItemPage() {
             lastName: accountData.lastName,
             phone: accountData.phone || undefined,
           },
-          item: buildItemBody(),
+          item: item.data,
         },
       });
 
@@ -199,7 +213,7 @@ export function RegisterItemPage() {
     } finally {
       setLoading(false);
     }
-  }, [accountData, buildItemBody, uploadFiles, totalSteps, refreshAuth, itemData.name, updateItemId, t]);
+  }, [accountData, itemData, uploadFiles, totalSteps, refreshAuth, updateItemId, t]);
 
   if (backendDown) {
     return (
@@ -212,72 +226,79 @@ export function RegisterItemPage() {
   // Confirmation screen
   if (completed) {
     return (
-      <section className="section-shell py-16">
-        <RegistrationConfirmation totalSteps={totalSteps} />
+      <section className="bg-[var(--rcb-white)] py-16">
+        <div className="section-shell">
+          <RegistrationConfirmation totalSteps={totalSteps} />
+        </div>
       </section>
     );
   }
 
   return (
-    <section className="section-shell py-16">
-      <title>{`${reg?.heading ?? "Register an item"} | RNBP`}</title>
-      <h1 className="text-center text-3xl font-bold text-[var(--rcb-text-strong)]">
-        {reg?.heading ?? "Register an item"}
-      </h1>
-      <p className="mt-2 text-center text-lg text-[var(--rcb-text-muted)]">
-        {reg?.description ?? ""}
-      </p>
+    <section className="bg-[var(--rcb-white)] py-16">
+      <div className="section-shell">
+        <title>{`${reg?.heading ?? "Register an item"} | RNBP`}</title>
+        <h1 className="text-center text-3xl font-bold text-[var(--rcb-text-strong)]">
+          {reg?.heading ?? "Register an item"}
+        </h1>
+        <p className="mt-2 text-center text-lg text-[var(--rcb-text-muted)]">
+          {reg?.description ?? ""}
+        </p>
 
-      <div className="mt-10">
-        <StepIndicator currentStep={step} totalSteps={totalSteps} />
-      </div>
+        <div className="mt-10">
+          <StepIndicator currentStep={step} totalSteps={totalSteps} />
+        </div>
 
-      <div className="mt-12">
-        {step === 1 && (
-          <StepItemDetails
-            data={itemData}
-            onChange={setItemData}
-            onNext={() => setStep(2)}
-            termsAccepted={termsAccepted}
-            onTermsChange={setTermsAccepted}
-          />
-        )}
+        <div className="mt-12">
+          {step === 1 && (
+            <StepItemDetails
+              data={itemData}
+              onChange={setItemData}
+              onNext={() => setStep(2)}
+              termsAccepted={termsAccepted}
+              onTermsChange={setTermsAccepted}
+            />
+          )}
 
-        {step === 2 && (
-          <StepDocuments
-            photos={photos}
-            documents={documents}
-            onPhotosChange={setPhotos}
-            onDocumentsChange={setDocuments}
-            onNext={() => setStep(3)}
-            onBack={() => setStep(1)}
-          />
-        )}
+          {step === 2 && (
+            <StepDocuments
+              photos={photos}
+              photoUrls={photoUrls}
+              documents={documents}
+              onPhotosChange={setPhotos}
+              onDocumentsChange={setDocuments}
+              onNext={() => setStep(3)}
+              onBack={() => setStep(1)}
+            />
+          )}
 
-        {step === 3 && (
-          <StepStickerUpsell
-            itemName={itemData.name}
-            onNext={() => {
-              if (user) {
-                handleSubmitLoggedIn();
-              } else {
-                setStep(4);
-              }
-            }}
-            onBack={() => setStep(2)}
-          />
-        )}
+          {step === 3 && (
+            <StepStickerUpsell
+              itemName={itemData.name}
+              loading={loading}
+              error={error}
+              onNext={() => {
+                if (user) {
+                  handleSubmitLoggedIn();
+                } else {
+                  setStep(4);
+                }
+              }}
+              onBack={() => setStep(2)}
+            />
+          )}
 
-        {step === 4 && !user && (
-          <StepAccount
-            data={accountData}
-            onChange={setAccountData}
-            onSubmit={handleSubmitWithAccount}
-            onBack={() => setStep(3)}
-            loading={loading}
-            error={error}
-          />
-        )}
+          {step === 4 && !user && (
+            <StepAccount
+              data={accountData}
+              onChange={setAccountData}
+              onSubmit={handleSubmitWithAccount}
+              onBack={() => setStep(3)}
+              loading={loading}
+              error={error}
+            />
+          )}
+        </div>
       </div>
     </section>
   );

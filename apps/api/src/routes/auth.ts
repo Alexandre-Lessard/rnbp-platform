@@ -5,6 +5,8 @@ import {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  updateProfileSchema,
+  type UpdateProfileInput,
 } from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { users, sessions } from "../db/schema.js";
@@ -45,6 +47,24 @@ import {
 } from "../utils/email.js";
 import { getConfig } from "../config.js";
 import { TOKEN_EXPIRY } from "../constants/time.js";
+import { toUserDto, userSelect } from "../utils/user-dto.js";
+
+function normalizeOptionalText(value: string | undefined): string | null | undefined {
+  if (value === undefined) return undefined;
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
+function normalizeCountry(value: string | undefined): string | null | undefined {
+  const normalized = normalizeOptionalText(value);
+  if (normalized === undefined || normalized === null) return normalized;
+  return normalized.toUpperCase();
+}
+
+function hasAddressValue(body: UpdateProfileInput): boolean {
+  return [body.address1, body.address2, body.city, body.province, body.postalCode]
+    .some((value) => typeof value === "string" && value.trim() !== "");
+}
 
 export async function authRoutes(app: FastifyInstance) {
   // ── Register ───────────────────────────────────────────────────────
@@ -82,19 +102,7 @@ export async function authRoutes(app: FastifyInstance) {
           preferredLanguage: body.preferredLanguage ?? "fr",
           termsAcceptedAt: new Date(),
         })
-        .returning({
-          id: users.id,
-          email: users.email,
-          firstName: users.firstName,
-          lastName: users.lastName,
-          phone: users.phone,
-          emailVerified: users.emailVerified,
-          isAdmin: users.isAdmin,
-          clientNumber: users.clientNumber,
-          preferredLanguage: users.preferredLanguage,
-          termsAcceptedAt: users.termsAcceptedAt,
-          createdAt: users.createdAt,
-        });
+        .returning(userSelect);
 
       return created;
     });
@@ -119,19 +127,7 @@ export async function authRoutes(app: FastifyInstance) {
     });
 
     return reply.status(201).send({
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: user.phone,
-        emailVerified: user.emailVerified,
-        isAdmin: user.isAdmin,
-        clientNumber: user.clientNumber,
-        preferredLanguage: user.preferredLanguage,
-        termsAcceptedAt: user.termsAcceptedAt?.toISOString() ?? null,
-        createdAt: user.createdAt.toISOString(),
-      },
+      user: toUserDto(user),
       accessToken,
       refreshToken,
     });
@@ -175,19 +171,7 @@ export async function authRoutes(app: FastifyInstance) {
     });
 
     return reply.send({
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: user.phone,
-        emailVerified: user.emailVerified,
-        isAdmin: user.isAdmin,
-        clientNumber: user.clientNumber,
-        preferredLanguage: user.preferredLanguage,
-        termsAcceptedAt: user.termsAcceptedAt?.toISOString() ?? null,
-        createdAt: user.createdAt.toISOString(),
-      },
+      user: toUserDto(user),
       accessToken,
       refreshToken,
     });
@@ -299,19 +283,7 @@ export async function authRoutes(app: FastifyInstance) {
     async (request, reply) => {
       const db = getDb();
       const [user] = await db
-        .select({
-          id: users.id,
-          email: users.email,
-          firstName: users.firstName,
-          lastName: users.lastName,
-          phone: users.phone,
-          emailVerified: users.emailVerified,
-          isAdmin: users.isAdmin,
-          clientNumber: users.clientNumber,
-          preferredLanguage: users.preferredLanguage,
-          termsAcceptedAt: users.termsAcceptedAt,
-          createdAt: users.createdAt,
-        })
+        .select(userSelect)
         .from(users)
         .where(eq(users.id, request.userId!))
         .limit(1);
@@ -320,13 +292,7 @@ export async function authRoutes(app: FastifyInstance) {
         throw new AppError(401, USER_NOT_FOUND, "User not found");
       }
 
-      return reply.send({
-        user: {
-          ...user,
-          termsAcceptedAt: user.termsAcceptedAt?.toISOString() ?? null,
-          createdAt: user.createdAt.toISOString(),
-        },
-      });
+      return reply.send({ user: toUserDto(user) });
     },
   );
 
@@ -336,12 +302,40 @@ export async function authRoutes(app: FastifyInstance) {
     "/auth/profile",
     { preHandler: requireAuth },
     async (request, reply) => {
-      const body = request.body as { preferredLanguage?: string };
+      const body = updateProfileSchema.parse(request.body);
       const db = getDb();
 
       const updates: Record<string, unknown> = { updatedAt: new Date() };
 
-      if (body.preferredLanguage && ["fr", "en"].includes(body.preferredLanguage)) {
+      if (body.firstName !== undefined) updates.firstName = body.firstName.trim();
+      if (body.lastName !== undefined) updates.lastName = body.lastName.trim();
+
+      const normalizedPhone = normalizeOptionalText(body.phone);
+      if (normalizedPhone !== undefined) updates.phone = normalizedPhone;
+
+      const normalizedAddress1 = normalizeOptionalText(body.address1);
+      if (normalizedAddress1 !== undefined) updates.address1 = normalizedAddress1;
+
+      const normalizedAddress2 = normalizeOptionalText(body.address2);
+      if (normalizedAddress2 !== undefined) updates.address2 = normalizedAddress2;
+
+      const normalizedCity = normalizeOptionalText(body.city);
+      if (normalizedCity !== undefined) updates.city = normalizedCity;
+
+      const normalizedProvince = normalizeOptionalText(body.province);
+      if (normalizedProvince !== undefined) updates.province = normalizedProvince;
+
+      const normalizedPostalCode = normalizeOptionalText(body.postalCode);
+      if (normalizedPostalCode !== undefined) updates.postalCode = normalizedPostalCode;
+
+      const normalizedCountry = normalizeCountry(body.country);
+      if (normalizedCountry !== undefined) {
+        updates.country = normalizedCountry;
+      } else if (hasAddressValue(body)) {
+        updates.country = "CA";
+      }
+
+      if (body.preferredLanguage) {
         updates.preferredLanguage = body.preferredLanguage;
       }
 

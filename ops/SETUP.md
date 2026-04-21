@@ -177,6 +177,8 @@ Edit `/opt/rnbp/.env` with production values:
 | `BREVO_API_KEY` | *(Brevo key if emails are enabled)* |
 | `GOOGLE_CLIENT_ID` | *(Google OAuth client ID)* |
 | `GOOGLE_CLIENT_SECRET` | *(Google OAuth client secret)* |
+| `MICROSOFT_CLIENT_ID` | *(Microsoft OAuth client ID)* |
+| `MICROSOFT_CLIENT_SECRET` | *(Microsoft OAuth client secret)* |
 | `FACEBOOK_CLIENT_ID` | *(Facebook OAuth app ID)* |
 | `FACEBOOK_CLIENT_SECRET` | *(Facebook OAuth app secret)* |
 | `R2_ACCOUNT_ID` | *(Cloudflare account ID)* |
@@ -186,6 +188,8 @@ Edit `/opt/rnbp/.env` with production values:
 | `R2_PUBLIC_URL` | *(R2 public bucket URL, e.g. `https://pub-xxx.r2.dev`)* |
 | `STRIPE_SECRET_KEY` | *(Stripe secret key)* |
 | `STRIPE_WEBHOOK_SECRET` | *(Stripe webhook signing secret)* |
+
+`R2_PUBLIC_URL` must point to an enabled public domain for the bucket. If the managed `r2.dev` domain or custom public domain is disabled, uploads will still be written to R2 but browsers will receive `401` when requesting the files.
 
 ### Generate JWT Ed25519 keys
 

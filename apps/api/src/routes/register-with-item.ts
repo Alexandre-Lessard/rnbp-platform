@@ -16,6 +16,7 @@ import {
 } from "../utils/email.js";
 import { getConfig } from "../config.js";
 import { TOKEN_EXPIRY } from "../constants/time.js";
+import { toUserDto, userSelect } from "../utils/user-dto.js";
 
 const registerWithItemSchema = z.object({
   account: registerSchema,
@@ -55,19 +56,7 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
           preferredLanguage: body.account.preferredLanguage ?? "fr",
           termsAcceptedAt: new Date(),
         })
-        .returning({
-          id: users.id,
-          email: users.email,
-          firstName: users.firstName,
-          lastName: users.lastName,
-          phone: users.phone,
-          emailVerified: users.emailVerified,
-          isAdmin: users.isAdmin,
-          clientNumber: users.clientNumber,
-          preferredLanguage: users.preferredLanguage,
-          termsAcceptedAt: users.termsAcceptedAt,
-          createdAt: users.createdAt,
-        });
+        .returning(userSelect);
 
       const [item] = await tx
         .insert(items)
@@ -110,19 +99,7 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
     });
 
     return reply.status(201).send({
-      user: {
-        id: result.user.id,
-        email: result.user.email,
-        firstName: result.user.firstName,
-        lastName: result.user.lastName,
-        phone: result.user.phone,
-        emailVerified: result.user.emailVerified,
-        isAdmin: result.user.isAdmin,
-        clientNumber: result.user.clientNumber,
-        preferredLanguage: result.user.preferredLanguage,
-        termsAcceptedAt: result.user.termsAcceptedAt?.toISOString() ?? null,
-        createdAt: result.user.createdAt.toISOString(),
-      },
+      user: toUserDto(result.user),
       item: result.item,
       accessToken,
       refreshToken,

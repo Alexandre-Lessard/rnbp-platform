@@ -7,15 +7,27 @@ type StepStickerUpsellProps = {
   onNext: () => void;
   onBack: () => void;
   itemName: string;
+  loading: boolean;
+  error: string;
 };
 
-export function StepStickerUpsell({ onNext, onBack, itemName }: StepStickerUpsellProps) {
+export function StepStickerUpsell({
+  onNext,
+  onBack,
+  itemName,
+  loading,
+  error,
+}: StepStickerUpsellProps) {
   const { t } = useLanguage();
   const { addItem } = useCart();
   const reg = t.registration!;
   const [added, setAdded] = useState(false);
 
   function handleAddToCart() {
+    if (loading) {
+      return;
+    }
+
     // Add to cart with a temporary "pending:<itemName>" itemId
     // which will be replaced by the real UUID after item creation
     addItem({
@@ -31,6 +43,12 @@ export function StepStickerUpsell({ onNext, onBack, itemName }: StepStickerUpsel
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
+      {error && (
+        <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
       <div className="rounded-xl border-2 border-[var(--rcb-primary)]/30 bg-[var(--rcb-primary)]/5 p-6 sm:p-8">
         <h3 className="text-xl font-bold text-[var(--rcb-text-strong)]">
           {reg.stickerHeading}
@@ -43,7 +61,7 @@ export function StepStickerUpsell({ onNext, onBack, itemName }: StepStickerUpsel
           <Button
             size="sm"
             onClick={handleAddToCart}
-            disabled={added}
+            disabled={added || loading}
             className={added ? "cursor-default opacity-70" : ""}
           >
             {added ? (
@@ -65,12 +83,13 @@ export function StepStickerUpsell({ onNext, onBack, itemName }: StepStickerUpsel
         <button
           type="button"
           onClick={onBack}
+          disabled={loading}
           className="cursor-pointer text-sm font-medium text-[var(--rcb-text-muted)] transition-colors hover:text-[var(--rcb-text-strong)]"
         >
           &larr; {reg.backButton}
         </button>
-        <Button onClick={onNext}>
-          {reg.confirmButton}
+        <Button onClick={onNext} disabled={loading}>
+          {loading ? reg.submitting : reg.confirmButton}
         </Button>
       </div>
     </div>

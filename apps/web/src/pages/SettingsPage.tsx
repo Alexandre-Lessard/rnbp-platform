@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
 import { apiRequest } from "@/lib/api-client";
+import { AccountNav } from "@/components/layout/AccountNav";
 import { Button } from "@/components/ui/Button";
 
 export function SettingsPage() {
@@ -41,6 +42,8 @@ export function SettingsPage() {
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {s?.heading ?? "Settings"}
         </h1>
+
+        <AccountNav current="settings" className="mt-6" />
 
         <div className="mt-10 max-w-lg">
           <h2 className="text-lg font-semibold text-[var(--rcb-text-strong)]">

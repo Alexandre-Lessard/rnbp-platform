@@ -37,7 +37,7 @@ const fr: SiteContent = {
     },
     lookup: {
       title: "Vérifier un bien | RNBP",
-      description: "Entrez un numéro RNBP pour vérifier le statut d'un bien enregistré dans le registre.",
+      description: "Entrez un numéro RNBP, un numéro de série ou un autre identifiant compatible pour vérifier le statut d'un bien enregistré.",
     },
     login: {
       title: "Connexion | RNBP",
@@ -59,6 +59,10 @@ const fr: SiteContent = {
       title: "Commande confirmée | RNBP",
       description: "Votre commande a été confirmée avec succès.",
     },
+    profile: {
+      title: "Mon profil | RNBP",
+      description: "Gérez vos informations personnelles et votre adresse civique.",
+    },
   },
   nav: {
     items: [
@@ -72,6 +76,7 @@ const fr: SiteContent = {
     login: "Connexion",
     logout: "Déconnexion",
     myAccount: "Mon compte",
+    myProfile: "Mon profil",
   },
   hero: {
     subtitleLine1: "Vos biens méritent",
@@ -450,6 +455,7 @@ const fr: SiteContent = {
     alreadyInCartCancel: "Non merci",
     alreadyInCartViewCart: "Voir le panier",
     awaitingNumber: "En attente d'attribution",
+    noNumberHint: "Commandez des étiquettes pour recevoir le numéro RNBP de ce bien.",
     clientNumber: "No. client",
     editItem: "Modifier",
   },
@@ -475,6 +481,22 @@ const fr: SiteContent = {
     saveButton: "Enregistrer",
     saving: "Enregistrement…",
     successMessage: "Enregistré !",
+  },
+  profile: {
+    heading: "Mon profil",
+    description: "Gérez vos informations personnelles et votre adresse civique.",
+    personalInfoHeading: "Informations personnelles",
+    addressHeading: "Adresse civique",
+    addressDescription: "Les champs d'adresse sont optionnels et servent à compléter votre profil.",
+    address1Label: "Adresse 1",
+    address2Label: "Adresse 2",
+    cityLabel: "Ville",
+    provinceLabel: "Province",
+    postalCodeLabel: "Code postal",
+    saveButton: "Enregistrer",
+    saving: "Enregistrement…",
+    successMessage: "Profil enregistré !",
+    backToDashboard: "Retour au tableau de bord",
   },
   archive: {
     button: "Archiver ce bien",
@@ -517,6 +539,8 @@ const fr: SiteContent = {
     serialLabel: "Numéro de série (original)",
     serialExplanation: "Si votre bien possède un numéro de série du fabricant, entrez-le ici.",
     valueLabel: "Valeur estimée ($)",
+    yearInvalidError: "Entrez une année valide, sans décimales.",
+    valueIntegerError: "Entrez un montant entier, sans décimales.",
     valueMinError: "La valeur minimale est de 1 000 $",
     descriptionLabel: "Description et signes distinctifs",
     descriptionHelper: "Décrivez tout signe particulier pouvant identifier votre bien : couleur, accessoires, modifications, marques d'usure, etc.",
@@ -530,6 +554,7 @@ const fr: SiteContent = {
     documentsDescription: "Preuve d'achat, certificat d'authenticité (optionnel).",
     addDocumentButton: "+ Ajouter un document",
     confirmButton: "Confirmer l'enregistrement",
+    submitting: "Enregistrement...",
     successHeading: "Bien enregistré avec succès !",
     successDescription: "Votre bien a été enregistré dans le RNBP.",
     successNoNumber: "Commandez des autocollants dans la boutique pour recevoir votre numéro RNBP unique.",
@@ -601,8 +626,9 @@ const fr: SiteContent = {
   lookup: {
     heading: "Vérifier un bien",
     description: "Vérifiez le statut d'un bien enregistré.",
+    inputLabel: "Identifiant du bien à vérifier",
     inputPlaceholder: "Identifiant unique",
-    inputHint: "Numéro RNBP, numéro de série, IMEI ou autre identifiant",
+    inputHint: "Numéro RNBP, numéro de série ou autre identifiant compatible",
     searchButton: "Vérifier",
     searching: "Recherche...",
     foundMessage: "Bien trouvé dans le registre",
@@ -706,6 +732,7 @@ const fr: SiteContent = {
     heading: "Obtenez un rabais sur votre assurance",
     promo: "Enregistrez vos biens et obtenez un rabais sur votre assurance habitation",
     description: "La plupart des assureurs offrent un rabais aux membres du RNBP. Sélectionnez votre assureur et contactez-le pour vérifier si vous êtes éligible.",
+    moreButton: "Et plus",
     selectLabel: "Votre assureur",
     selectPlaceholder: "Sélectionnez votre assureur",
     messageLabel: "Message pré-rempli",
@@ -714,6 +741,16 @@ const fr: SiteContent = {
     copiedToast: "Message copié ! Envoyez-le à votre assureur.",
     emailSubject: "Demande de rabais RNBP",
     emailButton: "Envoyer par courriel",
+    faq: {
+      heading: "FAQ assureurs",
+      description: "Une réponse rapide aux questions les plus fréquentes sur ce programme.",
+      items: [
+        {
+          question: "Qui finance le RNBP?",
+          answer: "Le RNBP est financé par ses activités commerciales, ses partenariats et les services complémentaires qu'il développe autour de la protection, de l'identification et de la récupération des biens personnels. L'inscription d'un bien au registre demeure gratuite pour les citoyens.",
+        },
+      ],
+    },
   },
   about: {
     heading: "À propos du RNBP",
@@ -740,11 +777,11 @@ const fr: SiteContent = {
     privacyContent: [
       {
         title: "1. Collecte de renseignements personnels",
-        body: "Le RNBP recueille uniquement les renseignements nécessaires à la création de votre compte et à l'enregistrement de vos biens : nom, adresse courriel, numéro de téléphone (facultatif), ainsi que les informations descriptives de vos biens (catégorie, marque, modèle, numéro de série, photos). Ces renseignements sont fournis volontairement lors de votre inscription.",
+        body: "Le RNBP recueille uniquement les renseignements nécessaires à la création de votre compte et à l'enregistrement de vos biens : nom, adresse courriel, numéro de téléphone (facultatif), adresse civique (facultative), ainsi que les informations descriptives de vos biens (catégorie, marque, modèle, numéro de série, photos). Ces renseignements sont fournis volontairement lors de votre inscription ou lors de la mise à jour de votre profil.",
       },
       {
         title: "2. Utilisation des renseignements",
-        body: "Vos renseignements sont utilisés pour : gérer votre compte et authentifier votre identité; enregistrer et identifier vos biens dans le registre; faciliter la restitution de biens perdus ou volés; vous envoyer des communications relatives à votre compte (vérification courriel, réinitialisation de mot de passe); améliorer nos services. Nous ne vendons ni ne louons vos renseignements personnels à des tiers.",
+        body: "Vos renseignements sont utilisés pour : gérer votre compte et authentifier votre identité; enregistrer et identifier vos biens dans le registre; faciliter la restitution de biens perdus ou volés; vous envoyer des communications relatives à votre compte (vérification courriel, réinitialisation de mot de passe); maintenir votre profil utilisateur à jour; améliorer nos services. Nous ne vendons ni ne louons vos renseignements personnels à des tiers.",
       },
       {
         title: "3. Protection des données",

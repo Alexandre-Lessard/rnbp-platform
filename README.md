@@ -10,7 +10,7 @@
 
 ## What is this?
 
-RNBP (Registre National des Biens Personnels) / NRPP (National Registry of Personal Property) is a bilingual Canadian web application that lets users catalog their personal property, generate unique RNBP tracking numbers, report thefts to aid recovery, and request insurance discounts from participating insurers.
+RNBP (Registre National des Biens Personnels) / NRPP (National Registry of Personal Property) is a bilingual Canadian web application that lets users catalog their personal property, manage their account profile, generate unique RNBP tracking numbers, report thefts to aid recovery, and request insurance discounts from participating insurers.
 
 The platform serves both French and English speakers through a bi-domain architecture: `rnbp.ca` (French) and `nrpp.ca` (English).
 
@@ -19,9 +19,10 @@ The platform serves both French and English speakers through a bi-domain archite
 - **Item Registration** — Catalog belongings with photos, documents, serial numbers, and estimated values
 - **RNBP Tracking Numbers** — Unique identifiers (stickers) assigned to registered items for identification and recovery
 - **Theft Reporting** — Declare stolen items with police report details; items are flagged across the registry
-- **Public Lookup** — Anyone can look up an RNBP number to check if an item is registered or reported stolen
+- **Public Lookup** — Anyone can look up an RNBP number or serial number to check if an item is registered or reported stolen
 - **Insurance Integration** — Send proof of registration to your insurer to request a home insurance discount
-- **OAuth Login** — Sign in with Google or Facebook (Microsoft OAuth ready, pending Azure configuration)
+- **Profile Management** — Maintain personal details, civic address, preferred language, and account settings from the protected account area
+- **OAuth Login** — Sign in with Google, Facebook, or Microsoft when the corresponding provider credentials are configured
 - **Stripe Checkout** — Purchase RNBP sticker sheets with tax calculation and shipping
 - **Bilingual UI** — Full French/English support with instant language toggle, hostname-based detection
 - **Bilingual Error Handling** — Centralized error codes mapped to both languages via i18n
@@ -56,7 +57,7 @@ rnbp.ca / nrpp.ca          api.rnbp.ca
 
 - **Frontend**: React 19 SPA served via Cloudflare Pages. Bilingual via hostname detection (`rnbp.ca` = FR, `nrpp.ca` = EN).
 - **Backend**: Fastify 5 behind Cloudflare Tunnel. No public IP, no nginx. Auto-migrating Drizzle ORM.
-- **Auth**: JWT EdDSA access/refresh tokens with server-side sessions. OAuth via Google and Facebook. Argon2 password hashing.
+- **Auth**: JWT EdDSA access/refresh tokens with server-side sessions. OAuth via Google, Facebook, and Microsoft. Argon2 password hashing.
 
 ## Stack
 
@@ -64,7 +65,7 @@ rnbp.ca / nrpp.ca          api.rnbp.ca
 |-------|-------------|
 | Frontend | React 19, Vite 6, Tailwind CSS 4, React Router 7 |
 | Backend | Fastify 5, Drizzle ORM, PostgreSQL 16 |
-| Auth | JWT EdDSA (Ed25519 via jose), Argon2, OAuth (Google, Facebook) |
+| Auth | JWT EdDSA (Ed25519 via jose), Argon2, OAuth (Google, Facebook, Microsoft) |
 | Validation | Zod (shared frontend/backend) |
 | Payments | Stripe Checkout |
 | Emails | Brevo (transactional) |
@@ -76,7 +77,7 @@ rnbp.ca / nrpp.ca          api.rnbp.ca
 
 ## Testing
 
-The project is under active development. Current tests cover critical utilities (authentication tokens, password hashing, error handling, client number generation). Full integration and component test coverage is planned before production launch.
+The project is under active development. Current automated coverage includes critical backend utilities plus targeted API and frontend tests for primary-photo selection, enriched user DTOs, insurer CTA behavior, FAQ rendering, and registration form validation.
 
 Testing framework: **Vitest** across all workspaces. Run with `pnpm test`.
 
@@ -117,7 +118,8 @@ See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for prerequisites, setup, and ava
 - [Deployment Guide](docs/DEPLOYMENT.md) — Deploy process, configuration, domains
 - [Architecture](docs/ARCHITECTURE.md) — Technical decisions, auth flow, OAuth, i18n strategy
 - [Production Setup](ops/SETUP.md) — Full infrastructure guide (Proxmox, Cloudflare, PostgreSQL, systemd)
-- [API Reference](apps/api/README.md)
+- [Detailed API Reference](docs/API.md)
+- [Backend Reference](apps/api/README.md)
 - [Frontend Reference](apps/web/README.md)
 
 ## License

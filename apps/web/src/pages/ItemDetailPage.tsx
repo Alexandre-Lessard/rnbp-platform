@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { getButtonClasses } from "@/lib/button-styles";
 import { Modal } from "@/components/ui/Modal";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
+import { ItemImage } from "@/components/ui/ItemImage";
 import type { ItemWithFiles } from "@rnbp/shared";
 import { ROUTES } from "@/routes/routes";
 
@@ -190,11 +191,12 @@ export function ItemDetailPage() {
             <div className="mt-6">
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {item.photos.map((photo) => (
-                  <img
+                  <ItemImage
                     key={photo.id}
                     src={photo.url}
                     alt={item.name}
                     className="h-48 w-full rounded-lg border border-[var(--rcb-border)] object-cover"
+                    fallbackClassName="flex h-48 w-full items-center justify-center rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-surface)]"
                   />
                 ))}
               </div>
