@@ -12,8 +12,19 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 function detectLocale(): SupportedLocale {
-  // SSR / build-time: no browser APIs available, default to FR (rnbp.ca primary domain)
-  if (typeof window === "undefined") return defaultLocale;
+  // SSR / build-time: no browser APIs available.
+  // BUILD_LOCALE=en switches the prerender output to English (used to generate
+  // index.en.html for nrpp.ca). Access process via globalThis cast so we don't
+  // need @types/node in the web app, and so the whole branch is dead-code in
+  // the browser bundle — both FR and EN builds produce identical client assets,
+  // only the prerendered HTML differs.
+  if (typeof window === "undefined") {
+    const g = globalThis as {
+      process?: { env?: Record<string, string | undefined> };
+    };
+    if (g.process?.env?.BUILD_LOCALE === "en") return "en";
+    return defaultLocale;
+  }
 
   // 1. User's explicit choice (localStorage)
   const stored = localStorage.getItem("locale");

@@ -467,7 +467,7 @@ export const onRequest: PagesFunction = async (context) => {
   }
 
   // For non-HTML requests, pass through to static assets
-  const response = await context.next();
+  let response = await context.next();
   const contentType = response.headers.get("Content-Type") || "";
   if (!contentType.includes("text/html")) {
     return response;
@@ -475,6 +475,28 @@ export const onRequest: PagesFunction = async (context) => {
 
   // For HTML responses, inject meta tags
   const locale = detectLocale(hostname);
+
+  // On the EN domain, swap the prerendered body for the EN-prerendered HTML
+  // (build produces index.html in FR and index.en.html in EN). We re-fetch
+  // via the ASSETS binding, which serves static assets and honours the
+  // pretty-path mapping: requesting /index.en returns the contents of
+  // /index.en.html (fetching /index.en.html directly 308-redirects to the
+  // pretty path). If the EN file is missing (e.g. old build still deployed),
+  // fall back silently to the FR body rather than 500.
+  if (locale === "en") {
+    const enUrl = new URL(context.request.url);
+    enUrl.pathname = "/index.en";
+    const enResp = await context.env.ASSETS.fetch(
+      new Request(enUrl, context.request),
+    );
+    if (enResp.ok) {
+      response = new Response(enResp.body, {
+        status: response.status,
+        headers: response.headers,
+      });
+    }
+  }
+
   // Normalize path: remove trailing slash except for root
   const path = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
   const html = await response.text();
