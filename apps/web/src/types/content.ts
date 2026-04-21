@@ -422,7 +422,13 @@ export type SiteContent = {
     heading: string;
     promo: string;
     description: string;
+    featuredHeading: string;
+    featuredHint: string;
     moreButton: string;
+    moreDescription: string;
+    composerHeading: string;
+    composerDescription: string;
+    selectedSummary: string;
     selectLabel: string;
     selectPlaceholder: string;
     messageLabel: string;

@@ -10,9 +10,13 @@ import {
 import avivaLogo from "@/assets/insurers/aviva.png";
 import belairdirectLogo from "@/assets/insurers/belairdirect.png";
 import benevaLogo from "@/assets/insurers/beneva.png";
+import cooperatorsLogo from "@/assets/insurers/cooperators.svg";
+import desjardinsLogo from "@/assets/insurers/desjardins.svg";
+import economicalLogo from "@/assets/insurers/economical.svg";
 import intactLogo from "@/assets/insurers/intact.png";
 import promutuelLogo from "@/assets/insurers/promutuel.png";
 import tdLogo from "@/assets/insurers/td.jpg";
+import wawanesaLogo from "@/assets/insurers/wawanesa.svg";
 
 const FEATURED_INSURERS = [
   "intact",
@@ -32,8 +36,12 @@ const FEATURED_INSURER_LOGOS: Partial<Record<InsurerId, string>> = {
   aviva: avivaLogo,
   beneva: benevaLogo,
   belairdirect: belairdirectLogo,
+  desjardins: desjardinsLogo,
   td: tdLogo,
+  wawanesa: wawanesaLogo,
   promutuel: promutuelLogo,
+  economical: economicalLogo,
+  cooperators: cooperatorsLogo,
 };
 
 export function InsuranceFormSection() {
@@ -41,6 +49,7 @@ export function InsuranceFormSection() {
   const [selectedInsurerId, setSelectedInsurerId] = useState("");
   const [copied, setCopied] = useState(false);
   const selectRef = useRef<HTMLSelectElement>(null);
+  const composerRef = useRef<HTMLDivElement>(null);
 
   const ins = t.insurance;
   if (!ins) return null;
@@ -48,6 +57,9 @@ export function InsuranceFormSection() {
   const selectedInsurer = INSURERS.find((i) => i.id === selectedInsurerId);
   const insurerDisplayName = selectedInsurer
     ? selectedInsurer[locale]
+    : "";
+  const selectedSummary = selectedInsurer
+    ? ins.selectedSummary.replace("{{insurer}}", insurerDisplayName)
     : "";
 
   const message = selectedInsurerId
@@ -81,12 +93,25 @@ export function InsuranceFormSection() {
     }
   }
 
-  function handleSelectInsurer(insurerId: string) {
+  function scrollToComposer() {
+    composerRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+
+  function selectInsurer(insurerId: string) {
     setSelectedInsurerId(insurerId);
     setCopied(false);
   }
 
+  function handleSelectInsurer(insurerId: string) {
+    selectInsurer(insurerId);
+    scrollToComposer();
+  }
+
   function handleOpenMore() {
+    scrollToComposer();
     selectRef.current?.focus();
     selectRef.current?.showPicker?.();
   }
@@ -119,6 +144,14 @@ export function InsuranceFormSection() {
 
         <div className="mx-auto mt-12 max-w-xl">
           <div className="mb-8">
+            <div className="mb-4">
+              <p className="text-lg font-semibold text-[var(--rcb-text-strong)]">
+                {ins.featuredHeading}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--rcb-text-muted)]">
+                {ins.featuredHint}
+              </p>
+            </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {FEATURED_INSURERS.map((insurerId) => {
                 const insurer = INSURERS.find((entry) => entry.id === insurerId);
@@ -132,10 +165,11 @@ export function InsuranceFormSection() {
                     key={insurerId}
                     type="button"
                     onClick={() => handleSelectInsurer(insurerId)}
-                    className={`flex min-h-24 items-center justify-center rounded-2xl border px-4 py-3 text-center transition-colors ${
+                    aria-pressed={isSelected}
+                    className={`flex min-h-24 items-center justify-center rounded-2xl border px-4 py-3 text-center transition-all ${
                       isSelected
-                        ? "border-[var(--rcb-primary)] bg-white shadow-sm"
-                        : "border-[var(--rcb-border)] bg-white hover:border-[var(--rcb-primary)]"
+                        ? "border-[var(--rcb-primary)] bg-white shadow-sm ring-2 ring-[var(--rcb-primary)]/15"
+                        : "border-[var(--rcb-border)] bg-white hover:border-[var(--rcb-primary)] hover:shadow-sm"
                     }`}
                   >
                     {logo ? (
@@ -152,17 +186,27 @@ export function InsuranceFormSection() {
                   </button>
                 );
               })}
-
-              <button
-                type="button"
-                onClick={handleOpenMore}
-                className="flex min-h-24 items-center justify-center rounded-2xl border border-dashed border-[var(--rcb-border)] bg-white px-4 py-3 text-center transition-colors hover:border-[var(--rcb-primary)]"
-              >
-                <span className="text-sm font-semibold text-[var(--rcb-text-strong)]">
+            </div>
+            <button
+              type="button"
+              onClick={handleOpenMore}
+              className="mt-4 flex w-full items-center justify-between rounded-2xl border border-dashed border-[var(--rcb-border)] bg-white px-5 py-4 text-left transition-colors hover:border-[var(--rcb-primary)] hover:bg-[var(--rcb-primary)]/5"
+            >
+              <span>
+                <span className="block text-sm font-semibold text-[var(--rcb-text-strong)]">
                   {ins.moreButton}
                 </span>
-              </button>
-            </div>
+                <span className="mt-1 block text-sm text-[var(--rcb-text-muted)]">
+                  {ins.moreDescription}
+                </span>
+              </span>
+              <span
+                aria-hidden="true"
+                className="ml-4 text-xl font-semibold text-[var(--rcb-primary)]"
+              >
+                +
+              </span>
+            </button>
           </div>
 
           <div className="mb-8">
@@ -174,70 +218,89 @@ export function InsuranceFormSection() {
             />
           </div>
 
-          <label
-            htmlFor="insurer-select"
-            className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
+          <div
+            ref={composerRef}
+            className="scroll-mt-28 rounded-3xl border border-[var(--rcb-border)] bg-white p-6 shadow-sm"
           >
-            {ins.selectLabel}
-          </label>
-          <select
-            id="insurer-select"
-            ref={selectRef}
-            value={selectedInsurerId}
-            onChange={(e) => {
-              handleSelectInsurer(e.target.value);
-            }}
-            className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
-          >
-            <option value="">{ins.selectPlaceholder}</option>
-            {INSURERS.map((insurer) => (
-              <option key={insurer.id} value={insurer.id}>
-                {insurer[locale]}
-              </option>
-            ))}
-          </select>
-
-          {selectedInsurerId && (
-            <div className="mt-6">
-              <label
-                htmlFor="insurance-message"
-                className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
-              >
-                {ins.messageLabel}
-              </label>
-              <textarea
-                id="insurance-message"
-                readOnly
-                value={message}
-                rows={4}
-                className="w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-white)] px-4 py-3 text-[var(--rcb-text-body)] focus:outline-none"
-              />
-
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                {mailtoHref && (
-                  <a
-                    href={mailtoHref}
-                    className="inline-block rounded-xl bg-[var(--rcb-primary)] px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--rcb-primary-dark)]"
-                  >
-                    {ins.emailButton}
-                  </a>
-                )}
-                <Button
-                  onClick={handleCopy}
-                  variant={mailtoHref ? "outline" : "primary"}
-                  size="sm"
-                  className="cursor-pointer"
-                >
-                  {ins.sendButton}
-                </Button>
-                {copied && (
-                  <span className="text-sm font-medium text-green-600">
-                    {ins.copiedToast}
-                  </span>
-                )}
-              </div>
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold text-[var(--rcb-text-strong)]">
+                {ins.composerHeading}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--rcb-text-muted)]">
+                {ins.composerDescription}
+              </p>
+              {selectedSummary && (
+                <p className="mt-3 inline-flex rounded-full bg-[var(--rcb-primary)]/10 px-3 py-1 text-sm font-medium text-[var(--rcb-primary)]">
+                  {selectedSummary}
+                </p>
+              )}
             </div>
-          )}
+
+            <label
+              htmlFor="insurer-select"
+              className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
+            >
+              {ins.selectLabel}
+            </label>
+            <select
+              id="insurer-select"
+              ref={selectRef}
+              value={selectedInsurerId}
+              onChange={(e) => {
+                selectInsurer(e.target.value);
+              }}
+              className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
+            >
+              <option value="">{ins.selectPlaceholder}</option>
+              {INSURERS.map((insurer) => (
+                <option key={insurer.id} value={insurer.id}>
+                  {insurer[locale]}
+                </option>
+              ))}
+            </select>
+
+            {selectedInsurerId && (
+              <div className="mt-6">
+                <label
+                  htmlFor="insurance-message"
+                  className="mb-2 block text-sm font-medium text-[var(--rcb-text-strong)]"
+                >
+                  {ins.messageLabel}
+                </label>
+                <textarea
+                  id="insurance-message"
+                  readOnly
+                  value={message}
+                  rows={4}
+                  className="w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-white)] px-4 py-3 text-[var(--rcb-text-body)] focus:outline-none"
+                />
+
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  {mailtoHref && (
+                    <a
+                      href={mailtoHref}
+                      className="inline-block rounded-xl bg-[var(--rcb-primary)] px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--rcb-primary-dark)]"
+                    >
+                      {ins.emailButton}
+                    </a>
+                  )}
+                  <Button
+                    onClick={handleCopy}
+                    variant={mailtoHref ? "outline" : "primary"}
+                    size="sm"
+                    className="cursor-pointer"
+                  >
+                    {ins.sendButton}
+                  </Button>
+                  {copied && (
+                    <span className="text-sm font-medium text-green-600">
+                      {ins.copiedToast}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>

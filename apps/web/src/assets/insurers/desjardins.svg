@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 96" role="img" aria-labelledby="title">
+  <title>Desjardins Assurances</title>
+  <rect width="240" height="96" rx="18" fill="#ffffff" />
+  <text
+    x="120"
+    y="42"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="24"
+    font-weight="700"
+    fill="#00843D"
+  >
+    Desjardins
+  </text>
+  <text
+    x="120"
+    y="68"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="22"
+    font-weight="700"
+    fill="#1F2937"
+  >
+    Assurances
+  </text>
+</svg>
