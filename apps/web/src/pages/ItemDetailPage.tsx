@@ -273,11 +273,12 @@ export function ItemDetailPage() {
                 <Button variant="outline" size="sm" onClick={() => setArchiveOpen(true)}>
                   {arc?.button ?? "Archive this item"}
                 </Button>
+                {/* min-w fits FR "Commander des étiquettes d'identification" — prevents FR/EN width jump */}
                 <button
                   type="button"
                   disabled={addedToCart}
                   onClick={handleOrderStickers}
-                  className="cursor-pointer rounded-xl border border-[var(--rcb-border)] px-6 py-2 text-sm font-medium text-[var(--rcb-primary)] transition-colors hover:bg-[var(--rcb-surface)] disabled:cursor-default disabled:opacity-60"
+                  className="min-w-[320px] cursor-pointer rounded-xl border border-[var(--rcb-border)] px-6 py-2 text-sm font-medium text-[var(--rcb-primary)] transition-colors hover:bg-[var(--rcb-surface)] disabled:cursor-default disabled:opacity-60"
                 >
                   {addedToCart
                     ? (t.registration?.addedToCart ?? "Added to cart")

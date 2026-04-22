@@ -220,7 +220,7 @@ export function DashboardPage() {
                       type="button"
                       disabled={addedId === item.id}
                       onClick={(e) => { e.preventDefault(); handleOrderStickers(item); }}
-                      className="cursor-pointer rounded-lg bg-[var(--rcb-surface)] px-3 py-1.5 text-xs font-medium text-[var(--rcb-primary)] transition-colors hover:bg-[var(--rcb-border)] disabled:cursor-default disabled:opacity-60"
+                      className="w-full cursor-pointer rounded-lg bg-[var(--rcb-surface)] px-3 py-1.5 text-xs font-medium text-[var(--rcb-primary)] transition-colors hover:bg-[var(--rcb-border)] disabled:cursor-default disabled:opacity-60"
                     >
                       {addedId === item.id
                         ? (t.registration?.addedToCart ?? "✓")
