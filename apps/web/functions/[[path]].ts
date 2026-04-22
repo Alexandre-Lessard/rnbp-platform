@@ -423,23 +423,17 @@ function injectMeta(
   const lang = locale === "fr" ? "fr-CA" : "en-CA";
   const jsonLd = buildJsonLd(locale, path, domain);
 
-  // Rewrite the literal <title> and <meta name="description"> hoisted by
-  // React 19 from the home LandingPage. The prerendered HTML shipped to
-  // every SPA-fallback route contains the home page title literally, not
-  // a {{TITLE}} placeholder, so we have to substitute the actual tag.
-  html = html.replace(
-    /<title>[^<]*<\/title>/,
-    `<title>${escapeHtml(meta.title)}</title>`,
-  );
-  html = html.replace(
-    /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/,
-    `<meta name="description" content="${escapeHtml(meta.description)}"/>`,
-  );
-
+  // The home-page <title> and <meta name="description"> hoisted by React 19
+  // into the prerendered HTML are replaced with {{TITLE}} / {{DESCRIPTION}}
+  // placeholders at build time (scripts/build-multilocale.mjs) so the
+  // substitutions below work for every route, including SPA-fallback ones.
+  // escapeHtml guards against future titles containing &, <, >, " — current
+  // translations are safe but the placeholder interpolation would otherwise
+  // inject raw chars into attribute/element contexts.
   return html
     .replace("{{LANG}}", lang)
-    .replace(/\{\{TITLE\}\}/g, meta.title)
-    .replace(/\{\{DESCRIPTION\}\}/g, meta.description)
+    .replace(/\{\{TITLE\}\}/g, escapeHtml(meta.title))
+    .replace(/\{\{DESCRIPTION\}\}/g, escapeHtml(meta.description))
     .replace("{{ROBOTS}}", robots)
     .replace("{{OG_LOCALE}}", ogLocale)
     .replace("{{OG_LOCALE_ALT}}", ogLocaleAlt)

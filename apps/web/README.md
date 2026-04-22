@@ -161,7 +161,7 @@ export function MyPage() {
 }
 ```
 
-For the SPA-fallback HTML served on non-prerendered routes, the Cloudflare Pages Function ([`functions/[[path]].ts`](functions/[[path]].ts)) injects the per-route Open Graph, Twitter, canonical, hreflang and JSON-LD tags at request time, based on the requested path and the active domain (`rnbp.ca` / `nrpp.ca`).
+For the SPA-fallback HTML served on non-prerendered routes, the Cloudflare Pages Function ([`functions/[[path]].ts`](functions/[[path]].ts)) injects the per-route `<title>`, `<meta name="description">`, Open Graph, Twitter, canonical, hreflang and JSON-LD tags at request time, based on the requested path and the active domain (`rnbp.ca` / `nrpp.ca`). The title and description are routed through `{{TITLE}}` / `{{DESCRIPTION}}` placeholders injected at build time by [`scripts/build-multilocale.mjs`](scripts/build-multilocale.mjs), since React 19 hoists the home page's title into the prerendered HTML that serves as the SPA fallback.
 
 ## i18n system
 
