@@ -151,6 +151,22 @@ export function StepItemDetails({
       </div>
 
       <div>
+        <label htmlFor="reg-tracker" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
+          {reg.trackerIdLabel}
+        </label>
+        <input
+          id="reg-tracker"
+          type="text"
+          value={data.trackerId}
+          onChange={(e) => update("trackerId", e.target.value)}
+          className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
+        />
+        <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
+          {reg.trackerIdExplanation}
+        </p>
+      </div>
+
+      <div>
         <label htmlFor="reg-value" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
           {reg.valueLabel}
         </label>

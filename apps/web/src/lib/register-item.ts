@@ -7,6 +7,7 @@ export type ItemFormData = {
   model: string;
   year: string;
   serialNumber: string;
+  trackerId: string;
   estimatedValue: string;
   description: string;
 };
@@ -83,6 +84,7 @@ export function sanitizeItemDraft(draft: unknown, fallback: ItemFormData): ItemF
     model: typeof data.model === "string" ? data.model : fallback.model,
     year: typeof data.year === "string" ? data.year : fallback.year,
     serialNumber: typeof data.serialNumber === "string" ? data.serialNumber : fallback.serialNumber,
+    trackerId: typeof data.trackerId === "string" ? data.trackerId : fallback.trackerId,
     estimatedValue: typeof data.estimatedValue === "string" ? data.estimatedValue : fallback.estimatedValue,
     description: typeof data.description === "string" ? data.description : fallback.description,
   };
@@ -98,6 +100,7 @@ export function buildCreateItemInput(itemData: ItemFormData):
     model: normalizeOptionalText(itemData.model),
     year: parseOptionalWholeNumber(itemData.year),
     serialNumber: normalizeOptionalText(itemData.serialNumber),
+    trackerId: normalizeOptionalText(itemData.trackerId),
     estimatedValue: parseOptionalWholeNumber(itemData.estimatedValue),
     description: normalizeOptionalText(itemData.description),
   });

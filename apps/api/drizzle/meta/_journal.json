@@ -71,6 +71,13 @@
       "when": 1776794598588,
       "tag": "0009_bored_mojo",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1776811434832,
+      "tag": "0010_cuddly_monster_badoon",
+      "breakpoints": true
     }
   ]
 }

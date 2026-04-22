@@ -21,6 +21,7 @@ type FormData = {
   model: string;
   year: string;
   serialNumber: string;
+  trackerId: string;
   estimatedValue: string;
   description: string;
 };
@@ -37,6 +38,7 @@ export function EditItemPage() {
     model: "",
     year: "",
     serialNumber: "",
+    trackerId: "",
     estimatedValue: "",
     description: "",
   });
@@ -81,6 +83,7 @@ export function EditItemPage() {
           model: item.model ?? "",
           year: item.year?.toString() ?? "",
           serialNumber: item.serialNumber ?? "",
+          trackerId: item.trackerId ?? "",
           estimatedValue: item.estimatedValue?.toString() ?? "",
           description: item.description ?? "",
         });
@@ -113,6 +116,7 @@ export function EditItemPage() {
       model: form.model,
       year: form.year ? Number(form.year) : undefined,
       serialNumber: form.serialNumber,
+      trackerId: form.trackerId,
       estimatedValue: form.estimatedValue ? Number(form.estimatedValue) : undefined,
       description: form.description,
     };
@@ -387,6 +391,22 @@ export function EditItemPage() {
             />
             <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
               {reg?.serialExplanation ?? "If your item has a manufacturer serial number, enter it here."}
+            </p>
+          </div>
+
+          <div>
+            <label htmlFor="edit-tracker" className="mb-1 block text-sm font-medium text-[var(--rcb-text-strong)]">
+              {reg?.trackerIdLabel ?? "Tracker ID"}
+            </label>
+            <input
+              id="edit-tracker"
+              type="text"
+              value={form.trackerId}
+              onChange={(e) => update("trackerId", e.target.value)}
+              className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
+            />
+            <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
+              {reg?.trackerIdExplanation ?? "e.g. serial number of an AirTag, Tile, or Samsung SmartTag"}
             </p>
           </div>
 

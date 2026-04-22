@@ -537,6 +537,8 @@ const en: SiteContent = {
     yearLabel: "Year",
     serialLabel: "Serial number (original)",
     serialExplanation: "If your item has a manufacturer serial number, enter it here.",
+    trackerIdLabel: "Tracker ID",
+    trackerIdExplanation: "e.g. serial number of an AirTag, Tile, or Samsung SmartTag",
     valueLabel: "Estimated value ($)",
     yearInvalidError: "Enter a valid year with no decimals.",
     valueIntegerError: "Enter a whole-dollar amount with no decimals.",

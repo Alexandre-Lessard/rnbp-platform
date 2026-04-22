@@ -105,6 +105,7 @@ export const items = pgTable(
     model: varchar("model", { length: 100 }),
     year: integer("year"),
     serialNumber: varchar("serial_number", { length: 255 }),
+    trackerId: varchar("tracker_id", { length: 255 }),
     estimatedValue: integer("estimated_value"),
     purchaseDate: timestamp("purchase_date", { withTimezone: true }),
     status: itemStatusEnum("status").notNull().default("active"),

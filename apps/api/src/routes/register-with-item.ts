@@ -69,6 +69,7 @@ export async function registerWithItemRoutes(app: FastifyInstance) {
           model: body.item.model ?? null,
           year: body.item.year ?? null,
           serialNumber: body.item.serialNumber ?? null,
+          trackerId: body.item.trackerId ?? null,
           estimatedValue: body.item.estimatedValue ?? null,
           purchaseDate: body.item.purchaseDate
             ? new Date(body.item.purchaseDate)

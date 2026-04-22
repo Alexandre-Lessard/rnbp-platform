@@ -14,6 +14,7 @@ const emptyItem: ItemFormData = {
   model: "",
   year: "",
   serialNumber: "",
+  trackerId: "",
   estimatedValue: "",
   description: "",
 };
@@ -27,6 +28,7 @@ describe("register-item helpers", () => {
       model: " GSD ",
       year: "2024",
       serialNumber: " SN123 ",
+      trackerId: "  AIRTAG-XYZ  ",
       estimatedValue: "4200",
       description: "  Noir mat ",
     });
@@ -39,6 +41,7 @@ describe("register-item helpers", () => {
       model: "GSD",
       year: 2024,
       serialNumber: "SN123",
+      trackerId: "AIRTAG-XYZ",
       estimatedValue: 4200,
       description: "Noir mat",
     });

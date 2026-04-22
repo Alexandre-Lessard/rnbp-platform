@@ -11,6 +11,7 @@ export type Item = {
   model: string | null;
   year: number | null;
   serialNumber: string | null;
+  trackerId: string | null;
   estimatedValue: number | null;
   purchaseDate: string | null;
   status: ItemStatus;

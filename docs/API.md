@@ -109,7 +109,7 @@ Auth: None
 ```
 Body: {
   account: { email, password, firstName, lastName, phone?, preferredLanguage? },
-  item: { name, category, brand?, model?, year?, serialNumber?, estimatedValue?, description?, purchaseDate? }
+  item: { name, category, brand?, model?, year?, serialNumber?, trackerId?, estimatedValue?, description?, purchaseDate? }
 }
 Response: { user, item, accessToken, refreshToken }
 ```
@@ -166,7 +166,7 @@ Response: { items: [{ ..., primaryPhotoUrl }] }
 ### POST /items
 Auth: requireVerifiedEmail
 ```
-Body: { name, category, brand?, model?, year?, serialNumber?, estimatedValue?, description?, purchaseDate? }
+Body: { name, category, brand?, model?, year?, serialNumber?, trackerId?, estimatedValue?, description?, purchaseDate? }
 Response: { item } (201)
 ```
 
@@ -180,7 +180,7 @@ Photos are returned with the primary photo first, then the remaining photos in a
 ### PATCH /items/:id
 Auth: requireVerifiedEmail
 ```
-Body: { name?, category?, brand?, model?, year?, serialNumber?, estimatedValue?, description?, purchaseDate? }
+Body: { name?, category?, brand?, model?, year?, serialNumber?, trackerId?, estimatedValue?, description?, purchaseDate? }
 Response: { item }
 ```
 

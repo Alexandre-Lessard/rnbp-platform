@@ -72,6 +72,7 @@ const emptyItem: ItemFormData = {
   model: "",
   year: "",
   serialNumber: "",
+  trackerId: "",
   estimatedValue: "",
   description: "",
 };

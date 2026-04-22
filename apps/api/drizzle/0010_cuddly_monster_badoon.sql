@@ -1,0 +1,1 @@
+ALTER TABLE "items" ADD COLUMN "tracker_id" varchar(255);

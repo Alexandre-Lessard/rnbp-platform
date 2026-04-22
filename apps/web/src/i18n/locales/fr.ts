@@ -543,6 +543,8 @@ const fr: SiteContent = {
     yearLabel: "Année",
     serialLabel: "Numéro de série (original)",
     serialExplanation: "Si votre bien possède un numéro de série du fabricant, entrez-le ici.",
+    trackerIdLabel: "ID du traceur",
+    trackerIdExplanation: "p. ex. numéro de série d'une AirTag, Tile ou Samsung SmartTag",
     valueLabel: "Valeur estimée ($)",
     yearInvalidError: "Entrez une année valide, sans décimales.",
     valueIntegerError: "Entrez un montant entier, sans décimales.",

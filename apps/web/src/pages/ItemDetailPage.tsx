@@ -221,6 +221,12 @@ export function ItemDetailPage() {
                 <p className="mt-1 font-mono text-sm text-[var(--rcb-text-strong)]">{item.serialNumber}</p>
               </div>
             )}
+            {item.trackerId && (
+              <div>
+                <p className="text-xs font-medium uppercase text-[var(--rcb-text-muted)]">{reg?.trackerIdLabel ?? "Tracker ID"}</p>
+                <p className="mt-1 font-mono text-sm text-[var(--rcb-text-strong)]">{item.trackerId}</p>
+              </div>
+            )}
             {item.estimatedValue && (
               <div>
                 <p className="text-xs font-medium uppercase text-[var(--rcb-text-muted)]">{reg?.valueLabel ?? "Estimated value"}</p>

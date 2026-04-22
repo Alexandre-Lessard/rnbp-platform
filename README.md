@@ -16,7 +16,7 @@ The platform serves both French and English speakers through a bi-domain archite
 
 ## Key Features
 
-- **Item Registration** — Catalog belongings with photos, documents, serial numbers, and estimated values
+- **Item Registration** — Catalog belongings with photos, documents, serial numbers, tracker IDs (AirTag/Tile/SmartTag), and estimated values
 - **RNBP Tracking Numbers** — Unique identifiers (stickers) assigned to registered items for identification and recovery
 - **Theft Reporting** — Declare stolen items with police report details; items are flagged across the registry
 - **Public Lookup** — Anyone can look up an RNBP number or serial number to check if an item is registered or reported stolen

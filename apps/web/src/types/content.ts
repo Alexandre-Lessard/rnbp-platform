@@ -243,6 +243,8 @@ export type SiteContent = {
     yearLabel: string;
     serialLabel: string;
     serialExplanation: string;
+    trackerIdLabel: string;
+    trackerIdExplanation: string;
     valueLabel: string;
     yearInvalidError: string;
     valueIntegerError: string;
