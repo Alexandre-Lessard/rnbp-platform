@@ -43,6 +43,19 @@ Body: { email, password }
 Response: { user, accessToken, refreshToken }
 ```
 
+**Pre-migration accounts.** An account created before the Cloudflare migration still holds an
+argon2 hash, which Workers cannot verify. Login refuses it with `401 PASSWORD_RESET_REQUIRED`
+**before looking at the password at all** — a correct password and a wrong one get the same
+answer. The account has to go through `POST /auth/forgot-password`; the reset writes a PBKDF2
+hash and normal login resumes.
+
+The web client turns that code into a call to `forgot-password` with the address already typed,
+so the person is one click from being back in. An unknown email still returns
+`INVALID_CREDENTIALS`, unchanged.
+
+This path retires itself: when no `$argon2` hash is left in the database, the code becomes
+unreachable and can be deleted along with `apps/api` and the old server.
+
 ### POST /auth/refresh
 Auth: None | Rate limit: 30/min
 ```

@@ -43,9 +43,10 @@ Cloudflare Pages              Cloudflare Worker
 Everything runs on Cloudflare. There is no server to maintain: the API is a Worker, the
 database is D1 (SQLite), files live in R2 and are served from `files.badgeid.ca`.
 
-One exception, temporary: the previous self-hosted server still answers a single endpoint
-that verifies pre-migration argon2 password hashes. It disappears once every account has
-logged in once. See [docs/CLOUDFLARE-MIGRATION.md](docs/CLOUDFLARE-MIGRATION.md).
+One exception, temporary: the previous self-hosted server still answers a single endpoint that
+verifies pre-migration argon2 password hashes. **Nothing calls it any more** — login sends those
+accounts through password reset instead — so it can be switched off as soon as that change is
+verified in production. See [docs/CLOUDFLARE-MIGRATION.md](docs/CLOUDFLARE-MIGRATION.md).
 
 ## Technical Decisions
 
@@ -116,8 +117,7 @@ badge-app/
 └── .github/workflows/    # CI, CD, CD Staging, nightly D1 backup
 ```
 
-`apps/api` is on its way out. Until the argon2 migration finishes, treat `apps/worker` as
-the API.
+`apps/api` is on its way out and nothing new belongs in it. `apps/worker` is the API.
 
 ## Testing
 

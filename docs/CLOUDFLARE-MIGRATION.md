@@ -128,14 +128,22 @@ variable is sufficient; they are not secrets).
 
 ## Not done yet
 
-- The old server still answers the argon2 bridge; it goes when the last
-  `$argon2` hash does
-- Delete the empty `rnbp-platform` Pages project and the `rnbp-uploads` bucket
-  after a few days of stability
+*Reviewed 2026-08-09, after the cutover. The production cutover itself used to be listed here;
+it is done — see "The cutover" below.*
+
+- The old server still answers the argon2 bridge, but **nothing calls it any more**: login now
+  sends pre-migration accounts through password reset instead (`PASSWORD_RESET_REQUIRED`). The
+  server, the Tunnel entry, the `deploy-legacy-bridge` job and `apps/api` can all go as soon as
+  that change has been verified in production.
+- Delete the empty `rnbp-platform` Pages project and the `rnbp-uploads` bucket after a few days
+  of stability
 - Stripe checkout + webhook on staging (needs test keys wired into the staging Worker)
 - OAuth on staging (needs staging redirect URIs registered with each provider)
 - R2 uploads on staging (bucket bound, public URL not yet configured)
-- Production cutover (Phase 4) — deliberately gated on Alex's go-ahead
+- `ops/seed.mjs` cannot seed staging yet: it hashes the seed password itself and needs
+  `PASSWORD_PEPPER`, which is a wrangler secret and cannot be read back. The fix is for the
+  script to create accounts through the Worker's own `/auth/register`, so the Worker hashes with
+  its own pepper and no secret has to travel.
 
 ## The RNBP → Badge rename
 

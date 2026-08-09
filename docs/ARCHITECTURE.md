@@ -86,10 +86,13 @@ cannot run on Workers, so the move to Cloudflare forced a change.
 2. **A server-side pepper** -- the free plan caps PBKDF2 at 100k iterations, below the OWASP
    recommendation. `PASSWORD_PEPPER`, a secret mixed into the derivation input, means an
    attacker with only the database cannot brute-force offline at all.
-3. **Lazy migration, nobody reset** -- a stored hash cannot be converted without the
-   plaintext, so existing `$argon2id$` hashes are verified by calling the old server
-   (`LEGACY_VERIFY_URL`) and rewritten to PBKDF2 on the next successful login. Network wait
-   does not count against Worker CPU, which is what keeps this on the free plan.
+3. **Pre-migration hashes go through password reset** -- a stored hash cannot be converted
+   without the plaintext. The first approach verified `$argon2id$` hashes by calling a bridge on
+   the old server and rewrote them to PBKDF2 on the next successful login. It worked, but it tied
+   the retirement of a whole server to whether thirteen customers happened to log in — two of whom
+   had never even verified their email. Login now refuses a legacy hash outright, whatever the
+   password, and returns `PASSWORD_RESET_REQUIRED`; the reset writes a PBKDF2 hash and needs
+   nothing from the old server. Decommissioning stopped depending on user behaviour.
 
 ### Drizzle ORM over Prisma
 

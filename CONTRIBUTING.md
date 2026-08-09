@@ -6,9 +6,12 @@ Thank you for your interest in contributing to Badge!
 
 1. Clone the repository
 2. Install dependencies: `pnpm install`
-3. Copy environment files: see `apps/api/.env.example` and `apps/web/.env.example`
-4. Start Docker (PostgreSQL): `docker start postgres`
-5. Start development servers: `pnpm dev:all`
+3. Copy `apps/worker/.dev.vars.example` to `apps/worker/.dev.vars` and fill it in
+4. Prepare the local database and seed data: `pnpm dev:setup`
+5. Start both servers: `pnpm dev` — API on 8787, web on 5173
+
+No database to install and no Docker: the Worker runs on workerd with a local D1 and R2, the
+same engine as production.
 
 See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for detailed setup instructions.
 

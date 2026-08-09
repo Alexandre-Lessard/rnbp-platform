@@ -1,4 +1,16 @@
-# @rnbp/api — Backend
+# @badge/api — RETIRED
+
+> **This is not the API any more.** Badge moved to a Cloudflare Worker on 2026-08-09;
+> `apps/worker` is the production API. Nothing new belongs here.
+>
+> This application survives on the old self-hosted server for one reason: it hosts the argon2
+> bridge (`POST /api/internal/verify-legacy`) used to verify password hashes created before the
+> migration. **Nothing calls that bridge any more** — login now sends those accounts through
+> password reset — so this whole directory, the server, the Tunnel entry and the
+> `deploy-legacy-bridge` CI job go away as soon as that change is verified in production.
+>
+> Everything below describes the retired stack and is kept for reference only. See
+> [docs/CLOUDFLARE-MIGRATION.md](../../docs/CLOUDFLARE-MIGRATION.md).
 
 REST API for the National Registry of Personal Property.
 

@@ -7,9 +7,13 @@
 | Node.js | >= 20.0 |
 | pnpm    | >= 10.0 |
 
-No database to install: the Worker runs against a local D1 (a SQLite file wrangler manages
-for you). PostgreSQL is only needed if you have to touch the legacy `apps/api`, which now
-exists solely to serve the argon2 bridge.
+No database to install and no Docker: the Worker runs on workerd against a local D1 (a SQLite
+file wrangler manages for you) and a simulated R2 — the same engine as production, so local
+behaviour matches.
+
+`apps/api` is the retired Fastify application. It is still deployed on the old server because it
+hosts the argon2 bridge, but **nothing calls that bridge any more** since login started sending
+pre-migration accounts through password reset. Do not build on it.
 
 ## Quick Start
 
@@ -21,19 +25,29 @@ pnpm install
 cp apps/worker/.dev.vars.example apps/worker/.dev.vars
 # Generate a dev keypair and a pepper — the file explains how
 
-# Create the local D1 and apply migrations
-pnpm --filter @badge/worker exec wrangler d1 migrations apply badge-db-staging --local --env staging
+# Create the local D1, apply migrations, and fill it with seed data
+pnpm dev:setup
 
-# Two terminals
-pnpm --filter @badge/worker dev    # API on http://localhost:8787
-pnpm dev                           # Frontend on http://localhost:5173
+# Both servers at once — API on 8787, frontend on 5173
+pnpm dev
 ```
 
-Point the frontend at the local Worker with `apps/web/.env.development`:
+`pnpm dev:worker` and `pnpm dev:web` run them separately. `apps/web/.env.development` already
+points at the local Worker (`VITE_API_URL=http://localhost:8787/api`); it is versioned, so there
+is nothing to configure.
 
-```
-VITE_API_URL=http://localhost:8787/api
-```
+## Seed data
+
+`pnpm run seed` wipes the local database and refills it with invented accounts, items in every
+state (stolen, active, archived, recovered, insured, and the sparse case with no serial and no
+photo), orders at every status, claimed and unclaimed sticker codes, and category-matching
+photos. It is rerunnable, and production is not a valid target.
+
+**Every seeded account signs in with `Seed1234!`.** Alex's five own accounts are recreated
+account-only — no items, no orders — so the usual logins exist.
+
+> **Never copy production client data into a local or staging database.** If a test genuinely
+> needs real data, say so first, keep it to the narrowest slice, and delete it the same day.
 
 ## Environment Variables
 
@@ -48,8 +62,6 @@ a secret.
 | `JWT_PRIVATE_KEY` | Ed25519 private key, base64-encoded PEM | yes |
 | `JWT_PUBLIC_KEY` | Ed25519 public key, base64-encoded PEM | yes |
 | `PASSWORD_PEPPER` | Secret mixed into the PBKDF2 input. Changing it invalidates every stored hash | yes |
-| `LEGACY_VERIFY_URL` | Endpoint on the old server that verifies argon2 hashes | prod, until retired |
-| `LEGACY_VERIFY_SECRET` | Shared secret for that endpoint | prod, until retired |
 | `BREVO_API_KEY` | Brevo transactional email. Unset: emails are logged, not sent | prod |
 | `STRIPE_SECRET_KEY` | Unset: the shop returns 503 | prod |
 | `STRIPE_WEBHOOK_SECRET` | Unset: webhooks return 503 and orders never become paid | prod |
