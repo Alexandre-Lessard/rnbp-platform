@@ -342,11 +342,11 @@ Sitemap: ${domain}/sitemap.xml
   });
 }
 
-// Stamped once per isolate rather than per request: the content only changes
-// when a deploy replaces the isolate, so this is the date of the running build.
-const LASTMOD = new Date().toISOString().slice(0, 10);
-
 function generateSitemapXml(): Response {
+  // Computed per request, not at module scope: Workers freeze the clock until
+  // the first I/O, so a Date read during module initialisation returns the
+  // epoch — which shipped a sitemap full of <lastmod>1970-01-01</lastmod>.
+  const LASTMOD = new Date().toISOString().slice(0, 10);
   const locale = detectLocale();
   const domain = getDomain();
 
