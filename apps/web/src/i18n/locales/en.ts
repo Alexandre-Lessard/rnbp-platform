@@ -884,8 +884,8 @@ const en: SiteContent = {
         body: "The public verification feature (search by Badge code) does not disclose any personal information about the owner. Only the property status (registered, reported stolen) is displayed.",
       },
       {
-        title: "7. Cookies and Similar Technologies",
-        body: "The Badge uses only strictly necessary cookies for site functionality (authentication, language preferences). No advertising tracking or third-party analytics cookies are used.",
+        title: "7. Cookies and similar technologies",
+        body: "Badge sets cookies that are strictly necessary for the site to work — authentication, language preference, cart — which cannot be refused without breaking the site. Two further categories exist only with your explicit consent, asked on your first visit: audience measurement, which tells us which pages actually serve people, and advertising, which lets us see which ads lead to a sign-up. None of it loads before you choose. You can change or withdraw that choice at any time through the \"Cookie settings\" link at the bottom of every page, as easily as you gave it. Advertising measurement data is shared with Meta Platforms, whose servers are outside Quebec, for the sole purpose of measuring our campaigns. We do not sell any data and share none for brokerage purposes."
       },
       {
         title: "8. Changes",
@@ -971,6 +971,29 @@ const en: SiteContent = {
     logoutButton: "Log out",
     checkAgain: "I've verified my email",
     notVerifiedYet: "Your email is not verified yet. Please check your inbox.",
+  },
+  consent: {
+    bannerTitle: "Your choice about cookies",
+    bannerBody:
+      "Badge only sets the cookies it needs to work. Nothing for measurement or advertising loads without your consent — and you can withdraw it at any time.",
+    privacyLink: "Read the privacy policy",
+    acceptAll: "Accept all",
+    refuseAll: "Refuse all",
+    customize: "Customize",
+    save: "Save my choices",
+    panelTitle: "Cookie settings",
+    panelIntro:
+      "Each category is separate. Refusing takes nothing away from the site: only our measurement suffers, not you.",
+    alwaysOn: "always on",
+    necessaryTitle: "Necessary",
+    necessaryBody:
+      "Your session, your language and your cart. Without them you cannot stay signed in or place an order.",
+    measurementTitle: "Audience measurement",
+    measurementBody:
+      "Helps us see which pages serve people and which lose them. No data is ever sold.",
+    advertisingTitle: "Advertising",
+    advertisingBody:
+      "Lets us see which ads lead to a sign-up. This data is shared with Meta, outside Quebec.",
   },
   newsletter: {
     unsubscribe: {

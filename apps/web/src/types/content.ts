@@ -540,6 +540,24 @@ export type SiteContent = {
     newsletterError: string;
     newsletterUnavailable: string;
   };
+  consent?: {
+    bannerTitle: string;
+    bannerBody: string;
+    privacyLink: string;
+    acceptAll: string;
+    refuseAll: string;
+    customize: string;
+    save: string;
+    panelTitle: string;
+    panelIntro: string;
+    alwaysOn: string;
+    necessaryTitle: string;
+    necessaryBody: string;
+    measurementTitle: string;
+    measurementBody: string;
+    advertisingTitle: string;
+    advertisingBody: string;
+  };
   newsletter?: {
     unsubscribe: {
       doneHeading: string;

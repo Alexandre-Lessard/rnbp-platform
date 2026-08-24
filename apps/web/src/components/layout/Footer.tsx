@@ -5,6 +5,7 @@ import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
 import { ClientOnly } from "@/components/ClientOnly";
 import { ROUTES } from "@/routes/routes";
+import { openCookiePreferences } from "@/lib/consent";
 
 // Build-time year used as SSR fallback. Replaced after mount with the live
 // browser year (handles edge case of year change between build and visit).
@@ -135,7 +136,13 @@ export function Footer() {
               >
                 {t.footer.dataDeletion}
               </Link>
-              <span className="cursor-not-allowed opacity-50">{t.footer.cookieSettings}</span>
+              <button
+                type="button"
+                onClick={openCookiePreferences}
+                className="cursor-pointer transition-colors hover:text-[var(--rcb-primary)]"
+              >
+                {t.footer.cookieSettings}
+              </button>
             </div>
             <p>
               {(() => {

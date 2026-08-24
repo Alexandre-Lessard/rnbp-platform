@@ -890,8 +890,8 @@ const fr: SiteContent = {
         body: "La fonction de vérification publique (recherche par badge) ne divulgue aucune information personnelle sur le propriétaire. Seul le statut du bien (enregistré, déclaré volé) est affiché.",
       },
       {
-        title: "7. Cookies et technologies similaires",
-        body: "Badge utilise des cookies strictement nécessaires au fonctionnement du site (authentification, préférences linguistiques). Aucun cookie de suivi publicitaire ou d'analyse tiers n'est utilisé.",
+        title: "7. Témoins et technologies similaires",
+        body: "Badge dépose des témoins strictement nécessaires au fonctionnement du site — authentification, préférences linguistiques, panier — qui ne peuvent pas être refusés sans empêcher le site de fonctionner. Deux catégories supplémentaires n'existent qu'avec votre consentement explicite, demandé à votre première visite : la mesure d'audience, qui nous indique quelles pages servent réellement, et la publicité, qui nous permet de savoir quelles annonces mènent à une inscription. Rien de tout cela n'est chargé avant votre choix. Vous pouvez le modifier ou le retirer à tout moment par le lien « Paramètres de témoins » au bas de chaque page, aussi facilement que vous l'avez donné. Les données de mesure publicitaire sont communiquées à Meta Platforms, dont les serveurs se trouvent hors du Québec, aux seules fins de mesurer l'efficacité de nos campagnes. Nous ne vendons aucune donnée et n'en partageons aucune à des fins de courtage."
       },
       {
         title: "8. Modifications",
@@ -977,6 +977,29 @@ const fr: SiteContent = {
     logoutButton: "Se déconnecter",
     checkAgain: "J'ai vérifié mon courriel",
     notVerifiedYet: "Votre courriel n'est pas encore vérifié. Vérifiez votre boîte de réception.",
+  },
+  consent: {
+    bannerTitle: "Votre choix sur les témoins",
+    bannerBody:
+      "Badge dépose uniquement les témoins nécessaires à son fonctionnement. Pour la mesure d'audience et la publicité, rien n'est chargé sans votre accord — et vous pouvez le retirer à tout moment.",
+    privacyLink: "Lire la politique de confidentialité",
+    acceptAll: "Tout accepter",
+    refuseAll: "Tout refuser",
+    customize: "Personnaliser",
+    save: "Enregistrer mes choix",
+    panelTitle: "Paramètres de témoins",
+    panelIntro:
+      "Chaque catégorie s'active séparément. Refuser n'enlève rien aux fonctionnalités du site : seule la mesure en souffre, pas vous.",
+    alwaysOn: "toujours actifs",
+    necessaryTitle: "Nécessaires",
+    necessaryBody:
+      "Votre session, votre langue et votre panier. Sans eux, impossible de rester connecté ou de commander.",
+    measurementTitle: "Mesure d'audience",
+    measurementBody:
+      "Nous aide à savoir quelles pages servent et lesquelles perdent les gens. Aucune donnée n'est revendue.",
+    advertisingTitle: "Publicité",
+    advertisingBody:
+      "Permet de savoir quelles publicités mènent à une inscription. Ces données sont communiquées à Meta, hors du Québec.",
   },
   newsletter: {
     unsubscribe: {
