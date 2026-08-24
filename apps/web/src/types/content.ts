@@ -573,6 +573,7 @@ export type SiteContent = {
       items: string;
       clients: string;
       orders: string;
+      acquisition: string;
       products: string;
     };
     dashboard: {
