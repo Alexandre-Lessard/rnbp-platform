@@ -31,6 +31,7 @@ export const ROUTES = {
   adminClients: "/admin/clients",
   adminOrders: "/admin/orders",
   adminOrderDetail: (id: string) => `/admin/orders/${id}`,
+  adminAcquisition: "/admin/acquisition",
   adminProducts: "/admin/products",
   adminProductEdit: (id: string) => `/admin/products/${id}`,
   googleCallback: "/auth/google/callback",

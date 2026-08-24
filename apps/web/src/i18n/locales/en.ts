@@ -1029,6 +1029,7 @@ const en: SiteContent = {
       items: "Items",
       clients: "Clients",
       orders: "Orders",
+      acquisition: "Acquisition",
       products: "Products",
     },
     dashboard: {

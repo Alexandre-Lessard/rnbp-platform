@@ -58,6 +58,15 @@ function ProductsIcon() {
   );
 }
 
+function AcquisitionIcon() {
+  return (
+    <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 3v18h18" />
+      <path d="M7 14l4-4 3 3 5-6" />
+    </svg>
+  );
+}
+
 function MenuIcon() {
   return (
     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -99,6 +108,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     { label: admin?.nav.items ?? "Items", href: ROUTES.adminItems, icon: <ItemsIcon /> },
     { label: admin?.nav.clients ?? "Clients", href: ROUTES.adminClients, icon: <ClientsIcon /> },
     { label: admin?.nav.orders ?? "Orders", href: ROUTES.adminOrders, icon: <OrdersIcon /> },
+    { label: admin?.nav.acquisition ?? "Acquisition", href: ROUTES.adminAcquisition, icon: <AcquisitionIcon /> },
     { label: admin?.nav.products ?? "Products", href: ROUTES.adminProducts, icon: <ProductsIcon /> },
   ];
 

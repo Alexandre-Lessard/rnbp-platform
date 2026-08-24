@@ -45,6 +45,7 @@ export default [
     route("admin/clients", "pages/AdminClientsPage.tsx"),
     route("admin/orders", "pages/AdminOrdersPage.tsx"),
     route("admin/orders/:id", "pages/AdminOrderDetailPage.tsx"),
+    route("admin/acquisition", "pages/AdminAcquisitionPage.tsx"),
     route("admin/products", "pages/AdminProductsPage.tsx"),
     route("admin/products/:id", "pages/AdminProductEditPage.tsx"),
   ]),

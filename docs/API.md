@@ -325,10 +325,17 @@ Response: { available: boolean }
 ### POST /shop/checkout
 Auth: requireVerifiedEmail
 ```
-Body: { items: [{ productId, quantity: 1-50, itemId? }], email? }
+Body: { items: [{ productId, quantity: 1-50, itemId? }], email?,
+        eventId?, adConsent?, utmSource?, utmMedium?, utmCampaign?, fbclid? }
 Response: { url: string }
 ```
 Returns a Stripe Checkout session URL. Items with `requiresItem=true` need a valid `itemId`.
+
+The measurement fields are frozen on the order here because this is the last moment a browser is
+involved: the webhook that confirms the sale arrives from Stripe with no URL to read and no consent
+to consult. `adConsent` is the visitor's advertising choice at checkout — anything but `true` and
+the Conversions API stays silent for this order. `eventId` is shared with the browser `Purchase`
+event so Meta counts one sale rather than two.
 
 ### POST /shop/webhook
 Auth: Stripe signature | Rate limit: 200/min
@@ -336,7 +343,7 @@ Auth: Stripe signature | Rate limit: 200/min
 Body: Raw Stripe event
 Response: { received: true }
 ```
-Handles `checkout.session.completed` and `checkout.session.expired`. On expired, soft-voids any unclaimed `sticker_codes` linked to the order's lines.
+Handles `checkout.session.completed` and `checkout.session.expired`. On expired, soft-voids any unclaimed `sticker_codes` linked to the order's lines. On completed, reports the purchase to the Meta Conversions API — only if the order carries `adConsent = true` and `META_CAPI_TOKEN` is set.
 
 ---
 
@@ -485,6 +492,37 @@ Auth: requireAdmin
 ```
 Query: ?limit=20 (max 100)
 Response: { activity: [{ type, date, id, ... }] }
+```
+
+### GET /admin/acquisition
+Auth: requireAdmin
+```
+Query: ?from=2026-08-01&to=2026-08-31
+Response: { from, to,
+            campaigns: [{ campaign, source, signups, orders, revenueCents, spendCents,
+                          costPerSignupCents, costPerOrderCents, signupToOrderRate }],
+            totals: { signups, orders, revenueCents, spendCents },
+            spendEntries: [...] }
+```
+Signups and paid orders grouped by `utm_campaign`, against the spend recorded below. Defaults to the
+last 30 days; both bounds are inclusive days. Rows with no campaign tag are grouped under
+`(direct / sans campagne)` rather than dropped — untagged traffic is most of the business. A cost
+per acquisition is `null` rather than `0` when there is nothing to divide by.
+
+### POST /admin/acquisition/spend
+Auth: requireAdmin
+```
+Body: { campaign, platform?, amountCents, periodStart, periodEnd, note? }
+Response: { spend } (201)
+```
+Ad spend is typed in by hand: reading it from Meta would need a system-user token to create, renew
+and guard, for a figure that is already on the invoice. `campaign` must match the `utm_campaign` in
+the ad's link, which is how the spend finds its conversions.
+
+### DELETE /admin/acquisition/spend/:id
+Auth: requireAdmin
+```
+Response: { success: true }
 ```
 
 ---

@@ -1035,6 +1035,7 @@ const fr: SiteContent = {
       items: "Biens",
       clients: "Clients",
       orders: "Commandes",
+      acquisition: "Acquisition",
       products: "Produits",
     },
     dashboard: {

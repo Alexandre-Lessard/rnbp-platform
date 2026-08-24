@@ -11,6 +11,7 @@ import {
   theftReports,
   newsletterSubscribers,
   stickerCodes,
+  adSpend,
 } from "../db/schema.js";
 import { requireAdmin } from "../middleware/auth.js";
 import { verifyToken } from "../utils/tokens.js";
@@ -19,6 +20,7 @@ import {
   ORDER_NOT_FOUND,
   ORDER_LINE_NOT_FOUND,
   ORDER_NOT_PAID,
+  SPEND_NOT_FOUND,
   PRODUCT_NOT_FOUND,
   INVALID_RANGE,
   INVALID_BADGE_FORMAT,
@@ -867,4 +869,163 @@ adminRoutes.get("/admin/activity", requireAdmin, async (c) => {
     .slice(0, feedLimit);
 
   return c.json({ activity });
+});
+
+// ── Acquisition (campaign performance) ─────────────────────────
+
+// What a campaign brought in, next to what it cost. The spend side is typed in
+// by hand: reading it from Meta would mean a system-user token to create,
+// renew and guard, for a figure that is already on the invoice.
+//
+// Deliberately not a funnel from visits: the Worker never sees a visit, and
+// the only visit count we have (Cloudflare Web Analytics) lives outside this
+// database. Signups → orders is the part we can state without guessing.
+
+const spendSchema = z.object({
+  campaign: z.string().trim().min(1).max(255),
+  platform: z.string().trim().min(1).max(50).default("facebook"),
+  amountCents: z.number().int().min(0),
+  periodStart: z.coerce.date(),
+  periodEnd: z.coerce.date(),
+  note: z.string().trim().max(500).optional(),
+});
+
+adminRoutes.get("/admin/acquisition", requireAdmin, async (c) => {
+  const db = getDb();
+
+  // Default window: the last 30 days, which is the span a campaign is usually
+  // judged on. Both bounds are inclusive of the days they name.
+  const to = c.req.query("to") ? new Date(`${c.req.query("to")}T23:59:59.999Z`) : new Date();
+  const from = c.req.query("from")
+    ? new Date(`${c.req.query("from")}T00:00:00.000Z`)
+    : new Date(to.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+  if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime()) || from > to) {
+    throw new AppError(400, INVALID_RANGE, "Invalid date range");
+  }
+
+  // `null` campaign is a real answer, not missing data: it is every signup and
+  // every order that arrived without a campaign tag — direct, organic, or from
+  // someone who refused advertising trackers. Hiding it would make the paid
+  // channels look like the whole business.
+  const UNATTRIBUTED = "(direct / sans campagne)";
+
+  const signupRows = await db
+    .select({
+      campaign: users.utmCampaign,
+      source: users.utmSource,
+      signups: count(),
+    })
+    .from(users)
+    .where(and(sql`${users.createdAt} >= ${from.getTime()}`, sql`${users.createdAt} <= ${to.getTime()}`))
+    .groupBy(users.utmCampaign, users.utmSource);
+
+  const orderRows = await db
+    .select({
+      campaign: orders.utmCampaign,
+      source: orders.utmSource,
+      orders: count(),
+      revenueCents: sum(orders.totalAmountCents),
+    })
+    .from(orders)
+    .where(
+      and(
+        eq(orders.status, "paid"),
+        sql`${orders.createdAt} >= ${from.getTime()}`,
+        sql`${orders.createdAt} <= ${to.getTime()}`,
+      ),
+    )
+    .groupBy(orders.utmCampaign, orders.utmSource);
+
+  // Spend is filtered on its period overlapping the window rather than being
+  // contained by it, so a campaign still running is not silently dropped.
+  const spendRows = await db
+    .select()
+    .from(adSpend)
+    .where(
+      and(sql`${adSpend.periodStart} <= ${to.getTime()}`, sql`${adSpend.periodEnd} >= ${from.getTime()}`),
+    )
+    .orderBy(desc(adSpend.periodStart));
+
+  type Row = {
+    campaign: string;
+    source: string | null;
+    signups: number;
+    orders: number;
+    revenueCents: number;
+    spendCents: number;
+  };
+
+  const byCampaign = new Map<string, Row>();
+  const row = (campaign: string | null, source: string | null): Row => {
+    const key = campaign ?? UNATTRIBUTED;
+    let existing = byCampaign.get(key);
+    if (!existing) {
+      existing = { campaign: key, source, signups: 0, orders: 0, revenueCents: 0, spendCents: 0 };
+      byCampaign.set(key, existing);
+    }
+    if (!existing.source && source) existing.source = source;
+    return existing;
+  };
+
+  for (const r of signupRows) row(r.campaign, r.source).signups += Number(r.signups);
+  for (const r of orderRows) {
+    const target = row(r.campaign, r.source);
+    target.orders += Number(r.orders);
+    target.revenueCents += Number(r.revenueCents ?? 0);
+  }
+  // A campaign that spent and converted nobody has to appear, cost and all.
+  for (const s of spendRows) row(s.campaign, s.platform).spendCents += s.amountCents;
+
+  const campaigns = [...byCampaign.values()]
+    .map((r) => ({
+      ...r,
+      // Null rather than zero when there is nothing to divide by: "no data" and
+      // "free" are different answers, and only one of them is true.
+      costPerSignupCents: r.signups > 0 && r.spendCents > 0 ? Math.round(r.spendCents / r.signups) : null,
+      costPerOrderCents: r.orders > 0 && r.spendCents > 0 ? Math.round(r.spendCents / r.orders) : null,
+      signupToOrderRate: r.signups > 0 ? r.orders / r.signups : null,
+    }))
+    .sort((a, b) => b.spendCents - a.spendCents || b.signups - a.signups);
+
+  const totals = campaigns.reduce(
+    (acc, r) => ({
+      signups: acc.signups + r.signups,
+      orders: acc.orders + r.orders,
+      revenueCents: acc.revenueCents + r.revenueCents,
+      spendCents: acc.spendCents + r.spendCents,
+    }),
+    { signups: 0, orders: 0, revenueCents: 0, spendCents: 0 },
+  );
+
+  return c.json({
+    from: from.toISOString().slice(0, 10),
+    to: to.toISOString().slice(0, 10),
+    campaigns,
+    totals,
+    spendEntries: spendRows,
+  });
+});
+
+adminRoutes.post("/admin/acquisition/spend", requireAdmin, async (c) => {
+  const db = getDb();
+  const body = spendSchema.parse(await c.req.json());
+
+  if (body.periodStart > body.periodEnd) {
+    throw new AppError(400, INVALID_RANGE, "periodStart must not be after periodEnd");
+  }
+
+  const [created] = await db.insert(adSpend).values(body).returning();
+  return c.json({ spend: created }, 201);
+});
+
+adminRoutes.delete("/admin/acquisition/spend/:id", requireAdmin, async (c) => {
+  const db = getDb();
+  const deleted = await db
+    .delete(adSpend)
+    .where(eq(adSpend.id, c.req.param("id")))
+    .returning({ id: adSpend.id });
+
+  if (deleted.length === 0) throw new AppError(404, SPEND_NOT_FOUND, "Spend entry not found");
+  return c.json({ success: true });
 });
