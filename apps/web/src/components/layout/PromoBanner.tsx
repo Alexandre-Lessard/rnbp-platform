@@ -20,8 +20,9 @@ function isDismissed(): boolean {
 export function PromoBanner() {
   // Reserve vertical space matching the rendered banner to avoid layout shift
   // when the client-side mount swaps in the real content (or null if dismissed).
+  // Two heights, because the banner stacks below sm.
   return (
-    <ClientOnly fallback={<div aria-hidden="true" style={{ height: 76 }} />}>
+    <ClientOnly fallback={<div aria-hidden="true" className="h-[132px] sm:h-[76px]" />}>
       <PromoBannerInner />
     </ClientOnly>
   );
@@ -47,10 +48,16 @@ function PromoBannerInner() {
   return (
     <div className="bg-[var(--rcb-white)]">
       <div className="section-shell py-3">
-      <div className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--rcb-primary)]/30 bg-[var(--rcb-primary)]/[0.06] px-5 py-3.5 shadow-md">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <div className="flex items-center gap-3">
-            <span className="relative shrink-0 rounded-full bg-[var(--rcb-primary)] px-3 py-1 text-xs font-bold tracking-wide text-white uppercase">
+      {/*
+        Stacked below sm: on a narrow screen the pill and the text competing for
+        one row left the sentence in a four-word column. From sm up they share a
+        row again. The close button is absolute so it never takes width from the
+        text in either layout.
+      */}
+      <div className="relative flex flex-col gap-2 rounded-2xl border border-[var(--rcb-primary)]/30 bg-[var(--rcb-primary)]/[0.06] px-4 py-3.5 pr-12 shadow-md sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            <span className="relative w-fit shrink-0 rounded-full bg-[var(--rcb-primary)] px-3 py-1 text-xs font-bold tracking-wide text-white uppercase">
               <span className="absolute inset-0 animate-ping rounded-full bg-[var(--rcb-primary)] opacity-30" />
               {promo.badge}
             </span>
@@ -60,13 +67,13 @@ function PromoBannerInner() {
           </div>
           <Link
             to={ROUTES.shop}
-            className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--rcb-primary)] transition-colors hover:underline"
+            className="inline-flex w-fit items-center gap-1 text-sm font-semibold text-[var(--rcb-primary)] transition-colors hover:underline"
           >
             {promo.cta}
             <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="absolute right-2 top-2 flex items-center gap-2 sm:static sm:right-auto sm:top-auto sm:shrink-0">
           <button
             type="button"
             onClick={handleDismissForever}
