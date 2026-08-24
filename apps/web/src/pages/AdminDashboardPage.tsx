@@ -9,8 +9,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
 } from "recharts";
 import { apiRequest, getAccessToken } from "@/lib/api-client";
 import { useLanguage } from "@/i18n/context";
@@ -44,42 +42,6 @@ type ChartData = {
   revenue: RevenuePoint[];
 };
 
-// Demo data for "Preview" mode — realistic growth curve over 30 days
-function generatePreviewData(): { charts: ChartData; categories: { name: string; count: number }[] } {
-  const points = 30;
-  const registrations: ChartPoint[] = [];
-  const items: ChartPoint[] = [];
-  const revenue: RevenuePoint[] = [];
-
-  for (let i = 0; i < points; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() - (points - 1 - i));
-    const dateStr = date.toISOString().split("T")[0];
-    // Growth curve with natural variation
-    const base = 2 + Math.floor(i / 3);
-    const jitter = () => Math.floor(Math.random() * 3) - 1;
-    registrations.push({ date: dateStr, count: Math.max(0, base + jitter()) });
-    items.push({ date: dateStr, count: Math.max(0, Math.floor(base * 1.8) + jitter() * 2) });
-    revenue.push({ date: dateStr, amount: Math.max(0, (base * 1200 + jitter() * 500)) });
-  }
-
-  const categories = [
-    { name: "velo-electrique", count: 34 },
-    { name: "telephone-intelligent", count: 28 },
-    { name: "ordinateur-portable", count: 22 },
-    { name: "montre-luxe", count: 18 },
-    { name: "drone", count: 15 },
-    { name: "instrument-musique", count: 12 },
-    { name: "console-jeux-video", count: 10 },
-    { name: "appareil-photo", count: 8 },
-    { name: "equipement-ski", count: 7 },
-    { name: "bijoux", count: 5 },
-  ];
-
-  return { charts: { registrations, items, revenue }, categories };
-}
-
-const PREVIEW_DATA = generatePreviewData();
 
 // Two backends report metrics during the Cloudflare migration: the Fastify
 // server sends host gauges (CPU, RAM, heap, uptime), the Worker sends what a
@@ -118,7 +80,7 @@ type ActivityEntry = {
   itemId?: string;
 };
 
-type Period = "preview" | "day" | "week" | "month";
+type Period = "day" | "week" | "month";
 
 const MONTH_ABBR_FR = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"];
 const MONTH_ABBR_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -127,7 +89,7 @@ function formatXAxis(dateStr: string, period: Period, locale: string): string {
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return dateStr;
 
-  if (period === "day" || period === "preview") {
+  if (period === "day") {
     return String(d.getUTCDate());
   }
   if (period === "week") {
@@ -147,13 +109,6 @@ function formatXAxis(dateStr: string, period: Period, locale: string): string {
 
 function formatCurrency(cents: number): string {
   return (cents / 100).toLocaleString("en-CA", { style: "currency", currency: "CAD" });
-}
-
-function formatUptime(seconds: number): string {
-  const d = Math.floor(seconds / 86400);
-  const h = Math.floor((seconds % 86400) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  return `${d}d ${h}h ${m}m`;
 }
 
 function relativeTime(date: string): string {
@@ -215,25 +170,6 @@ function KpiCard({
   );
 }
 
-// ------- Sparkline (for server metrics) -------
-
-function Sparkline({ data, color, dataKey }: { data: { value: number }[]; color: string; dataKey?: string }) {
-  return (
-    <ResponsiveContainer width="100%" height={40}>
-      <LineChart data={data}>
-        <Line
-          type="monotone"
-          dataKey={dataKey || "value"}
-          stroke={color}
-          strokeWidth={1.5}
-          dot={false}
-          isAnimationActive={false}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  );
-}
-
 // ------- Main Page -------
 
 export function AdminDashboardPage() {
@@ -244,7 +180,7 @@ export function AdminDashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [charts, setCharts] = useState<ChartData | null>(null);
   const [activity, setActivity] = useState<ActivityEntry[]>([]);
-  const [period, setPeriod] = useState<Period>("preview");
+  const [period, setPeriod] = useState<Period>("day");
   const [loading, setLoading] = useState(true);
 
   // SSE for live metrics
@@ -254,7 +190,7 @@ export function AdminDashboardPage() {
     return `${API_URL}/admin/metrics/live?token=${token}`;
   }, []);
 
-  const { data: liveData, history: liveHistory } = useSSE<LiveMetrics>(sseUrl);
+  const { data: liveData } = useSSE<LiveMetrics>(sseUrl);
 
   // Fetch stats and activity on mount
   useEffect(() => {
@@ -272,41 +208,29 @@ export function AdminDashboardPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Fetch charts when period changes (skip API for preview mode)
   useEffect(() => {
-    if (period === "preview") return;
     apiRequest<ChartData>(`/admin/stats/charts?period=${period}`)
       .then(setCharts)
       .catch(() => { /* charts fetch failed silently */ });
   }, [period]);
 
-  // Use preview data or real data depending on period
-  const activeCharts = period === "preview" ? PREVIEW_DATA.charts : charts;
+  const activeCharts = charts;
 
   // Sparkline data from SSE history
-  const cpuHistory = liveHistory.map((m) => ({ value: m.cpu ?? 0 }));
-  const ramHistory = liveHistory.map((m) => ({
-    value: m.memTotal ? Math.round(((m.memTotal - (m.memFree ?? 0)) / m.memTotal) * 100) : 0,
-  }));
 
   // Items by category for pie chart (top 8 + "Other")
   const categoryData = useMemo(() => {
-    const raw = period === "preview"
-      ? PREVIEW_DATA.categories
-      : stats
-        ? stats.itemsByCategory
-            .map((c) => ({ name: c.category, count: c.count }))
-            .sort((a, b) => b.count - a.count)
-        : [];
+    const raw = stats
+      ? stats.itemsByCategory
+          .map((c) => ({ name: c.category, count: c.count }))
+          .sort((a, b) => b.count - a.count)
+      : [];
     if (raw.length <= 8) return raw;
     const top8 = raw.slice(0, 8);
     const othersCount = raw.slice(8).reduce((sum, c) => sum + c.count, 0);
     return [...top8, { name: "Other", count: othersCount }];
-  }, [period, stats]);
+  }, [stats]);
 
-  const heapPercent = liveData?.heapTotal
-    ? Math.round(((liveData.heapUsed ?? 0) / liveData.heapTotal) * 100)
-    : 0;
 
   const xAxisLabel = period === "week"
     ? (d.axisWeekNumber ?? "Week")
@@ -315,7 +239,6 @@ export function AdminDashboardPage() {
       : (d.axisDayOfMonth ?? "Day of month");
 
   const periodTabs = [
-    { key: "preview" as Period, label: d.periodPreview ?? "Preview" },
     { key: "day" as Period, label: d.periodDay },
     { key: "week" as Period, label: d.periodWeek },
     { key: "month" as Period, label: d.periodMonth },
@@ -410,7 +333,7 @@ export function AdminDashboardPage() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Registrations chart */}
-          <ChartCard title={d.registrations} color="#3b82f6" gradientId="regGrad">
+          <ChartCard title={d.registrations} color="#3b82f6" gradientId="regGrad" isEmpty={!activeCharts?.registrations?.length} emptyLabel={d.noData}>
             <ResponsiveContainer width="100%" height={260}>
               <AreaChart data={activeCharts?.registrations ?? []} margin={{ bottom: 20, left: 10 }}>
                 <defs>
@@ -419,7 +342,7 @@ export function AdminDashboardPage() {
                     <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" || period === "preview" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
+                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={45} label={{ value: d.axisCount ?? "Count", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <Tooltip
                   contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
@@ -431,7 +354,7 @@ export function AdminDashboardPage() {
           </ChartCard>
 
           {/* Items chart */}
-          <ChartCard title={d.itemsRegistered} color="#10b981" gradientId="itemGrad">
+          <ChartCard title={d.itemsRegistered} color="#10b981" gradientId="itemGrad" isEmpty={!activeCharts?.items?.length} emptyLabel={d.noData}>
             <ResponsiveContainer width="100%" height={260}>
               <AreaChart data={activeCharts?.items ?? []} margin={{ bottom: 20, left: 10 }}>
                 <defs>
@@ -440,7 +363,7 @@ export function AdminDashboardPage() {
                     <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" || period === "preview" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
+                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={45} label={{ value: d.axisCount ?? "Count", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <Tooltip
                   contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
@@ -452,7 +375,7 @@ export function AdminDashboardPage() {
           </ChartCard>
 
           {/* Revenue chart */}
-          <ChartCard title={d.revenueOverTime} color="#D80621" gradientId="revGrad">
+          <ChartCard title={d.revenueOverTime} color="#D80621" gradientId="revGrad" isEmpty={!activeCharts?.revenue?.length} emptyLabel={d.noData}>
             <ResponsiveContainer width="100%" height={260}>
               <AreaChart data={activeCharts?.revenue ?? []} margin={{ bottom: 20, left: 10 }}>
                 <defs>
@@ -461,7 +384,7 @@ export function AdminDashboardPage() {
                     <stop offset="100%" stopColor="#D80621" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" || period === "preview" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
+                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#999" }} axisLine={false} tickLine={false} tickFormatter={(v) => formatXAxis(v, period, locale)} interval={period === "day" ? 4 : undefined} label={{ value: xAxisLabel, position: "bottom", offset: 2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <YAxis tick={{ fontSize: 11, fill: "#999" }} axisLine={false} tickLine={false} width={55} label={{ value: d.axisRevenue ?? "$ CAD", angle: -90, position: "insideLeft", offset: -2, style: { fontSize: 10, fill: "#aaa" } }} />
                 <Tooltip
                   contentStyle={{ background: "#1e293b", border: "none", borderRadius: "8px", color: "#fff", fontSize: 12 }}
@@ -474,7 +397,7 @@ export function AdminDashboardPage() {
           </ChartCard>
 
           {/* Items by category */}
-          <ChartCard title={d.itemsByCategory} color="#8b5cf6" gradientId="catGrad">
+          <ChartCard title={d.itemsByCategory} color="#8b5cf6" gradientId="catGrad" isEmpty={!categoryData.length} emptyLabel={d.noData}>
             <div className="flex flex-col items-center gap-2 lg:flex-row">
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
@@ -531,53 +454,11 @@ export function AdminDashboardPage() {
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-400 border-t-transparent" />
             <span className="ml-3 text-sm text-white/50">Connecting...</span>
           </div>
-        ) : liveData.platform === "workers" ? (
+        ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             <MiniMetric label={d.reqPerMin} value={String(liveData.reqPerMin ?? 0)} />
             <MiniMetric label={d.dbSize} value={`${liveData.dbRows ?? 0}`} />
             <MiniMetric label="Runtime" value="Workers" />
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Row 1: CPU, RAM, Node Heap with sparklines */}
-            <div className="grid gap-4 sm:grid-cols-3">
-              <MetricPanel label={d.cpu} value={`${(liveData.cpu ?? 0).toFixed(1)}%`} color="#3b82f6">
-                <Sparkline data={cpuHistory} color="#3b82f6" />
-              </MetricPanel>
-
-              <MetricPanel
-                label={d.ram}
-                value={`${liveData.memTotal ? Math.round(((liveData.memTotal - (liveData.memFree ?? 0)) / liveData.memTotal) * 100) : 0}%`}
-                color="#8b5cf6"
-              >
-                <Sparkline data={ramHistory} color="#8b5cf6" />
-              </MetricPanel>
-
-              <MetricPanel label={d.nodeHeap} value={`${heapPercent}%`} color="#f59e0b">
-                <div className="mt-2">
-                  <div className="h-2.5 overflow-hidden rounded-full bg-white/10">
-                    <div
-                      className="h-full rounded-full transition-all duration-700"
-                      style={{
-                        width: `${heapPercent}%`,
-                        background: `linear-gradient(90deg, #f59e0b, ${heapPercent > 80 ? "#ef4444" : "#f59e0b"})`,
-                      }}
-                    />
-                  </div>
-                  <p className="mt-1 text-[10px] text-white/30">
-                    {liveData.heapUsed ? `${(liveData.heapUsed / 1024 / 1024).toFixed(0)}MB / ${((liveData.heapTotal ?? 0) / 1024 / 1024).toFixed(0)}MB` : "—"}
-                  </p>
-                </div>
-              </MetricPanel>
-            </div>
-
-            {/* Row 2: DB size, Connections, Req/min, Uptime */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <MiniMetric label={d.dbSize} value={liveData.dbSize ? `${(liveData.dbSize / 1024 / 1024).toFixed(1)} MB` : "—"} />
-              <MiniMetric label={d.connections} value={String(liveData.dbConnections ?? 0)} />
-              <MiniMetric label={d.reqPerMin} value={String(liveData.reqPerMin ?? 0)} />
-              <MiniMetric label={d.uptime} value={formatUptime(liveData.uptime ?? 0)} />
-            </div>
           </div>
         )}
       </div>
@@ -611,11 +492,16 @@ function ChartCard({
   title,
   color,
   children,
+  isEmpty,
+  emptyLabel,
 }: {
   title: string;
   color: string;
   gradientId: string;
   children: React.ReactNode;
+  /** No data for the period — an empty chart reads as a broken one. */
+  isEmpty?: boolean;
+  emptyLabel?: string;
 }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-[var(--rcb-border)] bg-white p-5 shadow-sm">
@@ -623,29 +509,13 @@ function ChartCard({
         <div className="h-2.5 w-2.5 rounded-full" style={{ background: color }} />
         <h3 className="text-sm font-semibold text-[var(--rcb-text-strong)]">{title}</h3>
       </div>
-      {children}
-    </div>
-  );
-}
-
-function MetricPanel({
-  label,
-  value,
-  color,
-  children,
-}: {
-  label: string;
-  value: string;
-  color: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-xl border border-white/8 bg-white/5 p-4">
-      <div className="flex items-baseline justify-between">
-        <span className="text-xs font-medium uppercase tracking-wider text-white/40">{label}</span>
-        <span className="text-lg font-bold" style={{ color }}>{value}</span>
-      </div>
-      {children}
+      {isEmpty ? (
+        <div className="flex h-[260px] items-center justify-center text-center text-sm text-[var(--rcb-text-muted)]">
+          {emptyLabel}
+        </div>
+      ) : (
+        children
+      )}
     </div>
   );
 }

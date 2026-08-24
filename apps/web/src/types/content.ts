@@ -568,7 +568,8 @@ export type SiteContent = {
       itemsRegistered: string;
       revenueOverTime: string;
       itemsByCategory: string;
-      periodPreview?: string;
+      /** Shown in a chart card when the period holds no data. */
+      noData: string;
       periodDay: string;
       periodWeek: string;
       periodMonth: string;

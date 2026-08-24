@@ -1019,7 +1019,7 @@ const en: SiteContent = {
       itemsRegistered: "Items Registered",
       revenueOverTime: "Revenue",
       itemsByCategory: "Items by Category",
-      periodPreview: "Preview",
+      noData: "No data for this period",
       periodDay: "Day",
       periodWeek: "Week",
       periodMonth: "Month",

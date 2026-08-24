@@ -1025,7 +1025,7 @@ const fr: SiteContent = {
       itemsRegistered: "Biens enregistrés",
       revenueOverTime: "Revenus",
       itemsByCategory: "Biens par catégorie",
-      periodPreview: "Aperçu",
+      noData: "Aucune donnée pour cette période",
       periodDay: "Jour",
       periodWeek: "Semaine",
       periodMonth: "Mois",
