@@ -16,16 +16,16 @@ const en: SiteContent = {
       description: "Choose a new password for your Badge account.",
     },
     home: {
-      title: "Protect and recover your valuable belongings | Badge",
-      description: "Register your valuable belongings in a secure registry. Protect and recover your items in case of loss or theft.",
+      title: "Protect your belongings and get them back after a theft | Badge",
+      description: "Register your valuables for free — serial numbers, photos, receipts — in a secure Canadian registry. Proof of ownership ready for police and your insurer.",
     },
     faq: {
-      title: "Frequently Asked Questions | Badge",
-      description: "Find answers to common questions about registering your belongings in the Badge.",
+      title: "Frequently asked questions about the registry | Badge",
+      description: "How to register an item, what to do in the hours after a theft, and how police and insurers use the Badge registry.",
     },
     partners: {
-      title: "Consult the Registry | Badge",
-      description: "Consult the registry to verify an item. Citizens, law enforcement and insurance companies.",
+      title: "Search the stolen property registry | Badge",
+      description: "Police services, insurers and citizens: search the Canadian registry to identify an item, verify ownership or find an owner.",
     },
     privacy: {
       title: "Privacy Policy | Badge",
@@ -44,8 +44,8 @@ const en: SiteContent = {
       description: "Learn about the Badge, a platform to protect, identify and recover your valuable belongings.",
     },
     lookup: {
-      title: "Verify an Item | Badge",
-      description: "Enter an Badge code, serial number, or another compatible identifier to check the status of a registered item.",
+      title: "Check whether an item is stolen | Badge",
+      description: "Before buying second-hand, check a serial number or Badge code against the Canadian registry of items reported stolen. Free and instant.",
     },
     login: {
       title: "Login | Badge",
@@ -60,8 +60,8 @@ const en: SiteContent = {
       description: "Have a question or comment? Send us a message and we\u2019ll get back to you as soon as possible.",
     },
     shop: {
-      title: "Shop | Badge",
-      description: "Buy Badge identification stickers to protect your valuable belongings.",
+      title: "Identification labels for your belongings | Badge",
+      description: "Badge stickers with a unique code: tag bikes, tools and devices so they stay traceable if lost or stolen. Shipping across Canada.",
     },
     shopSuccess: {
       title: "Order Confirmed | Badge",

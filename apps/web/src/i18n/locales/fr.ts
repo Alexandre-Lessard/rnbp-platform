@@ -16,16 +16,16 @@ const fr: SiteContent = {
       description: "Choisissez un nouveau mot de passe pour votre compte Badge.",
     },
     home: {
-      title: "Protégez et retrouvez vos biens de valeur | Badge",
-      description: "Enregistrez vos biens de valeur dans un registre sécurisé. Protégez et retrouvez vos biens en cas de perte ou de vol.",
+      title: "Protégez vos biens et retrouvez-les après un vol | Badge",
+      description: "Enregistrez gratuitement vos objets de valeur — numéros de série, photos, factures — dans un registre canadien sécurisé. Une preuve de propriété prête pour la police et votre assureur.",
     },
     faq: {
-      title: "Questions fréquentes | Badge",
-      description: "Trouvez les réponses aux questions courantes sur l'enregistrement de vos biens au Badge.",
+      title: "Questions fréquentes sur le registre | Badge",
+      description: "Comment enregistrer un bien, quoi faire dans les heures suivant un vol, comment la police et les assureurs utilisent le registre Badge.",
     },
     partners: {
-      title: "Consulter le registre | Badge",
-      description: "Consultez le registre pour vérifier un bien. Citoyens, services policiers et compagnies d'assurance.",
+      title: "Consulter le registre des biens volés | Badge",
+      description: "Services policiers, assureurs et citoyens : consultez le registre canadien pour identifier un bien, vérifier une propriété ou retrouver un propriétaire.",
     },
     privacy: {
       title: "Politique de confidentialité | Badge",
@@ -44,8 +44,8 @@ const fr: SiteContent = {
       description: "Découvrez le Badge, une plateforme pour protéger, identifier et retrouver vos biens de valeur.",
     },
     lookup: {
-      title: "Vérifier un bien | Badge",
-      description: "Entrez un badge, un numéro de série ou un autre identifiant compatible pour vérifier le statut d'un bien enregistré.",
+      title: "Vérifier si un objet est volé | Badge",
+      description: "Avant d'acheter d'occasion, vérifiez un numéro de série ou un code Badge dans le registre canadien des biens déclarés volés. Gratuit et instantané.",
     },
     login: {
       title: "Connexion | Badge",
@@ -60,8 +60,8 @@ const fr: SiteContent = {
       description: "Une question ou un commentaire\u00a0? Envoyez-nous un message et nous vous répondrons dans les plus brefs délais.",
     },
     shop: {
-      title: "Boutique | Badge",
-      description: "Achetez des étiquettes d'identification Badge pour protéger vos biens de valeur.",
+      title: "Étiquettes d'identification pour vos biens | Badge",
+      description: "Autocollants Badge à code unique : identifiez vélos, outils et appareils pour les rendre traçables en cas de perte ou de vol. Livraison partout au Canada.",
     },
     shopSuccess: {
       title: "Commande confirmée | Badge",

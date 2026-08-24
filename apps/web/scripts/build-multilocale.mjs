@@ -34,15 +34,15 @@ copyFileSync(TMP_EN, "build/client/index.en.html");
 const HOME = {
   fr: {
     file: "build/client/index.html",
-    title: "Protégez et retrouvez vos biens de valeur | Badge",
+    title: "Protégez vos biens et retrouvez-les après un vol | Badge",
     description:
-      "Enregistrez vos biens de valeur dans un registre sécurisé. Protégez et retrouvez vos biens en cas de perte ou de vol.",
+      "Enregistrez gratuitement vos objets de valeur — numéros de série, photos, factures — dans un registre canadien sécurisé. Une preuve de propriété prête pour la police et votre assureur.",
   },
   en: {
     file: "build/client/index.en.html",
-    title: "Protect and recover your valuable belongings | Badge",
+    title: "Protect your belongings and get them back after a theft | Badge",
     description:
-      "Register your valuable belongings in a secure registry. Protect and recover your items in case of loss or theft.",
+      "Register your valuables for free — serial numbers, photos, receipts — in a secure Canadian registry. Proof of ownership ready for police and your insurer.",
   },
 };
 

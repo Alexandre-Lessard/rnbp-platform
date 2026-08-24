@@ -1,5 +1,5 @@
-import { useState, type FormEvent } from "react";
-import { Link } from "react-router";
+import { useState, useEffect, useRef, useCallback, type FormEvent } from "react";
+import { Link, useSearchParams } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/Button";
@@ -19,32 +19,52 @@ type LookupResult = {
 export function LookupPage() {
   const { t } = useLanguage();
   const { backendAvailable } = useAuth();
-  const [query, setQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  const initialQuery = searchParams.get("q")?.trim() ?? "";
+  const [query, setQuery] = useState(initialQuery);
   const [result, setResult] = useState<LookupResult | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [backendDown, setBackendDown] = useState(false);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setError("");
-    setResult(null);
-    setLoading(true);
+  const runLookup = useCallback(
+    async (raw: string) => {
+      const term = raw.trim();
+      if (!term) return;
+      setError("");
+      setResult(null);
+      setLoading(true);
 
-    try {
-      const data = await apiRequest<LookupResult>(
-        `/lookup?q=${encodeURIComponent(query.trim())}`,
-      );
-      setResult(data);
-    } catch (err) {
-      if (isNetworkError(err)) {
-        setBackendDown(true);
-        return;
+      try {
+        const data = await apiRequest<LookupResult>(
+          `/lookup?q=${encodeURIComponent(term)}`,
+        );
+        setResult(data);
+      } catch (err) {
+        if (isNetworkError(err)) {
+          setBackendDown(true);
+          return;
+        }
+        setError(getErrorMessage(err, t));
+      } finally {
+        setLoading(false);
       }
-      setError(getErrorMessage(err, t));
-    } finally {
-      setLoading(false);
-    }
+    },
+    [t],
+  );
+
+  // ?q= makes a lookup shareable, and backs the SearchAction the site declares
+  // to Google. Fires once on arrival; typing afterwards goes through the form.
+  const autoRan = useRef(false);
+  useEffect(() => {
+    if (autoRan.current || !initialQuery) return;
+    autoRan.current = true;
+    void runLookup(initialQuery);
+  }, [initialQuery, runLookup]);
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    void runLookup(query);
   }
 
   if (backendDown || !backendAvailable) {

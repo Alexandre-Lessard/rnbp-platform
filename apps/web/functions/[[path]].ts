@@ -9,25 +9,25 @@ type LocaleMeta = Record<string, PageMeta>;
 const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
   fr: {
     defaults: {
-      title: "Protégez et retrouvez vos biens de valeur | Badge",
+      title: "Protégez vos biens et retrouvez-les après un vol | Badge",
       description:
-        "Enregistrez vos biens de valeur dans un registre sécurisé. Protégez et retrouvez vos biens en cas de perte ou de vol.",
+        "Enregistrez gratuitement vos objets de valeur — numéros de série, photos, factures — dans un registre canadien sécurisé. Une preuve de propriété prête pour la police et votre assureur.",
     },
     pages: {
       "/": {
-        title: "Protégez et retrouvez vos biens de valeur | Badge",
+        title: "Protégez vos biens et retrouvez-les après un vol | Badge",
         description:
-          "Enregistrez vos biens de valeur dans un registre sécurisé. Protégez et retrouvez vos biens en cas de perte ou de vol.",
+          "Enregistrez gratuitement vos objets de valeur — numéros de série, photos, factures — dans un registre canadien sécurisé. Une preuve de propriété prête pour la police et votre assureur.",
       },
       "/faq": {
-        title: "Questions fréquentes | Badge",
+        title: "Questions fréquentes sur le registre | Badge",
         description:
-          "Trouvez les réponses aux questions courantes sur l'enregistrement de vos biens au Badge.",
+          "Comment enregistrer un bien, quoi faire dans les heures suivant un vol, comment la police et les assureurs utilisent le registre Badge.",
       },
       "/registry": {
-        title: "Consulter le registre | Badge",
+        title: "Consulter le registre des biens volés | Badge",
         description:
-          "Consultez le registre pour vérifier un bien. Citoyens, services policiers et compagnies d'assurance.",
+          "Services policiers, assureurs et citoyens : consultez le registre canadien pour identifier un bien, vérifier une propriété ou retrouver un propriétaire.",
       },
       "/privacy": {
         title: "Politique de confidentialité | Badge",
@@ -45,9 +45,9 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
           "Comment demander la suppression complète de votre compte et de vos données du Badge.",
       },
       "/lookup": {
-        title: "Vérifier un bien | Badge",
+        title: "Vérifier si un objet est volé | Badge",
         description:
-          "Entrez un code Badge pour vérifier le statut d'un bien enregistré dans le registre.",
+          "Avant d'acheter d'occasion, vérifiez un numéro de série ou un code Badge dans le registre canadien des biens déclarés volés. Gratuit et instantané.",
       },
       "/login": {
         title: "Connexion | Badge",
@@ -86,9 +86,9 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         robots: "noindex, nofollow",
       },
       "/shop": {
-        title: "Boutique | Badge",
+        title: "Étiquettes d'identification pour vos biens | Badge",
         description:
-          "Achetez des étiquettes d'identification Badge pour protéger vos biens de valeur.",
+          "Autocollants Badge à code unique : identifiez vélos, outils et appareils pour les rendre traçables en cas de perte ou de vol. Livraison partout au Canada.",
       },
       "/shop/success": {
         title: "Commande confirmée | Badge",
@@ -124,25 +124,25 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
   },
   en: {
     defaults: {
-      title: "Protect and recover your valuable belongings | Badge",
+      title: "Protect your belongings and get them back after a theft | Badge",
       description:
-        "Register your valuable belongings in a secure registry. Protect and recover your items in case of loss or theft.",
+        "Register your valuables for free — serial numbers, photos, receipts — in a secure Canadian registry. Proof of ownership ready for police and your insurer.",
     },
     pages: {
       "/": {
-        title: "Protect and recover your valuable belongings | Badge",
+        title: "Protect your belongings and get them back after a theft | Badge",
         description:
-          "Register your valuable belongings in a secure registry. Protect and recover your items in case of loss or theft.",
+          "Register your valuables for free — serial numbers, photos, receipts — in a secure Canadian registry. Proof of ownership ready for police and your insurer.",
       },
       "/faq": {
-        title: "Frequently Asked Questions | Badge",
+        title: "Frequently asked questions about the registry | Badge",
         description:
-          "Find answers to common questions about registering your belongings in the Badge.",
+          "How to register an item, what to do in the hours after a theft, and how police and insurers use the Badge registry.",
       },
       "/registry": {
-        title: "Consult the Registry | Badge",
+        title: "Search the stolen property registry | Badge",
         description:
-          "Consult the registry to verify an item. Citizens, law enforcement and insurance companies.",
+          "Police services, insurers and citizens: search the Canadian registry to identify an item, verify ownership or find an owner.",
       },
       "/privacy": {
         title: "Privacy Policy | Badge",
@@ -160,9 +160,9 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
           "How to request the complete deletion of your account and data from the Badge.",
       },
       "/lookup": {
-        title: "Verify an Item | Badge",
+        title: "Check whether an item is stolen | Badge",
         description:
-          "Enter a Badge code to check the status of a registered item.",
+          "Before buying second-hand, check a serial number or Badge code against the Canadian registry of items reported stolen. Free and instant.",
       },
       "/login": {
         title: "Login | Badge",
@@ -201,9 +201,9 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         robots: "noindex, nofollow",
       },
       "/shop": {
-        title: "Shop | Badge",
+        title: "Identification labels for your belongings | Badge",
         description:
-          "Buy Badge identification stickers to protect your valuable belongings.",
+          "Badge stickers with a unique code: tag bikes, tools and devices so they stay traceable if lost or stolen. Shipping across Canada.",
       },
       "/shop/success": {
         title: "Order Confirmed | Badge",
@@ -318,10 +318,6 @@ function getDomain(): string {
   return BRAND_ORIGIN;
 }
 
-function getOtherDomain(): string {
-  return BRAND_ORIGIN;
-}
-
 function generateRobotsTxt(): Response {
   const domain = BRAND_ORIGIN;
   const disallows = NOINDEX_PATHS.map((p) => `Disallow: ${p}`).join("\n");
@@ -336,27 +332,26 @@ Sitemap: ${domain}/sitemap.xml
   });
 }
 
+// Stamped once per isolate rather than per request: the content only changes
+// when a deploy replaces the isolate, so this is the date of the running build.
+const LASTMOD = new Date().toISOString().slice(0, 10);
+
 function generateSitemapXml(): Response {
   const locale = detectLocale();
   const domain = getDomain();
-  const otherDomain = getOtherDomain();
 
+  // Same form as the canonical tag — no trailing slash — so the sitemap and
+  // the pages agree on which URL is the real one.
   const urls = PUBLIC_PATHS.map((path) => {
-    const loc = `${domain}${path === "/" ? "" : path}/`;
-    const frHref =
-      locale === "fr"
-        ? loc
-        : `${otherDomain}${path === "/" ? "" : path}/`;
-    const enHref =
-      locale === "en"
-        ? loc
-        : `${otherDomain}${path === "/" ? "" : path}/`;
+    const loc = `${domain}${path === "/" ? "/" : path}`;
+    const frHref = loc;
+    const enHref = loc;
     return `  <url>
     <loc>${loc}</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="${frHref}" />
     <xhtml:link rel="alternate" hreflang="en" href="${enHref}" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${locale === "fr" ? loc : frHref}" />
-    <lastmod>2026-03-11</lastmod>
+    <lastmod>${LASTMOD}</lastmod>
   </url>`;
   }).join("\n");
 
@@ -371,17 +366,23 @@ ${urls}
   });
 }
 
+// Profiles Google can use to tie the site to a known entity. Add the Facebook
+// page here once its URL is settled — an Organization with no sameAs gives the
+// knowledge graph nothing to match against.
+const SAME_AS: string[] = [];
+
 function buildJsonLd(locale: "fr" | "en", path: string, domain: string): string {
-  const orgName =
-    locale === "fr"
-      ? "Badge"
-      : "Badge";
+  const orgName = "Badge";
   const altName = "Badge";
   const logoFile = "logo.png";
   const description =
     locale === "fr"
-      ? "Badge — protégez et retrouvez vos biens de valeur."
-      : "Badge — protect and recover your valuable belongings.";
+      ? "Registre canadien de biens personnels : enregistrez vos objets de valeur, prouvez que vous en êtes propriétaire et augmentez vos chances de les retrouver après un vol."
+      : "Canadian registry of personal property: register your valuables, prove ownership, and improve your odds of recovering them after a theft.";
+  const sameAs =
+    SAME_AS.length > 0
+      ? `,\n        "sameAs": ${JSON.stringify(SAME_AS)}`
+      : "";
 
   let jsonLd = `<script type="application/ld+json">
       {
@@ -391,9 +392,33 @@ function buildJsonLd(locale: "fr" | "en", path: string, domain: string): string 
         "alternateName": "${altName}",
         "url": "${domain}",
         "logo": "${domain}/assets/${logoFile}",
-        "description": "${description}"
+        "areaServed": "CA",
+        "description": "${description}"${sameAs}
       }
     </script>`;
+
+  // Declared on the home page only: repeating it on every route just adds
+  // noise for the crawler without adding meaning.
+  if (path === "/") {
+    jsonLd += `
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "${orgName}",
+        "url": "${domain}",
+        "inLanguage": ${JSON.stringify(locale === "fr" ? "fr-CA" : "en-CA")},
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "${domain}/lookup?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>`;
+  }
 
   if (path === "/faq") {
     const faqItems = locale === "fr" ? FAQ_FR : FAQ_EN;
@@ -448,11 +473,16 @@ function injectMeta(
   const ogLocaleAlt = locale === "fr" ? "en_CA" : "fr_CA";
   const siteName = "Badge";
   const ogImageFile = locale === "fr" ? "og-image-fr.png" : "og-image-en.png";
-  const canonicalUrl = `${domain}${path === "/" ? "" : path}/`;
+  // Canonical URLs carry no trailing slash: every internal link comes from
+  // ROUTES ("/faq", "/shop"), so the slashed form is a URL nothing links to.
+  // Declaring it as canonical is what made Google pick its own instead —
+  // the "Duplicate, Google chose a different canonical" report. The root
+  // stays "/" because it has no other form.
+  const canonicalUrl = `${domain}${path === "/" ? "/" : path}`;
   const ogUrl = canonicalUrl;
   const ogImage = `${domain}/assets/${ogImageFile}`;
-  const hreflangFr = `https://badgeid.ca${path === "/" ? "/" : path + "/"}`;
-  const hreflangEn = `https://badgeid.ca${path === "/" ? "/" : path + "/"}`;
+  const hreflangFr = canonicalUrl;
+  const hreflangEn = canonicalUrl;
   const robots = meta.robots ?? "index, follow";
   const lang = locale === "fr" ? "fr-CA" : "en-CA";
   const jsonLd = buildJsonLd(locale, path, domain);
