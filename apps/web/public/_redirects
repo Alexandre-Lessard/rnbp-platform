@@ -15,5 +15,9 @@
 /modifier/:id             /edit/:id           301
 /admin/commandes/:id      /admin/orders/:id   301
 
+# The reset email pointed at this path while no page existed for it. Reset
+# tokens are short-lived, so this can go once no in-flight link can still work.
+/reinitialiser-mot-de-passe  /reset-password  301
+
 # SPA fallback
 /*                        /index.html         200

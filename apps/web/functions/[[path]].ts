@@ -54,6 +54,17 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description:
           "Connectez-vous à votre compte Badge pour gérer vos biens enregistrés.",
       },
+      "/forgot-password": {
+        title: "Mot de passe oublié | Badge",
+        description:
+          "Recevez un lien pour choisir un nouveau mot de passe et retrouver l'accès à votre compte Badge.",
+        robots: "noindex, nofollow",
+      },
+      "/reset-password": {
+        title: "Nouveau mot de passe | Badge",
+        description: "Choisissez un nouveau mot de passe pour votre compte Badge.",
+        robots: "noindex, nofollow",
+      },
       "/register": {
         title: "Créer un compte | Badge",
         description:
@@ -157,6 +168,17 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         title: "Login | Badge",
         description:
           "Sign in to your Badge account to manage your registered items.",
+      },
+      "/forgot-password": {
+        title: "Forgot Password | Badge",
+        description:
+          "Get a link to choose a new password and regain access to your Badge account.",
+        robots: "noindex, nofollow",
+      },
+      "/reset-password": {
+        title: "New Password | Badge",
+        description: "Choose a new password for your Badge account.",
+        robots: "noindex, nofollow",
       },
       "/register": {
         title: "Create an Account | Badge",

@@ -131,6 +131,27 @@ export type SiteContent = {
     /** Shown when a pre-migration account must set a new password. */
     resetRequiredHeading: string;
     resetRequiredBody: string;
+    /** Forgot-password page: request a reset link by email. */
+    forgotHeading: string;
+    forgotDescription: string;
+    forgotSubmit: string;
+    forgotSending: string;
+    forgotSentBody: string;
+    forgotLink: string;
+    backToLogin: string;
+    /** Reset-password page: set a new password from an emailed link. */
+    resetHeading: string;
+    resetDescription: string;
+    resetNewPasswordLabel: string;
+    resetConfirmLabel: string;
+    resetMismatch: string;
+    resetSubmit: string;
+    resetting: string;
+    resetSuccessHeading: string;
+    resetSuccessBody: string;
+    resetLinkDeadHeading: string;
+    resetLinkDeadBody: string;
+    resetRequestNew: string;
     registerHeading: string;
     registerDescription: string;
     emailLabel: string;

@@ -51,7 +51,7 @@ export function LoginPage() {
           setResetSent(true);
         } catch {
           // Sending failed — fall back to the plain message, which already
-          // tells them to reset. The forgot-password page still works.
+          // tells them to reset; the forgot-password page is one link away.
           setError(getErrorMessage(err, t));
         }
         return;
@@ -153,6 +153,15 @@ export function LoginPage() {
               : (t.auth?.loginButton ?? "Log in")}
           </Button>
         </form>
+
+        <p className="mt-4 text-center text-sm">
+          <Link
+            to={ROUTES.forgotPassword}
+            className="font-medium text-[var(--rcb-primary)] hover:underline"
+          >
+            {t.auth?.forgotLink ?? "Forgot your password?"}
+          </Link>
+        </p>
 
         <p className="mt-6 text-center text-sm text-[var(--rcb-text-muted)]">
           {t.auth?.noAccount ?? "No account yet?"}{" "}

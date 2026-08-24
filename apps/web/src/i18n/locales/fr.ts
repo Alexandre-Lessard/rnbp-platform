@@ -7,6 +7,14 @@ const fr: SiteContent = {
       "Badge \u2014 prot\u00e9gez et retrouvez vos biens de valeur.",
   },
   pages: {
+    forgotPassword: {
+      title: "Mot de passe oublié | Badge",
+      description: "Recevez un lien pour choisir un nouveau mot de passe et retrouver l'accès à votre compte Badge.",
+    },
+    resetPassword: {
+      title: "Nouveau mot de passe | Badge",
+      description: "Choisissez un nouveau mot de passe pour votre compte Badge.",
+    },
     home: {
       title: "Protégez et retrouvez vos biens de valeur | Badge",
       description: "Enregistrez vos biens de valeur dans un registre sécurisé. Protégez et retrouvez vos biens en cas de perte ou de vol.",
@@ -426,6 +434,29 @@ const fr: SiteContent = {
     resetRequiredHeading: "Votre mot de passe doit être renouvelé",
     resetRequiredBody:
       "Pour des raisons de sécurité, ce compte a besoin d'un nouveau mot de passe. Nous venons de vous envoyer un lien pour en choisir un.",
+    forgotHeading: "Mot de passe oublié",
+    forgotDescription:
+      "Entrez l'adresse courriel de votre compte. Nous vous enverrons un lien pour choisir un nouveau mot de passe.",
+    forgotSubmit: "Envoyer le lien",
+    forgotSending: "Envoi en cours...",
+    forgotSentBody:
+      "Si un compte existe avec cette adresse, un courriel contenant un lien de réinitialisation vient d'être envoyé. Le lien est valide pour une durée limitée. Pensez à vérifier vos indésirables.",
+    forgotLink: "Mot de passe oublié?",
+    backToLogin: "Retour à la connexion",
+    resetHeading: "Nouveau mot de passe",
+    resetDescription: "Choisissez le mot de passe qui protégera votre compte Badge.",
+    resetNewPasswordLabel: "Nouveau mot de passe",
+    resetConfirmLabel: "Confirmer le mot de passe",
+    resetMismatch: "Les deux mots de passe ne sont pas identiques.",
+    resetSubmit: "Réinitialiser mon mot de passe",
+    resetting: "Réinitialisation...",
+    resetSuccessHeading: "Mot de passe réinitialisé",
+    resetSuccessBody:
+      "Votre nouveau mot de passe est actif. Pour votre sécurité, les autres sessions ont été fermées : reconnectez-vous pour continuer.",
+    resetLinkDeadHeading: "Lien invalide ou expiré",
+    resetLinkDeadBody:
+      "Ce lien de réinitialisation n'est plus valide. Il a peut-être expiré, ou il a déjà servi. Demandez-en un nouveau, ça prend quelques secondes.",
+    resetRequestNew: "Demander un nouveau lien",
     registerHeading: "Créer un compte",
     registerDescription: "Inscrivez-vous pour enregistrer vos biens",
     emailLabel: "Courriel",

@@ -7,6 +7,14 @@ const en: SiteContent = {
       "Badge \u2014 protect and recover your valuable belongings.",
   },
   pages: {
+    forgotPassword: {
+      title: "Forgot password | Badge",
+      description: "Get a link to choose a new password and regain access to your Badge account.",
+    },
+    resetPassword: {
+      title: "New password | Badge",
+      description: "Choose a new password for your Badge account.",
+    },
     home: {
       title: "Protect and recover your valuable belongings | Badge",
       description: "Register your valuable belongings in a secure registry. Protect and recover your items in case of loss or theft.",
@@ -420,6 +428,29 @@ const en: SiteContent = {
     resetRequiredHeading: "Your password needs to be updated",
     resetRequiredBody:
       "For security reasons, this account needs a new password. We just sent you a link to set one.",
+    forgotHeading: "Forgot password",
+    forgotDescription:
+      "Enter your account email address. We'll send you a link to choose a new password.",
+    forgotSubmit: "Send the link",
+    forgotSending: "Sending...",
+    forgotSentBody:
+      "If an account exists with that address, an email with a reset link has just been sent. The link is valid for a limited time. Remember to check your spam folder.",
+    forgotLink: "Forgot your password?",
+    backToLogin: "Back to log in",
+    resetHeading: "New password",
+    resetDescription: "Choose the password that will protect your Badge account.",
+    resetNewPasswordLabel: "New password",
+    resetConfirmLabel: "Confirm password",
+    resetMismatch: "The two passwords don't match.",
+    resetSubmit: "Reset my password",
+    resetting: "Resetting...",
+    resetSuccessHeading: "Password reset",
+    resetSuccessBody:
+      "Your new password is active. For your security, other sessions have been closed: log in again to continue.",
+    resetLinkDeadHeading: "Invalid or expired link",
+    resetLinkDeadBody:
+      "This reset link is no longer valid. It may have expired, or it has already been used. Request a new one, it only takes a few seconds.",
+    resetRequestNew: "Request a new link",
     registerHeading: "Create an account",
     registerDescription: "Sign up to register your belongings",
     emailLabel: "Email",

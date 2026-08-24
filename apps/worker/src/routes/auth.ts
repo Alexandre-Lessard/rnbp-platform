@@ -373,7 +373,7 @@ authRoutes.post("/auth/forgot-password", authRateLimit, async (c) => {
   if (user) {
     const lang = (user.preferredLanguage as "fr" | "en") ?? "fr";
     const token = createSignedToken(user.id, "reset-password", TOKEN_EXPIRY.PASSWORD_RESET);
-    const resetUrl = `${config.FRONTEND_URL}/reinitialiser-mot-de-passe?token=${token}`;
+    const resetUrl = `${config.FRONTEND_URL}/reset-password?token=${token}`;
     c.executionCtx.waitUntil(
       sendEmail(buildResetEmail(user.firstName, body.email.toLowerCase(), resetUrl, lang)).catch(
         (err) => {
