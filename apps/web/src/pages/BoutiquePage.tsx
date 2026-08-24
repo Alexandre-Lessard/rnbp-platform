@@ -5,6 +5,9 @@ import { useAuth } from "@/lib/auth-context";
 import { useCart, cartKey } from "@/lib/cart-context";
 import { apiRequest } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
+import { getAttribution } from "@/lib/attribution";
+import { hasConsent } from "@/lib/consent";
+import { newEventId, track } from "@/lib/pixel";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { ProductGallery } from "@/components/ui/ProductGallery";
@@ -167,10 +170,28 @@ export function BoutiquePage() {
         };
       });
 
+      // One id for one purchase, shared by the browser event and the one the
+      // Worker sends from the Stripe webhook, so Meta counts the sale once.
+      const eventId = newEventId();
+
+      // The webhook fires from Stripe's servers, with no browser and therefore
+      // no way to know what this visitor agreed to. Whatever is true right now
+      // is what the order will be judged by, hours later.
+      const adConsent = hasConsent("advertising");
+
       const res = await apiRequest<{ url: string }>("/shop/checkout", {
         method: "POST",
-        body: { items },
+        body: {
+          items,
+          eventId,
+          adConsent,
+          ...(getAttribution() ?? {}),
+        },
       });
+
+      // `track` is itself consent-gated, so a refusal sends nothing here either.
+      track("InitiateCheckout", { num_items: items.length }, eventId);
+
       window.location.href = res.url;
     } catch (err) {
       setCheckoutError(getErrorMessage(err, t));

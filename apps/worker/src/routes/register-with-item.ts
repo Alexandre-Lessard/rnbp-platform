@@ -55,6 +55,9 @@ registerWithItemRoutes.post("/auth/register-with-item", async (c) => {
         clientNumber,
         preferredLanguage: body.account.preferredLanguage ?? "fr",
         termsAcceptedAt: new Date(),
+        utmSource: body.account.utmSource ?? null,
+        utmMedium: body.account.utmMedium ?? null,
+        utmCampaign: body.account.utmCampaign ?? null,
       })
       .returning(userSelect);
   } catch (err) {

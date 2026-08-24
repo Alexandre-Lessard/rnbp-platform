@@ -11,6 +11,11 @@ export const registerSchema = z.object({
   lastName: z.string().min(1, "Last name required").max(100),
   phone: z.string().max(20).optional(),
   preferredLanguage: z.enum(["fr", "en"]).optional(),
+  // First-touch attribution, sent by the browser only when the visitor
+  // consented to advertising trackers. Absent is the normal case.
+  utmSource: z.string().max(255).nullish(),
+  utmMedium: z.string().max(255).nullish(),
+  utmCampaign: z.string().max(255).nullish(),
 });
 
 export const updateProfileSchema = z.object({

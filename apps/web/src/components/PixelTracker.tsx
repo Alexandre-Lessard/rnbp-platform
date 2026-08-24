@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { initPixel, track } from "@/lib/pixel";
+import { initAttribution } from "@/lib/attribution";
 import { hasConsent } from "@/lib/consent";
 
 /**
- * Wires the pixel to the router. Renders nothing.
+ * Wires the pixel and our own attribution to the router. Renders nothing.
  *
  * A single-page app changes URL without reloading, so Meta never sees the
  * navigation on its own — each route change has to be reported explicitly, or
@@ -14,6 +15,10 @@ export function PixelTracker() {
   const location = useLocation();
 
   useEffect(() => initPixel(), []);
+
+  // Runs on the landing URL, before the router has had a chance to replace it:
+  // the campaign tags are only ever in the address the visitor arrived on.
+  useEffect(() => initAttribution(), []);
 
   // initPixel already sent the first PageView, so the first run of this effect
   // is skipped. Without the guard the landing page counts twice, and every

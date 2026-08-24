@@ -12,6 +12,8 @@ import {
   setAccessToken,
   healthCheck,
 } from "./api-client";
+import { getAttribution } from "./attribution";
+import { track } from "./pixel";
 import type { User } from "@badge/shared";
 
 type AuthState = {
@@ -183,14 +185,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       lastName: string;
       phone?: string;
     }) => {
+      // Attached here rather than at each call site, so every sign-up form
+      // carries the campaign without having to remember to. Returns null
+      // unless the visitor consented to advertising trackers.
+      const attribution = getAttribution();
+
       const res = await apiRequest<{
         user: User;
         accessToken: string;
         refreshToken: string;
       }>("/auth/register", {
         method: "POST",
-        body: data,
+        body: {
+          ...data,
+          ...(attribution
+            ? {
+                utmSource: attribution.utmSource,
+                utmMedium: attribution.utmMedium,
+                utmCampaign: attribution.utmCampaign,
+              }
+            : {}),
+        },
       });
+
+      // Consent-gated inside `track`; a refusal reports nothing.
+      track("CompleteRegistration");
 
       setAccessToken(res.accessToken);
       setRefreshToken(res.refreshToken);

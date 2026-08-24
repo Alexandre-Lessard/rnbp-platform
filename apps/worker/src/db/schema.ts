@@ -54,6 +54,12 @@ export const users = sqliteTable("users", {
   clientNumber: text("client_number").unique(),
   preferredLanguage: text("preferred_language").notNull().default("fr"),
   termsAcceptedAt: integer("terms_accepted_at", { mode: "timestamp_ms" }),
+  // First-touch attribution: which campaign brought this person here, captured
+  // at sign-up and never overwritten afterwards. Only recorded when the visitor
+  // consented to the advertising category — see apps/web/src/lib/attribution.ts.
+  utmSource: text("utm_source"),
+  utmMedium: text("utm_medium"),
+  utmCampaign: text("utm_campaign"),
   // Mass revocation: all tokens issued BEFORE this timestamp are rejected.
   // Updated on password reset to invalidate all sessions.
   tokenRevokedBefore: integer("token_revoked_before", { mode: "timestamp_ms" }),
@@ -257,11 +263,30 @@ export const orders = sqliteTable(
     status: text("status", { enum: ORDER_STATUSES }).notNull().default("pending"),
     shippingName: text("shipping_name"),
     shippingAddress: text("shipping_address"),
+    // Attribution, captured when the Stripe session is created. It cannot be
+    // captured at confirmation: the webhook arrives from Stripe, with no
+    // browser and therefore no URL to read.
+    utmSource: text("utm_source"),
+    utmMedium: text("utm_medium"),
+    utmCampaign: text("utm_campaign"),
+    fbclid: text("fbclid"),
+    // The advertising consent as it stood at checkout, frozen here on purpose.
+    // The Stripe webhook has no idea what the browser agreed to, so without
+    // this the server would happily report a purchase for someone who refused
+    // — which is exactly the refusal Law 25 says we must honour. Null means no
+    // choice was recorded, and is treated as a refusal.
+    adConsent: integer("ad_consent", { mode: "boolean" }),
+    // Shared with the browser event so Meta recognises the two copies of one
+    // purchase as duplicates. Without it every sale counts twice and the cost
+    // per acquisition shown to us is half the real one.
+    capiEventId: text("capi_event_id"),
+    capiSentAt: integer("capi_sent_at", { mode: "timestamp_ms" }),
     ...timestamps(),
   },
   (table) => [
     index("orders_user_id_idx").on(table.userId),
     index("orders_stripe_session_id_idx").on(table.stripeSessionId),
+    index("orders_utm_campaign_idx").on(table.utmCampaign),
   ],
 );
 
@@ -348,4 +373,31 @@ export const products = sqliteTable(
     index("products_slug_idx").on(table.slug),
     index("products_sort_order_idx").on(table.sortOrder),
   ],
+);
+
+// ── Ad spend ──────────────────────────────────────────────────────────
+
+// What a campaign cost, typed in by hand. Reading it from the Meta API would
+// mean a system-user token to create, renew and guard, for a number someone
+// already reads off the invoice — so the cheap version is the one that works
+// from the first dollar. One row per campaign per period; the acquisition
+// report divides it by the conversions attributed to the same campaign.
+export const adSpend = sqliteTable(
+  "ad_spend",
+  {
+    id: uuidPk(),
+    // Matches orders.utm_campaign / users.utm_campaign, which is how the spend
+    // finds its conversions. A campaign with no matching visits still shows up,
+    // with a cost and no result — worth seeing rather than hiding.
+    campaign: text("campaign").notNull(),
+    // "facebook", "google"… Free text: we do not want a migration the day a
+    // second network is tried.
+    platform: text("platform").notNull().default("facebook"),
+    amountCents: integer("amount_cents").notNull(),
+    periodStart: integer("period_start", { mode: "timestamp_ms" }).notNull(),
+    periodEnd: integer("period_end", { mode: "timestamp_ms" }).notNull(),
+    note: text("note"),
+    ...timestamps(),
+  },
+  (table) => [index("ad_spend_campaign_idx").on(table.campaign)],
 );

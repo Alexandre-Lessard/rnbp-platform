@@ -15,6 +15,13 @@
       "when": 1787605535838,
       "tag": "0001_lyrical_robin_chapel",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1787614975929,
+      "tag": "0002_clear_captain_midlands",
+      "breakpoints": true
     }
   ]
 }

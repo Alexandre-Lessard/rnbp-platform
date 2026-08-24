@@ -105,6 +105,9 @@ authRoutes.post("/auth/register", authRateLimit, async (c) => {
         clientNumber,
         preferredLanguage: body.preferredLanguage ?? "fr",
         termsAcceptedAt: new Date(),
+        utmSource: body.utmSource ?? null,
+        utmMedium: body.utmMedium ?? null,
+        utmCampaign: body.utmCampaign ?? null,
       })
       .returning(userSelect);
   } catch (err) {
