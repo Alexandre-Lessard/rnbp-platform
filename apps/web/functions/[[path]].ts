@@ -120,6 +120,11 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         description: "Gestion des commandes.",
         robots: "noindex, nofollow",
       },
+      "/admin/acquisition": {
+        title: "Admin — Acquisition | Badge",
+        description: "Performance des campagnes publicitaires.",
+        robots: "noindex, nofollow",
+      },
       "/c": {
         title: "Bien enregistré | Badge",
         description: "Vérifiez l'état d'un bien enregistré à Badge via son code Badge.",
@@ -238,6 +243,11 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
       "/admin/orders": {
         title: "Admin — Orders | Badge",
         description: "Order management.",
+        robots: "noindex, nofollow",
+      },
+      "/admin/acquisition": {
+        title: "Admin — Acquisition | Badge",
+        description: "Ad campaign performance.",
         robots: "noindex, nofollow",
       },
       "/c": {
