@@ -11,6 +11,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PromoBanner } from "@/components/layout/PromoBanner";
 import { CookieConsent } from "@/components/ui/CookieConsent";
+import { PixelTracker } from "@/components/PixelTracker";
 import "./index.css";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -80,6 +81,7 @@ export default function Root() {
                   </main>
                   <Footer />
                 </div>
+                <PixelTracker />
                 <CookieConsent />
               </CartProvider>
             </AuthProvider>
