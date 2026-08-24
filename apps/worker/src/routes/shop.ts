@@ -13,6 +13,7 @@ import {
 } from "../utils/email.js";
 import { ITEMS_NOT_OWNED, PRODUCT_NOT_FOUND, PRODUCT_INACTIVE } from "@badge/shared";
 import { AppError } from "../utils/errors.js";
+import { sendPurchaseEvent } from "../utils/capi.js";
 import type { AppEnv } from "../context.js";
 
 const checkoutSchema = z.object({
@@ -27,6 +28,15 @@ const checkoutSchema = z.object({
     .min(1)
     .max(20),
   email: z.string().email().optional(),
+
+  // Sent by the browser at checkout, because the Stripe webhook that confirms
+  // the sale later has neither a URL to read nor a consent state to consult.
+  eventId: z.string().uuid().optional(),
+  adConsent: z.boolean().optional(),
+  utmSource: z.string().max(255).nullish(),
+  utmMedium: z.string().max(255).nullish(),
+  utmCampaign: z.string().max(255).nullish(),
+  fbclid: z.string().max(255).nullish(),
 });
 
 function getStripe(): Stripe {
@@ -144,6 +154,15 @@ shopRoutes.post("/shop/checkout", requireVerifiedEmail, async (c) => {
       userId: c.var.userId || null,
       totalAmountCents: 0, // Updated by webhook
       status: "pending",
+      // Frozen here on purpose: this is the last moment a browser is involved.
+      // `adConsent` false or absent means the server stays silent about this
+      // order — see sendPurchaseEvent in utils/capi.ts.
+      adConsent: body.adConsent ?? false,
+      capiEventId: body.eventId ?? null,
+      utmSource: body.utmSource ?? null,
+      utmMedium: body.utmMedium ?? null,
+      utmCampaign: body.utmCampaign ?? null,
+      fbclid: body.fbclid ?? null,
     })
     .returning();
 
@@ -264,10 +283,36 @@ shopRoutes.post("/shop/webhook", async (c) => {
           updatedAt: new Date(),
         })
         .where(and(eq(orders.id, orderId), eq(orders.status, "pending")))
-        .returning({ id: orders.id });
+        .returning({
+          id: orders.id,
+          adConsent: orders.adConsent,
+          capiEventId: orders.capiEventId,
+          fbclid: orders.fbclid,
+        });
 
       // Send admin notification only if the order was updated (not a duplicate)
       if (updated.length > 0) {
+        // Report the sale to Meta from here rather than from the browser: this
+        // is the only place a purchase is confirmed for certain. The order
+        // carries the consent that was true at checkout, and sendPurchaseEvent
+        // refuses to send without it.
+        c.executionCtx.waitUntil(
+          sendPurchaseEvent({
+            orderId,
+            eventId: updated[0].capiEventId,
+            adConsent: updated[0].adConsent,
+            email: session.customer_details?.email ?? null,
+            valueCents: session.amount_total || 0,
+            currency: session.currency?.toUpperCase() ?? "CAD",
+            fbclid: updated[0].fbclid,
+            sourceUrl: `${config.FRONTEND_URL}/shop/success`,
+          }).then((sent) =>
+            sent
+              ? db.update(orders).set({ capiSentAt: new Date() }).where(eq(orders.id, orderId))
+              : undefined,
+          ),
+        );
+
         const orderLines = await db
           .select({ quantity: orderItems.quantity })
           .from(orderItems)

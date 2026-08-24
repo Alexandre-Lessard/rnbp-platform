@@ -59,6 +59,10 @@ export const envSchema = z.object({
   // Public base URL for files served from the R2 bucket
   R2_PUBLIC_URL: z.string().optional(),
 
+  // Meta Conversions API. Optional: without it the server simply reports
+  // nothing, and only the browser pixel measures — degraded, never broken.
+  META_CAPI_TOKEN: z.string().optional(),
+
   // Admin notifications
   ADMIN_ORDER_EMAIL: z.string().email().optional(),
   ADMIN_CONTACT_EMAIL: z.string().email().optional(),

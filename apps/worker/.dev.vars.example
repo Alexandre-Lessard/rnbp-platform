@@ -22,5 +22,8 @@ FACEBOOK_CLIENT_ID=
 FACEBOOK_CLIENT_SECRET=
 MICROSOFT_CLIENT_ID=
 MICROSOFT_CLIENT_SECRET=
+# Meta Conversions API. Without it the server reports no purchases and only
+# the browser pixel measures — degraded, never broken.
+META_CAPI_TOKEN=
 ADMIN_ORDER_EMAIL=
 ADMIN_CONTACT_EMAIL=
