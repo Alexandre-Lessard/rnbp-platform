@@ -7,6 +7,10 @@ const en: SiteContent = {
       "Badge \u2014 protect and recover your valuable belongings.",
   },
   pages: {
+    unsubscribe: {
+      title: "Unsubscribe | Badge",
+      description: "Remove your address from our promotional messages.",
+    },
     forgotPassword: {
       title: "Forgot password | Badge",
       description: "Get a link to choose a new password and regain access to your Badge account.",
@@ -967,6 +971,17 @@ const en: SiteContent = {
     logoutButton: "Log out",
     checkAgain: "I've verified my email",
     notVerifiedYet: "Your email is not verified yet. Please check your inbox.",
+  },
+  newsletter: {
+    unsubscribe: {
+      doneHeading: "Unsubscribed",
+      doneBody:
+        "You will no longer receive our promotional messages. Emails about your orders and your account keep coming — those are not marketing messages.",
+      errorHeading: "Invalid unsubscribe link",
+      errorBody:
+        "This link does not look valid. Write to info@badgeid.ca and we will remove you from the list by hand.",
+      backHome: "Back to home",
+    },
   },
   errors: {
     serviceUnavailable: "Service temporarily unavailable",

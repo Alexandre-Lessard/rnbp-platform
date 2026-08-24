@@ -60,6 +60,11 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
           "Recevez un lien pour choisir un nouveau mot de passe et retrouver l'accès à votre compte Badge.",
         robots: "noindex, nofollow",
       },
+      "/unsubscribe": {
+        title: "Se désabonner | Badge",
+        description: "Retirez votre adresse de nos communications promotionnelles.",
+        robots: "noindex, nofollow",
+      },
       "/reset-password": {
         title: "Nouveau mot de passe | Badge",
         description: "Choisissez un nouveau mot de passe pour votre compte Badge.",
@@ -173,6 +178,11 @@ const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
         title: "Forgot Password | Badge",
         description:
           "Get a link to choose a new password and regain access to your Badge account.",
+        robots: "noindex, nofollow",
+      },
+      "/unsubscribe": {
+        title: "Unsubscribe | Badge",
+        description: "Remove your address from our promotional messages.",
         robots: "noindex, nofollow",
       },
       "/reset-password": {

@@ -6,6 +6,12 @@ type EmailPayload = {
   to: string;
   subject: string;
   html: string;
+  /**
+   * Extra SMTP headers. Used for List-Unsubscribe and List-Unsubscribe-Post,
+   * which Gmail and Outlook require from bulk senders — without them a
+   * commercial campaign lands in spam, which makes the rest academic.
+   */
+  headers?: Record<string, string>;
 };
 
 /**
@@ -19,6 +25,7 @@ export async function sendEmail(payload: EmailPayload): Promise<void> {
     console.log("[email] No BREVO_API_KEY — logging email instead:");
     console.log(`  To: ${payload.to}`);
     console.log(`  Subject: ${payload.subject}`);
+    if (payload.headers) console.log(`  Headers: ${JSON.stringify(payload.headers)}`);
     console.log(`  Body: ${payload.html}`);
     return;
   }
@@ -35,6 +42,7 @@ export async function sendEmail(payload: EmailPayload): Promise<void> {
       to: [{ email: payload.to }],
       subject: payload.subject,
       htmlContent: payload.html,
+      ...(payload.headers ? { headers: payload.headers } : {}),
     }),
   });
 
@@ -288,19 +296,64 @@ export function buildOrderNotificationEmail(
   };
 }
 
+/**
+ * Build a commercial (campaign) email: CASL footer, working unsubscribe link,
+ * and the one-click headers Gmail and Outlook expect from bulk senders.
+ *
+ * Not for transactional mail. An order confirmation or a password reset is not
+ * a commercial electronic message and must not carry an unsubscribe link.
+ */
+export function buildCommercialEmail(opts: {
+  to: string;
+  subscriberId: string;
+  subject: string;
+  body: string;
+}): EmailPayload {
+  const config = getConfig();
+  // Never expires: a campaign sent two years ago must still be actionable.
+  const token = createSignedToken(opts.subscriberId, "newsletter-unsubscribe", null);
+  const pageUrl = `${config.FRONTEND_URL}/unsubscribe?token=${token}`;
+  const oneClickUrl = `${config.API_URL}/newsletter/unsubscribe?token=${token}`;
+
+  return {
+    to: opts.to,
+    subject: opts.subject,
+    html: buildBaseEmail({
+      body: opts.body,
+      variant: "commercial",
+      unsubscribeUrl: pageUrl,
+    }),
+    headers: {
+      "List-Unsubscribe": `<${oneClickUrl}>, <${pageUrl}>`,
+      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    },
+  };
+}
+
 // ── HMAC token helpers ────────────────────────────────────────────────
 
+export type TokenPurpose = "verify-email" | "reset-password" | "newsletter-unsubscribe";
+
 /**
- * Create an HMAC-signed token for email verification or password reset.
- * Format: `userId.expiresAt.randomNonce.signature`
+ * Create an HMAC-signed token for email verification, password reset or
+ * newsletter unsubscription.
+ * Format: `subject.expiresAt.randomNonce.signature`
+ *
+ * `subject` must not contain a dot — the format is dot-separated, so pass a
+ * uuid, never an email address.
+ *
+ * Pass `null` for `expiresInMs` to mint a token that never expires. Only the
+ * unsubscribe link uses that: a commercial email from two years ago must still
+ * be actionable, and CASL gives no grace period for a stale link.
  */
 export function createSignedToken(
-  userId: string,
-  purpose: "verify-email" | "reset-password",
-  expiresInMs: number,
+  subject: string,
+  purpose: TokenPurpose,
+  expiresInMs: number | null,
 ): string {
   const config = getConfig();
-  const expiresAt = Date.now() + expiresInMs;
+  const userId = subject;
+  const expiresAt = expiresInMs === null ? 0 : Date.now() + expiresInMs;
   const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
@@ -316,7 +369,7 @@ export function createSignedToken(
  */
 export function verifySignedToken(
   token: string,
-  purpose: "verify-email" | "reset-password",
+  purpose: TokenPurpose,
 ): string | null {
   const config = getConfig();
   const parts = token.split(".");
@@ -325,7 +378,9 @@ export function verifySignedToken(
   const [userId, expiresAtStr, nonce, signature] = parts;
   const expiresAt = Number(expiresAtStr);
 
-  if (isNaN(expiresAt) || Date.now() > expiresAt) return null;
+  // expiresAt === 0 marks a token that never expires (unsubscribe links).
+  if (isNaN(expiresAt)) return null;
+  if (expiresAt !== 0 && Date.now() > expiresAt) return null;
 
   const data = `${userId}.${expiresAt}.${nonce}.${purpose}`;
   const expected = createHmac("sha256", config.JWT_PRIVATE_KEY)

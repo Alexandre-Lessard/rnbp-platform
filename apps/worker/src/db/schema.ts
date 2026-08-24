@@ -231,6 +231,13 @@ export const contactMessages = sqliteTable("contact_messages", {
 export const newsletterSubscribers = sqliteTable("newsletter_subscribers", {
   id: uuidPk(),
   email: text("email").notNull().unique(),
+  // CASL requires the sender to be able to *prove* consent, not merely hold it:
+  // where it was given, and when.
+  consentSource: text("consent_source"),
+  consentAt: integer("consent_at", { mode: "timestamp_ms" }),
+  // Set once, never cleared by a subsequent subscribe: an address that opted out
+  // only comes back through an explicit, deliberate re-subscription.
+  unsubscribedAt: integer("unsubscribed_at", { mode: "timestamp_ms" }),
   createdAt: integer("created_at", { mode: "timestamp_ms" })
     .notNull()
     .$defaultFn(() => new Date()),

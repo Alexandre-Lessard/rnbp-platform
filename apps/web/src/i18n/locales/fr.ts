@@ -7,6 +7,10 @@ const fr: SiteContent = {
       "Badge \u2014 prot\u00e9gez et retrouvez vos biens de valeur.",
   },
   pages: {
+    unsubscribe: {
+      title: "Se désabonner | Badge",
+      description: "Retirez votre adresse de nos communications promotionnelles.",
+    },
     forgotPassword: {
       title: "Mot de passe oublié | Badge",
       description: "Recevez un lien pour choisir un nouveau mot de passe et retrouver l'accès à votre compte Badge.",
@@ -973,6 +977,17 @@ const fr: SiteContent = {
     logoutButton: "Se déconnecter",
     checkAgain: "J'ai vérifié mon courriel",
     notVerifiedYet: "Votre courriel n'est pas encore vérifié. Vérifiez votre boîte de réception.",
+  },
+  newsletter: {
+    unsubscribe: {
+      doneHeading: "Désabonnement confirmé",
+      doneBody:
+        "Vous ne recevrez plus nos communications promotionnelles. Les courriels liés à vos commandes et à votre compte continuent de vous être envoyés — ce ne sont pas des messages publicitaires.",
+      errorHeading: "Lien de désabonnement invalide",
+      errorBody:
+        "Ce lien ne semble pas valide. Écrivez-nous à info@badgeid.ca et nous vous retirons de la liste manuellement.",
+      backHome: "Retour à l'accueil",
+    },
   },
   errors: {
     serviceUnavailable: "Service temporairement indisponible",

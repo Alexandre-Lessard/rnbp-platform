@@ -11,6 +11,7 @@
       "vars": {
         "NODE_ENV": "staging",
         "FRONTEND_URL": "https://staging.badge-platform.pages.dev",
+        "API_URL": "https://badge-api-staging.alexandre-lessard92.workers.dev/api",
         "CORS_ORIGINS": "https://staging.badge-platform.pages.dev,http://localhost:5173",
         "FROM_EMAIL": "noreply@badgeid.ca",
         "FROM_NAME": "Badge (staging)"
@@ -56,6 +57,7 @@
       "vars": {
         "NODE_ENV": "production",
         "FRONTEND_URL": "https://badgeid.ca",
+        "API_URL": "https://api.badgeid.ca/api",
         "CORS_ORIGINS": "https://badgeid.ca,https://www.badgeid.ca,https://rnbp.ca,https://www.rnbp.ca,https://nrpp.ca,https://www.nrpp.ca",
         "FROM_EMAIL": "noreply@badgeid.ca",
         "FROM_NAME": "Badge"

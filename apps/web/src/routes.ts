@@ -7,6 +7,7 @@ export default [
   route("login", "pages/LoginPage.tsx"),
   route("forgot-password", "pages/ForgotPasswordPage.tsx"),
   route("reset-password", "pages/ResetPasswordPage.tsx"),
+  route("unsubscribe", "pages/UnsubscribePage.tsx"),
   route("register", "pages/RegisterAccountPage.tsx"),
   route("register-item", "pages/RegisterItemPage.tsx"),
   route("lookup", "pages/LookupPage.tsx"),

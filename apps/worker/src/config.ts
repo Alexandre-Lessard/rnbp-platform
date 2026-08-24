@@ -39,6 +39,11 @@ export const envSchema = z.object({
   // Frontend URL (for email links)
   FRONTEND_URL: z.string().url().default("http://localhost:5173"),
 
+  // The Worker's own public URL. Needed in emails that must carry a link back
+  // to the API rather than to a page — one-click unsubscribe (RFC 8058) is
+  // POSTed by the mail client straight to the endpoint.
+  API_URL: z.string().url().default("http://localhost:8787/api"),
+
   // Stripe (boutique)
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),

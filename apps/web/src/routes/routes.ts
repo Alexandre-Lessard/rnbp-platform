@@ -3,6 +3,7 @@ export const ROUTES = {
   login: "/login",
   forgotPassword: "/forgot-password",
   resetPassword: "/reset-password",
+  unsubscribe: "/unsubscribe",
   register: "/register",
   registerItem: "/register-item",
   lookup: "/lookup",

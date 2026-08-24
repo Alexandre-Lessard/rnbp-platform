@@ -3,11 +3,32 @@
  * Table-based layout for Outlook compatibility. All styles inline.
  */
 
+/**
+ * Postal address of the sender, required by CASL on every commercial message.
+ * It is the registered business address, already public through the Quebec
+ * enterprise registry (NEQ 2281977662). Swap it for a PO box if that ever
+ * becomes preferable — nothing else depends on the value.
+ */
+const SENDER_IDENTITY = {
+  name: "Alexandre Lessard – Solutions intégrées",
+  address: "523 rue des Arpents-Verts, Saint-Cyprien-de-Napierville (Québec) J0J 1L0, Canada",
+};
+
 type BaseEmailOptions = {
   /** Email body HTML (will be wrapped in the template) */
   body: string;
-  /** "user" = branded footer with links, "admin" = simple admin footer */
-  variant?: "user" | "admin";
+  /**
+   * "user" = branded footer with links, "admin" = simple admin footer,
+   * "commercial" = adds what CASL requires of a commercial electronic message:
+   * the sender's identity, a postal address, and a working unsubscribe link.
+   *
+   * Transactional mail — order confirmations, password resets, verification —
+   * is **not** commercial and must stay on "user": adding an unsubscribe link
+   * there would invite people to opt out of messages they need to receive.
+   */
+  variant?: "user" | "admin" | "commercial";
+  /** Required when variant is "commercial". */
+  unsubscribeUrl?: string;
 };
 
 /**
@@ -18,13 +39,25 @@ type BaseEmailOptions = {
  * - Dark mode meta tags for email clients
  * - Responsive: 100% on mobile, max 600px desktop
  */
-export function buildBaseEmail({ body, variant = "user" }: BaseEmailOptions): string {
+export function buildBaseEmail({
+  body,
+  variant = "user",
+  unsubscribeUrl,
+}: BaseEmailOptions): string {
   const isAdmin = variant === "admin";
+
+  const brandFooter = `<p style="color: #999999; font-size: 12px; margin: 0;">Badge — Identifiez. Protégez. Récupérez.</p>
+       <p style="color: #999999; font-size: 11px; margin: 8px 0 0;"><a href="mailto:info@badgeid.ca" style="color: #999999;">info@badgeid.ca</a> · <a href="https://badgeid.ca" style="color: #999999;">badgeid.ca</a></p>`;
+
+  const commercialFooter = `${brandFooter}
+       <p style="color: #999999; font-size: 11px; margin: 12px 0 0;">${SENDER_IDENTITY.name}<br>${SENDER_IDENTITY.address}</p>
+       <p style="color: #999999; font-size: 11px; margin: 8px 0 0;"><a href="${unsubscribeUrl ?? "https://badgeid.ca"}" style="color: #999999; text-decoration: underline;">Se désabonner</a> · <a href="${unsubscribeUrl ?? "https://badgeid.ca"}" style="color: #999999; text-decoration: underline;">Unsubscribe</a></p>`;
 
   const footerText = isAdmin
     ? `<p style="color: #999999; font-size: 11px; margin: 0;">Badge — Notification automatique</p>`
-    : `<p style="color: #999999; font-size: 12px; margin: 0;">Badge — Identifiez. Protégez. Récupérez.</p>
-       <p style="color: #999999; font-size: 11px; margin: 8px 0 0;"><a href="mailto:info@badgeid.ca" style="color: #999999;">info@badgeid.ca</a> · <a href="https://badgeid.ca" style="color: #999999;">badgeid.ca</a></p>`;
+    : variant === "commercial"
+      ? commercialFooter
+      : brandFooter;
 
   return `<!DOCTYPE html>
 <html lang="fr" xmlns="http://www.w3.org/1999/xhtml">

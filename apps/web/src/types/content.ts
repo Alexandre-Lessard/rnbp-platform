@@ -540,6 +540,15 @@ export type SiteContent = {
     newsletterError: string;
     newsletterUnavailable: string;
   };
+  newsletter?: {
+    unsubscribe: {
+      doneHeading: string;
+      doneBody: string;
+      errorHeading: string;
+      errorBody: string;
+      backHome: string;
+    };
+  };
   admin?: {
     nav: {
       dashboard: string;
