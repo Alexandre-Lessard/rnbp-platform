@@ -51,6 +51,12 @@ jobs:
       - name: Build web (staging)
         env:
           VITE_API_URL: https://badge-api-staging.alexandre-lessard92.workers.dev/api
+          # The Facebook button renders only when this is set (OAuthButtons.tsx).
+          # The App ID is not a secret — it travels in the authorisation URL.
+          # The Meta app is still unpublished, so only its admins, developers and
+          # testers can complete the flow; everyone else gets "app unavailable".
+          # That is the point: staging is where we validate before production.
+          VITE_FACEBOOK_CLIENT_ID: "1667886064239370"
         run: pnpm --filter @badge/web build
 
       - name: Deploy web to Cloudflare Pages (staging branch)

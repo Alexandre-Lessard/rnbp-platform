@@ -1,15 +1,12 @@
 # OAuth Providers — Configuration & Production Checklist
 
-> **⚠ Review before enabling OAuth.** This document records what was registered with Google
-> and Facebook when the app lived at `rnbp.ca` / `nrpp.ca`. The app now serves from
-> `badgeid.ca`, so the redirect URIs, authorized domains, home page and policy links below
-> are almost certainly out of date on the provider side. Verify each one in the provider
-> console before switching the buttons on — a stale redirect URI fails the flow with
-> `redirect_uri_mismatch`. The values here have not been updated because they describe
-> external state that cannot be checked from the repo.
+> **State as of 2026-08-24.** The Facebook side below was re-verified against the Meta console
+> and corrected the same day. What it recorded before then described the pre-rebrand `rnbp.ca`
+> setup and had been wrong for four months — including a business verification it called
+> "pending" that had in fact completed on 2026-04-13.
 >
-> The buttons are currently off: they are gated on `VITE_*_CLIENT_ID`, commented out in
-> `apps/web/.env.production`. The Worker already holds the Google and Facebook secrets.
+> Google has **not** been re-verified. Treat its section as unconfirmed until someone checks it
+> against the console, the same way Facebook's was.
 
 This document captures everything needed to configure and ship the OAuth sign-in providers (Google, Facebook, Microsoft) to public production. It is written so a future maintainer can pick it up cold without re-discovering every console URL and form field.
 
@@ -128,47 +125,36 @@ A submission template is preserved in the project sprint plan; reuse it verbatim
 
 ### Configuration checklist
 
-| Item | Value |
+| Item | Value (verified 2026-08-24) |
 |---|---|
 | App ID | `1667886064239370` |
-| Display name | RNBP |
-| App secret | Stored in `apps/api/.env` as `FACEBOOK_CLIENT_SECRET` |
-| App icon | 1024×1024 PNG (RNBP shield) |
+| Display name | **Badge** |
+| App secret | Worker secret `FACEBOOK_CLIENT_SECRET` — **production only**, staging has none |
+| App icon | still the RNBP shield — to replace |
 | Category | Utility & productivity |
-| Business Use | Selected via business portfolio link |
-| App domains | `rnbp.ca`, `nrpp.ca` |
-| Contact email | `tech@rnbp.ca` |
-| Privacy Policy URL | `https://rnbp.ca/privacy` |
-| Terms of Service URL | `https://rnbp.ca/terms` |
-| User data deletion | Mode "Data deletion instructions URL" → `https://rnbp.ca/data-deletion` |
-| Business linked | "Registre national des biens personnels" (Business Portfolio) |
-| Use case | "Authenticate and request data from users with Facebook Login" — customised |
-| Permissions enabled | `email`, `public_profile` |
-| App Mode | In development → switch to **Live** after business verification + app review |
+| App domains | `badgeid.ca`, plus `rnbp.ca` and `nrpp.ca` while those still serve the site |
+| Contact email | `info@badgeid.ca` |
+| Privacy Policy URL | `https://badgeid.ca/privacy` |
+| Terms of Service URL | `https://badgeid.ca/terms` |
+| User data deletion | Instructions URL → `https://badgeid.ca/data-deletion` |
+| Business linked | `BADGE ID` (`1656065239155631`) |
+| Valid OAuth redirect URIs | `https://badgeid.ca/auth/facebook/callback`, `https://staging.badge-platform.pages.dev/auth/facebook/callback`, plus the two legacy ones |
+| Permissions | `email` and `public_profile` — **Ready to publish** (advanced access granted without review) |
+| App Mode | **Unpublished** — blocked on the data access renewal, below |
+
+**Strict mode is on**, so a redirect URI must match exactly. The code builds it as
+`${window.location.origin}/auth/facebook/callback` (`apps/web/src/lib/oauth.ts:56`) — adding a new
+environment means adding its URI here first. `http://localhost:5173/...` is **rejected**: "Enforce
+HTTPS" is enabled, and trying to add it makes Meta reject the whole batch silently.
 
 ### Path to Live mode
 
-Three gates must be cleared, in order:
-
-1. **Business verification** (one-time per business portfolio)
-   - Started in https://business.facebook.com/settings/security → Business verification → Start verification
-   - Requires: legal entity name (matching the Quebec REQ entry exactly), incorporation document, address
-   - Meta may force a specific admin to complete it (not always the one who started). The chosen admin gets an in-app notification.
-   - Currently in progress under Jason's account.
-
-2. **App Review for `email`** (and `public_profile` if not auto-granted)
-   - https://developers.facebook.com/apps/1667886064239370/app-review/permissions/
-   - For each requested permission, click "Request Advanced Access"
-   - Required artifact: a 30–60 second screencast (MP4, ≤10 MB) showing:
-     1. RNBP homepage
-     2. Click "Continue with Facebook"
-     3. Facebook consent screen
-     4. Successful return to RNBP, user logged in
-   - Submit with a short written description of the use case (account creation and login)
-
-3. **Switch App Mode to Live**
-   - From the app dashboard, top-right toggle "In development → Live"
-   - If prerequisites are missing Meta surfaces a checklist popup; complete each item before retrying
+| Gate | State (2026-08-24) |
+|---|---|
+| Business verification | ✅ done 2026-04-13, under **11898248 Canada Inc.** |
+| App Review for `email` / `public_profile` | ✅ not required — advanced access granted straight from *Actions → Increase access*, because the business is verified |
+| **Annual data access renewal** | ❌ **the remaining blocker.** Assessment generated 2026-08-24, action ID `1793026865058622`, **due 2026-10-23**. Four sections: business connection, allowed usage, data handling, reviewer instructions. Meta warns that vague answers can cost platform access — it is a declaration by the company about its data practices, so **Alex answers it**, not an agent. |
+| Switch to Live | blocked until the renewal is submitted |
 
 After Live, validate end-to-end with a Facebook account that is **not** an admin or test user of the app.
 
