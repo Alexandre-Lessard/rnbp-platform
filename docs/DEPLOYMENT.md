@@ -61,9 +61,25 @@ write a compensating migration, or restore from a backup (see below).
 
 ## Configuration
 
-`.deploy.env` at the repo root (gitignored) holds `CLOUDFLARE_API_TOKEN` and
-`CLOUDFLARE_ACCOUNT_ID` for local wrangler use. CI reads the same values from the GitHub
-secret `CLOUDFLARE_API_TOKEN` and the variable `CLOUDFLARE_ACCOUNT_ID`.
+Each pipeline has its own Cloudflare API token, so a leak is bounded and the audit trail
+says which pipeline did what:
+
+| GitHub secret | Token | Used by |
+|---|---|---|
+| `CLOUDFLARE_API_TOKEN_PROD` | `badge-cicd-prod` | `cd.yml` — production Worker, Pages, D1 migrations |
+| `CLOUDFLARE_API_TOKEN_STAGING` | `badge-cicd-staging` | `cd-staging.yml` — the same, for staging |
+| `CLOUDFLARE_API_TOKEN_BACKUP` | `badge-backups` | `backup-d1.yml` — nightly D1 export only |
+
+`CLOUDFLARE_ACCOUNT_ID` is a repository **variable**, not a secret.
+
+Cloudflare scopes Workers, Pages and D1 permissions to the **whole account**, never to a single
+resource, so `badge-cicd-staging` technically carries the same rights as its production
+counterpart. Splitting them still bounds a leak and keeps the trails apart; real isolation would
+take a second Cloudflare account.
+
+For local wrangler work the tokens live in the system keyring rather than in a file — see
+`~/knowledge/keyring.md`. `.deploy.env` is a leftover of the old self-hosted deploy and is not
+read by anything in this pipeline.
 
 The web build runs on a GitHub runner where `apps/web/.env.production` does not exist — it
 is not tracked in git. Any `VITE_*` the production build needs must be set in the
