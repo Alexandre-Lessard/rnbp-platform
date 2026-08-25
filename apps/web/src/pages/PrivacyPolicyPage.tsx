@@ -18,9 +18,14 @@ export function PrivacyPolicyPage() {
               <h2 className="text-lg font-semibold text-[var(--rcb-text-strong)]">
                 {section.title}
               </h2>
-              <p className="mt-2 leading-relaxed text-[var(--rcb-text-body)]">
-                {section.body}
-              </p>
+              {/* A blank line in the translation starts a new paragraph. The
+                  cookie section runs long enough that one wall of text would
+                  bury the part people actually need to find. */}
+              {section.body.split("\n\n").map((paragraph, j) => (
+                <p key={j} className="mt-2 leading-relaxed text-[var(--rcb-text-body)]">
+                  {paragraph}
+                </p>
+              ))}
             </div>
           ))}
         </div>

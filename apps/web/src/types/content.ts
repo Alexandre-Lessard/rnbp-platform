@@ -553,8 +553,7 @@ export type SiteContent = {
     alwaysOn: string;
     necessaryTitle: string;
     necessaryBody: string;
-    measurementTitle: string;
-    measurementBody: string;
+    analyticsNote: string;
     advertisingTitle: string;
     advertisingBody: string;
   };

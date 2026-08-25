@@ -891,7 +891,7 @@ const fr: SiteContent = {
       },
       {
         title: "7. Témoins et technologies similaires",
-        body: "Badge dépose des témoins strictement nécessaires au fonctionnement du site — authentification, préférences linguistiques, panier — qui ne peuvent pas être refusés sans empêcher le site de fonctionner. Deux catégories supplémentaires n'existent qu'avec votre consentement explicite, demandé à votre première visite : la mesure d'audience, qui nous indique quelles pages servent réellement, et la publicité, qui nous permet de savoir quelles annonces mènent à une inscription. Rien de tout cela n'est chargé avant votre choix. Vous pouvez le modifier ou le retirer à tout moment par le lien « Paramètres de témoins » au bas de chaque page, aussi facilement que vous l'avez donné. Les données de mesure publicitaire sont communiquées à Meta Platforms, dont les serveurs se trouvent hors du Québec, aux seules fins de mesurer l'efficacité de nos campagnes. Nous ne vendons aucune donnée et n'en partageons aucune à des fins de courtage."
+        body: "Badge dépose des témoins strictement nécessaires au fonctionnement du site — authentification, préférences linguistiques, panier — qui ne peuvent pas être refusés sans empêcher le site de fonctionner.\n\nUne seule catégorie exige votre consentement explicite, demandé à votre première visite : la publicité. Elle regroupe le pixel Meta, sa copie envoyée depuis nos serveurs, et les identifiants de campagne que nous conservons dans votre navigateur pour savoir quelles annonces mènent à une inscription. Rien de tout cela n'est chargé ni conservé avant votre choix, et un refus vaut aussi pour l'envoi effectué depuis nos serveurs. Vous pouvez modifier ou retirer ce choix à tout moment par le lien « Paramètres de témoins » au bas de chaque page, aussi facilement que vous l'avez donné. Ces données de mesure publicitaire sont communiquées à Meta Platforms, dont les serveurs se trouvent hors du Québec, aux seules fins de mesurer l'efficacité de nos campagnes.\n\nNous utilisons par ailleurs Cloudflare Web Analytics, une mesure d'audience agrégée qui compte les pages vues, les provenances et les temps de chargement. Elle ne dépose aucun témoin, n'écrit rien sur votre appareil, ne relève pas d'empreinte de navigateur et ne permet donc de vous reconnaître ni d'une page à l'autre ni d'une visite à l'autre. Comme elle ne vous identifie pas, elle ne repose pas sur votre consentement et fonctionne pour tout le monde; il n'y a rien à refuser ni à retirer.\n\nNous ne vendons aucune donnée et n'en partageons aucune à des fins de courtage."
       },
       {
         title: "8. Modifications",
@@ -981,7 +981,7 @@ const fr: SiteContent = {
   consent: {
     bannerTitle: "Votre choix sur les témoins",
     bannerBody:
-      "Badge dépose uniquement les témoins nécessaires à son fonctionnement. Pour la mesure d'audience et la publicité, rien n'est chargé sans votre accord — et vous pouvez le retirer à tout moment.",
+      "Badge dépose uniquement les témoins nécessaires à son fonctionnement. Pour les traceurs publicitaires, rien n'est chargé sans votre accord — et vous pouvez le retirer à tout moment.",
     privacyLink: "Lire la politique de confidentialité",
     acceptAll: "Tout accepter",
     refuseAll: "Tout refuser",
@@ -989,14 +989,13 @@ const fr: SiteContent = {
     save: "Enregistrer mes choix",
     panelTitle: "Paramètres de témoins",
     panelIntro:
-      "Chaque catégorie s'active séparément. Refuser n'enlève rien aux fonctionnalités du site : seule la mesure en souffre, pas vous.",
+      "Refuser n'enlève rien aux fonctionnalités du site : seule la mesure en souffre, pas vous.",
     alwaysOn: "toujours actifs",
     necessaryTitle: "Nécessaires",
     necessaryBody:
       "Votre session, votre langue et votre panier. Sans eux, impossible de rester connecté ou de commander.",
-    measurementTitle: "Mesure d'audience",
-    measurementBody:
-      "Nous aide à savoir quelles pages servent et lesquelles perdent les gens. Aucune donnée n'est revendue.",
+    analyticsNote:
+      "Une mesure d'audience agrégée tourne pour tout le monde : elle compte les pages vues et d'où elles viennent, sans témoin, sans rien écrire sur votre appareil et sans jamais vous reconnaître d'une visite à l'autre. Comme elle n'identifie personne, elle ne se refuse pas — il n'y a rien à retirer.",
     advertisingTitle: "Publicité",
     advertisingBody:
       "Permet de savoir quelles publicités mènent à une inscription. Ces données sont communiquées à Meta, hors du Québec.",

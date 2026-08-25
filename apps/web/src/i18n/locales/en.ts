@@ -885,7 +885,7 @@ const en: SiteContent = {
       },
       {
         title: "7. Cookies and similar technologies",
-        body: "Badge sets cookies that are strictly necessary for the site to work — authentication, language preference, cart — which cannot be refused without breaking the site. Two further categories exist only with your explicit consent, asked on your first visit: audience measurement, which tells us which pages actually serve people, and advertising, which lets us see which ads lead to a sign-up. None of it loads before you choose. You can change or withdraw that choice at any time through the \"Cookie settings\" link at the bottom of every page, as easily as you gave it. Advertising measurement data is shared with Meta Platforms, whose servers are outside Quebec, for the sole purpose of measuring our campaigns. We do not sell any data and share none for brokerage purposes."
+        body: "Badge sets cookies that are strictly necessary for the site to work — authentication, language preference, cart — which cannot be refused without breaking the site.\n\nOne category requires your explicit consent, asked on your first visit: advertising. It covers the Meta pixel, the copy of it we send from our own servers, and the campaign identifiers we keep in your browser so we can see which ads lead to a sign-up. None of it loads or is stored before you choose, and a refusal silences the server-side copy too. You can change or withdraw that choice at any time through the \"Cookie settings\" link at the bottom of every page, as easily as you gave it. This advertising measurement data is shared with Meta Platforms, whose servers are outside Quebec, for the sole purpose of measuring our campaigns.\n\nWe also use Cloudflare Web Analytics, an aggregate audience count covering page views, referrers and load times. It sets no cookie, writes nothing to your device and takes no browser fingerprint, so it cannot recognise you from one page to the next or from one visit to another. Because it does not identify you, it does not rely on your consent and runs for everyone; there is nothing to refuse and nothing to withdraw.\n\nWe do not sell any data and share none for brokerage purposes."
       },
       {
         title: "8. Changes",
@@ -975,7 +975,7 @@ const en: SiteContent = {
   consent: {
     bannerTitle: "Your choice about cookies",
     bannerBody:
-      "Badge only sets the cookies it needs to work. Nothing for measurement or advertising loads without your consent — and you can withdraw it at any time.",
+      "Badge only sets the cookies it needs to work. No advertising tracker loads without your consent — and you can withdraw it at any time.",
     privacyLink: "Read the privacy policy",
     acceptAll: "Accept all",
     refuseAll: "Refuse all",
@@ -983,14 +983,13 @@ const en: SiteContent = {
     save: "Save my choices",
     panelTitle: "Cookie settings",
     panelIntro:
-      "Each category is separate. Refusing takes nothing away from the site: only our measurement suffers, not you.",
+      "Refusing takes nothing away from the site: only our measurement suffers, not you.",
     alwaysOn: "always on",
     necessaryTitle: "Necessary",
     necessaryBody:
       "Your session, your language and your cart. Without them you cannot stay signed in or place an order.",
-    measurementTitle: "Audience measurement",
-    measurementBody:
-      "Helps us see which pages serve people and which lose them. No data is ever sold.",
+    analyticsNote:
+      "An aggregate audience count runs for everyone: it records page views and where they came from, with no cookie, nothing written to your device, and no way to recognise you from one visit to the next. Since it identifies nobody, there is nothing to refuse and nothing to withdraw.",
     advertisingTitle: "Advertising",
     advertisingBody:
       "Lets us see which ads lead to a sign-up. This data is shared with Meta, outside Quebec.",

@@ -33,14 +33,12 @@ export function CookieConsent() {
   const decided = useSyncExternalStore(onConsentChange, hasDecided, () => true);
 
   const [panelOpen, setPanelOpen] = useState(false);
-  const [measurement, setMeasurement] = useState(false);
   const [advertising, setAdvertising] = useState(false);
 
   useEffect(
     () =>
       onOpenPreferences(() => {
         const now = getConsent();
-        setMeasurement(now?.measurement ?? false);
         setAdvertising(now?.advertising ?? false);
         setPanelOpen(true);
       }),
@@ -48,17 +46,17 @@ export function CookieConsent() {
   );
 
   function acceptAll() {
-    setConsent({ measurement: true, advertising: true });
+    setConsent({ advertising: true });
     setPanelOpen(false);
   }
 
   function refuseAll() {
-    setConsent({ measurement: false, advertising: false });
+    setConsent({ advertising: false });
     setPanelOpen(false);
   }
 
   function saveChoice() {
-    setConsent({ measurement, advertising });
+    setConsent({ advertising });
     setPanelOpen(false);
   }
 
@@ -115,17 +113,18 @@ export function CookieConsent() {
             note={c.alwaysOn}
           />
           <ConsentRow
-            title={c.measurementTitle}
-            body={c.measurementBody}
-            checked={measurement}
-            onChange={setMeasurement}
-          />
-          <ConsentRow
             title={c.advertisingTitle}
             body={c.advertisingBody}
             checked={advertising}
             onChange={setAdvertising}
           />
+
+          {/* Not a toggle, because there is nothing here to switch off: this
+              measurement stores nothing on the device and identifies nobody.
+              Saying so is more honest than a control that governs nothing. */}
+          <p className="rounded-lg bg-[var(--rcb-surface)] p-4 text-sm leading-relaxed text-[var(--rcb-text-muted)]">
+            {c.analyticsNote}
+          </p>
 
           <div className="flex flex-col gap-2 border-t border-[var(--rcb-border)] pt-4 sm:flex-row sm:justify-end">
             <Button variant="outline" size="sm" onClick={refuseAll} style={{ minWidth: 150 }}>

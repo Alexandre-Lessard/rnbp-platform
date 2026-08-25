@@ -9,20 +9,33 @@
 export type ConsentCategories = {
   /** Session, language, cart. Cannot be refused; the site breaks without them. */
   necessary: true;
-  /** Audience measurement. */
-  measurement: boolean;
-  /** Advertising trackers — the Meta pixel and its server-side twin. */
+  /** Advertising trackers — the Meta pixel, its server-side twin, and the
+   * campaign tags we keep to check Meta's numbers against our own. */
   advertising: boolean;
 };
 
+/**
+ * There is deliberately no "audience measurement" category. The only audience
+ * measurement running is Cloudflare Web Analytics, which sets no cookie, writes
+ * nothing to the device and builds no profile — so it identifies nobody and
+ * needs no consent. A toggle that governs nothing would be worse than none: it
+ * would suggest a control that does not exist. The privacy policy says so
+ * plainly instead.
+ */
+
 const STORAGE_KEY = "badge-consent-v1";
 
-/** Bumped when the categories change meaning; an old record stops counting. */
-const VERSION = 1;
+/**
+ * Bumped when the categories change meaning; an old record stops counting.
+ *
+ * 2 — the audience-measurement category was removed. A record made against the
+ * old three-category wording no longer describes what we ask for, so everyone
+ * is asked again rather than assumed to have agreed to something else.
+ */
+const VERSION = 2;
 
 type StoredConsent = {
   version: number;
-  measurement: boolean;
   advertising: boolean;
   /** When the choice was made — Law 25 expects consent to be demonstrable. */
   decidedAt: string;
@@ -53,20 +66,18 @@ export function getConsent(): ConsentCategories | null {
   if (!stored) return null;
   return {
     necessary: true,
-    measurement: stored.measurement,
     advertising: stored.advertising,
   };
 }
 
 /** True only for an explicit yes. Absence of a choice is a no. */
-export function hasConsent(category: "measurement" | "advertising"): boolean {
+export function hasConsent(category: "advertising"): boolean {
   return getConsent()?.[category] === true;
 }
 
-export function setConsent(choice: { measurement: boolean; advertising: boolean }): void {
+export function setConsent(choice: { advertising: boolean }): void {
   const record: StoredConsent = {
     version: VERSION,
-    measurement: choice.measurement,
     advertising: choice.advertising,
     decidedAt: new Date().toISOString(),
   };
@@ -82,7 +93,7 @@ export function setConsent(choice: { measurement: boolean; advertising: boolean 
 
 /** Withdrawing has to be as easy as consenting — this is the same one click. */
 export function withdrawConsent(): void {
-  setConsent({ measurement: false, advertising: false });
+  setConsent({ advertising: false });
 }
 
 /** Forget the decision entirely so the banner asks again. */
