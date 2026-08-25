@@ -53,8 +53,10 @@ account-only — no items, no orders — so the usual logins exist.
 
 ### Worker (`apps/worker/.dev.vars` locally, `wrangler secret` in deployed environments)
 
-Non-secret values (`FRONTEND_URL`, `CORS_ORIGINS`, `NODE_ENV`, `FROM_EMAIL`, `FROM_NAME`)
-live in `apps/worker/wrangler.jsonc` per environment and are versioned. Everything below is
+Non-secret values (`FRONTEND_URL`, `API_URL`, `CORS_ORIGINS`, `NODE_ENV`, `FROM_EMAIL`,
+`FROM_NAME`) live in `apps/worker/wrangler.jsonc` per environment and are versioned.
+`API_URL` exists because one-click unsubscribe (RFC 8058) is POSTed by the mail client straight
+to the Worker, so that email needs a link back to the API rather than to a page. Everything below is
 a secret.
 
 | Variable | Description | Required |
@@ -69,6 +71,7 @@ a secret.
 | `GOOGLE_CLIENT_ID` / `_SECRET` | Google OAuth | optional |
 | `FACEBOOK_CLIENT_ID` / `_SECRET` | Facebook OAuth | optional |
 | `MICROSOFT_CLIENT_ID` / `_SECRET` | Microsoft OAuth | optional |
+| `META_CAPI_TOKEN` | Meta Conversions API. Unset: the server reports no purchase and only the browser pixel measures | prod |
 | `ADMIN_ORDER_EMAIL` / `ADMIN_CONTACT_EMAIL` | Admin notification recipients | optional |
 
 Most of these are `.optional()` in the schema, so the Worker boots without them and quietly
@@ -87,6 +90,9 @@ pnpm --filter @badge/worker exec wrangler secret put NAME --env staging
 >
 > `R2_PUBLIC_URL` must point at an enabled public domain for the bucket. If it is private,
 > uploads still persist but image requests return 401 and the app shows fallbacks.
+>
+> `META_CAPI_TOKEN` is deliberately **production-only**. Set it on staging and test orders would
+> land in the live Meta dataset, skewing the cost per acquisition the ads dashboard reports.
 
 ### Web (`apps/web/.env.development`)
 

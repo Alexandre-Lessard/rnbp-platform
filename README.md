@@ -27,7 +27,7 @@ It runs at `badgeid.ca` in French and English on the same domain. The former `rn
 - **Insurance Integration** — Send proof of registration to your insurer to request a home insurance discount
 - **Stripe Checkout** — Purchase sticker sheets with tax calculation and shipping
 - **Bilingual UI** — Full French/English support with instant language toggle
-- **OAuth Login** — Google and Facebook, currently switched off pending business verification (see `apps/web/.env.production`)
+- **OAuth Login** — Google is live in production; Facebook is wired end to end but switched off there, because the Meta app is still unpublished and only its own admins and testers could complete a sign-in (see `docs/OAUTH-PROVIDERS.md`)
 
 ## Architecture
 
@@ -135,8 +135,10 @@ See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for prerequisites, setup, and scr
 - [Deployment Guide](docs/DEPLOYMENT.md) — How deploys work, environments, rollback
 - [Architecture](docs/ARCHITECTURE.md) — Technical decisions, auth flow, i18n strategy
 - [Cloudflare Migration](docs/CLOUDFLARE-MIGRATION.md) — How the platform got here, and what is left
+- [OAuth Providers](docs/OAUTH-PROVIDERS.md) — Console configuration and what is still pending
 - [Production Setup](ops/SETUP.md) — Infrastructure reference
 - [API Reference](docs/API.md)
+- [Printer Spec](docs/printer-spec.md) — Sticker sheet specification for the print run
 
 ## License
 

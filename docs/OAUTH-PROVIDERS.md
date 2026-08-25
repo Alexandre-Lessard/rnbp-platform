@@ -1,12 +1,16 @@
 # OAuth Providers — Configuration & Production Checklist
 
-> **State as of 2026-08-24.** The Facebook side below was re-verified against the Meta console
-> and corrected the same day. What it recorded before then described the pre-rebrand `rnbp.ca`
-> setup and had been wrong for four months — including a business verification it called
-> "pending" that had in fact completed on 2026-04-13.
+> **State as of 2026-08-25.** Both provider sections below have now been re-verified against
+> their consoles. Facebook was corrected on 2026-08-24, Google on 2026-08-25.
 >
-> Google has **not** been re-verified. Treat its section as unconfirmed until someone checks it
-> against the console, the same way Facebook's was.
+> The Google section as written before 2026-08-25 was wrong in almost every line: it described a
+> published, verified app awaiting a Trust & Safety review, with two OAuth clients and a
+> `tech@rnbp.ca` support address. The console held none of that. The app was still in **Test**
+> mode with zero test users — meaning nobody at all could sign in with Google — the consent
+> screen carried no home page, no privacy link, no terms link and no authorized domain, and the
+> project owned **no OAuth client**. The client ID sitting in `apps/web/.env.development` pointed
+> at a project number (`849229135087`) that belongs to no project on this account. No manual
+> review had ever been submitted. Everything below was rebuilt from scratch on 2026-08-25.
 
 This document captures everything needed to configure and ship the OAuth sign-in providers (Google, Facebook, Microsoft) to public production. It is written so a future maintainer can pick it up cold without re-discovering every console URL and form field.
 
@@ -14,8 +18,8 @@ This document captures everything needed to configure and ship the OAuth sign-in
 
 | Provider | Status | Action owner |
 |---|---|---|
-| Google | In production, branding verification under manual T&S review | Alexandre |
-| Facebook | App Mode "In development", business verification pending Jason | Jason → Alexandre |
+| Google | **Live.** Consent screen published, no verification required (non-sensitive scopes, no logo) | — |
+| Facebook | Unpublished. Business verification done; blocked on the annual data access renewal (due 2026-10-23) | Alexandre |
 | Microsoft | Code wired but disabled in production (no `VITE_MICROSOFT_CLIENT_ID` set) | Post-launch |
 
 ## Code touchpoints
@@ -25,8 +29,9 @@ This document captures everything needed to configure and ship the OAuth sign-in
 | Frontend OAuth flow (PKCE, state, redirect) | [apps/web/src/lib/oauth.ts](../apps/web/src/lib/oauth.ts) |
 | Frontend buttons (provider availability) | [apps/web/src/components/auth/OAuthButtons.tsx](../apps/web/src/components/auth/OAuthButtons.tsx) |
 | OAuth callback page | [apps/web/src/pages/OAuthCallbackPage.tsx](../apps/web/src/pages/OAuthCallbackPage.tsx) |
-| Backend token exchange | [apps/api/src/utils/oauth.ts](../apps/api/src/utils/oauth.ts) |
-| User schema (provider IDs) | [apps/api/src/db/schema.ts](../apps/api/src/db/schema.ts) (`googleId`, `facebookId`, `microsoftId`) |
+| Backend token exchange | [apps/worker/src/utils/oauth.ts](../apps/worker/src/utils/oauth.ts) |
+| Backend routes | [apps/worker/src/routes/oauth.ts](../apps/worker/src/routes/oauth.ts) |
+| User schema (provider IDs) | [apps/worker/src/db/schema.ts](../apps/worker/src/db/schema.ts) (`googleId`, `facebookId`, `microsoftId`) |
 | Privacy policy disclosure | [apps/web/src/i18n/locales/fr.ts](../apps/web/src/i18n/locales/fr.ts) + [en.ts](../apps/web/src/i18n/locales/en.ts) (`legal.privacyContent` section #4) |
 | Account deletion procedure | [apps/web/src/pages/DataDeletionPage.tsx](../apps/web/src/pages/DataDeletionPage.tsx) |
 | Privacy declaration (W3C) | [apps/web/src/root.tsx](../apps/web/src/root.tsx) — `<link rel="privacy-policy">` |
@@ -50,65 +55,101 @@ This list is reflected in [the privacy policy section #4](../apps/web/src/i18n/l
 
 ## Google
 
+Verified against the console on 2026-08-25. Google sign-in works in production and in local dev;
+nothing is pending on Google's side.
+
 ### Console links
 
-- Cloud Console (project): https://console.cloud.google.com/ — select project `rnbp-ca`
-- OAuth consent screen / Branding: https://console.cloud.google.com/auth/branding
-- Audience (publishing status, test users): https://console.cloud.google.com/auth/audience
-- Clients (OAuth client IDs): https://console.cloud.google.com/apis/credentials
-- Verification Center: https://console.cloud.google.com/auth/verification
+- Cloud Console (project): https://console.cloud.google.com/ — project **Badge**, ID `rnbp-ca`
+- Branding (consent screen): https://console.cloud.google.com/auth/branding?project=rnbp-ca
+- Audience (publishing status): https://console.cloud.google.com/auth/audience?project=rnbp-ca
+- Clients (OAuth client IDs): https://console.cloud.google.com/auth/clients?project=rnbp-ca
+- Data access (scopes): https://console.cloud.google.com/auth/scopes?project=rnbp-ca
+
+The project **display name** is `Badge`; the project **ID** stays `rnbp-ca` because a Google Cloud
+project ID is immutable. That ID is an admin-only string — it never reaches a user — so it is not
+worth a new project and a fresh verification cycle. Project number: `812153749723`.
 
 ### Configuration checklist
 
-| Item | Value |
+| Item | Value (verified 2026-08-25) |
 |---|---|
-| Project ID | `rnbp-ca` |
-| Scopes | `openid`, `email`, `profile` (non-sensitive — no extra verification required) |
-| Publishing status | In production |
+| Project display name / ID / number | `Badge` / `rnbp-ca` / `812153749723` |
+| App name shown on the consent screen | **Badge** |
+| Publishing status | **In production** |
 | User type | External |
-| App name | RNBP |
-| User support email | `tech@rnbp.ca` |
-| Developer contact | `tech@rnbp.ca` |
-| App logo | 120×120+ PNG, light background, no text |
-| Application home page | `https://rnbp.ca/` |
-| Application privacy policy link | `https://rnbp.ca/privacy` |
-| Application terms of service link | `https://rnbp.ca/terms` |
-| Authorized domains | `rnbp.ca`, `nrpp.ca` |
-| Search Console domain ownership | `rnbp.ca` and `nrpp.ca`, owner = `tech@rnbp.ca` |
+| Scopes | `openid`, `.../auth/userinfo.email`, `.../auth/userinfo.profile` — all non-sensitive |
+| User support email | `alexandre.lessard92@gmail.com` — see the constraint below |
+| Developer contact | `info@badgeid.ca` |
+| App logo | **none, deliberately** — see below |
+| Application home page | `https://badgeid.ca/` |
+| Application privacy policy link | `https://badgeid.ca/privacy` |
+| Application terms of service link | `https://badgeid.ca/terms` |
+| Authorized domains | `badgeid.ca` |
+
+`rnbp.ca` and `nrpp.ca` are **not** registered here. They only redirect to `badgeid.ca`, so the SPA
+never runs on them and no OAuth flow can start there. Registering a dead name would be the one
+thing that brings it back.
 
 ### OAuth clients
 
-Two clients in `Credentials → OAuth 2.0 Client IDs`:
+Two clients, both `Application Web`, both created 2026-08-25:
 
-**RNBP Prod**
-- Authorized JavaScript origins: `https://rnbp.ca`, `https://nrpp.ca`
-- Authorized redirect URIs: `https://rnbp.ca/auth/google/callback`, `https://nrpp.ca/auth/google/callback`
-- Used by: production deploys (set in `apps/web/.env` and `apps/api/.env` on the prod server)
+**Badge Web (production)**
+- Client ID: `812153749723-vu6vdv0b53spgjuni1ihu84a07dpna9f.apps.googleusercontent.com`
+- Authorized JavaScript origins: `https://badgeid.ca`
+- Authorized redirect URIs: `https://badgeid.ca/auth/google/callback`
+- Client ID set in: `apps/web/.env.production`, `.github/workflows/cd.yml` (web build) and
+  `apps/worker/wrangler.jsonc` (production `vars`)
+- Client secret: Worker secret `GOOGLE_CLIENT_SECRET`, listed in `secrets.manifest.json` under
+  production — **CD refuses to deploy production without it**
 
-**RNBP Dev**
+**Badge Web (developpement local)**
+- Client ID: `812153749723-8mbnab54s7jj32sg1pm918tdbd1junpm.apps.googleusercontent.com`
 - Authorized JavaScript origins: `http://localhost:5173`
 - Authorized redirect URIs: `http://localhost:5173/auth/google/callback`
-- Used by: local dev (`pnpm dev`)
+- Client ID set in `apps/web/.env.development`; secret goes in `apps/worker/.dev.vars`
 
-### Branding verification
+Staging has no Google client. `staging.badge-platform.pages.dev` sits under the `pages.dev` public
+suffix, which Google will not accept as an authorized domain, and staging is not on the launch
+critical path. The Google button simply does not render there.
 
-Because Google's automated branding verifier returns non-deterministic results on conformant HTML, the supported escape hatch is to request a **manual review** from the Trust & Safety team.
+Client secrets are shown **once**, in the dialog that appears right after a client is created. If
+one is lost, do not recreate the client: open it and use **Add secret**, which also allows a
+zero-downtime rotation (add the new secret, deploy, delete the old one).
 
-1. Form: https://support.google.com/cloud/contact/oauth_app_verification
-2. Authenticate as `tech@rnbp.ca` (the project owner)
-3. Reference the `rnbp-ca` project
-4. Provide evidence (Rich Results Test URL, verified domain, prerendered HTML)
-5. Wait 1–14 days for a human reply
+### Why there is no verification to wait for
 
-A submission template is preserved in the project sprint plan; reuse it verbatim if a fresh submission is needed.
+Google requires a review only when the app declares **more than 10 authorized domains**, uploads an
+**app logo**, or requests **sensitive or restricted scopes**. Badge does none of the three, so
+publishing to production was instant and users see a normal consent screen — no "unverified app"
+interstitial.
 
-### Recovery if the auto-verifier rejects
+Uploading a logo is therefore not free: it converts a live, review-free app into one that needs
+Trust & Safety approval (1–14 days). The logo is deliberately deferred until after launch, and
+should be uploaded only when someone is willing to sit through that review.
 
-1. Confirm the page is still rendered correctly via https://search.google.com/test/rich-results?url=https://rnbp.ca/
-2. Confirm the privacy policy and terms pages return 200 publicly (`curl -I`)
-3. Confirm `<link rel="privacy-policy">` is still in the served HTML head
-4. Re-submit a manual T&S review with the latest commit hash and the rendered HTML excerpt
-5. Do **not** keep clicking the auto-verify button — each retry burns reputation with the classifier
+### Known constraint — the user support email
+
+The consent screen shows a support address to every user, and Google only lets you pick from **the
+signed-in account's own email** or **a Google Group that account manages**. `info@badgeid.ca` is a
+Cloudflare Email Routing alias, not a Google identity, so it cannot be selected; the field is stuck
+on `alexandre.lessard92@gmail.com`, which is what users currently see.
+
+Two ways out, neither on the critical path:
+
+1. Create a Google Group with `alexandre.lessard92@gmail.com` as manager and select it. Free, but
+   the address ends in `@googlegroups.com`.
+2. Put `badgeid.ca` on Google Workspace, create `info@badgeid.ca` as a real mailbox, and select it.
+   Paid, and the only option that shows a `@badgeid.ca` address on the consent screen.
+
+The developer contact field has no such restriction and is already `info@badgeid.ca`.
+
+### Troubleshooting
+
+Google holds **no company information** for this project — there is no billing account and no
+verification submission, and non-sensitive scopes never ask for a legal entity. Nothing here needs
+correcting for the `11898248 Canada Inc.` → `9567-1525 Québec Inc.` change.
 
 ---
 

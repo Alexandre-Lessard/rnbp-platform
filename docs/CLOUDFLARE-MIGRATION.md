@@ -114,10 +114,18 @@ commit.
 
 The Google and Facebook buttons are deliberately off in production — see the
 commented `VITE_GOOGLE_CLIENT_ID` / `VITE_FACEBOOK_CLIENT_ID` in
-`apps/web/.env.production`, pending business verification with both providers.
-The buttons are gated on those vars at build time, so the component renders
-nothing without them. The Worker side is ready: both client ids and secrets are
-already set as production secrets.
+`apps/web/.env.production`. The buttons are gated on those vars at build time, so
+the component renders nothing without them. The Worker side is ready: both client
+ids and secrets are already set as production secrets.
+
+What actually blocks Facebook is no longer the configuration — that was fixed on
+2026-08-24, including the redirect URIs, which had stayed on `rnbp.ca` under strict
+mode and would have failed every attempt with `redirect_uri_mismatch`. The app is
+still **unpublished**, so only its own admins, developers and testers can complete a
+sign-in, and publishing is gated on the annual data access renewal. **Google went
+live on 2026-08-25** — its consent screen is published and `VITE_GOOGLE_CLIENT_ID`
+is set in the `deploy-web` job. Both are tracked in `docs/OAUTH-PROVIDERS.md` and
+`notes/TODO.md` (T6).
 
 One thing changed with the cutover: the web build now runs on a GitHub runner,
 and **`.env.production` is not tracked in git**, so it never reaches that
@@ -137,13 +145,17 @@ it is done — see "The cutover" below.*
   that change has been verified in production.
 - Delete the empty `rnbp-platform` Pages project and the `rnbp-uploads` bucket after a few days
   of stability
-- Stripe checkout + webhook on staging (needs test keys wired into the staging Worker)
-- OAuth on staging (needs staging redirect URIs registered with each provider)
-- R2 uploads on staging (bucket bound, public URL not yet configured)
-- `ops/seed.mjs` cannot seed staging yet: it hashes the seed password itself and needs
-  `PASSWORD_PEPPER`, which is a wrangler secret and cannot be read back. The fix is for the
-  script to create accounts through the Worker's own `/auth/register`, so the Worker hashes with
-  its own pepper and no secret has to travel.
+- Stripe checkout + webhook on staging (needs test keys wired into the staging Worker —
+  `notes/TODO.md`, T18)
+
+Done since this list was written:
+
+- **OAuth on staging** — the staging redirect URI is registered and `VITE_FACEBOOK_CLIENT_ID`
+  is set in the `cd-staging.yml` build step (2026-08-24).
+- **R2 uploads on staging** — `R2_PUBLIC_URL` is set on the staging Worker.
+- **Seeding staging** — `ops/seed.mjs` now creates accounts through the Worker's own
+  `/auth/register`, so the Worker hashes with its own pepper and no secret has to travel.
+  Run it with `pnpm run seed:staging`.
 
 ## The RNBP → Badge rename
 

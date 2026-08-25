@@ -547,6 +547,20 @@ Auth: None | Rate limit: 5/min
 Body: { email }
 Response: { code: "SUBSCRIPTION_SUCCESS" }
 ```
+Returns `SUBSCRIPTION_OPTED_OUT` for an address that previously unsubscribed, rather than
+silently resurrecting it — CASL treats an opt-out as standing until the person asks to come back.
+
+### POST /newsletter/unsubscribe
+Auth: None (the signed token is the authorisation)
+```
+Body: { token } — or ?token= in the query string
+Response: { message }
+```
+Idempotent: unsubscribing twice succeeds both times. The token is accepted from the query string
+so a mail client can POST the one-click header straight here (RFC 8058) — that is why
+`buildCommercialEmail()` sets `List-Unsubscribe` and `List-Unsubscribe-Post`. The token never
+expires, because an unsubscribe link has to keep working in a mail archive years later.
+Returns `UNSUBSCRIBE_LINK_INVALID` on a bad or tampered token.
 
 ---
 

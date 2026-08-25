@@ -57,10 +57,28 @@ which the domain is down.
 
 ## Access tokens
 
-The API token `badge-cicd` (no expiry, no IP filter) is stored in the GitHub secret
-`CLOUDFLARE_API_TOKEN` and in `.deploy.env` at the repo root for local use. It covers Workers
-Scripts, D1, R2, Pages, KV, Tail and Account Settings at account level, plus DNS, Workers
-Routes and Zone Read on the `badgeid.ca`, `rnbp.ca` and `nrpp.ca` zones.
+Each pipeline has its own token, so a leak is bounded and the audit trail says which pipeline
+did what:
+
+| GitHub secret | Token | Scope |
+|---|---|---|
+| `CLOUDFLARE_API_TOKEN_PROD` | `badge-cicd-prod` | Production Worker, Pages, D1 migrations |
+| `CLOUDFLARE_API_TOKEN_STAGING` | `badge-cicd-staging` | The same, for staging |
+| `CLOUDFLARE_API_TOKEN_BACKUP` | `badge-backups` | Nightly D1 export only |
+
+A fourth, `badge-ops`, is for manual zone work — redirects, transform rules, rulesets, plus D1
+read. It deliberately **cannot deploy**. All four live in the system keyring, never in a file;
+see `~/knowledge/keyring.md` for the names and the read/write gestures.
+
+Cloudflare scopes Workers, Pages and D1 permissions to the **whole account**, never to a single
+resource, so the staging token technically carries the same rights as the production one.
+Splitting them still bounds a leak and keeps the trails apart; real isolation would take a second
+Cloudflare account.
+
+> ⚠️ The older combined token **`badge-cicd`** (no expiry, account-wide, plus DNS on the three
+> zones) still exists and still sits in `.deploy.env` at the repo root, where local `wrangler`
+> calls pick it up when no token is passed explicitly. Nothing in CI uses it any more. Retiring
+> it is tracked as T20 in `notes/TODO.md`.
 
 It deliberately **cannot manage tokens**. Widening its scope needs a fresh bootstrap token
 with token-management rights — so when creating one, cover every zone the project touches the
