@@ -1,7 +1,9 @@
 # OAuth Providers — Configuration & Production Checklist
 
-> **State as of 2026-08-25.** Both provider sections below have now been re-verified against
-> their consoles. Facebook was corrected on 2026-08-24, Google on 2026-08-25.
+> **State as of 2026-09-02.** Both provider sections below have been re-verified against their
+> consoles — Facebook on 2026-08-24, Google on 2026-08-25 — and **Google sign-in is live and
+> proven**: deployed to production on 2026-09-02 and used successfully by a third-party Google
+> account, the only test that means anything.
 >
 > The Google section as written before 2026-08-25 was wrong in almost every line: it described a
 > published, verified app awaiting a Trust & Safety review, with two OAuth clients and a
@@ -18,7 +20,7 @@ This document captures everything needed to configure and ship the OAuth sign-in
 
 | Provider | Status | Action owner |
 |---|---|---|
-| Google | **Done at Google.** Consent screen published, branding verified and visible, clients wired. The button ships on the next deploy to `main` | — |
+| Google | **Live.** Consent screen published, branding verified and visible, clients wired, button deployed 2026-09-02 and verified end-to-end with a third-party account | — |
 | Facebook | Unpublished. Business verification done; blocked on the annual data access renewal (due 2026-10-23) | Alexandre |
 | Microsoft | Code wired but disabled in production (no `VITE_MICROSOFT_CLIENT_ID` set) | Post-launch |
 
@@ -55,14 +57,15 @@ This list is reflected in [the privacy policy section #4](../apps/web/src/i18n/l
 
 ## Google
 
-Verified against the console on 2026-08-25. Nothing is pending at Google: the consent screen is
-published, branding is verified and visible to users, and the two OAuth clients hold live secrets.
-What stands between that and a working button in production is on our side only:
+Verified against the console on 2026-08-25, and **working in production since 2026-09-02** — a
+Google account belonging to neither the project nor the company signed in without a hitch. Nothing
+is pending on either side.
 
 The production Worker secrets `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` hold the
-`Badge Web (production)` values, and `apps/worker/.dev.vars` holds the dev pair. The frontend only
-renders the button once a deploy carries `VITE_GOOGLE_CLIENT_ID`, which is set in `cd.yml` and
-ships on the next push to `main`. That deploy is the last remaining step.
+`Badge Web (production)` values, and `apps/worker/.dev.vars` holds the dev pair. The frontend
+renders the button only when the build carries `VITE_GOOGLE_CLIENT_ID`, which is set in `cd.yml`
+— so a fork of the pipeline that drops that variable silently removes the button rather than
+breaking loudly.
 
 ### Console links
 
@@ -137,9 +140,9 @@ one is lost, do not recreate the client: open it and use **Add secret**, which a
 zero-downtime rotation — add the new secret, put it in place, then disable and delete the old one.
 
 Both clients were rotated on 2026-08-25: each now has exactly one **active** secret, and the
-original secret of each is **disabled** (kept, not deleted, so it can be re-enabled if a rotation
-turns out to have missed a consumer). Delete the disabled ones once Google sign-in is confirmed
-working in production.
+original secret of each is **disabled** (kept, not deleted, so it could be re-enabled if a
+rotation turned out to have missed a consumer). Sign-in has since been proven in production, so
+nothing depends on them any more — they can be deleted whenever someone is in the console.
 
 **A caution for whoever rotates these next.** Do not let an agent read the secret off the page. The
 Google Cloud console puts the full secret in the copy button's `aria-label`, so it lands in any
