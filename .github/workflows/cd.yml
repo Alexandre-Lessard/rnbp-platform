@@ -102,6 +102,10 @@ jobs:
       - name: Build web
         env:
           VITE_API_URL: https://api.badgeid.ca/api
+          # The Google button renders only when this is set (OAuthButtons.tsx).
+          # The client ID is not a secret — it travels in the authorisation URL.
+          # The consent screen is published, so any Google account can sign in.
+          VITE_GOOGLE_CLIENT_ID: "812153749723-vu6vdv0b53spgjuni1ihu84a07dpna9f.apps.googleusercontent.com"
         run: pnpm --filter @badge/web build
 
       - name: Deploy to Cloudflare Pages
