@@ -854,7 +854,7 @@ const fr: SiteContent = {
   },
   promo: {
     badge: "Prélancement",
-    text: "Obtenez vos étiquettes d'identification gratuitement. Offre valide jusqu'au 1er septembre 2026.",
+    text: "Obtenez vos étiquettes d'identification gratuitement. Offre valide jusqu'au 1er novembre 2026.",
     cta: "Voir la boutique",
     dismiss: "Fermer",
     dontShowAgain: "Ne plus afficher",
