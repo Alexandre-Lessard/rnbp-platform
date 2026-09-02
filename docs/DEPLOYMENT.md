@@ -87,7 +87,8 @@ its previous build while the API moves ahead.
 
 This is why the same token works for staging: the staging Worker declares no route and lives on
 `workers.dev`, so nothing ever touches a zone. Verified the hard way on 2026-09-02, on the first
-production deploy that used the split tokens.
+production deploy that used the split tokens; the permission was added to `badge-cicd-prod` the
+same day and the deploy went green.
 
 For local wrangler work the tokens live in the system keyring rather than in a file — see
 `~/knowledge/keyring.md`. `.deploy.env` is a leftover of the old self-hosted deploy and is not
