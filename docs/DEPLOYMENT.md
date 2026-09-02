@@ -77,6 +77,18 @@ resource, so `badge-cicd-staging` technically carries the same rights as its pro
 counterpart. Splitting them still bounds a leak and keeps the trails apart; real isolation would
 take a second Cloudflare account.
 
+**Worker routes are the exception, and they are zone-scoped.** The production Worker declares
+`api.badgeid.ca` as a custom domain (`wrangler.jsonc`, `env.production.routes`), so every deploy
+calls `/zones/:id/workers/routes` to reconcile it. Account-level `Workers Scripts: Edit` does not
+cover that call: `badge-cicd-prod` also needs **`Workers Routes: Edit` on the `badgeid.ca` zone**.
+Without it the Worker uploads and serves fine, then the deploy fails on the route step — and
+because `deploy-web` runs `needs: deploy-worker`, Pages is silently skipped and the site stays on
+its previous build while the API moves ahead.
+
+This is why the same token works for staging: the staging Worker declares no route and lives on
+`workers.dev`, so nothing ever touches a zone. Verified the hard way on 2026-09-02, on the first
+production deploy that used the split tokens.
+
 For local wrangler work the tokens live in the system keyring rather than in a file — see
 `~/knowledge/keyring.md`. `.deploy.env` is a leftover of the old self-hosted deploy and is not
 read by anything in this pipeline.
