@@ -6,7 +6,7 @@
 /**
  * Postal address of the sender, required by CASL on every commercial message.
  * It is the registered business address, already public through the Quebec
- * enterprise registry (NEQ 2281977662). Swap it for a PO box if that ever
+ * enterprise registry (NEQ 2269043040). Swap it for a PO box if that ever
  * becomes preferable — nothing else depends on the value.
  */
 const SENDER_IDENTITY = {
