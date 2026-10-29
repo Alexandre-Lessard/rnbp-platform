@@ -1,32 +1,32 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "badge-api",
+  "name": "rnbp-api",
   "main": "src/index.ts",
   "compatibility_date": "2026-05-01",
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
   "env": {
     "staging": {
-      "name": "badge-api-staging",
+      "name": "rnbp-api-staging",
       "vars": {
         "NODE_ENV": "staging",
-        "FRONTEND_URL": "https://staging.badge-platform.pages.dev",
-        "API_URL": "https://badge-api-staging.alexandre-lessard92.workers.dev/api",
-        "CORS_ORIGINS": "https://staging.badge-platform.pages.dev,http://localhost:5173",
+        "FRONTEND_URL": "https://staging.rnbp-platform.pages.dev",
+        "API_URL": "https://rnbp-api-staging.alexandre-lessard92.workers.dev/api",
+        "CORS_ORIGINS": "https://staging.rnbp-platform.pages.dev,http://localhost:5173",
         "FROM_EMAIL": "noreply@rnbp.ca",
         "FROM_NAME": "RNBP (staging)"
       },
       "d1_databases": [
         {
           "binding": "DB",
-          "database_name": "badge-db-staging",
-          "database_id": "ef6af431-b45f-4e2b-a34e-0414a2b8b063"
+          "database_name": "rnbp-db-staging",
+          "database_id": "1afb4d18-ffe3-4ac6-bbaa-0e68a6fcf1ad"
         }
       ],
       "r2_buckets": [
         {
           "binding": "UPLOADS",
-          "bucket_name": "badge-uploads-staging"
+          "bucket_name": "rnbp-uploads-staging"
         }
       ],
       "unsafe": {
@@ -49,7 +49,7 @@
 
     // Production.
     "production": {
-      "name": "badge-api",
+      "name": "rnbp-api",
       // api.badgeid.ca stays as an alias during the return to RNBP (T28), for
       // anything still holding the old host; it goes once traffic has moved.
       "routes": [
@@ -69,14 +69,14 @@
       "d1_databases": [
         {
           "binding": "DB",
-          "database_name": "badge-db",
-          "database_id": "487a867c-f911-4ec2-b274-c9b6fb399655"
+          "database_name": "rnbp-db",
+          "database_id": "2f0498ca-ae93-467d-8010-3b34a64c220d"
         }
       ],
       "r2_buckets": [
         {
           "binding": "UPLOADS",
-          "bucket_name": "badge-uploads"
+          "bucket_name": "rnbp-uploads"
         }
       ],
       "unsafe": {

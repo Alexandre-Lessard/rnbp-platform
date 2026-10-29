@@ -47,7 +47,7 @@ jobs:
         run: node ops/check-secrets.mjs production
 
       - name: Apply D1 migrations
-        run: pnpm --filter ./apps/worker exec wrangler d1 migrations apply badge-db --remote --env production
+        run: pnpm --filter ./apps/worker exec wrangler d1 migrations apply rnbp-db --remote --env production
 
       - name: Deploy Worker
         run: pnpm --filter ./apps/worker exec wrangler deploy --env production
@@ -109,4 +109,4 @@ jobs:
         run: pnpm --filter ./apps/web build
 
       - name: Deploy to Cloudflare Pages
-        run: pnpm --filter ./apps/web exec wrangler pages deploy build/client --project-name badge-platform --branch main
+        run: pnpm --filter ./apps/web exec wrangler pages deploy build/client --project-name rnbp-platform --branch main

@@ -9,11 +9,11 @@ platform got here, see [docs/CLOUDFLARE-MIGRATION.md](../docs/CLOUDFLARE-MIGRATI
 ## Architecture
 
 ```
-rnbp.ca       -->  Pages project `badge-platform`   -->  React SPA
-api.rnbp.ca   -->  Worker `badge-api`               -->  Hono
-                                                            |-- D1  `badge-db`
-                                                            `-- R2  `badge-uploads`
-files.badgeid.ca -->  R2 `badge-uploads` (public custom domain)
+rnbp.ca       -->  Pages project `rnbp-platform`   -->  React SPA
+api.rnbp.ca   -->  Worker `rnbp-api`               -->  Hono
+                                                            |-- D1  `rnbp-db`
+                                                            `-- R2  `rnbp-uploads`
+files.rnbp.ca -->  R2 `rnbp-uploads` (public custom domain)
 ```
 
 Cloudflare account: `3aa12f83f9d4006cfd805489b6d65eb8` (Alexandre.lessard92@gmail.com).
@@ -23,11 +23,11 @@ Cloudflare account: `3aa12f83f9d4006cfd805489b6d65eb8` (Alexandre.lessard92@gmai
 
 | Kind | Production | Staging |
 |---|---|---|
-| Worker | `badge-api` | `badge-api-staging` |
-| D1 | `badge-db` | `badge-db-staging` |
-| R2 uploads | `badge-uploads` → `files.badgeid.ca` | `badge-uploads-staging` → `files-staging.badgeid.ca` |
-| Pages | `badge-platform` (branch `main`) | `badge-platform` (branch `staging`) |
-| R2 backups | `badge-db-backups` (shared, 90-day lifecycle) | — |
+| Worker | `rnbp-api` | `rnbp-api-staging` |
+| D1 | `rnbp-db` | `rnbp-db-staging` |
+| R2 uploads | `rnbp-uploads` → `files.rnbp.ca` | `rnbp-uploads-staging` → `files-staging.rnbp.ca` |
+| Pages | `rnbp-platform` (branch `main`) | `rnbp-platform` (branch `staging`) |
+| R2 backups | `rnbp-db-backups` (shared, 90-day lifecycle) | — |
 
 Bindings and non-secret vars are declared per environment in `apps/worker/wrangler.jsonc`.
 That file is the source of truth; nothing here should contradict it.
@@ -36,10 +36,10 @@ That file is the source of truth; nothing here should contradict it.
 
 | Domain | Points at |
 |---|---|
-| `rnbp.ca`, `www.badgeid.ca` | Pages `badge-platform` |
-| `rnbp.ca`, `www.rnbp.ca`, `nrpp.ca`, `www.nrpp.ca` | Pages `badge-platform` (legacy aliases) |
-| `api.rnbp.ca` | Worker `badge-api` (custom domain, declared in `wrangler.jsonc`) |
-| `files.badgeid.ca` | R2 `badge-uploads` |
+| `rnbp.ca`, `www.badgeid.ca` | Pages `rnbp-platform` |
+| `rnbp.ca`, `www.rnbp.ca`, `nrpp.ca`, `www.nrpp.ca` | Pages `rnbp-platform` (legacy aliases) |
+| `api.rnbp.ca` | Worker `rnbp-api` (custom domain, declared in `wrangler.jsonc`) |
+| `files.rnbp.ca` | R2 `rnbp-uploads` |
 | `api.rnbp.ca` | **Old server via Cloudflare Tunnel — argon2 bridge only.** Do not repoint until the bridge is retired. |
 
 ### Moving a domain between Pages projects
@@ -133,14 +133,14 @@ them; the old server's backup script passes the header explicitly.
 
 | What | How | Retention |
 |---|---|---|
-| D1 `badge-db` | `Backup D1` workflow, nightly 03:00 ET → R2 | 90 days (bucket lifecycle) |
+| D1 `rnbp-db` | `Backup D1` workflow, nightly 03:00 ET → R2 | 90 days (bucket lifecycle) |
 | D1 point-in-time | Cloudflare Time Travel | 30 days |
 | Legacy Postgres | cron on the old server → R2, until it is shut down | 14 days local, 90 in R2 |
 
 Restore a D1 export:
 
 ```bash
-pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production --file dump.sql
+pnpm --filter @rnbp/worker exec wrangler d1 execute rnbp-db --remote --env production --file dump.sql
 ```
 
 ## Migrating data from Postgres
@@ -151,8 +151,8 @@ JSON — and can repoint stored file URLs with `--rewrite-url OLD=NEW`.
 
 ```bash
 ./ops/pg-export.sh /tmp/pgdata prod@192.168.50.241
-./ops/pg-to-d1.py /tmp/pgdata --rewrite-url https://pub-OLD.r2.dev=https://files.badgeid.ca > import.sql
-pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production --file import.sql
+./ops/pg-to-d1.py /tmp/pgdata --rewrite-url https://pub-OLD.r2.dev=https://files.rnbp.ca > import.sql
+pnpm --filter @rnbp/worker exec wrangler d1 execute rnbp-db --remote --env production --file import.sql
 ```
 
 ## The legacy stack (being retired)
@@ -170,7 +170,7 @@ The container goes once its Postgres is no longer needed; the Worker's `isLegacy
 once this returns 0:
 
 ```bash
-pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production \
+pnpm --filter @rnbp/worker exec wrangler d1 execute rnbp-db --remote --env production \
   --command "SELECT COUNT(*) FROM users WHERE password_hash LIKE '\$argon2%';"
 ```
 

@@ -37,8 +37,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SEED_PASSWORD = "Seed1234!";
 
 const TARGETS = {
-  local: { db: "badge-db-staging", env: "staging", flag: "--local" },
-  staging: { db: "badge-db-staging", env: "staging", flag: "--remote" },
+  local: { db: "rnbp-db-staging", env: "staging", flag: "--local" },
+  staging: { db: "rnbp-db-staging", env: "staging", flag: "--remote" },
 };
 
 /** Alex's own accounts. Recreated account-only, hashes pulled from production. */

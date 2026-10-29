@@ -50,7 +50,7 @@ jobs:
 
       - name: Build web (staging)
         env:
-          VITE_API_URL: https://badge-api-staging.alexandre-lessard92.workers.dev/api
+          VITE_API_URL: https://rnbp-api-staging.alexandre-lessard92.workers.dev/api
           # The Facebook button renders only when this is set (OAuthButtons.tsx).
           # The App ID is not a secret — it travels in the authorisation URL.
           # The Meta app is still unpublished, so only its admins, developers and
@@ -60,11 +60,11 @@ jobs:
         run: pnpm --filter ./apps/web build
 
       - name: Deploy web to Cloudflare Pages (staging branch)
-        run: pnpm --filter ./apps/web exec wrangler pages deploy build/client --project-name badge-platform --branch staging
+        run: pnpm --filter ./apps/web exec wrangler pages deploy build/client --project-name rnbp-platform --branch staging
 
       - name: Apply D1 migrations (staging)
         if: ${{ hashFiles('apps/worker/wrangler.jsonc') != '' }}
-        run: pnpm --filter ./apps/worker exec wrangler d1 migrations apply badge-db-staging --remote --env staging
+        run: pnpm --filter ./apps/worker exec wrangler d1 migrations apply rnbp-db-staging --remote --env staging
 
       - name: Deploy API Worker (staging)
         if: ${{ hashFiles('apps/worker/wrangler.jsonc') != '' }}
@@ -75,7 +75,7 @@ jobs:
         run: |
           for i in 1 2 3 4 5; do
             sleep 3
-            if curl -sf https://badge-api-staging.alexandre-lessard92.workers.dev/api/health; then
+            if curl -sf https://rnbp-api-staging.alexandre-lessard92.workers.dev/api/health; then
               echo "Health check passed"
               exit 0
             fi

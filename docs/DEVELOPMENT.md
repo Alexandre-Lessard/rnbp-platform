@@ -14,7 +14,7 @@ behaviour matches.
 ## Quick Start
 
 ```bash
-git clone git@github.com:Alexandre-Lessard/badge-platform.git && cd badge-platform
+git clone git@github.com:Alexandre-Lessard/rnbp-platform.git && cd rnbp-platform
 pnpm install
 
 # Worker secrets for local dev
@@ -128,7 +128,7 @@ cd apps/worker
 pnpm run db:generate                  # generate a migration from db/schema.ts
 pnpm run db:migrate:local             # apply to the local D1
 pnpm run db:migrate:staging           # apply to the remote staging D1
-npx wrangler d1 execute badge-db-staging --local --env staging --command "SELECT ..."
+npx wrangler d1 execute rnbp-db-staging --local --env staging --command "SELECT ..."
 ```
 
 Schema changes go through Drizzle migrations — never hand-edit the database.
