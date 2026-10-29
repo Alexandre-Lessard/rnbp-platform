@@ -39,7 +39,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared package
-        run: pnpm --filter @rnbp/shared build
+        run: pnpm --filter ./packages/shared build
 
       # Before anything is applied: a missing secret would not stop the Worker
       # booting, it would quietly disable a feature. Fail here instead.
@@ -47,10 +47,10 @@ jobs:
         run: node ops/check-secrets.mjs production
 
       - name: Apply D1 migrations
-        run: pnpm --filter @rnbp/worker exec wrangler d1 migrations apply badge-db --remote --env production
+        run: pnpm --filter ./apps/worker exec wrangler d1 migrations apply badge-db --remote --env production
 
       - name: Deploy Worker
-        run: pnpm --filter @rnbp/worker exec wrangler deploy --env production
+        run: pnpm --filter ./apps/worker exec wrangler deploy --env production
 
       - name: Health check
         run: |
@@ -97,7 +97,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared package
-        run: pnpm --filter @rnbp/shared build
+        run: pnpm --filter ./packages/shared build
 
       - name: Build web
         env:
@@ -106,10 +106,10 @@ jobs:
           # The client ID is not a secret — it travels in the authorisation URL.
           # The consent screen is published, so any Google account can sign in.
           VITE_GOOGLE_CLIENT_ID: "812153749723-vu6vdv0b53spgjuni1ihu84a07dpna9f.apps.googleusercontent.com"
-        run: pnpm --filter @rnbp/web build
+        run: pnpm --filter ./apps/web build
 
       - name: Deploy to Cloudflare Pages
-        run: pnpm --filter @rnbp/web exec wrangler pages deploy build/client --project-name badge-platform --branch main
+        run: pnpm --filter ./apps/web exec wrangler pages deploy build/client --project-name badge-platform --branch main
 
   # Legacy: the old Fastify server, kept alive only to serve the argon2 bridge
   # the Worker calls (POST /api/internal/verify-legacy on api.rnbp.ca). Every
@@ -144,8 +144,8 @@ jobs:
           source ~/.nvm/nvm.sh
           cd /opt/rnbp/repo
           pnpm install --frozen-lockfile
-          pnpm --filter @rnbp/shared build
-          pnpm --filter @rnbp/api build
+          pnpm --filter ./packages/shared build
+          pnpm --filter ./apps/api build
           sudo systemctl restart rnbp-api
 
       - name: Health check
