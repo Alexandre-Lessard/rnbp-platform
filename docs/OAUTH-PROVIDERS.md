@@ -297,7 +297,7 @@ After Live, validate end-to-end with a Facebook account that is **not** an admin
 
 ## Microsoft (deferred to post-launch)
 
-The code path is wired (`apps/api/src/utils/oauth.ts` `exchangeMicrosoftCode`, frontend button in `OAuthButtons.tsx`, `microsoftId` column in DB) but the production env does **not** set `VITE_MICROSOFT_CLIENT_ID`, so the button is hidden in the UI and the `/auth/microsoft/callback` route is unreachable in practice.
+The code path is wired (`apps/worker/src/utils/oauth.ts` `exchangeMicrosoftCode`, frontend button in `OAuthButtons.tsx`, `microsoftId` column in DB) but the production env does **not** set `VITE_MICROSOFT_CLIENT_ID`, so the button is hidden in the UI and the `/auth/microsoft/callback` route is unreachable in practice.
 
 To activate after launch:
 

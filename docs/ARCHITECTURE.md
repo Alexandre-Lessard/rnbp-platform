@@ -70,7 +70,7 @@ framework choice: Fastify has no fetch adapter and assumes a Node HTTP server.
 3. **Close to Fastify** -- routing and middleware map almost one to one, which is what made
    porting ~3400 lines of routes tractable.
 
-The old Fastify app survives in `apps/api` only to serve the argon2 bridge.
+The old Fastify app (`apps/api`) was removed on 2026-10-29.
 
 ### JWT EdDSA (Ed25519) over RS256
 

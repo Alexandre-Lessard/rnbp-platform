@@ -1,7 +1,7 @@
 name: Backup D1
 
-# The Postgres backup runs from cron on the old server (ops/backup.sh), which
-# disappears once the argon2 migration finishes. D1's backup runs here instead,
+# The Postgres backup runs from cron on the old server, which disappears once
+# its pre-migration data is no longer needed. D1's backup runs here instead,
 # so it outlives that machine. D1 also keeps 30 days of Time Travel on its own;
 # this is the off-platform copy, into the same R2 bucket as the Postgres dumps.
 

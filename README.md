@@ -117,8 +117,6 @@ badge-app/
 └── .github/workflows/    # CI, CD, CD Staging, nightly D1 backup
 ```
 
-`apps/api` is on its way out and nothing new belongs in it. `apps/worker` is the API.
-
 ## Testing
 
 Vitest across all workspaces, run with `pnpm test`. Coverage focuses on the parts where a

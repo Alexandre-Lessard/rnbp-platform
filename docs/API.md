@@ -54,7 +54,7 @@ so the person is one click from being back in. An unknown email still returns
 `INVALID_CREDENTIALS`, unchanged.
 
 This path retires itself: when no `$argon2` hash is left in the database, the code becomes
-unreachable and can be deleted along with `apps/api` and the old server.
+unreachable and can be deleted.
 
 ### POST /auth/refresh
 Auth: None | Rate limit: 30/min
