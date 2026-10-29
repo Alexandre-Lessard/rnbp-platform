@@ -7,7 +7,7 @@ import {
   SUBSCRIPTION_OPTED_OUT,
   UNSUBSCRIBE_SUCCESS,
   UNSUBSCRIBE_LINK_INVALID,
-} from "@badge/shared";
+} from "@rnbp/shared";
 import { getDb } from "../db/client.js";
 import { newsletterSubscribers } from "../db/schema.js";
 import { authRateLimit } from "../middleware/auth.js";

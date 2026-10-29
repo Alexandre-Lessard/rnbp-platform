@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { apiRequest } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
 import { useLanguage } from "@/i18n/context";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type Client = {
   id: string;
@@ -42,7 +43,7 @@ export function AdminClientsPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`Admin — ${t.admin?.nav.clients ?? "Clients"} | Badge`}</title>
+      <title>{`Admin — ${t.admin?.nav.clients ?? "Clients"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {t.admin?.nav.clients ?? "Clients"}

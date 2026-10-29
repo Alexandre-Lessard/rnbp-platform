@@ -1,4 +1,4 @@
-# Infrastructure Setup — Badge
+# Infrastructure Setup — RNBP
 
 Everything runs on Cloudflare. There is no server to provision, no OS to patch, no TLS to
 renew. This document is the reference for recreating or reasoning about that infrastructure.
@@ -9,8 +9,8 @@ platform got here, see [docs/CLOUDFLARE-MIGRATION.md](../docs/CLOUDFLARE-MIGRATI
 ## Architecture
 
 ```
-badgeid.ca       -->  Pages project `badge-platform`   -->  React SPA
-api.badgeid.ca   -->  Worker `badge-api`               -->  Hono
+rnbp.ca       -->  Pages project `badge-platform`   -->  React SPA
+api.rnbp.ca   -->  Worker `badge-api`               -->  Hono
                                                             |-- D1  `badge-db`
                                                             `-- R2  `badge-uploads`
 files.badgeid.ca -->  R2 `badge-uploads` (public custom domain)
@@ -36,9 +36,9 @@ That file is the source of truth; nothing here should contradict it.
 
 | Domain | Points at |
 |---|---|
-| `badgeid.ca`, `www.badgeid.ca` | Pages `badge-platform` |
+| `rnbp.ca`, `www.badgeid.ca` | Pages `badge-platform` |
 | `rnbp.ca`, `www.rnbp.ca`, `nrpp.ca`, `www.nrpp.ca` | Pages `badge-platform` (legacy aliases) |
-| `api.badgeid.ca` | Worker `badge-api` (custom domain, declared in `wrangler.jsonc`) |
+| `api.rnbp.ca` | Worker `badge-api` (custom domain, declared in `wrangler.jsonc`) |
 | `files.badgeid.ca` | R2 `badge-uploads` |
 | `api.rnbp.ca` | **Old server via Cloudflare Tunnel — argon2 bridge only.** Do not repoint until the bridge is retired. |
 
@@ -92,8 +92,8 @@ Secrets live on the Worker, survive deploys, and are never in the repo.
 
 ```bash
 export CLOUDFLARE_ACCOUNT_ID=3aa12f83f9d4006cfd805489b6d65eb8
-pnpm --filter @badge/worker exec wrangler secret put NAME --env production
-pnpm --filter @badge/worker exec wrangler secret list --env production
+pnpm --filter @rnbp/worker exec wrangler secret put NAME --env production
+pnpm --filter @rnbp/worker exec wrangler secret list --env production
 ```
 
 `apps/worker/secrets.manifest.json` declares what each environment needs; CD runs
@@ -140,7 +140,7 @@ them; `ops/backup.sh` passes the header explicitly.
 Restore a D1 export:
 
 ```bash
-pnpm --filter @badge/worker exec wrangler d1 execute badge-db --remote --env production --file dump.sql
+pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production --file dump.sql
 ```
 
 ## Migrating data from Postgres
@@ -152,7 +152,7 @@ JSON — and can repoint stored file URLs with `--rewrite-url OLD=NEW`.
 ```bash
 ./ops/pg-export.sh /tmp/pgdata prod@192.168.50.241
 ./ops/pg-to-d1.py /tmp/pgdata --rewrite-url https://pub-OLD.r2.dev=https://files.badgeid.ca > import.sql
-pnpm --filter @badge/worker exec wrangler d1 execute badge-db --remote --env production --file import.sql
+pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production --file import.sql
 ```
 
 ## The legacy stack (being retired)
@@ -173,7 +173,7 @@ Retire the container, the Tunnel route, the `deploy-legacy-bridge` CD job and `a
 this returns 0:
 
 ```bash
-pnpm --filter @badge/worker exec wrangler d1 execute badge-db --remote --env production \
+pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production \
   --command "SELECT COUNT(*) FROM users WHERE password_hash LIKE '\$argon2%';"
 ```
 

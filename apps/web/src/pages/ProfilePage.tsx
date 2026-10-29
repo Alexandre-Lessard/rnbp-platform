@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { User } from "@badge/shared";
+import type { User } from "@rnbp/shared";
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { useAuth } from "@/lib/auth-context";
@@ -8,6 +8,7 @@ import { AccountNav } from "@/components/layout/AccountNav";
 import { Button } from "@/components/ui/Button";
 import { getButtonClasses } from "@/lib/button-styles";
 import { ROUTES } from "@/routes/routes";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type ProfileForm = {
   firstName: string;
@@ -77,7 +78,7 @@ export function ProfilePage() {
 
   return (
     <section className="min-h-[70vh] bg-[var(--rcb-white)]">
-      <title>{`${profile?.heading ?? "My profile"} | Badge`}</title>
+      <title>{`${profile?.heading ?? "My profile"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <div className="max-w-3xl">
           <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">

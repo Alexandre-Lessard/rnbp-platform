@@ -14,7 +14,7 @@ import {
 } from "./api-client";
 import { getAttribution } from "./attribution";
 import { track } from "./pixel";
-import type { User } from "@badge/shared";
+import type { User } from "@rnbp/shared";
 
 type AuthState = {
   user: User | null;

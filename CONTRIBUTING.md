@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to Badge!
+Thank you for your interest in contributing to RNBP!
 
 ## Getting Started
 

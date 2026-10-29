@@ -1,12 +1,12 @@
 /**
- * Branded HTML email base template (Badge).
+ * Branded HTML email base template (RNBP).
  * Table-based layout for Outlook compatibility. All styles inline.
  */
 
 /**
  * Postal address of the sender, required by CASL on every commercial message.
  * It is the registered business address, already public through the Quebec
- * enterprise registry (NEQ 2281977662). Swap it for a PO box if that ever
+ * enterprise registry (NEQ 2269043040). Swap it for a PO box if that ever
  * becomes preferable — nothing else depends on the value.
  */
 const SENDER_IDENTITY = {
@@ -46,15 +46,15 @@ export function buildBaseEmail({
 }: BaseEmailOptions): string {
   const isAdmin = variant === "admin";
 
-  const brandFooter = `<p style="color: #999999; font-size: 12px; margin: 0;">Badge — Identifiez. Protégez. Récupérez.</p>
-       <p style="color: #999999; font-size: 11px; margin: 8px 0 0;"><a href="mailto:info@badgeid.ca" style="color: #999999;">info@badgeid.ca</a> · <a href="https://badgeid.ca" style="color: #999999;">badgeid.ca</a></p>`;
+  const brandFooter = `<p style="color: #999999; font-size: 12px; margin: 0;">RNBP — Identifiez. Protégez. Récupérez.</p>
+       <p style="color: #999999; font-size: 11px; margin: 8px 0 0;"><a href="mailto:info@rnbp.ca" style="color: #999999;">info@rnbp.ca</a> · <a href="https://rnbp.ca" style="color: #999999;">rnbp.ca</a></p>`;
 
   const commercialFooter = `${brandFooter}
        <p style="color: #999999; font-size: 11px; margin: 12px 0 0;">${SENDER_IDENTITY.name}<br>${SENDER_IDENTITY.address}</p>
-       <p style="color: #999999; font-size: 11px; margin: 8px 0 0;"><a href="${unsubscribeUrl ?? "https://badgeid.ca"}" style="color: #999999; text-decoration: underline;">Se désabonner</a> · <a href="${unsubscribeUrl ?? "https://badgeid.ca"}" style="color: #999999; text-decoration: underline;">Unsubscribe</a></p>`;
+       <p style="color: #999999; font-size: 11px; margin: 8px 0 0;"><a href="${unsubscribeUrl ?? "https://rnbp.ca"}" style="color: #999999; text-decoration: underline;">Se désabonner</a> · <a href="${unsubscribeUrl ?? "https://rnbp.ca"}" style="color: #999999; text-decoration: underline;">Unsubscribe</a></p>`;
 
   const footerText = isAdmin
-    ? `<p style="color: #999999; font-size: 11px; margin: 0;">Badge — Notification automatique</p>`
+    ? `<p style="color: #999999; font-size: 11px; margin: 0;">RNBP — Notification automatique</p>`
     : variant === "commercial"
       ? commercialFooter
       : brandFooter;
@@ -66,7 +66,7 @@ export function buildBaseEmail({
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
-  <title>Badge</title>
+  <title>RNBP</title>
   <!--[if mso]>
   <style>table,td{font-family:Arial,sans-serif!important;}</style>
   <![endif]-->
@@ -86,8 +86,8 @@ export function buildBaseEmail({
             <td style="background-color: #ffffff; padding: 24px 32px 16px; text-align: left;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td style="font-size: 20px; font-weight: 700; color: #1a2e44; letter-spacing: 0.5px;">Badge</td>
-                  <td style="padding-left: 8px; font-size: 11px; color: #999999; vertical-align: bottom; padding-bottom: 2px;">badgeid.ca</td>
+                  <td style="font-size: 20px; font-weight: 700; color: #1a2e44; letter-spacing: 0.5px;">RNBP</td>
+                  <td style="padding-left: 8px; font-size: 11px; color: #999999; vertical-align: bottom; padding-bottom: 2px;">rnbp.ca</td>
                 </tr>
               </table>
             </td>

@@ -1,6 +1,6 @@
 # API Reference
 
-Base URL: `https://api.badgeid.ca/api` (production) / `http://localhost:8787/api` (development)
+Base URL: `https://api.rnbp.ca/api` (production) / `http://localhost:8787/api` (development)
 
 ## Authentication
 
@@ -274,7 +274,7 @@ Response: 204 No Content
 ### GET /lookup
 Auth: None | Rate limit: 30/min
 ```
-Query: ?q=BADGE-XXXXXXXX (or serial number)
+Query: ?q=BID-XXXXXXXX (or serial number)
 Response: { found: false } | { found: true, status, category, brand, model }
 ```
 Normalizes serial numbers (strips spaces, dashes, underscores).
@@ -421,7 +421,7 @@ Each sticker-sheet order line carries the codes registered during shipment prepa
 ### POST /admin/orders/:id/items/:orderItemId/codes
 Auth: requireAdmin
 ```
-Body: { ranges: [{ firstCode: "BADGE-XXXXXXXX", lastCode: "BADGE-XXXXXXXX" }, ...] }
+Body: { ranges: [{ firstCode: "BID-XXXXXXXX", lastCode: "BID-XXXXXXXX" }, ...] }
 Response: { codes: string[] } (201)
 ```
 Registers sticker codes during shipment preparation. One range = one sheet of 10 sequential codes. Total `ranges.length × 10` must equal `orderItem.quantity × 10`. Returns the expanded list of codes.

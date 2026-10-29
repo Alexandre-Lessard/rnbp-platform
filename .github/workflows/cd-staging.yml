@@ -39,7 +39,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared package
-        run: pnpm --filter @badge/shared build
+        run: pnpm --filter @rnbp/shared build
 
       # First, before anything ships: a missing secret does not stop the Worker
       # booting, it quietly disables a feature. Checking after the web deploy
@@ -57,18 +57,18 @@ jobs:
           # testers can complete the flow; everyone else gets "app unavailable".
           # That is the point: staging is where we validate before production.
           VITE_FACEBOOK_CLIENT_ID: "1667886064239370"
-        run: pnpm --filter @badge/web build
+        run: pnpm --filter @rnbp/web build
 
       - name: Deploy web to Cloudflare Pages (staging branch)
-        run: pnpm --filter @badge/web exec wrangler pages deploy build/client --project-name badge-platform --branch staging
+        run: pnpm --filter @rnbp/web exec wrangler pages deploy build/client --project-name badge-platform --branch staging
 
       - name: Apply D1 migrations (staging)
         if: ${{ hashFiles('apps/worker/wrangler.jsonc') != '' }}
-        run: pnpm --filter @badge/worker exec wrangler d1 migrations apply badge-db-staging --remote --env staging
+        run: pnpm --filter @rnbp/worker exec wrangler d1 migrations apply badge-db-staging --remote --env staging
 
       - name: Deploy API Worker (staging)
         if: ${{ hashFiles('apps/worker/wrangler.jsonc') != '' }}
-        run: pnpm --filter @badge/worker exec wrangler deploy --env staging
+        run: pnpm --filter @rnbp/worker exec wrangler deploy --env staging
 
       - name: Health check staging API
         if: ${{ hashFiles('apps/worker/wrangler.jsonc') != '' }}

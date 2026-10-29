@@ -6,7 +6,7 @@ import { useLanguage } from "@/i18n/context";
 import { apiRequest } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
 import { getButtonClasses } from "@/lib/button-styles";
-import { normalizeBadgeCode, BADGE_CODE_REGEX } from "@badge/shared";
+import { normalizeBadgeCode, BADGE_CODE_REGEX } from "@rnbp/shared";
 import { ROUTES } from "@/routes/routes";
 
 type AssignableItem = {
@@ -127,7 +127,7 @@ export function AssignBadgeCodeModal(props: AssignBadgeCodeModalProps) {
               autoFocus
               value={codeInput}
               onChange={(e) => setCodeInput(e.target.value)}
-              placeholder="BADGE-XXXXXXXX"
+              placeholder="BID-XXXXXXXX"
               maxLength={13}
               className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 font-mono uppercase tracking-wider text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
             />

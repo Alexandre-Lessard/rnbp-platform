@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth-context";
 import { apiRequest } from "@/lib/api-client";
 import { AccountNav } from "@/components/layout/AccountNav";
 import { Button } from "@/components/ui/Button";
+import { BRAND_NAME } from "@rnbp/shared";
 
 export function SettingsPage() {
   const { t } = useLanguage();
@@ -37,7 +38,7 @@ export function SettingsPage() {
 
   return (
     <section className="min-h-[70vh] bg-[var(--rcb-white)]">
-      <title>{`${s?.heading ?? "Settings"} | Badge`}</title>
+      <title>{`${s?.heading ?? "Settings"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {s?.heading ?? "Settings"}

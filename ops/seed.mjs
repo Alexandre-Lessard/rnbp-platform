@@ -108,7 +108,7 @@ function runSql(sql) {
   writeFileSync(file, sql);
   execFileSync(
     "pnpm",
-    ["--filter", "@badge/worker", "exec", "wrangler", "d1", "execute", db, "--env", env, flag, "--file", file],
+    ["--filter", "@rnbp/worker", "exec", "wrangler", "d1", "execute", db, "--env", env, flag, "--file", file],
     { cwd: ROOT, stdio: "inherit" },
   );
 }
@@ -149,8 +149,8 @@ function buildSql() {
       slug: "door-sticker",
       nameFr: "Autocollant de porte",
       nameEn: "Door sticker",
-      descFr: "Signale que vos biens sont enregistrés au registre Badge.",
-      descEn: "Signals that your belongings are registered with Badge.",
+      descFr: "Signale que vos biens sont enregistrés au RNBP.",
+      descEn: "Signals that your belongings are registered with RNBP.",
       price: 999,
       sort: 2,
     },
@@ -223,7 +223,7 @@ function buildSql() {
       serial: "CVLO-884201",
       value: 650000,
       status: "stolen",
-      badgeCode: "BADGE-4K7P2NRC",
+      badgeCode: "BID-4K7P2NRC",
       insured: true,
       insurerId: "intact",
       insurerName: "Intact Assurance",
@@ -247,7 +247,7 @@ function buildSql() {
       serial: "C02XK1YZLVDL",
       value: 289900,
       status: "active",
-      badgeCode: "BADGE-9TMD3XQH",
+      badgeCode: "BID-9TMD3XQH",
       insured: false,
       keyword: "laptop",
       photos: 1,
@@ -302,7 +302,7 @@ function buildSql() {
       serial: "CC-ONW-772103",
       value: 1450000,
       status: "active",
-      badgeCode: "BADGE-6RJH8WYF",
+      badgeCode: "BID-6RJH8WYF",
       insured: true,
       insurerId: "desjardins",
       insurerName: "Desjardins Assurances",
@@ -353,7 +353,7 @@ function buildSql() {
       serial: "SD-SUM-661204",
       value: 1899000,
       status: "recovered",
-      badgeCode: "BADGE-2QW5ZKBN",
+      badgeCode: "BID-2QW5ZKBN",
       insured: true,
       insurerId: "promutuel",
       insurerName: "Promutuel Assurance",
@@ -406,7 +406,7 @@ function buildSql() {
       s = CODE_ALPHABET[v % 31] + s;
       v = Math.floor(v / 31) + 13;
     }
-    return `BADGE-${s}`;
+    return `BID-${s}`;
   };
 
   for (const o of orders) {

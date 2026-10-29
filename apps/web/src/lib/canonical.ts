@@ -3,7 +3,7 @@
 // the same string. Keep it dependency-free: the Function imports it by relative
 // path and is bundled by wrangler, outside the Vite build.
 
-export const BRAND_ORIGIN = "https://badgeid.ca";
+export const BRAND_ORIGIN = "https://rnbp.ca";
 
 /** Drops the trailing slash, except on the root which has no other form. */
 export function normalizePath(pathname: string): string {
