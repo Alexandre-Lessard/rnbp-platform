@@ -21,6 +21,7 @@ import { stickerCodesRoutes } from "./routes/sticker-codes.js";
 import { uploadRoutes } from "./routes/uploads.js";
 import { adminRoutes } from "./routes/admin.js";
 import { oauthRoutes } from "./routes/oauth.js";
+import { runHeartbeat } from "./utils/heartbeat.js";
 
 const app = new Hono<AppEnv>().basePath("/api");
 
@@ -107,4 +108,11 @@ app.route("/", uploadRoutes);
 app.route("/", adminRoutes);
 app.route("/", oauthRoutes);
 
-export default app;
+// The cron trigger (production only, wrangler.jsonc) feeds the health-monitor
+// heartbeat; see utils/heartbeat.ts.
+export default {
+  fetch: app.fetch,
+  scheduled(_controller: ScheduledController, env: Bindings, ctx: ExecutionContext) {
+    ctx.waitUntil(runHeartbeat(env));
+  },
+} satisfies ExportedHandler<Bindings>;

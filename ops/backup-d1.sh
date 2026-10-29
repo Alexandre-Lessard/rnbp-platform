@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ──────────────────────────────────────────────
-# Nightly D1 export for badge-db.
+# Nightly D1 export for rnbp-db.
 #
 # D1 keeps 30 days of Time Travel on its own; this adds an off-platform copy
 # in the same R2 bucket as the Postgres dumps, so a single place holds every
@@ -25,8 +25,8 @@ set +a
 mkdir -p "$OUT_DIR"
 FILE="$OUT_DIR/d1_$(date +%Y%m%d_%H%M%S).sql"
 
-log "Exporting badge-db..."
-npx wrangler d1 export badge-db --remote --env production --output "$FILE"
+log "Exporting rnbp-db..."
+npx wrangler d1 export rnbp-db --remote --env production --output "$FILE"
 gzip -f "$FILE"
 FILE="$FILE.gz"
 log "Export OK: $FILE ($(du -h "$FILE" | cut -f1))"

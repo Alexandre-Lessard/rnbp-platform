@@ -81,24 +81,24 @@ worth a new project and a fresh verification cycle. Project number: `81215374972
 
 ### Configuration checklist
 
-| Item | Value (verified 2026-08-25) |
+| Item | Value (updated 2026-10-29, return to RNBP) |
 |---|---|
-| Project display name / ID / number | `Badge` / `rnbp-ca` / `812153749723` |
-| App name shown on the consent screen | **Badge** |
+| Project display name / ID / number | `RNBP` / `rnbp-ca` / `812153749723` |
+| App name shown on the consent screen | **RNBP** — saved; the previously verified branding (Badge) stays visible until Google re-verifies it, launched once `rnbp.ca` serves RNBP |
 | Publishing status | **In production** |
 | User type | External |
 | Scopes | `openid`, `.../auth/userinfo.email`, `.../auth/userinfo.profile` — all non-sensitive |
-| User support email | `badgeid-support@googlegroups.com` — see the constraint below |
+| User support email | `rnbp-support@googlegroups.com` — see the constraint below |
 | Developer contact | `info@badgeid.ca` |
 | App logo | **none, deliberately** — see below |
-| Application home page | `https://badgeid.ca/` |
-| Application privacy policy link | `https://badgeid.ca/privacy` |
-| Application terms of service link | `https://badgeid.ca/terms` |
-| Authorized domains | `badgeid.ca` |
+| Application home page | `https://rnbp.ca/` |
+| Application privacy policy link | `https://rnbp.ca/privacy` |
+| Application terms of service link | `https://rnbp.ca/terms` |
+| Authorized domains | `rnbp.ca`, and `badgeid.ca` until its URIs are removed |
 
-`rnbp.ca` and `nrpp.ca` are **not** registered here. They only redirect to `badgeid.ca`, so the SPA
-never runs on them and no OAuth flow can start there. Registering a dead name would be the one
-thing that brings it back.
+`rnbp.ca` is the production domain again since 2026-10-29 (T28). `badgeid.ca` and `nrpp.ca` only
+redirect to it, so no OAuth flow starts there; the `badgeid.ca` entries go once the transition is
+over.
 
 ### OAuth clients
 
@@ -106,8 +106,8 @@ Two clients, both `Application Web`, both created 2026-08-25:
 
 **Badge Web (production)**
 - Client ID: `812153749723-vu6vdv0b53spgjuni1ihu84a07dpna9f.apps.googleusercontent.com`
-- Authorized JavaScript origins: `https://badgeid.ca`
-- Authorized redirect URIs: `https://badgeid.ca/auth/google/callback`
+- Authorized JavaScript origins: `https://rnbp.ca`, `https://badgeid.ca` (transition)
+- Authorized redirect URIs: `https://rnbp.ca/auth/google/callback`, `https://badgeid.ca/auth/google/callback` (transition)
 - Client ID set in: `apps/web/.env.production`, `.github/workflows/cd.yml` (web build) and
   `apps/worker/wrangler.jsonc` (production `vars`)
 - Client secret: Worker secret `GOOGLE_CLIENT_SECRET`, listed in `secrets.manifest.json` under
@@ -123,8 +123,8 @@ Two clients, both `Application Web`, both created 2026-08-25:
 2026-08-25). `cd-staging.yml` passes only `VITE_FACEBOOK_CLIENT_ID`, and the staging Worker has no
 `GOOGLE_CLIENT_*` secrets, so the button does not render there.
 
-The obstacle is that `staging.badge-platform.pages.dev` sits under the `pages.dev` public suffix.
-Google would want `badge-platform.pages.dev` as an authorized domain, which requires Search Console
+The obstacle is that `staging.rnbp-platform.pages.dev` sits under the `pages.dev` public suffix.
+Google would want `rnbp-platform.pages.dev` as an authorized domain, which requires Search Console
 ownership, which requires DNS control over `pages.dev` — impossible.
 
 The way in, if staging ever needs it: give the Pages project a **`staging.badgeid.ca`** custom
@@ -229,14 +229,14 @@ A group was created on 2026-08-25 to avoid showing a personal Gmail to users:
 
 | Item | Value |
 |---|---|
-| Address | `badgeid-support@googlegroups.com` |
-| Group name | Badge — support |
+| Address | `rnbp-support@googlegroups.com` (renamed from `badgeid-support` on 2026-10-29) |
+| Group name | RNBP — support |
 | Manager | `alexandre.lessard92@gmail.com` (sole member) |
 | Who can post | **anyone on the web** — a user who reads the address on the consent screen has to be able to write to it |
 | Who can view conversations / member list / find the group | group members only |
 | Who can join | invited users only |
 
-The address ends in `@googlegroups.com` rather than `@badgeid.ca`. Showing a `badgeid.ca` address
+The address ends in `@googlegroups.com` rather than `@rnbp.ca`. Showing an `rnbp.ca` address
 would require putting the domain on Google Workspace and creating a real mailbox there — paid, and
 not worth it before launch.
 
@@ -263,20 +263,20 @@ nothing here needs correcting for the `11898248 Canada Inc.` → `9567-1525 Qué
 
 ### Configuration checklist
 
-| Item | Value (verified 2026-08-24) |
+| Item | Value (updated 2026-10-29, return to RNBP) |
 |---|---|
 | App ID | `1667886064239370` |
-| Display name | **Badge** |
+| Display name | **RNBP** |
 | App secret | Worker secret `FACEBOOK_CLIENT_SECRET` — **production only**, staging has none |
-| App icon | still the RNBP shield — to replace |
+| App icon | the RNBP shield |
 | Category | Utility & productivity |
-| App domains | `badgeid.ca`, plus `rnbp.ca` and `nrpp.ca` while those still serve the site |
-| Contact email | `info@badgeid.ca` |
-| Privacy Policy URL | `https://badgeid.ca/privacy` |
-| Terms of Service URL | `https://badgeid.ca/terms` |
-| User data deletion | Instructions URL → `https://badgeid.ca/data-deletion` |
+| App domains | `rnbp.ca`, `nrpp.ca`, `badgeid.ca` (the last two only redirect) |
+| Contact email | `info@rnbp.ca` |
+| Privacy Policy URL | `https://rnbp.ca/privacy` |
+| Terms of Service URL | `https://rnbp.ca/terms` |
+| User data deletion | Instructions URL → `https://rnbp.ca/data-deletion` |
 | Business linked | `BADGE ID` (`1656065239155631`) |
-| Valid OAuth redirect URIs | `https://badgeid.ca/auth/facebook/callback`, `https://staging.badge-platform.pages.dev/auth/facebook/callback`, plus the two legacy ones |
+| Valid OAuth redirect URIs | `https://badgeid.ca/auth/facebook/callback`, `https://staging.rnbp-platform.pages.dev/auth/facebook/callback`, plus the two legacy ones |
 | Permissions | `email` and `public_profile` — **Ready to publish** (advanced access granted without review) |
 | App Mode | **Unpublished** — blocked on the data access renewal, below |
 

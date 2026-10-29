@@ -6,7 +6,7 @@ Deploys are automated. Push to a branch, and once CI passes a CD workflow ships 
 
 | Branch | Workflow | What it deploys |
 |--------|----------|-----------------|
-| `main` | `cd.yml` | Production Worker (`badge-api`) + D1 migrations, then the Pages site |
+| `main` | `cd.yml` | Production Worker (`rnbp-api`) + D1 migrations, then the Pages site |
 | `staging` | `cd-staging.yml` | Staging Worker + D1 migrations + the Pages `staging` branch |
 
 ```
@@ -102,12 +102,22 @@ uncommenting the local file.
 
 | What | How | Where |
 |------|-----|-------|
-| D1 (`badge-db`) | `Backup D1` workflow, nightly 03:00 ET | R2 `badge-db-backups` |
+| D1 (`rnbp-db`) | `Backup D1` workflow, nightly 03:00 ET | R2 `rnbp-db-backups` |
 | D1 point-in-time | Cloudflare Time Travel, 30 days | built in |
-| Legacy Postgres | cron on the old server, until it is shut down | R2 `badge-db-backups` |
+| Legacy Postgres | cron on the old server, until it is shut down | R2 `rnbp-db-backups` |
 
 The Postgres backup goes away with the old server. Restore a D1 export with
-`wrangler d1 execute badge-db --remote --file <dump.sql>`.
+`wrangler d1 execute rnbp-db --remote --file <dump.sql>`.
+
+## Monitoring
+
+The production Worker has a cron trigger (`*/5 * * * *`) that checks the database (`SELECT 1`)
+and the public site (`FRONTEND_URL` answers 200 with "RNBP" in the page). Only when both pass
+does it call `HEALTH_PING_URL`, a heartbeat on health-monitor (`health.al-si.com`, Alex's own
+Worker). The monitor waits 5 minutes plus 10 minutes of grace before alerting by email, so a
+passing blip stays silent and a lasting outage — or the cron itself stopping — does not. The
+code is `apps/worker/src/utils/heartbeat.ts`. `HEALTH_PING_URL` is a Worker secret: the token in
+it is what proves the ping genuine. Without it the cron still runs its checks but pings nothing.
 
 ## Shop Products & Stripe
 
@@ -145,10 +155,10 @@ set the new secret, then delete the old endpoint.
 
 | Domain | Serves |
 |--------|--------|
-| `rnbp.ca`, `www.badgeid.ca` | Pages project `badge-platform` |
+| `rnbp.ca`, `www.badgeid.ca` | Pages project `rnbp-platform` |
 | `rnbp.ca`, `www.rnbp.ca`, `nrpp.ca`, `www.nrpp.ca` | Same site, legacy domains |
-| `api.rnbp.ca` | Worker `badge-api` |
-| `files.badgeid.ca` | R2 bucket `badge-uploads` |
+| `api.rnbp.ca` | Worker `rnbp-api` |
+| `files.rnbp.ca` | R2 bucket `rnbp-uploads` |
 | `api.rnbp.ca` | **Old server, argon2 bridge only.** Every other path returns 410. Leave it on the Tunnel until the bridge is retired. |
 
 Language detection priority: localStorage > navigator.language > default (FR).
@@ -163,7 +173,7 @@ the pre-migration Postgres and backs it up nightly until it is shut down.
 The `isLegacyHash` branch in the Worker stays until this returns 0 (12 accounts on 2026-10-29):
 
 ```bash
-pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production \
+pnpm --filter @rnbp/worker exec wrangler d1 execute rnbp-db --remote --env production \
   --command "SELECT COUNT(*) FROM users WHERE password_hash LIKE '\$argon2%';"
 ```
 

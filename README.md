@@ -1,7 +1,7 @@
 # RNBP — Registre national des biens personnels
 
-![CI](https://github.com/Alexandre-Lessard/badge-platform/actions/workflows/ci.yml/badge.svg)
-![CD](https://github.com/Alexandre-Lessard/badge-platform/actions/workflows/cd.yml/badge.svg)
+![CI](https://github.com/Alexandre-Lessard/rnbp-platform/actions/workflows/ci.yml/badge.svg)
+![CD](https://github.com/Alexandre-Lessard/rnbp-platform/actions/workflows/cd.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-blue)
 ![Node](https://img.shields.io/badge/node-20-green)
 ![pnpm](https://img.shields.io/badge/pnpm-10-orange)
@@ -41,7 +41,7 @@ Cloudflare Pages              Cloudflare Worker
 ```
 
 Everything runs on Cloudflare. There is no server to maintain: the API is a Worker, the
-database is D1 (SQLite), files live in R2 and are served from `files.badgeid.ca`.
+database is D1 (SQLite), files live in R2 and are served from `files.rnbp.ca`.
 
 One exception, temporary: the previous self-hosted server still answers a single endpoint that
 verifies pre-migration argon2 password hashes. **Nothing calls it any more** — login sends those
@@ -85,10 +85,10 @@ verified in production. See [docs/CLOUDFLARE-MIGRATION.md](docs/CLOUDFLARE-MIGRA
 
 | | Production | Staging |
 |---|---|---|
-| Site | `rnbp.ca` | `staging.badge-platform.pages.dev` |
-| API | `api.rnbp.ca` | `badge-api-staging.alexandre-lessard92.workers.dev` |
-| Database | D1 `badge-db` | D1 `badge-db-staging` |
-| Files | `files.badgeid.ca` | `files-staging.badgeid.ca` |
+| Site | `rnbp.ca` | `staging.rnbp-platform.pages.dev` |
+| API | `api.rnbp.ca` | `rnbp-api-staging.alexandre-lessard92.workers.dev` |
+| Database | D1 `rnbp-db` | D1 `rnbp-db-staging` |
+| Files | `files.rnbp.ca` | `files-staging.rnbp.ca` |
 | Deploys from | `main` | `staging` |
 
 The two environments share nothing. A push to `staging` deploys staging; merging to `main`
