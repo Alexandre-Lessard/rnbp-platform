@@ -11,250 +11,250 @@ type LocaleMeta = Record<string, PageMeta>;
 const META: Record<"fr" | "en", { defaults: PageMeta; pages: LocaleMeta }> = {
   fr: {
     defaults: {
-      title: "Protégez vos biens et retrouvez-les après un vol | Badge",
+      title: "Protégez vos biens et retrouvez-les après un vol | RNBP",
       description:
         "Enregistrez gratuitement vos objets de valeur — numéros de série, photos, factures — dans un registre canadien sécurisé. Une preuve de propriété prête pour la police et votre assureur.",
     },
     pages: {
       "/": {
-        title: "Protégez vos biens et retrouvez-les après un vol | Badge",
+        title: "Protégez vos biens et retrouvez-les après un vol | RNBP",
         description:
           "Enregistrez gratuitement vos objets de valeur — numéros de série, photos, factures — dans un registre canadien sécurisé. Une preuve de propriété prête pour la police et votre assureur.",
       },
       "/faq": {
-        title: "Questions fréquentes sur le registre | Badge",
+        title: "Questions fréquentes sur le registre | RNBP",
         description:
-          "Comment enregistrer un bien, quoi faire dans les heures suivant un vol, comment la police et les assureurs utilisent le registre Badge.",
+          "Comment enregistrer un bien, quoi faire dans les heures suivant un vol, comment la police et les assureurs utilisent le registre RNBP.",
       },
       "/registry": {
-        title: "Consulter le registre des biens volés | Badge",
+        title: "Consulter le registre des biens volés | RNBP",
         description:
           "Services policiers, assureurs et citoyens : consultez le registre canadien pour identifier un bien, vérifier une propriété ou retrouver un propriétaire.",
       },
       "/privacy": {
-        title: "Politique de confidentialité | Badge",
+        title: "Politique de confidentialité | RNBP",
         description:
-          "Découvrez comment Badge protège vos renseignements personnels et respecte les lois fédérales sur la vie privée.",
+          "Découvrez comment le RNBP protège vos renseignements personnels et respecte les lois fédérales sur la vie privée.",
       },
       "/terms": {
-        title: "Conditions d'utilisation | Badge",
+        title: "Conditions d'utilisation | RNBP",
         description:
-          "Consultez les conditions d'utilisation du Badge.",
+          "Consultez les conditions d'utilisation du RNBP.",
       },
       "/data-deletion": {
-        title: "Suppression de votre compte | Badge",
+        title: "Suppression de votre compte | RNBP",
         description:
-          "Comment demander la suppression complète de votre compte et de vos données du Badge.",
+          "Comment demander la suppression complète de votre compte et de vos données du RNBP.",
       },
       "/lookup": {
-        title: "Vérifier si un objet est volé | Badge",
+        title: "Vérifier si un objet est volé | RNBP",
         description:
           "Avant d'acheter d'occasion, vérifiez un numéro de série ou un code Badge dans le registre canadien des biens déclarés volés. Gratuit et instantané.",
       },
       "/login": {
-        title: "Connexion | Badge",
+        title: "Connexion | RNBP",
         description:
-          "Connectez-vous à votre compte Badge pour gérer vos biens enregistrés.",
+          "Connectez-vous à votre compte RNBP pour gérer vos biens enregistrés.",
       },
       "/forgot-password": {
-        title: "Mot de passe oublié | Badge",
+        title: "Mot de passe oublié | RNBP",
         description:
-          "Recevez un lien pour choisir un nouveau mot de passe et retrouver l'accès à votre compte Badge.",
+          "Recevez un lien pour choisir un nouveau mot de passe et retrouver l'accès à votre compte RNBP.",
         robots: "noindex, nofollow",
       },
       "/unsubscribe": {
-        title: "Se désabonner | Badge",
+        title: "Se désabonner | RNBP",
         description: "Retirez votre adresse de nos communications promotionnelles.",
         robots: "noindex, nofollow",
       },
       "/reset-password": {
-        title: "Nouveau mot de passe | Badge",
-        description: "Choisissez un nouveau mot de passe pour votre compte Badge.",
+        title: "Nouveau mot de passe | RNBP",
+        description: "Choisissez un nouveau mot de passe pour votre compte RNBP.",
         robots: "noindex, nofollow",
       },
       "/register": {
-        title: "Créer un compte | Badge",
+        title: "Créer un compte | RNBP",
         description:
-          "Inscrivez-vous gratuitement à Badge pour enregistrer et protéger vos biens de valeur.",
+          "Inscrivez-vous gratuitement au RNBP pour enregistrer et protéger vos biens de valeur.",
       },
       "/dashboard": {
-        title: "Tableau de bord | Badge",
+        title: "Tableau de bord | RNBP",
         description: "Gérez vos biens enregistrés.",
         robots: "noindex, nofollow",
       },
       "/report-theft": {
-        title: "Déclarer un vol | Badge",
+        title: "Déclarer un vol | RNBP",
         description: "Déclarez un bien volé.",
         robots: "noindex, nofollow",
       },
       "/register-item": {
-        title: "Enregistrer un bien | Badge",
+        title: "Enregistrer un bien | RNBP",
         description: "Enregistrez un bien dans le registre.",
         robots: "noindex, nofollow",
       },
       "/shop": {
-        title: "Étiquettes d'identification pour vos biens | Badge",
+        title: "Étiquettes d'identification pour vos biens | RNBP",
         description:
           "Autocollants Badge à code unique : identifiez vélos, outils et appareils pour les rendre traçables en cas de perte ou de vol. Livraison partout au Canada.",
       },
       "/shop/success": {
-        title: "Commande confirmée | Badge",
+        title: "Commande confirmée | RNBP",
         description: "Votre commande a été confirmée avec succès.",
         robots: "noindex, nofollow",
       },
       "/contact": {
-        title: "Contactez-nous | Badge",
+        title: "Contactez-nous | RNBP",
         description:
-          "Contactez l'équipe du Badge pour toute question ou demande.",
+          "Contactez l'équipe du RNBP pour toute question ou demande.",
       },
       "/verify-email": {
-        title: "Vérification du courriel | Badge",
+        title: "Vérification du courriel | RNBP",
         description: "Vérifiez votre adresse courriel.",
         robots: "noindex, nofollow",
       },
       "/email-pending": {
-        title: "Vérification en attente | Badge",
+        title: "Vérification en attente | RNBP",
         description: "Vérification de votre courriel en cours.",
         robots: "noindex, nofollow",
       },
       "/admin/orders": {
-        title: "Admin — Commandes | Badge",
+        title: "Admin — Commandes | RNBP",
         description: "Gestion des commandes.",
         robots: "noindex, nofollow",
       },
       "/admin/acquisition": {
-        title: "Admin — Acquisition | Badge",
+        title: "Admin — Acquisition | RNBP",
         description: "Performance des campagnes publicitaires.",
         robots: "noindex, nofollow",
       },
       "/c": {
-        title: "Bien enregistré | Badge",
-        description: "Vérifiez l'état d'un bien enregistré à Badge via son code Badge.",
+        title: "Bien enregistré | RNBP",
+        description: "Vérifiez l'état d'un bien enregistré au RNBP via son code Badge.",
         robots: "noindex, nofollow",
       },
     },
   },
   en: {
     defaults: {
-      title: "Protect your belongings and get them back after a theft | Badge",
+      title: "Protect your belongings and get them back after a theft | RNBP",
       description:
         "Register your valuables for free — serial numbers, photos, receipts — in a secure Canadian registry. Proof of ownership ready for police and your insurer.",
     },
     pages: {
       "/": {
-        title: "Protect your belongings and get them back after a theft | Badge",
+        title: "Protect your belongings and get them back after a theft | RNBP",
         description:
           "Register your valuables for free — serial numbers, photos, receipts — in a secure Canadian registry. Proof of ownership ready for police and your insurer.",
       },
       "/faq": {
-        title: "Frequently asked questions about the registry | Badge",
+        title: "Frequently asked questions about the registry | RNBP",
         description:
-          "How to register an item, what to do in the hours after a theft, and how police and insurers use the Badge registry.",
+          "How to register an item, what to do in the hours after a theft, and how police and insurers use the RNBP registry.",
       },
       "/registry": {
-        title: "Search the stolen property registry | Badge",
+        title: "Search the stolen property registry | RNBP",
         description:
           "Police services, insurers and citizens: search the Canadian registry to identify an item, verify ownership or find an owner.",
       },
       "/privacy": {
-        title: "Privacy Policy | Badge",
+        title: "Privacy Policy | RNBP",
         description:
-          "Learn how the Badge protects your personal information and complies with federal privacy laws.",
+          "Learn how the RNBP protects your personal information and complies with federal privacy laws.",
       },
       "/terms": {
-        title: "Terms of Service | Badge",
+        title: "Terms of Service | RNBP",
         description:
-          "Review the terms of service for the Badge.",
+          "Review the terms of service for the RNBP.",
       },
       "/data-deletion": {
-        title: "Account Deletion | Badge",
+        title: "Account Deletion | RNBP",
         description:
-          "How to request the complete deletion of your account and data from the Badge.",
+          "How to request the complete deletion of your account and data from the RNBP.",
       },
       "/lookup": {
-        title: "Check whether an item is stolen | Badge",
+        title: "Check whether an item is stolen | RNBP",
         description:
           "Before buying second-hand, check a serial number or Badge code against the Canadian registry of items reported stolen. Free and instant.",
       },
       "/login": {
-        title: "Login | Badge",
+        title: "Login | RNBP",
         description:
-          "Sign in to your Badge account to manage your registered items.",
+          "Sign in to your RNBP account to manage your registered items.",
       },
       "/forgot-password": {
-        title: "Forgot Password | Badge",
+        title: "Forgot Password | RNBP",
         description:
-          "Get a link to choose a new password and regain access to your Badge account.",
+          "Get a link to choose a new password and regain access to your RNBP account.",
         robots: "noindex, nofollow",
       },
       "/unsubscribe": {
-        title: "Unsubscribe | Badge",
+        title: "Unsubscribe | RNBP",
         description: "Remove your address from our promotional messages.",
         robots: "noindex, nofollow",
       },
       "/reset-password": {
-        title: "New Password | Badge",
-        description: "Choose a new password for your Badge account.",
+        title: "New Password | RNBP",
+        description: "Choose a new password for your RNBP account.",
         robots: "noindex, nofollow",
       },
       "/register": {
-        title: "Create an Account | Badge",
+        title: "Create an Account | RNBP",
         description:
           "Sign up for free to register and protect your valuable belongings.",
       },
       "/dashboard": {
-        title: "Dashboard | Badge",
+        title: "Dashboard | RNBP",
         description: "Manage your registered items.",
         robots: "noindex, nofollow",
       },
       "/report-theft": {
-        title: "Report a Theft | Badge",
+        title: "Report a Theft | RNBP",
         description: "Report a stolen item.",
         robots: "noindex, nofollow",
       },
       "/register-item": {
-        title: "Register an Item | Badge",
+        title: "Register an Item | RNBP",
         description: "Register an item in the registry.",
         robots: "noindex, nofollow",
       },
       "/shop": {
-        title: "Identification labels for your belongings | Badge",
+        title: "Identification labels for your belongings | RNBP",
         description:
           "Badge stickers with a unique code: tag bikes, tools and devices so they stay traceable if lost or stolen. Shipping across Canada.",
       },
       "/shop/success": {
-        title: "Order Confirmed | Badge",
+        title: "Order Confirmed | RNBP",
         description: "Your order has been successfully confirmed.",
         robots: "noindex, nofollow",
       },
       "/contact": {
-        title: "Contact Us | Badge",
+        title: "Contact Us | RNBP",
         description:
-          "Contact the Badge team for any questions or inquiries.",
+          "Contact the RNBP team for any questions or inquiries.",
       },
       "/verify-email": {
-        title: "Email Verification | Badge",
+        title: "Email Verification | RNBP",
         description: "Verify your email address.",
         robots: "noindex, nofollow",
       },
       "/email-pending": {
-        title: "Verification Pending | Badge",
+        title: "Verification Pending | RNBP",
         description: "Email verification in progress.",
         robots: "noindex, nofollow",
       },
       "/admin/orders": {
-        title: "Admin — Orders | Badge",
+        title: "Admin — Orders | RNBP",
         description: "Order management.",
         robots: "noindex, nofollow",
       },
       "/admin/acquisition": {
-        title: "Admin — Acquisition | Badge",
+        title: "Admin — Acquisition | RNBP",
         description: "Ad campaign performance.",
         robots: "noindex, nofollow",
       },
       "/c": {
-        title: "Registered item | Badge",
-        description: "Check the status of an item registered with Badge via its badge code.",
+        title: "Registered item | RNBP",
+        description: "Check the status of an item registered with RNBP via its Badge code.",
         robots: "noindex, nofollow",
       },
     },
@@ -272,7 +272,7 @@ const FAQ_FR = [
   },
   {
     q: "Mes données sont-elles protégées\u00a0?",
-    a: "Oui. Badge respecte les lois fédérales sur la protection des données. Vos informations personnelles ne sont jamais vendues ni partagées sans consentement.",
+    a: "Oui. Le RNBP respecte les lois fédérales sur la protection des données. Vos informations personnelles ne sont jamais vendues ni partagées sans consentement.",
   },
   {
     q: "Combien de temps prend l'enregistrement\u00a0?",
@@ -280,7 +280,7 @@ const FAQ_FR = [
   },
   {
     q: "Pourquoi le registre est-il nécessaire\u00a0?",
-    a: "Chaque année, des milliers de biens sont perdus ou volés au Canada. Badge crée une preuve officielle, sécurisée et datée de vos biens dans un dossier unique.",
+    a: "Chaque année, des milliers de biens sont perdus ou volés au Canada. Le RNBP crée une preuve officielle, sécurisée et datée de vos biens dans un dossier unique.",
   },
   {
     q: "Le registre fonctionne-t-il partout au pays\u00a0?",
@@ -299,7 +299,7 @@ const FAQ_EN = [
   },
   {
     q: "Is my data protected?",
-    a: "Yes. The Badge complies with federal data protection laws. Your personal information is never sold or shared without consent.",
+    a: "Yes. The RNBP complies with federal data protection laws. Your personal information is never sold or shared without consent.",
   },
   {
     q: "How long does registration take?",
@@ -307,7 +307,7 @@ const FAQ_EN = [
   },
   {
     q: "Why is the registry necessary?",
-    a: "Every year, thousands of items are lost or stolen in Canada. The Badge creates an official, secure and dated record of your belongings in a single file.",
+    a: "Every year, thousands of items are lost or stolen in Canada. The RNBP creates an official, secure and dated record of your belongings in a single file.",
   },
   {
     q: "Does the registry work across the country?",
@@ -327,7 +327,7 @@ const NOINDEX_PATHS = Object.entries(META.fr.pages)
 const ALL_KNOWN_PATHS = Object.keys(META.fr.pages);
 const PREFIX_PATHS = ["/admin/orders", "/c"];
 
-// Single-domain (badgeid.ca): locale detection moved client-side
+// Single-domain (rnbp.ca): locale detection moved client-side
 // (localStorage > navigator.language). Server-side prerender defaults to FR;
 // EN variant is generated via BUILD_LOCALE=en at build time.
 // BRAND_ORIGIN and the canonical rule live in src/lib/canonical.ts, shared with
@@ -394,8 +394,8 @@ ${urls}
 const SAME_AS: string[] = [];
 
 function buildJsonLd(locale: "fr" | "en", path: string, domain: string): string {
-  const orgName = "Badge";
-  const altName = "Badge";
+  const orgName = "RNBP";
+  const altName = locale === "fr" ? "Registre national des biens personnels" : "National Registry of Personal Property";
   const logoFile = "logo.png";
   const description =
     locale === "fr"
@@ -493,7 +493,7 @@ function injectMeta(
 
   const ogLocale = locale === "fr" ? "fr_CA" : "en_CA";
   const ogLocaleAlt = locale === "fr" ? "en_CA" : "fr_CA";
-  const siteName = "Badge";
+  const siteName = "RNBP";
   const ogImageFile = locale === "fr" ? "og-image-fr.png" : "og-image-en.png";
   const canonical = canonicalUrl(path);
   const ogUrl = canonical;

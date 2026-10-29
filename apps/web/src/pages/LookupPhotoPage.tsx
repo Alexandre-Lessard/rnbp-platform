@@ -2,13 +2,14 @@ import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { getButtonClasses } from "@/lib/button-styles";
 import { ROUTES } from "@/routes/routes";
+import { BRAND_NAME } from "@rnbp/shared";
 
 export function LookupPhotoPage() {
   const { locale } = useLanguage();
 
   const i18n = {
     fr: {
-      title: "Recherche par photo | Badge",
+      title: `Recherche par photo | ${BRAND_NAME}`,
       description: "Recherchez un bien enregistré à l'aide d'une photo.",
       heading: "Recherche par photo",
       badge: "Bientôt disponible",
@@ -17,7 +18,7 @@ export function LookupPhotoPage() {
       back: "Retour à la recherche",
     },
     en: {
-      title: "Photo search | Badge",
+      title: `Photo search | ${BRAND_NAME}`,
       description: "Search for a registered item using a photo.",
       heading: "Photo search",
       badge: "Coming soon",

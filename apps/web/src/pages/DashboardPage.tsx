@@ -11,6 +11,7 @@ import { PromoCallout } from "@/components/ui/PromoCallout";
 import { ItemImage } from "@/components/ui/ItemImage";
 import { AssignBadgeCodeModal } from "@/components/AssignBadgeCodeModal";
 import { ROUTES } from "@/routes/routes";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type Item = {
   id: string;
@@ -91,7 +92,7 @@ export function DashboardPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`${dash?.heading ?? "Dashboard"} | Badge`}</title>
+      <title>{`${dash?.heading ?? "Dashboard"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>

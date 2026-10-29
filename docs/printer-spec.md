@@ -4,8 +4,8 @@ Ce document décrit le format des codes Badge, les règles de génération par f
 
 ## Format du code
 
-- **Structure** : `BADGE-XXXXXXXX` (14 caractères au total)
-- **Préfixe** : `BADGE-` (6 caractères, fixe, en majuscules)
+- **Structure** : `BID-XXXXXXXX` (12 caractères au total)
+- **Préfixe** : `BID-` (4 caractères, fixe, en majuscules)
 - **Suffixe** : 8 caractères tirés de l'alphabet ci-dessous, en majuscules
 
 > **Source de vérité** : `packages/shared/src/schemas/badge.ts`. Le serveur valide chaque
@@ -29,7 +29,7 @@ Capacité totale de l'espace : 31⁸ ≈ **852 milliards** de codes uniques.
 ## Règles par feuille
 
 - **10 codes par feuille**, séquentiels dans l'alphabet ci-dessus
-- Exemple de feuille valide : `BADGE-A2222222` → `BADGE-A222222B`
+- Exemple de feuille valide : `BID-A2222222` → `BID-A222222B`
   - Les 10 codes sont : `A2222222`, `A2222223`, `A2222224`, `A2222225`, `A2222226`, `A2222227`, `A2222228`, `A2222229`, `A222222A`, `A222222B`
 - Le passage de `9` à `A` est normal (continuité de l'alphabet) — il faut sauter les caractères exclus (`I` entre `H` et `J`, `L` entre `K` et `M`, `O` entre `N` et `P`).
 
@@ -60,14 +60,14 @@ Chaque autocollant porte **deux représentations** du même code :
 
 ### 1. Le code en clair
 
-Format `BADGE-XXXXXXXX`, en police lisible humainement. Sert si le QR est endommagé ou mal scanné — le client peut saisir le code manuellement sur le site.
+Format `BID-XXXXXXXX`, en police lisible humainement. Sert si le QR est endommagé ou mal scanné — le client peut saisir le code manuellement sur le site.
 
 ### 2. Un QR code
 
 Encodant l'URL :
 
 ```
-https://badgeid.ca/c/BADGE-XXXXXXXX
+https://rnbp.ca/c/BID-XXXXXXXX
 ```
 
 (le même code qu'imprimé en clair, préfixé du host)
@@ -78,19 +78,33 @@ Paramètres recommandés :
 - **Correction d'erreur** : **M (15 %)** ou **Q (25 %)** — résistance à l'usure et aux marques
 - **Taille minimale** : QR Version 2 (25×25 modules) ou plus, selon la dimension physique de l'autocollant
 
+### 3. Le domaine en clair
+
+Sous le code, la mention bilingue :
+
+```
+Ce bien est enregistré sur
+www.RNBP.ca
+This property is registered under
+```
+
+Le rouleau d'épreuve d'octobre 2026 porte `www.BadgeID.ca` et le numéro factice `BID093859` :
+ni l'un ni l'autre ne se reproduisent. Le domaine est `www.RNBP.ca`, et chaque autocollant porte
+son propre code au format ci-dessus, avec le tiret.
+
 ## Exemple complet
 
-Feuille no 1, codes `BADGE-A2222222` à `BADGE-A222222B` :
+Feuille no 1, codes `BID-A2222222` à `BID-A222222B` :
 
 | Code (clair) | URL encodée dans le QR |
 |---|---|
-| `BADGE-A2222222` | `https://badgeid.ca/c/BADGE-A2222222` |
-| `BADGE-A2222223` | `https://badgeid.ca/c/BADGE-A2222223` |
-| `BADGE-A2222224` | `https://badgeid.ca/c/BADGE-A2222224` |
-| `BADGE-A2222225` | `https://badgeid.ca/c/BADGE-A2222225` |
-| `BADGE-A2222226` | `https://badgeid.ca/c/BADGE-A2222226` |
-| `BADGE-A2222227` | `https://badgeid.ca/c/BADGE-A2222227` |
-| `BADGE-A2222228` | `https://badgeid.ca/c/BADGE-A2222228` |
-| `BADGE-A2222229` | `https://badgeid.ca/c/BADGE-A2222229` |
-| `BADGE-A222222A` | `https://badgeid.ca/c/BADGE-A222222A` |
-| `BADGE-A222222B` | `https://badgeid.ca/c/BADGE-A222222B` |
+| `BID-A2222222` | `https://rnbp.ca/c/BID-A2222222` |
+| `BID-A2222223` | `https://rnbp.ca/c/BID-A2222223` |
+| `BID-A2222224` | `https://rnbp.ca/c/BID-A2222224` |
+| `BID-A2222225` | `https://rnbp.ca/c/BID-A2222225` |
+| `BID-A2222226` | `https://rnbp.ca/c/BID-A2222226` |
+| `BID-A2222227` | `https://rnbp.ca/c/BID-A2222227` |
+| `BID-A2222228` | `https://rnbp.ca/c/BID-A2222228` |
+| `BID-A2222229` | `https://rnbp.ca/c/BID-A2222229` |
+| `BID-A222222A` | `https://rnbp.ca/c/BID-A222222A` |
+| `BID-A222222B` | `https://rnbp.ca/c/BID-A222222B` |

@@ -1,4 +1,4 @@
-# Deployment Guide — Badge
+# Deployment Guide — RNBP
 
 ## Overview
 
@@ -10,8 +10,8 @@ Deploys are automated. Push to a branch, and once CI passes a CD workflow ships 
 | `staging` | `cd-staging.yml` | Staging Worker + D1 migrations + the Pages `staging` branch |
 
 ```
-badgeid.ca      -->  Cloudflare Pages   -->  React SPA
-api.badgeid.ca  -->  Cloudflare Worker  -->  Hono  -->  D1 + R2
+rnbp.ca      -->  Cloudflare Pages   -->  React SPA
+api.rnbp.ca  -->  Cloudflare Worker  -->  Hono  -->  D1 + R2
 ```
 
 Nothing is deployed by hand. `ops/deploy.sh` still exists but targets the old self-hosted
@@ -41,8 +41,8 @@ Secrets live on the Worker, not in the repo, and survive deploys — `wrangler d
 replaces code only.
 
 ```bash
-pnpm --filter @badge/worker exec wrangler secret put NAME --env production
-pnpm --filter @badge/worker exec wrangler secret list --env production
+pnpm --filter @rnbp/worker exec wrangler secret put NAME --env production
+pnpm --filter @rnbp/worker exec wrangler secret list --env production
 ```
 
 Non-secret values (URLs, CORS origins, `NODE_ENV`) are `vars` in
@@ -53,7 +53,7 @@ For local development, copy `apps/worker/.dev.vars.example` to `.dev.vars` (giti
 ## Rollback
 
 ```bash
-pnpm --filter @badge/worker exec wrangler rollback --env production
+pnpm --filter @rnbp/worker exec wrangler rollback --env production
 ```
 
 Or revert the commit and let CD redeploy. D1 migrations do not roll back automatically —
@@ -115,12 +115,12 @@ configured".
    - Complete **Stripe Tax registration** for Canada — `automatic_tax: { enabled: true }` in
      `apps/worker/src/routes/shop.ts` makes checkout hard-fail without it, even at $0.
    - Create products and prices, note each `price_xxx`.
-   - Create a webhook endpoint at `https://api.badgeid.ca/api/shop/webhook` with
+   - Create a webhook endpoint at `https://api.rnbp.ca/api/shop/webhook` with
      **`checkout.session.completed`** and **`checkout.session.expired`** only. Copy the `whsec_xxx`.
 2. Set the new values:
    ```bash
-   pnpm --filter @badge/worker exec wrangler secret put STRIPE_SECRET_KEY --env production
-   pnpm --filter @badge/worker exec wrangler secret put STRIPE_WEBHOOK_SECRET --env production
+   pnpm --filter @rnbp/worker exec wrangler secret put STRIPE_SECRET_KEY --env production
+   pnpm --filter @rnbp/worker exec wrangler secret put STRIPE_WEBHOOK_SECRET --env production
    ```
 3. Update each product's `stripePriceId`.
 4. Place a $0 test order end to end and confirm the webhook returns 200 in the Dashboard.
@@ -133,9 +133,9 @@ set the new secret, then delete the old endpoint.
 
 | Domain | Serves |
 |--------|--------|
-| `badgeid.ca`, `www.badgeid.ca` | Pages project `badge-platform` |
+| `rnbp.ca`, `www.badgeid.ca` | Pages project `badge-platform` |
 | `rnbp.ca`, `www.rnbp.ca`, `nrpp.ca`, `www.nrpp.ca` | Same site, legacy domains |
-| `api.badgeid.ca` | Worker `badge-api` |
+| `api.rnbp.ca` | Worker `badge-api` |
 | `files.badgeid.ca` | R2 bucket `badge-uploads` |
 | `api.rnbp.ca` | **Old server, argon2 bridge only.** Every other path returns 410. Leave it on the Tunnel until the bridge is retired. |
 
@@ -150,7 +150,7 @@ password hashes. The `deploy-legacy-bridge` job keeps it current.
 Retire all of it — job, server, Tunnel route, `apps/api` — once this returns 0:
 
 ```bash
-pnpm --filter @badge/worker exec wrangler d1 execute badge-db --remote --env production \
+pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production \
   --command "SELECT COUNT(*) FROM users WHERE password_hash LIKE '\$argon2%';"
 ```
 

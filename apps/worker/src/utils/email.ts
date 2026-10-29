@@ -77,7 +77,7 @@ export function buildContactNotificationEmail(
   const config = getConfig();
   const adminEmail =
     config.ADMIN_CONTACT_EMAIL ||
-    (config.NODE_ENV === "production" ? "info@badgeid.ca" : "dev@badgeid.ca");
+    (config.NODE_ENV === "production" ? "info@rnbp.ca" : "dev@rnbp.ca");
 
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
@@ -96,7 +96,7 @@ export function buildContactNotificationEmail(
       phoneLabel: "Téléphone",
       typeLabel: "Type",
       messageLabel: "Message",
-      footer: "Badge — Formulaire de contact partenaires",
+      footer: "RNBP — Formulaire de contact partenaires",
     },
     en: {
       subject: `New partner message — ${name}`,
@@ -107,7 +107,7 @@ export function buildContactNotificationEmail(
       phoneLabel: "Phone",
       typeLabel: "Type",
       messageLabel: "Message",
-      footer: "Badge — Partner contact form",
+      footer: "RNBP — Partner contact form",
     },
   }[lang];
 
@@ -140,7 +140,7 @@ export function buildSignupNotificationEmail(
   const config = getConfig();
   const adminEmail =
     config.ADMIN_CONTACT_EMAIL ||
-    (config.NODE_ENV === "production" ? "info@badgeid.ca" : "dev@badgeid.ca");
+    (config.NODE_ENV === "production" ? "info@rnbp.ca" : "dev@rnbp.ca");
 
   const safeName = escapeHtml(`${opts.firstName} ${opts.lastName}`.trim());
   const safeEmail = escapeHtml(opts.email);
@@ -153,7 +153,7 @@ export function buildSignupNotificationEmail(
       nameLabel: "Nom",
       emailLabel: "Courriel",
       methodLabel: "Méthode",
-      footer: "Badge — Notification automatique d'inscription",
+      footer: "RNBP — Notification automatique d'inscription",
     },
     en: {
       subject: `New signup — ${safeName}`,
@@ -161,7 +161,7 @@ export function buildSignupNotificationEmail(
       nameLabel: "Name",
       emailLabel: "Email",
       methodLabel: "Method",
-      footer: "Badge — Automatic signup notification",
+      footer: "RNBP — Automatic signup notification",
     },
   }[lang];
 
@@ -199,7 +199,7 @@ export function buildOrderNotificationEmail(
   const config = getConfig();
   const adminEmail =
     config.ADMIN_ORDER_EMAIL ||
-    (config.NODE_ENV === "production" ? "commandes@badgeid.ca" : "dev@badgeid.ca");
+    (config.NODE_ENV === "production" ? "commandes@rnbp.ca" : "dev@rnbp.ca");
 
   const total = (opts.totalAmountCents / 100).toFixed(2);
   const tax = (opts.taxAmountCents / 100).toFixed(2);
@@ -246,7 +246,7 @@ export function buildOrderNotificationEmail(
       shippingLabel: "Livraison",
       nameLabel: "Nom",
       addressLabel: "Adresse",
-      footer: "Badge — Notification automatique de commande",
+      footer: "RNBP — Notification automatique de commande",
     },
     en: {
       subject: `New order #${opts.orderId.slice(0, 8)} — ${total} $ CAD`,
@@ -260,7 +260,7 @@ export function buildOrderNotificationEmail(
       shippingLabel: "Shipping",
       nameLabel: "Name",
       addressLabel: "Address",
-      footer: "Badge — Automatic order notification",
+      footer: "RNBP — Automatic order notification",
     },
   }[lang];
 
@@ -412,22 +412,22 @@ export function buildVerificationEmail(
 ): EmailPayload {
   const t = {
     fr: {
-      subject: "Vérifiez votre adresse courriel — Badge",
+      subject: "Vérifiez votre adresse courriel — RNBP",
       greeting: `Bonjour ${escapeHtml(firstName)},`,
-      body: "Merci de vous être inscrit à Badge. Veuillez vérifier votre adresse courriel en cliquant sur le lien ci-dessous :",
+      body: "Merci de vous être inscrit au RNBP. Veuillez vérifier votre adresse courriel en cliquant sur le lien ci-dessous :",
       button: "Vérifier mon courriel",
       expiry: "Ce lien expire dans 24 heures.",
       ignore: "Si vous n'avez pas créé de compte, ignorez ce courriel.",
-      footer: "Badge — Registre canadien des biens personnels",
+      footer: "RNBP — Registre national des biens personnels",
     },
     en: {
-      subject: "Verify your email — Badge",
+      subject: "Verify your email — RNBP",
       greeting: `Hello ${escapeHtml(firstName)},`,
-      body: "Thank you for signing up for the Badge. Please verify your email address by clicking the link below:",
+      body: "Thank you for signing up for RNBP. Please verify your email address by clicking the link below:",
       button: "Verify my email",
       expiry: "This link expires in 24 hours.",
       ignore: "If you did not create an account, please ignore this email.",
-      footer: "Badge — Badge",
+      footer: "RNBP — National Registry of Personal Property",
     },
   }[lang];
 
@@ -453,22 +453,22 @@ export function buildResetEmail(
 ): EmailPayload {
   const t = {
     fr: {
-      subject: "Réinitialisation de mot de passe — Badge",
+      subject: "Réinitialisation de mot de passe — RNBP",
       greeting: `Bonjour ${escapeHtml(firstName)},`,
       body: "Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour le changer :",
       button: "Réinitialiser mon mot de passe",
       expiry: "Ce lien expire dans 1 heure.",
       ignore: "Si vous n'avez pas demandé cette réinitialisation, ignorez ce courriel.",
-      footer: "Badge — Registre canadien des biens personnels",
+      footer: "RNBP — Registre national des biens personnels",
     },
     en: {
-      subject: "Password reset — Badge",
+      subject: "Password reset — RNBP",
       greeting: `Hello ${escapeHtml(firstName)},`,
       body: "You requested a password reset. Click the link below to change your password:",
       button: "Reset my password",
       expiry: "This link expires in 1 hour.",
       ignore: "If you did not request this reset, please ignore this email.",
-      footer: "Badge — Badge",
+      footer: "RNBP — National Registry of Personal Property",
     },
   }[lang];
 
@@ -534,7 +534,7 @@ export function buildOrderConfirmationEmail(
 
   const i18n = {
     fr: {
-      subject: `Confirmation de commande #${orderShort} — Badge`,
+      subject: `Confirmation de commande #${orderShort} — RNBP`,
       heading: "Merci pour votre commande\u00a0!",
       orderLabel: "Commande",
       productsLabel: "Produits",
@@ -548,7 +548,7 @@ export function buildOrderConfirmationEmail(
       note: "Ce courriel ne remplace pas votre reçu Stripe, qui vous a été envoyé séparément.",
     },
     en: {
-      subject: `Order confirmation #${orderShort} — Badge`,
+      subject: `Order confirmation #${orderShort} — RNBP`,
       heading: "Thank you for your order!",
       orderLabel: "Order",
       productsLabel: "Products",

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useSearchParams } from "react-router";
-import { resetPasswordSchema, RESET_LINK_INVALID } from "@badge/shared";
+import { resetPasswordSchema, RESET_LINK_INVALID } from "@rnbp/shared";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest, type ApiError } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";

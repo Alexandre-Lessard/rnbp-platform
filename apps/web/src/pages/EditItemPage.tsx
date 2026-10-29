@@ -10,10 +10,11 @@ import { Modal } from "@/components/ui/Modal";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { PromoCallout } from "@/components/ui/PromoCallout";
 import { ItemImage } from "@/components/ui/ItemImage";
-import { ITEM_CATEGORIES, normalizeBadgeCode, BADGE_CODE_REGEX, INSURERS } from "@badge/shared";
-import type { ItemWithFiles } from "@badge/shared";
+import { ITEM_CATEGORIES, normalizeBadgeCode, BADGE_CODE_REGEX, INSURERS } from "@rnbp/shared";
+import type { ItemWithFiles } from "@rnbp/shared";
 import { ROUTES } from "@/routes/routes";
 import { resizeImageForUpload } from "@/lib/image-resize";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type FormData = {
   name: string;
@@ -309,7 +310,7 @@ export function EditItemPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`${edit?.heading ?? "Edit item"} | Badge`}</title>
+      <title>{`${edit?.heading ?? "Edit item"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
@@ -458,7 +459,7 @@ export function EditItemPage() {
               maxLength={13}
               value={form.badgeCode}
               onChange={(e) => update("badgeCode", e.target.value.toUpperCase())}
-              placeholder="BADGE-XXXXXXXX"
+              placeholder="BID-XXXXXXXX"
               className="h-12 w-full rounded-lg border border-[var(--rcb-border)] bg-[var(--rcb-bg)] px-4 font-mono uppercase tracking-wider text-[var(--rcb-text-body)] focus:border-[var(--rcb-primary)] focus:outline-none"
             />
             <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">

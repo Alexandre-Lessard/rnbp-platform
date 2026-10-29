@@ -5,6 +5,7 @@ import { getErrorMessage } from "@/lib/error-utils";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/routes/routes";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type Product = {
   id: string;
@@ -208,7 +209,7 @@ export function AdminProductEditPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`Admin — ${t.admin?.nav.products ?? "Products"} | Badge`}</title>
+      <title>{`Admin — ${t.admin?.nav.products ?? "Products"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <Link
           to={ROUTES.adminProducts}

@@ -1,4 +1,4 @@
-import { ITEM_CATEGORIES, createItemSchema, type CreateItemInput } from "@badge/shared";
+import { ITEM_CATEGORIES, createItemSchema, type CreateItemInput } from "@rnbp/shared";
 
 export type ItemFormData = {
   name: string;

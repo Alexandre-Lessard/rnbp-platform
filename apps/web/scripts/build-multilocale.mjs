@@ -3,7 +3,7 @@ import { copyFileSync, existsSync, readFileSync, statSync, writeFileSync } from 
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-const TMP_EN = join(tmpdir(), "badge-index.en.html");
+const TMP_EN = join(tmpdir(), "rnbp-index.en.html");
 
 console.log("→ Building EN prerender…");
 execSync("react-router build", {
@@ -34,13 +34,13 @@ copyFileSync(TMP_EN, "build/client/index.en.html");
 const HOME = {
   fr: {
     file: "build/client/index.html",
-    title: "Protégez vos biens et retrouvez-les après un vol | Badge",
+    title: "Protégez vos biens et retrouvez-les après un vol | RNBP",
     description:
       "Enregistrez gratuitement vos objets de valeur — numéros de série, photos, factures — dans un registre canadien sécurisé. Une preuve de propriété prête pour la police et votre assureur.",
   },
   en: {
     file: "build/client/index.en.html",
-    title: "Protect your belongings and get them back after a theft | Badge",
+    title: "Protect your belongings and get them back after a theft | RNBP",
     description:
       "Register your valuables for free — serial numbers, photos, receipts — in a secure Canadian registry. Proof of ownership ready for police and your insurer.",
   },

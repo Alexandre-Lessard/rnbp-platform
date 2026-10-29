@@ -23,7 +23,7 @@ function event(overrides: Partial<PurchaseEvent> = {}): PurchaseEvent {
     adConsent: true,
     email: "Someone@Example.com",
     valueCents: 4999,
-    sourceUrl: "https://badgeid.ca/shop/success",
+    sourceUrl: "https://rnbp.ca/shop/success",
     ...overrides,
   };
 }

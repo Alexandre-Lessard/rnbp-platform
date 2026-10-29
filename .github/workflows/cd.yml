@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Production: the Cloudflare Worker behind api.badgeid.ca, on D1.
+  # Production: the Cloudflare Worker behind api.rnbp.ca, on D1.
   deploy-worker:
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
@@ -39,7 +39,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared package
-        run: pnpm --filter @badge/shared build
+        run: pnpm --filter @rnbp/shared build
 
       # Before anything is applied: a missing secret would not stop the Worker
       # booting, it would quietly disable a feature. Fail here instead.
@@ -47,16 +47,16 @@ jobs:
         run: node ops/check-secrets.mjs production
 
       - name: Apply D1 migrations
-        run: pnpm --filter @badge/worker exec wrangler d1 migrations apply badge-db --remote --env production
+        run: pnpm --filter @rnbp/worker exec wrangler d1 migrations apply badge-db --remote --env production
 
       - name: Deploy Worker
-        run: pnpm --filter @badge/worker exec wrangler deploy --env production
+        run: pnpm --filter @rnbp/worker exec wrangler deploy --env production
 
       - name: Health check
         run: |
           for i in 1 2 3 4 5; do
             sleep 5
-            if curl -sf https://api.badgeid.ca/api/health; then
+            if curl -sf https://api.rnbp.ca/api/health; then
               echo "Health check passed"
               exit 0
             fi
@@ -97,19 +97,19 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared package
-        run: pnpm --filter @badge/shared build
+        run: pnpm --filter @rnbp/shared build
 
       - name: Build web
         env:
-          VITE_API_URL: https://api.badgeid.ca/api
+          VITE_API_URL: https://api.rnbp.ca/api
           # The Google button renders only when this is set (OAuthButtons.tsx).
           # The client ID is not a secret — it travels in the authorisation URL.
           # The consent screen is published, so any Google account can sign in.
           VITE_GOOGLE_CLIENT_ID: "812153749723-vu6vdv0b53spgjuni1ihu84a07dpna9f.apps.googleusercontent.com"
-        run: pnpm --filter @badge/web build
+        run: pnpm --filter @rnbp/web build
 
       - name: Deploy to Cloudflare Pages
-        run: pnpm --filter @badge/web exec wrangler pages deploy build/client --project-name badge-platform --branch main
+        run: pnpm --filter @rnbp/web exec wrangler pages deploy build/client --project-name badge-platform --branch main
 
   # Legacy: the old Fastify server, kept alive only to serve the argon2 bridge
   # the Worker calls (POST /api/internal/verify-legacy on api.rnbp.ca). Every
@@ -144,8 +144,8 @@ jobs:
           source ~/.nvm/nvm.sh
           cd /opt/rnbp/repo
           pnpm install --frozen-lockfile
-          pnpm --filter @badge/shared build
-          pnpm --filter @badge/api build
+          pnpm --filter @rnbp/shared build
+          pnpm --filter @rnbp/api build
           sudo systemctl restart rnbp-api
 
       - name: Health check

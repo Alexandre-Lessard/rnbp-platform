@@ -22,6 +22,13 @@
       "when": 1787614975929,
       "tag": "0002_clear_captain_midlands",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1793289116641,
+      "tag": "0003_badge_codes_to_bid",
+      "breakpoints": true
     }
   ]
 }

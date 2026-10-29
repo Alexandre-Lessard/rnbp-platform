@@ -9,8 +9,9 @@ import { Modal } from "@/components/ui/Modal";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
 import { ItemImage } from "@/components/ui/ItemImage";
 import { AssignBadgeCodeModal } from "@/components/AssignBadgeCodeModal";
-import { INSURERS, ITEM_CATEGORIES, type ItemWithFiles } from "@badge/shared";
+import { INSURERS, ITEM_CATEGORIES, type ItemWithFiles } from "@rnbp/shared";
 import { ROUTES } from "@/routes/routes";
+import { BRAND_NAME } from "@rnbp/shared";
 
 export function ItemDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -145,7 +146,7 @@ export function ItemDetailPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`${item.name} | Badge`}</title>
+      <title>{`${item.name} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         {/* Header */}
         <div className="flex items-center justify-between">

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const BADGE_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
-export const BADGE_CODE_REGEX = /^BADGE-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{8}$/;
+export const BADGE_CODE_REGEX = /^BID-[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{8}$/;
 
 export const badgeCodeSchema = z
   .string()

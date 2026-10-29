@@ -1,4 +1,4 @@
-# Badge
+# RNBP — Registre national des biens personnels
 
 ![CI](https://github.com/Alexandre-Lessard/badge-platform/actions/workflows/ci.yml/badge.svg)
 ![CD](https://github.com/Alexandre-Lessard/badge-platform/actions/workflows/cd.yml/badge.svg)
@@ -10,13 +10,13 @@ A platform for Canadians to register, protect, and recover their valuable belong
 
 ## What is this?
 
-Badge is a bilingual Canadian web application that lets users catalog their personal
+RNBP (Registre national des biens personnels — National Registry of Personal Property) is a bilingual Canadian web application that lets users catalog their personal
 property, claim Badge codes for their items, report thefts to aid recovery, and request
 insurance discounts from participating insurers. Anyone can look up a Badge code or serial
 number to check whether an item is registered or reported stolen.
 
-It runs at `badgeid.ca` in French and English on the same domain. The former `rnbp.ca` and
-`nrpp.ca` domains still resolve and point at the same site.
+It runs at `rnbp.ca` in French and English on the same domain. `badgeid.ca` (the product's
+name from May to October 2026) and `nrpp.ca` redirect to it permanently.
 
 ## Key Features
 
@@ -32,7 +32,7 @@ It runs at `badgeid.ca` in French and English on the same domain. The former `rn
 ## Architecture
 
 ```
-badgeid.ca                     api.badgeid.ca
+rnbp.ca                     api.rnbp.ca
      |                                |
 Cloudflare Pages              Cloudflare Worker
      |                                |
@@ -85,8 +85,8 @@ verified in production. See [docs/CLOUDFLARE-MIGRATION.md](docs/CLOUDFLARE-MIGRA
 
 | | Production | Staging |
 |---|---|---|
-| Site | `badgeid.ca` | `staging.badge-platform.pages.dev` |
-| API | `api.badgeid.ca` | `badge-api-staging.alexandre-lessard92.workers.dev` |
+| Site | `rnbp.ca` | `staging.badge-platform.pages.dev` |
+| API | `api.rnbp.ca` | `badge-api-staging.alexandre-lessard92.workers.dev` |
 | Database | D1 `badge-db` | D1 `badge-db-staging` |
 | Files | `files.badgeid.ca` | `files-staging.badgeid.ca` |
 | Deploys from | `main` | `staging` |
@@ -142,4 +142,4 @@ See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for prerequisites, setup, and scr
 
 ## License
 
-Copyright (c) 2025-2026 Badge. All rights reserved. See [LICENSE](LICENSE).
+Copyright (c) 2025-2026 9567-1525 Québec inc. All rights reserved. See [LICENSE](LICENSE).

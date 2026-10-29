@@ -1,4 +1,4 @@
-# Badge Development Guide
+# RNBP Development Guide
 
 ## Prerequisites
 
@@ -82,7 +82,7 @@ that manifest in the same commit** — a unit test enforces it for the required 
 Set one on a deployed environment with:
 
 ```bash
-pnpm --filter @badge/worker exec wrangler secret put NAME --env staging
+pnpm --filter @rnbp/worker exec wrangler secret put NAME --env staging
 ```
 
 > Stripe Price IDs live in the `products` table, not in env vars. Configure them via
@@ -114,7 +114,7 @@ All scripts are run from the monorepo root with `pnpm`.
 | Script              | Description                                      |
 |---------------------|--------------------------------------------------|
 | `pnpm dev`          | Start frontend dev server (port 5173)            |
-| `pnpm --filter @badge/worker dev` | Start the API on a local D1 (port 8787) |
+| `pnpm --filter @rnbp/worker dev` | Start the API on a local D1 (port 8787) |
 | `pnpm build`        | Build all packages                               |
 | `pnpm build:web`    | Build frontend only                              |
 | `pnpm lint`         | Typecheck across all packages                    |

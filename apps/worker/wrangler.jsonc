@@ -13,8 +13,8 @@
         "FRONTEND_URL": "https://staging.badge-platform.pages.dev",
         "API_URL": "https://badge-api-staging.alexandre-lessard92.workers.dev/api",
         "CORS_ORIGINS": "https://staging.badge-platform.pages.dev,http://localhost:5173",
-        "FROM_EMAIL": "noreply@badgeid.ca",
-        "FROM_NAME": "Badge (staging)"
+        "FROM_EMAIL": "noreply@rnbp.ca",
+        "FROM_NAME": "RNBP (staging)"
       },
       "d1_databases": [
         {
@@ -47,20 +47,22 @@
       }
     },
 
-    // Production. Deployed but not serving traffic until api.badgeid.ca is
-    // pointed here instead of the Tunnel (see docs/CLOUDFLARE-MIGRATION.md).
+    // Production.
     "production": {
       "name": "badge-api",
-      // api.rnbp.ca stays on the Tunnel: it is how the Worker reaches the old
-      // server's argon2 bridge, so it must not resolve to the Worker itself.
-      "routes": [{ "pattern": "api.badgeid.ca", "custom_domain": true }],
+      // api.badgeid.ca stays as an alias during the return to RNBP (T28), for
+      // anything still holding the old host; it goes once traffic has moved.
+      "routes": [
+        { "pattern": "api.rnbp.ca", "custom_domain": true },
+        { "pattern": "api.badgeid.ca", "custom_domain": true }
+      ],
       "vars": {
         "NODE_ENV": "production",
-        "FRONTEND_URL": "https://badgeid.ca",
-        "API_URL": "https://api.badgeid.ca/api",
-        "CORS_ORIGINS": "https://badgeid.ca,https://www.badgeid.ca,https://rnbp.ca,https://www.rnbp.ca,https://nrpp.ca,https://www.nrpp.ca",
-        "FROM_EMAIL": "noreply@badgeid.ca",
-        "FROM_NAME": "Badge"
+        "FRONTEND_URL": "https://rnbp.ca",
+        "API_URL": "https://api.rnbp.ca/api",
+        "CORS_ORIGINS": "https://rnbp.ca,https://www.rnbp.ca,https://badgeid.ca,https://www.badgeid.ca",
+        "FROM_EMAIL": "noreply@rnbp.ca",
+        "FROM_NAME": "RNBP"
       },
       "d1_databases": [
         {

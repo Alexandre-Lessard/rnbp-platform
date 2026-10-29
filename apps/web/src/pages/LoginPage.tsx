@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { apiRequest, isNetworkError, type ApiError } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
-import { PASSWORD_RESET_REQUIRED } from "@badge/shared";
+import { PASSWORD_RESET_REQUIRED } from "@rnbp/shared";
 import { Button } from "@/components/ui/Button";
 import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
@@ -83,7 +83,7 @@ export function LoginPage() {
         </h1>
         <p className="mt-2 text-[var(--rcb-text-muted)]">
           {t.auth?.loginDescription ??
-            "Log in to your Badge account"}
+            "Log in to your RNBP account"}
         </p>
 
         <div className="mt-8">

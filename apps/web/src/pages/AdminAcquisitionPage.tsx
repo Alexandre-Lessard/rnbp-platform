@@ -4,6 +4,7 @@ import { getErrorMessage } from "@/lib/error-utils";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
+import { BRAND_NAME } from "@rnbp/shared";
 
 /**
  * What each campaign brought in, next to what it cost.
@@ -154,7 +155,7 @@ export function AdminAcquisitionPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>Admin — Acquisition | Badge</title>
+      <title>{`Admin — Acquisition | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">Acquisition</h1>
         <p className="mt-2 max-w-2xl text-sm text-[var(--rcb-text-muted)]">

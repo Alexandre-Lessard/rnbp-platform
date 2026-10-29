@@ -11,18 +11,18 @@ describe("normalizePath", () => {
   });
 
   it("leaves a path without a trailing slash untouched", () => {
-    expect(normalizePath("/c/BADGE-ABCDEFGH")).toBe("/c/BADGE-ABCDEFGH");
+    expect(normalizePath("/c/BID-ABCDEFGH")).toBe("/c/BID-ABCDEFGH");
   });
 });
 
 describe("canonicalUrl", () => {
   it("points the root at the brand origin with its slash", () => {
-    expect(canonicalUrl("/")).toBe("https://badgeid.ca/");
+    expect(canonicalUrl("/")).toBe("https://rnbp.ca/");
   });
 
   it("gives the slashed and unslashed forms the same canonical", () => {
-    expect(canonicalUrl("/register/")).toBe("https://badgeid.ca/register");
-    expect(canonicalUrl("/register")).toBe("https://badgeid.ca/register");
+    expect(canonicalUrl("/register/")).toBe("https://rnbp.ca/register");
+    expect(canonicalUrl("/register")).toBe("https://rnbp.ca/register");
   });
 
   it("never contains a placeholder", () => {
