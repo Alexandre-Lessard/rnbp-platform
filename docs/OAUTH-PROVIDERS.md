@@ -150,7 +150,7 @@ it:
 ```bash
 xclip -o -selection clipboard | \
   CLOUDFLARE_API_TOKEN=$(secret-tool lookup service cloudflare key badge-cicd-prod) \
-  pnpm --filter @badge/worker exec wrangler secret put GOOGLE_CLIENT_SECRET --env production
+  pnpm --filter @rnbp/worker exec wrangler secret put GOOGLE_CLIENT_SECRET --env production
 ```
 
 ### Two verifications, only one of which matters for signing in

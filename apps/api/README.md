@@ -1,4 +1,4 @@
-# @badge/api — RETIRED
+# @rnbp/api — RETIRED
 
 > **This is not the API any more.** Badge moved to a Cloudflare Worker on 2026-08-09;
 > `apps/worker` is the production API. Nothing new belongs here.

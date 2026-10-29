@@ -57,7 +57,7 @@ if (missing.length > 0) {
   }
   fail(
     `${missing.length} secret(s) missing on ${env}. Set them with:\n` +
-      missing.map((n) => `    pnpm --filter @badge/worker exec wrangler secret put ${n} --env ${env}`).join("\n"),
+      missing.map((n) => `    pnpm --filter @rnbp/worker exec wrangler secret put ${n} --env ${env}`).join("\n"),
   );
 }
 

@@ -109,7 +109,7 @@ export const items = sqliteTable(
     insurerId: text("insurer_id"),
     insurerName: text("insurer_name"),
     status: text("status", { enum: ITEM_STATUSES }).notNull().default("active"),
-    // Format: BADGE-XXXXXXXX — manually assigned by admin when processing orders
+    // Format: BID-XXXXXXXX — manually assigned by admin when processing orders
     // Null = not yet assigned (pending sticker purchase)
     badgeCode: text("badge_code").unique(),
     archivedAt: integer("archived_at", { mode: "timestamp_ms" }),
@@ -324,7 +324,7 @@ export const orderItems = sqliteTable(
 export const stickerCodes = sqliteTable(
   "sticker_codes",
   {
-    code: text("code").primaryKey(), // BADGE-XXXXXXXX
+    code: text("code").primaryKey(), // BID-XXXXXXXX
     orderItemId: text("order_item_id")
       .notNull()
       .references(() => orderItems.id, { onDelete: "restrict" }),

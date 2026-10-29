@@ -29,7 +29,7 @@ import {
   CODES_NOT_REGISTERED,
   PRODUCT_SLUGS,
   CODES_PER_SHEET,
-} from "@badge/shared";
+} from "@rnbp/shared";
 import { AppError } from "../utils/errors.js";
 import { expandRange } from "../utils/badge-sequence.js";
 import type { AppEnv } from "../context.js";

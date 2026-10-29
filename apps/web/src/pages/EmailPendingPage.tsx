@@ -5,6 +5,7 @@ import { useLanguage } from "@/i18n/context";
 import { apiRequest } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/routes/routes";
+import { BRAND_NAME } from "@rnbp/shared";
 
 export function EmailPendingPage() {
   const { user, logout, refreshUser } = useAuth();
@@ -42,7 +43,7 @@ export function EmailPendingPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`${locale === "fr" ? "Vérification du courriel" : "Email verification"} | Badge`}</title>
+      <title>{`${locale === "fr" ? "Vérification du courriel" : "Email verification"} | ${BRAND_NAME}`}</title>
       <div className="section-shell flex flex-col items-center justify-center py-16">
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
           <svg className="h-8 w-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

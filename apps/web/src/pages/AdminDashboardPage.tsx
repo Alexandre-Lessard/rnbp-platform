@@ -15,6 +15,7 @@ import { useLanguage } from "@/i18n/context";
 import { useCountUp } from "@/lib/use-count-up";
 import { useSSE } from "@/lib/use-sse";
 import { Tabs } from "@/components/ui/Tabs";
+import { BRAND_NAME } from "@rnbp/shared";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8787/api";
 
@@ -254,7 +255,7 @@ export function AdminDashboardPage() {
 
   return (
     <div className="p-6 lg:p-8">
-      <title>{`Admin — ${d.title} | Badge`}</title>
+      <title>{`Admin — ${d.title} | ${BRAND_NAME}`}</title>
       {/* Page title */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-[var(--rcb-text-strong)] lg:text-3xl">

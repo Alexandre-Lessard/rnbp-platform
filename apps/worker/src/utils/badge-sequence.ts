@@ -1,10 +1,10 @@
-import { BADGE_ALPHABET, BADGE_CODE_REGEX, normalizeBadgeCode } from "@badge/shared";
+import { BADGE_ALPHABET, BADGE_CODE_REGEX, normalizeBadgeCode } from "@rnbp/shared";
 
 const SUFFIX_LENGTH = 8;
 const ALPHABET_SIZE = BigInt(BADGE_ALPHABET.length);
 const MAX_SUFFIX_VALUE = ALPHABET_SIZE ** BigInt(SUFFIX_LENGTH) - 1n;
 const MAX_RANGE_SIZE = 1000;
-const PREFIX = "BADGE-";
+const PREFIX = "BID-";
 
 export function codeToInt(code: string): bigint {
   if (!BADGE_CODE_REGEX.test(code)) {

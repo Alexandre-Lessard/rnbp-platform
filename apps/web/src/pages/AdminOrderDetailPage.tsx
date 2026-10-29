@@ -9,7 +9,8 @@ import {
   PRODUCT_SLUGS,
   CODES_PER_SHEET,
   normalizeBadgeCode,
-} from "@badge/shared";
+} from "@rnbp/shared";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type StickerCode = {
   code: string;
@@ -217,7 +218,7 @@ export function AdminOrderDetailPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`Admin — ${t.admin?.nav.orders ?? "Orders"} | Badge`}</title>
+      <title>{`Admin — ${t.admin?.nav.orders ?? "Orders"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <Link
           to={ROUTES.adminOrders}
@@ -328,7 +329,7 @@ export function AdminOrderDetailPage() {
                           </span>
                           <input
                             type="text"
-                            placeholder="First (BADGE-…)"
+                            placeholder="First (BID-…)"
                             value={sheet.firstCode}
                             onChange={(e) =>
                               updateSheetInput(item.id, sheetIdx, "firstCode", e.target.value)
@@ -337,7 +338,7 @@ export function AdminOrderDetailPage() {
                           />
                           <input
                             type="text"
-                            placeholder="Last (BADGE-…)"
+                            placeholder="Last (BID-…)"
                             value={sheet.lastCode}
                             onChange={(e) =>
                               updateSheetInput(item.id, sheetIdx, "lastCode", e.target.value)

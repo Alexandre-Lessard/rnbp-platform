@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Production: the Cloudflare Worker behind api.badgeid.ca, on D1.
+  # Production: the Cloudflare Worker behind api.rnbp.ca, on D1.
   deploy-worker:
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
@@ -56,7 +56,7 @@ jobs:
         run: |
           for i in 1 2 3 4 5; do
             sleep 5
-            if curl -sf https://api.badgeid.ca/api/health; then
+            if curl -sf https://api.rnbp.ca/api/health; then
               echo "Health check passed"
               exit 0
             fi
@@ -101,7 +101,7 @@ jobs:
 
       - name: Build web
         env:
-          VITE_API_URL: https://api.badgeid.ca/api
+          VITE_API_URL: https://api.rnbp.ca/api
           # The Google button renders only when this is set (OAuthButtons.tsx).
           # The client ID is not a secret — it travels in the authorisation URL.
           # The consent screen is published, so any Google account can sign in.

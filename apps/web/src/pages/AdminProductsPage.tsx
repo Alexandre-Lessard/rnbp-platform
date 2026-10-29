@@ -5,6 +5,7 @@ import { getErrorMessage } from "@/lib/error-utils";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/routes/routes";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type Product = {
   id: string;
@@ -73,7 +74,7 @@ export function AdminProductsPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`Admin — ${p?.title ?? "Products"} | Badge`}</title>
+      <title>{`Admin — ${p?.title ?? "Products"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">

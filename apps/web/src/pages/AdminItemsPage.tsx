@@ -4,6 +4,7 @@ import { getErrorMessage } from "@/lib/error-utils";
 import { useLanguage } from "@/i18n/context";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type AdminItem = {
   id: string;
@@ -99,7 +100,7 @@ export function AdminItemsPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`Admin — ${t.admin?.nav.items ?? "Items"} | Badge`}</title>
+      <title>{`Admin — ${t.admin?.nav.items ?? "Items"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           {t.admin?.nav.items ?? "Items"}

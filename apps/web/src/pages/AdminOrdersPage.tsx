@@ -4,6 +4,7 @@ import { apiRequest } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
 import { useLanguage } from "@/i18n/context";
 import { ROUTES } from "@/routes/routes";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type Order = {
   id: string;
@@ -48,7 +49,7 @@ export function AdminOrdersPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`Admin — ${t.admin?.nav.orders ?? "Orders"} | Badge`}</title>
+      <title>{`Admin — ${t.admin?.nav.orders ?? "Orders"} | ${BRAND_NAME}`}</title>
       <div className="section-shell py-16">
         <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
           Orders

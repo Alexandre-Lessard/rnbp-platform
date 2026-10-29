@@ -1,4 +1,4 @@
-# @badge/web — Frontend
+# @rnbp/web — Frontend
 
 React web application for the National Registry of Personal Property.
 
@@ -153,7 +153,7 @@ export function MyPage() {
   const { t } = useLanguage();
   return (
     <section>
-      <title>{`${t.pages.my.title} | Badge`}</title>
+      <title>{`${t.pages.my.title} | RNBP`}</title>
       <meta name="description" content={t.pages.my.description} />
       ...
     </section>
@@ -187,7 +187,7 @@ The language toggle is instant (no reload, no domain change).
 
 ## Single domain
 
-`badgeid.ca` serves both languages. The logo follows the active language. Every page declares its own URL as canonical and as the `hreflang` target for FR, EN and `x-default`. The former domains still resolve and only serve as aliases.
+`rnbp.ca` serves both languages, with one logo (RNBP) for both. Every page declares its own URL as canonical and as the `hreflang` target for FR, EN and `x-default`. The former domains (`badgeid.ca`, `nrpp.ca`) redirect permanently to it, path and query string kept.
 
 ## Design system
 

@@ -6,7 +6,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import { PRODUCT_SLUGS } from "@badge/shared";
+import { PRODUCT_SLUGS } from "@rnbp/shared";
 
 // ── Types ────────────────────────────────────────────────────────────
 

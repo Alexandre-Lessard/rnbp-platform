@@ -6,6 +6,7 @@ import { getButtonClasses } from "@/lib/button-styles";
 import { useAuth } from "@/lib/auth-context";
 import { useLanguage } from "@/i18n/context";
 import { ROUTES } from "@/routes/routes";
+import { BRAND_NAME } from "@rnbp/shared";
 
 export function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
@@ -36,7 +37,7 @@ export function VerifyEmailPage() {
 
   return (
     <section className="min-h-[80vh] bg-[var(--rcb-white)]">
-      <title>{`${locale === "fr" ? "Vérification du courriel" : "Email verification"} | Badge`}</title>
+      <title>{`${locale === "fr" ? "Vérification du courriel" : "Email verification"} | ${BRAND_NAME}`}</title>
       <div className="section-shell flex flex-col items-center justify-center py-16">
         {status === "loading" && (
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--rcb-primary)] border-t-transparent" />

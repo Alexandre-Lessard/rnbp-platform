@@ -4,6 +4,7 @@ import { apiRequest, isNetworkError } from "@/lib/api-client";
 import { getErrorMessage } from "@/lib/error-utils";
 import { Button } from "@/components/ui/Button";
 import { ServiceUnavailable } from "@/components/auth/ServiceUnavailable";
+import { BRAND_NAME } from "@rnbp/shared";
 
 type Item = {
   id: string;
@@ -96,7 +97,7 @@ export function ReportTheftPage() {
 
   return (
     <section className="section-shell py-16">
-      <title>{`${t.report?.heading ?? "Report a theft"} | Badge`}</title>
+      <title>{`${t.report?.heading ?? "Report a theft"} | ${BRAND_NAME}`}</title>
       <h1 className="text-3xl font-bold text-[var(--rcb-text-strong)]">
         {t.report?.heading ?? "Report a theft"}
       </h1>

@@ -14,7 +14,7 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 function detectLocale(): SupportedLocale {
   // SSR / build-time: no browser APIs available.
   // BUILD_LOCALE=en switches the prerender output to English (used to generate
-  // index.en.html for badgeid.ca). Access process via globalThis cast so we don't
+  // index.en.html for rnbp.ca). Access process via globalThis cast so we don't
   // need @types/node in the web app, and so the whole branch is dead-code in
   // the browser bundle — both FR and EN builds produce identical client assets,
   // only the prerendered HTML differs.

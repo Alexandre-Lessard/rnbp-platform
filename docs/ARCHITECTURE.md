@@ -1,9 +1,9 @@
-# Badge -- Architecture & Technical Decisions
+# RNBP -- Architecture & Technical Decisions
 
 ## 1. System Architecture
 
 ```
-                         badgeid.ca
+                         rnbp.ca
                              |
                              v
                     +------------------+
@@ -18,7 +18,7 @@
                              v
                     +------------------+
                     | Cloudflare Worker|
-                    | (api.badgeid.ca) |
+                    | (api.rnbp.ca) |
                     |    Hono API      |
                     +------------------+
                           |        |
@@ -35,7 +35,7 @@ The API is a Worker bound directly to its database and its bucket.
 
 ### One domain, two languages
 
-`badgeid.ca` serves both French and English. Language comes from localStorage, then
+`rnbp.ca` serves both French and English. Language comes from localStorage, then
 `navigator.language`, then French as the default. The former `rnbp.ca` and `nrpp.ca`
 domains still resolve and serve the same site — kept for links printed on stickers and for
 search engines, not as separate language sites.
@@ -132,13 +132,13 @@ restart, nothing to monitor for disk space.
 
 ### pnpm workspaces monorepo
 
-1. **Shared types and constants** -- The `@badge/shared` package exports Zod schemas, error codes, and TypeScript types used by both frontend and backend. A single source of truth eliminates drift.
+1. **Shared types and constants** -- The `@rnbp/shared` package exports Zod schemas, error codes, and TypeScript types used by both frontend and backend. A single source of truth eliminates drift.
 2. **Single lockfile** -- One `pnpm-lock.yaml` for the entire project ensures consistent dependency resolution across all packages.
 3. **Disk-efficient** -- pnpm's content-addressable store deduplicates dependencies across workspaces, unlike npm or yarn classic.
 
 ### Zod for validation
 
-1. **Shared between frontend and backend** -- The same Zod schemas in `@badge/shared` validate form inputs on the frontend and request bodies on the backend. If a validation rule changes, it changes once.
+1. **Shared between frontend and backend** -- The same Zod schemas in `@rnbp/shared` validate form inputs on the frontend and request bodies on the backend. If a validation rule changes, it changes once.
 2. **TypeScript type inference** -- `z.infer<typeof schema>` derives types from schemas, so validation logic and types never diverge.
 3. **Composable** -- Schemas can be extended, merged, and refined, making it easy to build API-specific schemas from base definitions.
 
@@ -224,7 +224,7 @@ Error handling follows a code-based pattern that decouples the API from display 
 
 ### How it works
 
-1. **Shared error codes** -- The `@badge/shared` package exports string constants for every error and success code (`INVALID_CREDENTIALS`, `TOKEN_EXPIRED`, `ITEM_NOT_FOUND`, etc.). These are plain strings, not messages.
+1. **Shared error codes** -- The `@rnbp/shared` package exports string constants for every error and success code (`INVALID_CREDENTIALS`, `TOKEN_EXPIRED`, `ITEM_NOT_FOUND`, etc.). These are plain strings, not messages.
 
 2. **Backend throws codes** -- The API never returns user-facing messages in French or English. It throws `AppError` with an HTTP status and an error code:
    ```typescript
@@ -248,7 +248,7 @@ The `detectLocale` function applies this cascade:
 2. **Browser language** -- `navigator.language` as a fallback.
 3. **Default** -- French (`fr`).
 
-Hostname detection was removed with the move to a single domain: `badgeid.ca` serves both
+Hostname detection was removed with the move to a single domain: `rnbp.ca` serves both
 languages, and `rnbp.ca` / `nrpp.ca` are now just aliases for the same site rather than a
 French and an English edition. During the prerender, `BUILD_LOCALE=en` selects the English
 build instead.
