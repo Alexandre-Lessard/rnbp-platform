@@ -14,8 +14,7 @@ rnbp.ca      -->  Cloudflare Pages   -->  React SPA
 api.rnbp.ca  -->  Cloudflare Worker  -->  Hono  -->  D1 + R2
 ```
 
-Nothing is deployed by hand. `ops/deploy.sh` still exists but targets the old self-hosted
-stack; it is not the production path any more.
+Nothing is deployed by hand: a push to `main` or `staging` is the only way in.
 
 ### Order matters
 
@@ -105,7 +104,7 @@ uncommenting the local file.
 |------|-----|-------|
 | D1 (`badge-db`) | `Backup D1` workflow, nightly 03:00 ET | R2 `badge-db-backups` |
 | D1 point-in-time | Cloudflare Time Travel, 30 days | built in |
-| Legacy Postgres | `ops/backup.sh` via cron on the old server | R2 `badge-db-backups` |
+| Legacy Postgres | cron on the old server, until it is shut down | R2 `badge-db-backups` |
 
 The Postgres backup goes away with the old server. Restore a D1 export with
 `wrangler d1 execute badge-db --remote --file <dump.sql>`.
@@ -156,11 +155,12 @@ Language detection priority: localStorage > navigator.language > default (FR).
 
 ## The old stack
 
-`apps/api` (Fastify) and the self-hosted server still exist to serve one endpoint:
-`POST /internal/verify-legacy`, which the Worker calls to verify pre-migration argon2
-password hashes. The `deploy-legacy-bridge` job keeps it current.
+The Fastify app (`apps/api`), its `deploy-legacy-bridge` job and the Tunnel route on
+`api.rnbp.ca` were removed on 2026-10-29: the Worker never called the argon2 bridge, it refuses a
+`$argon2` hash and sends the account through password reset. The old server itself still holds
+the pre-migration Postgres and backs it up nightly until it is shut down.
 
-Retire all of it — job, server, Tunnel route, `apps/api` — once this returns 0:
+The `isLegacyHash` branch in the Worker stays until this returns 0 (12 accounts on 2026-10-29):
 
 ```bash
 pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production \

@@ -11,10 +11,6 @@ No database to install and no Docker: the Worker runs on workerd against a local
 file wrangler manages for you) and a simulated R2 — the same engine as production, so local
 behaviour matches.
 
-`apps/api` is the retired Fastify application. It is still deployed on the old server because it
-hosts the argon2 bridge, but **nothing calls that bridge any more** since login started sending
-pre-migration accounts through password reset. Do not build on it.
-
 ## Quick Start
 
 ```bash
@@ -139,7 +135,7 @@ Schema changes go through Drizzle migrations — never hand-edit the database.
 
 ## Testing
 
-Tests use [Vitest](https://vitest.dev/). `apps/worker`, `apps/api` and `apps/web` each have their own suite.
+Tests use [Vitest](https://vitest.dev/). `apps/worker` and `apps/web` each have their own suite.
 
 ```bash
 pnpm test          # Run all tests across the monorepo
@@ -157,7 +153,7 @@ Test files are colocated in `src/__tests__/` directories within each package.
 
 ## Database
 
-The project uses [Drizzle ORM](https://orm.drizzle.team/) with Cloudflare D1 (SQLite), via `sqlite-core`. The legacy `apps/api` still uses `pg-core` against PostgreSQL.
+The project uses [Drizzle ORM](https://orm.drizzle.team/) with Cloudflare D1 (SQLite), via `sqlite-core`.
 
 Migrations are **not** automatic any more — a Worker has no startup hook. CD applies them
 with `wrangler d1 migrations apply` before deploying, and you apply them locally yourself.

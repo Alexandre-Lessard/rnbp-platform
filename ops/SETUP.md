@@ -127,7 +127,7 @@ the token value**. The bucket-scoped resource key is
 `com.cloudflare.edge.r2.bucket.<account_id>_default_<bucket_name>`.
 
 `curl` before 8.2 omits `x-amz-content-sha256` from `--aws-sigv4` requests and R2 rejects
-them; `ops/backup.sh` passes the header explicitly.
+them; the old server's backup script passes the header explicitly.
 
 ## Backups
 
@@ -135,7 +135,7 @@ them; `ops/backup.sh` passes the header explicitly.
 |---|---|---|
 | D1 `badge-db` | `Backup D1` workflow, nightly 03:00 ET → R2 | 90 days (bucket lifecycle) |
 | D1 point-in-time | Cloudflare Time Travel | 30 days |
-| Legacy Postgres | `ops/backup.sh` via cron on the old server → R2 | 14 days local, 90 in R2 |
+| Legacy Postgres | cron on the old server → R2, until it is shut down | 14 days local, 90 in R2 |
 
 Restore a D1 export:
 
@@ -157,20 +157,17 @@ pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env prod
 
 ## The legacy stack (being retired)
 
-A Proxmox container at `192.168.50.241` runs the old Fastify API (`rnbp-api`, systemd) against
-a local PostgreSQL 16, reachable through a Cloudflare Tunnel. It exists for one endpoint:
-`POST /internal/verify-legacy`, which the Worker calls to verify pre-migration argon2 password
-hashes.
-
-The tunnel config (`/etc/cloudflared/config.yml`) matches only that path on `api.rnbp.ca` and
-returns 410 for everything else, so nothing can write to that Postgres by accident. The
-pre-cutover config is kept as `config.yml.bak-precutover`.
+A Proxmox container at `192.168.50.241` still holds the pre-migration PostgreSQL 16 and backs
+it up nightly to R2. Its Fastify API (`rnbp-api`, systemd) served the argon2 bridge, which the
+Worker never called; the public Tunnel routes (`api.rnbp.ca`, `ssh-rnbp.rnbp.ca`) were removed on
+2026-10-29, so `api.rnbp.ca` now belongs to the Worker.
 
 Note that the container's `.git` is frozen (deploys rsync without it) — GitHub `main` is the
 truth, never `git log` on the server.
 
-Retire the container, the Tunnel route, the `deploy-legacy-bridge` CD job and `apps/api` once
-this returns 0:
+The Tunnel route, the `deploy-legacy-bridge` CD job and `apps/api` were removed on 2026-10-29.
+The container goes once its Postgres is no longer needed; the Worker's `isLegacyHash` branch goes
+once this returns 0:
 
 ```bash
 pnpm --filter @rnbp/worker exec wrangler d1 execute badge-db --remote --env production \

@@ -27,9 +27,6 @@ jobs:
       - name: Build shared package
         run: pnpm --filter ./packages/shared build
 
-      - name: Type-check API
-        run: pnpm --filter ./apps/api exec tsc --noEmit
-
       - name: Type-check web
         run: pnpm --filter ./apps/web exec tsc --noEmit
 
