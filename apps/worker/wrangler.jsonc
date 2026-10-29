@@ -56,6 +56,8 @@
         { "pattern": "api.rnbp.ca", "custom_domain": true },
         { "pattern": "api.badgeid.ca", "custom_domain": true }
       ],
+      // Heartbeat to health-monitor (health.al-si.com): see utils/heartbeat.ts.
+      "triggers": { "crons": ["*/5 * * * *"] },
       "vars": {
         "NODE_ENV": "production",
         "FRONTEND_URL": "https://rnbp.ca",

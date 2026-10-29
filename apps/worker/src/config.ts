@@ -63,6 +63,10 @@ export const envSchema = z.object({
   // nothing, and only the browser pixel measures — degraded, never broken.
   META_CAPI_TOKEN: z.string().optional(),
 
+  // Heartbeat URL on health-monitor (health.al-si.com/ping/<token>). The token
+  // is the secret: whoever holds the URL can report the site alive.
+  HEALTH_PING_URL: z.string().url().optional(),
+
   // Admin notifications
   ADMIN_ORDER_EMAIL: z.string().email().optional(),
   ADMIN_CONTACT_EMAIL: z.string().email().optional(),

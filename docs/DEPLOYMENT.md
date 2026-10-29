@@ -96,6 +96,16 @@ uncommenting the local file.
 The Postgres backup goes away with the old server. Restore a D1 export with
 `wrangler d1 execute badge-db --remote --file <dump.sql>`.
 
+## Monitoring
+
+The production Worker has a cron trigger (`*/5 * * * *`) that checks the database (`SELECT 1`)
+and the public site (`FRONTEND_URL` answers 200 with "RNBP" in the page). Only when both pass
+does it call `HEALTH_PING_URL`, a heartbeat on health-monitor (`health.al-si.com`, Alex's own
+Worker). The monitor waits 5 minutes plus 10 minutes of grace before alerting by email, so a
+passing blip stays silent and a lasting outage — or the cron itself stopping — does not. The
+code is `apps/worker/src/utils/heartbeat.ts`. `HEALTH_PING_URL` is a Worker secret: the token in
+it is what proves the ping genuine. Without it the cron still runs its checks but pings nothing.
+
 ## Shop Products & Stripe
 
 Products live in the `products` table. Stripe Price IDs are **not** seeded by migration and
