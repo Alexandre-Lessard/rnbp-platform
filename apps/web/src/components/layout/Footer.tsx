@@ -43,7 +43,7 @@ export function Footer() {
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
             <Link to="/" className="inline-block">
-              <img src="/assets/logo.png" alt={t.a11y.logoAlt} className="h-10" />
+              <img src="/assets/logo-rnbp.png" alt={t.a11y.logoAlt} className="h-10" />
             </Link>
             <nav aria-label={t.a11y.mainNav} className="mt-8 flex flex-wrap gap-8 text-sm font-medium text-[var(--rcb-text-strong)]">
               {t.nav.items

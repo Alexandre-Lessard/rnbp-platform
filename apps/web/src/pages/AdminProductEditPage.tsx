@@ -422,7 +422,7 @@ export function AdminProductEditPage() {
               value={form.imageUrls}
               onChange={handleChange}
               className={inputClass}
-              placeholder="/assets/product-stickers.webp"
+              placeholder="/assets/product-stickers-bid.webp"
             />
             <p className="mt-1 text-xs text-[var(--rcb-text-muted)]">
               {p?.imageUrlsHint ?? "One URL per line. First image = main display."}

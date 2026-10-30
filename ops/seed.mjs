@@ -159,7 +159,7 @@ function buildSql() {
   for (const p of products) {
     productIds[p.slug] = id();
     S.push(
-      `INSERT INTO products (id, slug, name_fr, name_en, description_fr, description_en, price_cents, image_urls, is_active, requires_item, sort_order, created_at, updated_at) VALUES (${q(productIds[p.slug])}, ${q(p.slug)}, ${q(p.nameFr)}, ${q(p.nameEn)}, ${q(p.descFr)}, ${q(p.descEn)}, ${n(p.price)}, ${q(JSON.stringify(["/assets/product-stickers.webp"]))}, 1, 0, ${n(p.sort)}, ${n(daysAgo(120))}, ${n(daysAgo(120))});`,
+      `INSERT INTO products (id, slug, name_fr, name_en, description_fr, description_en, price_cents, image_urls, is_active, requires_item, sort_order, created_at, updated_at) VALUES (${q(productIds[p.slug])}, ${q(p.slug)}, ${q(p.nameFr)}, ${q(p.nameEn)}, ${q(p.descFr)}, ${q(p.descEn)}, ${n(p.price)}, ${q(JSON.stringify(["/assets/product-stickers-bid.webp"]))}, 1, 0, ${n(p.sort)}, ${n(daysAgo(120))}, ${n(daysAgo(120))});`,
     );
   }
 
