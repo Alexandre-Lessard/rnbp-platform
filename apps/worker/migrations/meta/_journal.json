@@ -43,6 +43,13 @@
       "when": 1793297147577,
       "tag": "0005_files_on_rnbp_ca",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1793367367481,
+      "tag": "0006_products_images_renamed",
+      "breakpoints": true
     }
   ]
 }

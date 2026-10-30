@@ -7,6 +7,13 @@ in the room.
 
 Started 2026-08-09. Production data at that point: 17 users, 5 items, 23 orders.
 
+> **Names have changed since.** This log keeps the names of the time. On 2026-10-29 (T28) every
+> resource was renamed: `badge-api(-staging)` → `rnbp-api(-staging)`, `badge-db(-staging)` →
+> `rnbp-db(-staging)`, `badge-uploads(-staging)` → `rnbp-uploads(-staging)`, `badge-db-backups` →
+> `rnbp-db-backups`, Pages `badge-platform` → `rnbp-platform`, `files(-staging).badgeid.ca` →
+> `files(-staging).rnbp.ca`, GitHub repo `badge-platform` → `rnbp-platform`. The `badge-*`
+> resources are kept as rollback until 2026-11-28, then deleted.
+
 ## Why this shape
 
 The evaluation compared three targets:

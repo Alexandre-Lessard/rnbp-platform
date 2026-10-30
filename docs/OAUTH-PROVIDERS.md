@@ -127,10 +127,10 @@ The obstacle is that `staging.rnbp-platform.pages.dev` sits under the `pages.dev
 Google would want `rnbp-platform.pages.dev` as an authorized domain, which requires Search Console
 ownership, which requires DNS control over `pages.dev` — impossible.
 
-The way in, if staging ever needs it: give the Pages project a **`staging.badgeid.ca`** custom
-domain. `badgeid.ca` is a Search Console *Domain* property, which covers every subdomain, and a
-Google authorized domain likewise covers its subdomains — so a redirect URI at
-`https://staging.badgeid.ca/auth/google/callback` needs **no new authorized domain**. That matters:
+The way in, if staging ever needs it: give the Pages project a **`staging.rnbp.ca`** custom
+domain. `rnbp.ca` is already an authorized domain on the consent screen, and an authorized domain
+covers its subdomains — so a redirect URI at `https://staging.rnbp.ca/auth/google/callback` needs
+**no new authorized domain**. That matters:
 adding one would drop the app back to unverified and force the whole branding cycle again.
 
 Until then, Google sign-in is validated in local dev (the dev client is live) and in production.
@@ -275,8 +275,8 @@ nothing here needs correcting for the `11898248 Canada Inc.` → `9567-1525 Qué
 | Privacy Policy URL | `https://rnbp.ca/privacy` |
 | Terms of Service URL | `https://rnbp.ca/terms` |
 | User data deletion | Instructions URL → `https://rnbp.ca/data-deletion` |
-| Business linked | `BADGE ID` (`1656065239155631`) |
-| Valid OAuth redirect URIs | `https://badgeid.ca/auth/facebook/callback`, `https://staging.rnbp-platform.pages.dev/auth/facebook/callback`, plus the two legacy ones |
+| Business linked | `RNBP` (`1656065239155631`) |
+| Valid OAuth redirect URIs | `https://rnbp.ca/auth/facebook/callback`, `https://staging.rnbp-platform.pages.dev/auth/facebook/callback`, plus `nrpp.ca` and `badgeid.ca` (they only redirect; removed once the transition is over) |
 | Permissions | `email` and `public_profile` — **Ready to publish** (advanced access granted without review) |
 | App Mode | **Unpublished** — blocked on the data access renewal, below |
 

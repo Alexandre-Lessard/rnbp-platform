@@ -396,7 +396,7 @@ const SAME_AS: string[] = [];
 function buildJsonLd(locale: "fr" | "en", path: string, domain: string): string {
   const orgName = "RNBP";
   const altName = locale === "fr" ? "Registre national des biens personnels" : "National Registry of Personal Property";
-  const logoFile = "logo.png";
+  const logoFile = "logo-rnbp.png";
   const description =
     locale === "fr"
       ? "Registre canadien de biens personnels : enregistrez vos objets de valeur, prouvez que vous en êtes propriétaire et augmentez vos chances de les retrouver après un vol."
@@ -494,7 +494,7 @@ function injectMeta(
   const ogLocale = locale === "fr" ? "fr_CA" : "en_CA";
   const ogLocaleAlt = locale === "fr" ? "en_CA" : "fr_CA";
   const siteName = "RNBP";
-  const ogImageFile = locale === "fr" ? "og-image-fr.png" : "og-image-en.png";
+  const ogImageFile = locale === "fr" ? "og-image-rnbp-fr.png" : "og-image-rnbp-en.png";
   const canonical = canonicalUrl(path);
   const ogUrl = canonical;
   const ogImage = `${domain}/assets/${ogImageFile}`;
