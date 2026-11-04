@@ -96,11 +96,6 @@ const fr: SiteContent = {
     description:
       "Le RNBP facilite leur identification et leur restitution en cas de vol ou de perte.",
     freeLabel: "Enregistrement 100% gratuit",
-    countBadge: {
-      count: "32 726",
-      middle: "clients inscrits en",
-      highlight: "15 jours.",
-    },
     imageAlt:
       "V\u00e9lo, laptop, cellulaire, montre, voiturette de golf et autres biens",
     trustBadges: [
