@@ -55,11 +55,6 @@ export type SiteContent = {
     titleLine1: string;
     description: string;
     freeLabel: string;
-    countBadge: {
-      count: string;
-      middle: string;
-      highlight: string;
-    };
     imageAlt: string;
     trustBadges: TrustBadge[];
   };

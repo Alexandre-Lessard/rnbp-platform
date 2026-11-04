@@ -96,11 +96,6 @@ const en: SiteContent = {
     description:
       "RNBP makes them easier to identify and recover in case of theft or loss.",
     freeLabel: "Registration is 100% free",
-    countBadge: {
-      count: "32,726",
-      middle: "clients registered in",
-      highlight: "15 days.",
-    },
     imageAlt:
       "Bike, laptop, phone, watch, golf cart and other belongings",
     trustBadges: [
