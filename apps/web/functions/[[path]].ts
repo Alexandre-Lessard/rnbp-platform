@@ -343,7 +343,13 @@ function getDomain(): string {
 
 function generateRobotsTxt(): Response {
   const domain = BRAND_ORIGIN;
-  const disallows = NOINDEX_PATHS.map((p) => `Disallow: ${p}`).join("\n");
+  // A Disallow rule matches every path that starts with it, so `Disallow: /c`
+  // also blocked /contact. When a bare rule would cover a public page, close it
+  // with a slash so it only reaches the sub-paths.
+  const disallows = NOINDEX_PATHS.map((p) => {
+    const coversPublicPage = PUBLIC_PATHS.some((pub) => pub !== p && pub.startsWith(p));
+    return `Disallow: ${coversPublicPage ? `${p}/` : p}`;
+  }).join("\n");
   const body = `User-agent: *
 Allow: /
 ${disallows}
