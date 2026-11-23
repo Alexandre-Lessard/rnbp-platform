@@ -20,6 +20,7 @@ import { shopRoutes } from "./routes/shop.js";
 import { stickerCodesRoutes } from "./routes/sticker-codes.js";
 import { uploadRoutes } from "./routes/uploads.js";
 import { adminRoutes } from "./routes/admin.js";
+import { promoRoutes } from "./routes/promo.js";
 import { oauthRoutes } from "./routes/oauth.js";
 import { runHeartbeat } from "./utils/heartbeat.js";
 
@@ -103,6 +104,7 @@ app.route("/", newsletterRoutes);
 app.route("/", insuranceRoutes);
 app.route("/", contactRoutes);
 app.route("/", shopRoutes);
+app.route("/", promoRoutes);
 app.route("/", stickerCodesRoutes);
 app.route("/", uploadRoutes);
 app.route("/", adminRoutes);

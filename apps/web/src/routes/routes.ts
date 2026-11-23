@@ -34,6 +34,7 @@ export const ROUTES = {
   adminAcquisition: "/admin/acquisition",
   adminProducts: "/admin/products",
   adminProductEdit: (id: string) => `/admin/products/${id}`,
+  adminPromo: "/admin/promo",
   googleCallback: "/auth/google/callback",
   facebookCallback: "/auth/facebook/callback",
   microsoftCallback: "/auth/microsoft/callback",

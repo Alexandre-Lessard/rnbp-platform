@@ -401,3 +401,22 @@ export const adSpend = sqliteTable(
   },
   (table) => [index("ad_spend_campaign_idx").on(table.campaign)],
 );
+
+// ── Promo settings ─────────────────────────────────────────────────────
+// One row (id = "current"), edited from /admin/promo so the pre-launch offer can
+// be changed without a deploy. The "valid until" sentence is built from endsOn
+// by the web app, so the text and the date cannot drift apart.
+
+export const PROMO_SETTINGS_ID = "current";
+
+export const promoSettings = sqliteTable("promo_settings", {
+  id: text("id").primaryKey(),
+  active: integer("active", { mode: "boolean" }).notNull().default(true),
+  // When set, the promo hides itself once endsOn is over (Montreal time).
+  autoHide: integer("auto_hide", { mode: "boolean" }).notNull().default(true),
+  // Last day of the offer, YYYY-MM-DD, inclusive.
+  endsOn: text("ends_on").notNull(),
+  textFr: text("text_fr").notNull(),
+  textEn: text("text_en").notNull(),
+  ...timestamps(),
+});

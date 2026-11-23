@@ -413,7 +413,7 @@ const fr: SiteContent = {
       "\u00a9 {{year}} RNBP. Tous droits r\u00e9serv\u00e9s.",
     legalMention:
       "Le RNBP est une plateforme op\u00e9r\u00e9e et administr\u00e9e par 9567-1525 Qu\u00e9bec Inc.",
-    promoLine: "Protégez vos biens — Autocollants Badge gratuits",
+    promoLine: "Protégez vos biens — Étiquettes d'identification gratuites",
   },
   buttons: {
     registerItem: "Enregistrer gratuitement",
@@ -849,7 +849,7 @@ const fr: SiteContent = {
   },
   promo: {
     badge: "Prélancement",
-    text: "Obtenez vos étiquettes d'identification gratuitement. Offre valide jusqu'au 1er janvier 2027.",
+    validUntil: "Offre valide jusqu'au {date}.",
     cta: "Voir la boutique",
     dismiss: "Fermer",
     dontShowAgain: "Ne plus afficher",
@@ -1031,6 +1031,7 @@ const fr: SiteContent = {
       orders: "Commandes",
       acquisition: "Acquisition",
       products: "Produits",
+      promo: "Promotion",
     },
     dashboard: {
       title: "Tableau de bord",
@@ -1112,6 +1113,25 @@ const fr: SiteContent = {
       error: "Erreur lors de l'enregistrement.",
       notFound: "Produit introuvable.",
       customMechanicBadge: "Mécanique spéciale active — Ce produit a un comportement personnalisé géré par le code (sélection du bien, validation de propriété, assignation Badge). Pour ajouter une mécanique similaire à un autre produit, une modification au code est requise.",
+    },
+    promo: {
+      title: "Promotion",
+      intro: "La bannière en haut du site, les encarts du tableau de bord et la ligne du pied de page. Une modification paraît sur le site en moins d'une minute.",
+      textFr: "Texte (français)",
+      textEn: "Texte (anglais)",
+      textHint: "Sans la date : la phrase « Offre valide jusqu'au… » est ajoutée automatiquement.",
+      endsOn: "Dernier jour de l'offre",
+      active: "Active",
+      autoHide: "Masquer automatiquement après la date de fin",
+      autoHideHint: "La promotion disparaît le lendemain de la date de fin, à minuit (heure de Montréal).",
+      preview: "Aperçu",
+      visibleNow: "Affichée en ce moment",
+      hiddenInactive: "Masquée : la promotion est désactivée",
+      hiddenExpired: "Masquée : la date de fin est passée",
+      save: "Enregistrer",
+      saving: "Enregistrement…",
+      saved: "Promotion enregistrée.",
+      lastUpdated: "Dernière modification\u00a0:",
     },
   },
   apiErrors: {

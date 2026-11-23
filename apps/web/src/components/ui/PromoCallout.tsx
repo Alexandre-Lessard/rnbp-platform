@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { ROUTES } from "@/routes/routes";
+import { usePromo } from "@/lib/use-promo";
 
 type PromoCalloutProps = {
   variant: "dashboard" | "item" | "registration";
@@ -11,8 +12,10 @@ type PromoCalloutProps = {
 export function PromoCallout({ variant, items }: PromoCalloutProps) {
   const { t } = useLanguage();
   const promo = t.promo;
+  // Follows the same switch as the banner: the callouts promise free labels.
+  const settings = usePromo();
 
-  if (!promo) return null;
+  if (!promo || !settings) return null;
 
   // Hide if user already has at least one item with an Badge code
   if (items?.some((item) => item.badgeCode)) return null;

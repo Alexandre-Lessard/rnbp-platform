@@ -67,6 +67,16 @@ function AcquisitionIcon() {
   );
 }
 
+function PromoIcon() {
+  return (
+    <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 11v2a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1z" />
+      <path d="M15.5 8.5a5 5 0 010 7" />
+      <path d="M18.5 5.5a9 9 0 010 13" />
+    </svg>
+  );
+}
+
 function MenuIcon() {
   return (
     <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -110,6 +120,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     { label: admin?.nav.orders ?? "Orders", href: ROUTES.adminOrders, icon: <OrdersIcon /> },
     { label: admin?.nav.acquisition ?? "Acquisition", href: ROUTES.adminAcquisition, icon: <AcquisitionIcon /> },
     { label: admin?.nav.products ?? "Products", href: ROUTES.adminProducts, icon: <ProductsIcon /> },
+    { label: admin?.nav.promo ?? "Promotion", href: ROUTES.adminPromo, icon: <PromoIcon /> },
   ];
 
   function isActive(href: string) {

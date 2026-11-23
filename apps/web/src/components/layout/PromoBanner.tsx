@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { useLanguage } from "@/i18n/context";
 import { ROUTES } from "@/routes/routes";
 import { ClientOnly } from "@/components/ClientOnly";
+import { usePromo, promoSentence } from "@/lib/use-promo";
 
 const STORAGE_KEY = "badge-promo-dismissed";
 const DISMISS_DURATION_MS = 12 * 60 * 60 * 1000; // 12 hours
@@ -29,11 +30,12 @@ export function PromoBanner() {
 }
 
 function PromoBannerInner() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const promo = t.promo;
+  const settings = usePromo();
   const [dismissed, setDismissed] = useState(isDismissed);
 
-  if (!promo || dismissed) return null;
+  if (!promo || !settings || dismissed) return null;
 
   function handleDismiss() {
     localStorage.setItem(STORAGE_KEY, String(Date.now()));
@@ -62,7 +64,7 @@ function PromoBannerInner() {
               {promo.badge}
             </span>
             <p className="text-sm font-medium text-[var(--rcb-text-strong)] sm:text-base">
-              {promo.text}
+              {promoSentence(settings, locale, promo.validUntil)}
             </p>
           </div>
           <Link

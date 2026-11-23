@@ -12,6 +12,8 @@ import {
   newsletterSubscribers,
   stickerCodes,
   adSpend,
+  promoSettings,
+  PROMO_SETTINGS_ID,
 } from "../db/schema.js";
 import { requireAdmin } from "../middleware/auth.js";
 import { verifyToken } from "../utils/tokens.js";
@@ -32,6 +34,7 @@ import {
 } from "@rnbp/shared";
 import { AppError } from "../utils/errors.js";
 import { expandRange } from "../utils/badge-sequence.js";
+import { isPromoVisible } from "../utils/promo.js";
 import type { AppEnv } from "../context.js";
 
 export const adminRoutes = new Hono<AppEnv>();
@@ -1028,4 +1031,55 @@ adminRoutes.delete("/admin/acquisition/spend/:id", requireAdmin, async (c) => {
 
   if (deleted.length === 0) throw new AppError(404, SPEND_NOT_FOUND, "Spend entry not found");
   return c.json({ success: true });
+});
+
+// ── Promo settings ─────────────────────────────────────────────
+
+const promoSchema = z.object({
+  active: z.boolean(),
+  autoHide: z.boolean(),
+  endsOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "endsOn must be YYYY-MM-DD"),
+  textFr: z.string().trim().min(1).max(300),
+  textEn: z.string().trim().min(1).max(300),
+});
+
+function promoDto(row: typeof promoSettings.$inferSelect) {
+  return {
+    active: row.active,
+    autoHide: row.autoHide,
+    endsOn: row.endsOn,
+    textFr: row.textFr,
+    textEn: row.textEn,
+    updatedAt: row.updatedAt,
+    visibleNow: isPromoVisible(row, new Date()),
+  };
+}
+
+adminRoutes.get("/admin/promo", requireAdmin, async (c) => {
+  const db = getDb();
+  const [row] = await db
+    .select()
+    .from(promoSettings)
+    .where(eq(promoSettings.id, PROMO_SETTINGS_ID));
+
+  return c.json({ promo: row ? promoDto(row) : null });
+});
+
+adminRoutes.put("/admin/promo", requireAdmin, async (c) => {
+  const db = getDb();
+  const body = promoSchema.parse(await c.req.json());
+  const now = new Date();
+
+  // Upsert: the row is created by migration 0007, but a fresh database must
+  // not leave the admin page unable to save.
+  const [row] = await db
+    .insert(promoSettings)
+    .values({ id: PROMO_SETTINGS_ID, ...body, createdAt: now, updatedAt: now })
+    .onConflictDoUpdate({
+      target: promoSettings.id,
+      set: { ...body, updatedAt: now },
+    })
+    .returning();
+
+  return c.json({ promo: promoDto(row) });
 });

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ClientOnly } from "@/components/ClientOnly";
 import { ROUTES } from "@/routes/routes";
 import { openCookiePreferences } from "@/lib/consent";
+import { usePromo } from "@/lib/use-promo";
 
 // Build-time year used as SSR fallback. Replaced after mount with the live
 // browser year (handles edge case of year change between build and visit).
@@ -17,6 +18,8 @@ function CurrentYear() {
 
 export function Footer() {
   const { t, locale } = useLanguage();
+  // The promo line follows the banner's switch in /admin/promo.
+  const promo = usePromo();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error" | "unavailable">("idle");
 
@@ -104,7 +107,7 @@ export function Footer() {
           </div>
         </div>
 
-        {t.footer.promoLine && (
+        {promo && t.footer.promoLine && (
           <div className="mt-10 text-center">
             <Link
               to={ROUTES.shop}

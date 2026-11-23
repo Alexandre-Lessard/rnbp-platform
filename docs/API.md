@@ -322,6 +322,15 @@ Auth: None
 Response: { available: boolean }
 ```
 
+### GET /promo
+Auth: None
+```
+Response: { promo: { textFr, textEn, endsOn } | null }
+```
+The pre-launch promo set in `/admin/promo`, or `null` when it is turned off or, with auto-hide,
+once `endsOn` (inclusive, Montreal time) is over. `Cache-Control: public, max-age=60`. The banner,
+the promo callouts and the footer promo line all follow it.
+
 ### POST /shop/checkout
 Auth: requireVerifiedEmail
 ```
@@ -524,6 +533,22 @@ Auth: requireAdmin
 ```
 Response: { success: true }
 ```
+
+### GET /admin/promo
+Auth: requireAdmin
+```
+Response: { promo: { active, autoHide, endsOn, textFr, textEn, updatedAt, visibleNow } | null }
+```
+`visibleNow` is what `GET /promo` would answer right now.
+
+### PUT /admin/promo
+Auth: requireAdmin
+```
+Body: { active: boolean, autoHide: boolean, endsOn: "YYYY-MM-DD", textFr: string(1-300), textEn: string(1-300) }
+Response: same as GET /admin/promo
+```
+Upserts the single `promo_settings` row. The texts leave out the date: the web app appends
+"Offre valide jusqu'au {date}." / "Offer valid until {date}." from `endsOn`.
 
 ---
 

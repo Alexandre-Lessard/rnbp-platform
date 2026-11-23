@@ -458,7 +458,8 @@ export type SiteContent = {
   };
   promo?: {
     badge: string;
-    text: string;
+    /** "Offre valide jusqu'au {date}." — the text itself comes from /admin/promo. */
+    validUntil: string;
     cta: string;
     dismiss: string;
     dontShowAgain?: string;
@@ -569,6 +570,7 @@ export type SiteContent = {
       orders: string;
       acquisition: string;
       products: string;
+      promo: string;
     };
     dashboard: {
       title: string;
@@ -651,6 +653,25 @@ export type SiteContent = {
       error: string;
       notFound: string;
       customMechanicBadge: string;
+    };
+    promo: {
+      title: string;
+      intro: string;
+      textFr: string;
+      textEn: string;
+      textHint: string;
+      endsOn: string;
+      active: string;
+      autoHide: string;
+      autoHideHint: string;
+      preview: string;
+      visibleNow: string;
+      hiddenInactive: string;
+      hiddenExpired: string;
+      save: string;
+      saving: string;
+      saved: string;
+      lastUpdated: string;
     };
   };
   apiErrors?: Record<string, string>;

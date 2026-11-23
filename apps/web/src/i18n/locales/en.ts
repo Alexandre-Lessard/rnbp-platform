@@ -407,7 +407,7 @@ const en: SiteContent = {
       "\u00a9 {{year}} RNBP. All rights reserved.",
     legalMention:
       "RNBP is a platform operated and administered by 9567-1525 Québec Inc.",
-    promoLine: "Protect your valuables — Free Badge stickers",
+    promoLine: "Protect your valuables — Free identification labels",
   },
   buttons: {
     registerItem: "Register for free",
@@ -843,7 +843,7 @@ const en: SiteContent = {
   },
   promo: {
     badge: "Pre-launch",
-    text: "Get your identification labels for free. Offer valid until January 1, 2027.",
+    validUntil: "Offer valid until {date}.",
     cta: "Visit shop",
     dismiss: "Close",
     dontShowAgain: "Don't show again",
@@ -1025,6 +1025,7 @@ const en: SiteContent = {
       orders: "Orders",
       acquisition: "Acquisition",
       products: "Products",
+      promo: "Promotion",
     },
     dashboard: {
       title: "Dashboard",
@@ -1106,6 +1107,25 @@ const en: SiteContent = {
       error: "Error saving product.",
       notFound: "Product not found.",
       customMechanicBadge: "Custom mechanic active — This product has custom behavior managed by code (item selection, ownership validation, badge assignment). To add a similar mechanic to another product, a code change is required.",
+    },
+    promo: {
+      title: "Promotion",
+      intro: "The banner at the top of the site, the dashboard callouts and the footer line. A change shows on the site within a minute.",
+      textFr: "Text (French)",
+      textEn: "Text (English)",
+      textHint: "Without the date: the \"Offer valid until…\" sentence is added automatically.",
+      endsOn: "Last day of the offer",
+      active: "Active",
+      autoHide: "Hide automatically after the end date",
+      autoHideHint: "The promotion disappears the day after the end date, at midnight (Montreal time).",
+      preview: "Preview",
+      visibleNow: "Showing now",
+      hiddenInactive: "Hidden: the promotion is turned off",
+      hiddenExpired: "Hidden: the end date has passed",
+      save: "Save",
+      saving: "Saving…",
+      saved: "Promotion saved.",
+      lastUpdated: "Last updated:",
     },
   },
   apiErrors: {
