@@ -843,7 +843,7 @@ const en: SiteContent = {
   },
   promo: {
     badge: "Pre-launch",
-    text: "Get your identification labels for free. Offer valid until November 1, 2026.",
+    text: "Get your identification labels for free. Offer valid until January 1, 2027.",
     cta: "Visit shop",
     dismiss: "Close",
     dontShowAgain: "Don't show again",
